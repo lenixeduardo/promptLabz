@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom"
+import { AuthProvider } from "@/contexts/AuthContext"
+import { PrivateRoute } from "@/components/PrivateRoute"
 import Hero from "@/pages/Hero"
 import Login from "@/pages/Login"
 import Signup from "@/pages/Signup"
@@ -11,16 +13,53 @@ import MissionComplete from "@/pages/MissionComplete"
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Hero />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/learn" element={<LearningLab />} />
-      <Route path="/lesson" element={<Lesson />} />
-      <Route path="/skills" element={<Skills />} />
-      <Route path="/mission" element={<MissionComplete />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Hero />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route
+          path="/home"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/learn"
+          element={
+            <PrivateRoute>
+              <LearningLab />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/lesson"
+          element={
+            <PrivateRoute>
+              <Lesson />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/skills"
+          element={
+            <PrivateRoute>
+              <Skills />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/mission"
+          element={
+            <PrivateRoute>
+              <MissionComplete />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </AuthProvider>
   )
 }

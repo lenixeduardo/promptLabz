@@ -1,9 +1,10 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { ArrowLeft, User, Mail, Lock, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
+import { useAuth } from "@/hooks/useAuth"
 
 function GoogleIcon() {
   return (
@@ -37,10 +38,50 @@ function AppleIcon() {
 }
 
 export default function Signup() {
+  const navigate = useNavigate()
+  const { signup, loginWithGoogle } = useAuth()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+
+    if (password !== confirmPassword) {
+      setError("As senhas não coincidem")
+      return
+    }
+
+    if (password.length < 6) {
+      setError("A senha deve ter pelo menos 6 caracteres")
+      return
+    }
+
+    setLoading(true)
+    const result = await signup(email, password)
+    if (result.success) {
+      navigate("/home")
+    } else {
+      setError(result.error || "Erro ao criar conta")
+    }
+    setLoading(false)
+  }
+
+  const handleGoogleSignup = async () => {
+    setError("")
+    setLoading(true)
+    const result = await loginWithGoogle()
+    if (result.success) {
+      navigate("/home")
+    } else {
+      setError(result.error || "Erro ao criar conta com Google")
+    }
+    setLoading(false)
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
@@ -97,10 +138,12 @@ export default function Signup() {
 
         {/* Form card */}
         <Card className="w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => e.preventDefault()}
-          >
+          {error && (
+            <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <Input
               type="text"
               placeholder="Nome completo"
@@ -108,6 +151,7 @@ export default function Signup() {
               onChange={(e) => setName(e.target.value)}
               icon={<User className="h-5 w-5" strokeWidth={2.2} />}
               autoComplete="name"
+              disabled={loading}
             />
             <Input
               type="email"
@@ -116,6 +160,8 @@ export default function Signup() {
               onChange={(e) => setEmail(e.target.value)}
               icon={<Mail className="h-5 w-5" strokeWidth={2.2} />}
               autoComplete="email"
+              required
+              disabled={loading}
             />
             <Input
               type="password"
@@ -124,6 +170,8 @@ export default function Signup() {
               onChange={(e) => setPassword(e.target.value)}
               icon={<Lock className="h-5 w-5" strokeWidth={2.2} />}
               autoComplete="new-password"
+              required
+              disabled={loading}
             />
             <Input
               type="password"
@@ -132,6 +180,8 @@ export default function Signup() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               icon={<CheckCircle2 className="h-5 w-5" strokeWidth={2.2} />}
               autoComplete="new-password"
+              required
+              disabled={loading}
             />
 
             <p className="text-center text-xs text-[#4A5E52]">
@@ -151,8 +201,8 @@ export default function Signup() {
               </Link>
             </p>
 
-            <Button type="submit" size="lg" className="mt-1 w-full">
-              Criar Conta
+            <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
+              {loading ? "Criando..." : "Criar Conta"}
             </Button>
 
             {/* Divider */}
@@ -164,13 +214,20 @@ export default function Signup() {
 
             {/* Social logins */}
             <div className="flex justify-center gap-5">
-              <Button type="button" variant="social" size="icon" aria-label="Google">
+              <Button
+                type="button"
+                variant="social"
+                size="icon"
+                aria-label="Google"
+                onClick={handleGoogleSignup}
+                disabled={loading}
+              >
                 <GoogleIcon />
               </Button>
-              <Button type="button" variant="social" size="icon" aria-label="Apple">
+              <Button type="button" variant="social" size="icon" aria-label="Apple" disabled>
                 <AppleIcon />
               </Button>
-              <Button type="button" variant="social" size="icon" aria-label="E-mail">
+              <Button type="button" variant="social" size="icon" aria-label="E-mail" disabled>
                 <Mail className="h-6 w-6 text-primary" strokeWidth={2.2} />
               </Button>
             </div>
