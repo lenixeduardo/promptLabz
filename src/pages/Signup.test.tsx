@@ -3,12 +3,21 @@ import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import Signup from "./Signup"
+import { sileo } from "sileo"
 
 const mockSignup = vi.fn()
 const mockLoginWithGoogle = vi.fn()
 
 vi.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ signup: mockSignup, loginWithGoogle: mockLoginWithGoogle }),
+  useAuth: () => ({ signup: mockSignup, loginWithGoogle: mockLoginWithGoogle, user: null }),
+}))
+
+vi.mock("sileo", () => ({
+  sileo: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+  Toaster: () => null,
 }))
 
 function renderSignup() {
@@ -23,7 +32,7 @@ function renderSignup() {
   )
 }
 
-async function fillForm(email = "novo@test.com", password = "senha123", confirm = "senha123") {
+async function fillForm(email = "novo@test.com", password = "Senha123", confirm = "Senha123") {
   await userEvent.type(screen.getByPlaceholderText("E-mail"), email)
   await userEvent.type(screen.getByPlaceholderText("Senha"), password)
   await userEvent.type(screen.getByPlaceholderText("Confirmar senha"), confirm)
@@ -54,24 +63,24 @@ describe("Signup — renderização", () => {
 describe("Signup — validações", () => {
   it("exibe erro quando as senhas não coincidem", async () => {
     renderSignup()
-    await fillForm("email@test.com", "senha123", "diferente")
+    await fillForm("email@test.com", "Senha123", "diferente")
     await userEvent.click(screen.getByRole("button", { name: /criar conta/i }))
 
     await waitFor(() =>
-      expect(screen.getByText("As senhas não coincidem")).toBeInTheDocument()
+      expect(sileo.error).toHaveBeenCalledWith({ title: "As senhas não coincidem" })
     )
     expect(mockSignup).not.toHaveBeenCalled()
   })
 
-  it("exibe erro quando senha tem menos de 6 caracteres", async () => {
+  it("exibe erro quando senha tem menos de 8 caracteres", async () => {
     renderSignup()
-    await fillForm("email@test.com", "abc", "abc")
+    await fillForm("email@test.com", "Abc1", "Abc1")
     await userEvent.click(screen.getByRole("button", { name: /criar conta/i }))
 
     await waitFor(() =>
-      expect(
-        screen.getByText("A senha deve ter pelo menos 6 caracteres")
-      ).toBeInTheDocument()
+      expect(sileo.error).toHaveBeenCalledWith({
+        title: "A senha deve ter pelo menos 8 caracteres",
+      })
     )
     expect(mockSignup).not.toHaveBeenCalled()
   })
@@ -109,7 +118,7 @@ describe("Signup — submissão", () => {
     await userEvent.click(screen.getByRole("button", { name: /criar conta/i }))
 
     await waitFor(() =>
-      expect(screen.getByText("Email já cadastrado")).toBeInTheDocument()
+      expect(sileo.error).toHaveBeenCalledWith({ title: "Email já cadastrado" })
     )
   })
 

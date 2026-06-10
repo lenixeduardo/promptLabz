@@ -3,12 +3,21 @@ import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import Login from "./Login"
+import { sileo } from "sileo"
 
 const mockLogin = vi.fn()
 const mockLoginWithGoogle = vi.fn()
 
 vi.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ login: mockLogin, loginWithGoogle: mockLoginWithGoogle }),
+  useAuth: () => ({ login: mockLogin, loginWithGoogle: mockLoginWithGoogle, user: null }),
+}))
+
+vi.mock("sileo", () => ({
+  sileo: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+  Toaster: () => null,
 }))
 
 vi.mock("@/components/CircleTransition", () => ({
@@ -82,7 +91,7 @@ describe("Login — submissão", () => {
     await userEvent.click(screen.getByRole("button", { name: /entrar/i }))
 
     await waitFor(() =>
-      expect(screen.getByText("Credenciais inválidas")).toBeInTheDocument()
+      expect(sileo.error).toHaveBeenCalledWith({ title: "Credenciais inválidas" })
     )
   })
 

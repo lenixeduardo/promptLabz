@@ -1,87 +1,21 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { X, BookOpen, ChevronLeft, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-
-// ── Lesson data ─────────────────────────────────────────────────────────────
-
-const LESSON = {
-  module: "Módulo 1 · Fundamentos",
-  title: "Chain-of-Thought Prompting",
-  content: [
-    {
-      type: "text",
-      text: "Chain-of-Thought (CoT) Prompting é uma técnica que instrui o modelo de linguagem a raciocinar passo a passo antes de chegar à resposta final.",
-    },
-    {
-      type: "text",
-      text: 'Em vez de pedir uma resposta direta, você guia o modelo a "pensar em voz alta", decompondo o problema em etapas intermediárias.',
-    },
-    {
-      type: "quote",
-      text: '"Resolva o problema abaixo. Pense passo a passo antes de dar a resposta final."',
-    },
-    {
-      type: "heading",
-      text: "Por que funciona?",
-    },
-    {
-      type: "text",
-      text: "Modelos de linguagem cometem menos erros quando decompõem problemas complexos. O raciocínio intermediário serve como rascunho que melhora a acurácia e permite auditar o processo, não só a resposta.",
-    },
-    {
-      type: "text",
-      text: "Sem CoT: \"Qual é 17 × 24?\" — o modelo pode errar diretamente.",
-    },
-    {
-      type: "quote",
-      text: '"Calcule 17 × 24 explicando cada etapa." → 17×20=340, 17×4=68, 340+68=408',
-    },
-  ],
-  questions: [
-    {
-      id: 1,
-      question: "O que é Chain-of-Thought (CoT) Prompting?",
-      options: [
-        { letter: "A", text: "Uma técnica que instrui o modelo a raciocinar passo a passo antes de responder" },
-        { letter: "B", text: "Um método para reduzir o tamanho do modelo de linguagem" },
-        { letter: "C", text: "Uma forma de treinar modelos com menos dados" },
-        { letter: "D", text: "Uma técnica para comprimir textos longos" },
-      ],
-      correct: "A",
-    },
-    {
-      id: 2,
-      question: "Qual é o principal benefício do Chain-of-Thought Prompting?",
-      options: [
-        { letter: "A", text: "Reduz o tempo de resposta do modelo" },
-        { letter: "B", text: "Permite auditar o raciocínio e reduz erros em problemas complexos" },
-        { letter: "C", text: "Diminui o custo de uso da API" },
-        { letter: "D", text: "Aumenta a velocidade de digitação" },
-      ],
-      correct: "B",
-    },
-    {
-      id: 3,
-      question: "Qual destes é um exemplo de prompt Chain-of-Thought?",
-      options: [
-        { letter: "A", text: '"Quanto é 17 × 24?"' },
-        { letter: "B", text: '"Calcule 17 × 24 explicando cada etapa da multiplicação."' },
-        { letter: "C", text: '"Responda em uma palavra."' },
-        { letter: "D", text: '"Seja direto e objetivo."' },
-      ],
-      correct: "B",
-    },
-  ],
-}
+import { sileo } from "sileo"
+import { lessonsData, ContentBlock, Question } from "@/data/lessonsData"
 
 // ── Sub-components ───────────────────────────────────────────────────────────
 
-function ContentView() {
+interface ContentViewProps {
+  content: ContentBlock[]
+}
+
+function ContentView({ content }: ContentViewProps) {
   return (
     <div className="flex flex-col gap-3.5">
-      {LESSON.content.map((block, i) => {
+      {content.map((block, i) => {
         if (block.type === "heading")
           return (
             <p key={i} className="mt-1 text-base font-bold text-[#1F2A24]">
@@ -110,7 +44,7 @@ function ContentView() {
 }
 
 interface QuestionViewProps {
-  question: (typeof LESSON.questions)[0]
+  question: Question
   questionIndex: number
   total: number
   selected: string | null
@@ -220,13 +154,37 @@ function QuestionView({
 
 export default function Lesson() {
   const navigate = useNavigate()
-  const [step, setStep] = useState(0)        // 0 = content, 1-3 = questions
+  const [searchParams] = useSearchParams()
+
+  const categoryId = searchParams.get("category") || "trending-skills"
+  const moduleIndex = parseInt(searchParams.get("moduleIndex") || "0", 10)
+  const lessonIndex = parseInt(searchParams.get("lessonIndex") || "0", 10)
+
+  const categoryObj = lessonsData[categoryId] || lessonsData["trending-skills"]
+  const moduleObj = categoryObj.modules[moduleIndex] || categoryObj.modules[0]
+  const lessonObj = moduleObj?.lessons[lessonIndex] || moduleObj?.lessons[0]
+
+  const [step, setStep] = useState(0)        // 0 = content, 1+ = questions
   const [selected, setSelected] = useState<string | null>(null)
   const [confirmed, setConfirmed] = useState(false)
   const [score, setScore] = useState(0)
 
-  const totalSteps = 1 + LESSON.questions.length
-  const currentQuestion = step > 0 ? LESSON.questions[step - 1] : null
+  // Safeguard if data is missing
+  if (!lessonObj) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#F7FBF8] p-5 text-center">
+        <div>
+          <p className="text-lg font-bold text-red-600">Erro: Lição não encontrada.</p>
+          <Button onClick={() => navigate("/learn")} className="mt-4">
+            Voltar ao Lab
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  const totalSteps = 1 + lessonObj.questions.length
+  const currentQuestion = step > 0 ? lessonObj.questions[step - 1] : null
 
   function goBack() {
     if (step > 0) {
@@ -234,14 +192,62 @@ export default function Lesson() {
       setSelected(null)
       setConfirmed(false)
     } else {
-      navigate("/learn")
+      navigate(`/learn?category=${categoryId}`)
     }
   }
 
   function handleConfirm() {
     if (!selected || !currentQuestion) return
-    if (selected === currentQuestion.correct) setScore((s) => s + 1)
+    if (selected === currentQuestion.correct) {
+      setScore((s) => s + 1)
+      sileo.success({ title: "Correto!", description: "Muito bem! 🎉" })
+    } else {
+      sileo.error({ title: "Incorreto", description: "Verifique a resposta correta abaixo." })
+    }
     setConfirmed(true)
+  }
+
+  function saveProgress() {
+    try {
+      const saved = localStorage.getItem("promptlab_progress")
+      const progress = saved ? JSON.parse(saved) : {}
+
+      const catProgress = progress[categoryId] || {
+        currentModuleIndex: 0,
+        currentLessonIndex: 0,
+        completedLessonIds: []
+      }
+
+      // Add to completed list
+      if (!catProgress.completedLessonIds.includes(lessonObj.id)) {
+        catProgress.completedLessonIds.push(lessonObj.id)
+      }
+
+      // If user completed their currently active lesson, advance progress pointer
+      if (
+        moduleIndex === catProgress.currentModuleIndex &&
+        lessonIndex === catProgress.currentLessonIndex
+      ) {
+        const nextLessonIndex = lessonIndex + 1
+        if (nextLessonIndex < moduleObj.lessons.length) {
+          catProgress.currentLessonIndex = nextLessonIndex
+        } else {
+          // Move to next module
+          const nextModuleIndex = moduleIndex + 1
+          if (nextModuleIndex < categoryObj.modules.length) {
+            catProgress.currentModuleIndex = nextModuleIndex
+            catProgress.currentLessonIndex = 0
+          } else {
+            // Already fully completed the category modules
+          }
+        }
+      }
+
+      progress[categoryId] = catProgress
+      localStorage.setItem("promptlab_progress", JSON.stringify(progress))
+    } catch (err) {
+      console.error("Error saving progress to localStorage", err)
+    }
   }
 
   function handleNext() {
@@ -250,6 +256,7 @@ export default function Lesson() {
       setSelected(null)
       setConfirmed(false)
     } else {
+      saveProgress()
       navigate("/mission")
     }
   }
@@ -260,11 +267,11 @@ export default function Lesson() {
     <div className="flex min-h-screen flex-col bg-[#F7FBF8]">
 
       {/* ── Sticky header ── */}
-      <div className="sticky top-0 z-10 bg-[#F7FBF8] px-4 pb-3 pt-4">
+      <div className="sticky top-0 z-10 bg-[#F7FBF8] px-4 pb-3 pt-4 border-b border-[#EAF2ED]">
         {/* Top row: close + book */}
         <div className="mb-3 flex items-center justify-between">
           <button
-            onClick={() => navigate("/learn")}
+            onClick={() => navigate(`/learn?category=${categoryId}`)}
             className="rounded-full p-1.5 text-[#1F2A24] transition-colors hover:bg-[#DCF1E4]"
           >
             <X className="h-5 w-5" />
@@ -276,34 +283,34 @@ export default function Lesson() {
         <div className="flex items-center justify-between">
           <button
             onClick={goBack}
-            className="flex items-center gap-0.5 text-sm font-medium text-[#3E8E5E] transition-colors hover:text-[#2B5D3A]"
+            className="flex items-center gap-0.5 text-xs font-bold text-[#3E8E5E] transition-colors hover:text-[#2B5D3A]"
           >
-            <ChevronLeft className="h-4 w-4" />
-            {LESSON.module}
+            <ChevronLeft className="h-4 w-4" strokeWidth={2.5} />
+            {moduleObj.title}
           </button>
-          <span className="text-sm font-medium text-[#8A998F]">
+          <span className="text-sm font-semibold text-[#8A998F]">
             {step + 1}/{totalSteps}
           </span>
         </div>
 
         {/* Lesson title */}
-        <h1 className="mt-2 text-xl font-extrabold text-[#1F2A24]">
-          {LESSON.title}
+        <h1 className="mt-2 text-lg font-extrabold text-[#1F2A24] leading-snug">
+          {lessonObj.title}
         </h1>
         {/* Green accent underline */}
         <div className="mt-1.5 h-0.5 w-10 rounded-full bg-[#3E8E5E]" />
       </div>
 
       {/* ── Scrollable content ── */}
-      <div className="flex-1 overflow-y-auto px-4 py-2 pb-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 pb-6">
         {step === 0 ? (
-          <ContentView />
+          <ContentView content={lessonObj.content} />
         ) : (
           currentQuestion && (
             <QuestionView
               question={currentQuestion}
               questionIndex={step - 1}
-              total={LESSON.questions.length}
+              total={lessonObj.questions.length}
               selected={selected}
               confirmed={confirmed}
               onSelect={setSelected}
@@ -313,7 +320,7 @@ export default function Lesson() {
       </div>
 
       {/* ── Bottom button ── */}
-      <div className="px-4 pb-10 pt-3">
+      <div className="px-4 pb-8 pt-3 border-t border-[#EAF2ED]">
         {step === 0 ? (
           <Button size="lg" className="w-full" onClick={handleNext}>
             Entendi, vamos lá! →

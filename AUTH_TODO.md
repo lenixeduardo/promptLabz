@@ -31,10 +31,10 @@
 ---
 
 ### Phase 3: Signup Validation
-- [ ] Validate email format (Zod schema)
+- [x] Validate email format (Zod schema)
 - [ ] Check email not already registered
-- [ ] Validate password strength (8+ chars, uppercase, number)
-- [ ] Confirm passwords match
+- [x] Validate password strength (8+ chars, uppercase, number)
+- [x] Confirm passwords match
 - [ ] Send verification email after signup
 - [ ] Create user profile in `users` table after signup
 - [ ] Handle duplicate email error gracefully
@@ -44,11 +44,11 @@
 
 ### Phase 4: ForgotPassword Complete
 - [ ] Test password reset email sending
-- [ ] Create password reset page (/reset-password?token=...)
+- [x] Create password reset page (/reset-password?token=...)
 - [ ] Validate reset token
-- [ ] Update password with token
-- [ ] Show success/error messages
-- [ ] Redirect to login after password reset
+- [x] Update password with token
+- [x] Show success/error messages
+- [x] Redirect to login after password reset
 
 ---
 
@@ -58,7 +58,7 @@
   - Add Google Client ID & Secret
   - Set redirect URL: `https://yourproject.supabase.co/auth/v1/callback`
 - [ ] Setup Apple Sign-In in Supabase
-- [ ] Test Google login flow
+- [x] Test Google login flow
 - [ ] Test Apple login flow
 - [ ] Auto-create user profile on social signup
 - [ ] Link social account to existing email account (optional)
@@ -76,9 +76,9 @@
   );
   ```
 - [ ] Store user profile after signup
-- [ ] Display user name in Home page header
-- [ ] Display avatar in header
-- [ ] Edit profile page (/profile)
+- [x] Display user name in Home page header
+- [x] Display avatar in header
+- [x] Edit profile page (/profile)
 - [ ] Upload avatar image to Supabase Storage
 
 ---
@@ -88,18 +88,18 @@
 - [ ] Auto-logout on token expiration
 - [ ] Refresh token on app load
 - [ ] Handle expired session on protected routes
-- [ ] Logout button in Home/dashboard header
+- [x] Logout button in Home/dashboard header
 - [ ] Show loading state on app startup
 
 ---
 
 ### Phase 8: Protected Routes & Navigation
-- [ ] Block unauthenticated users from /home, /learn, /lesson, /skills, /mission
-- [ ] Redirect anon users to /login
-- [ ] Redirect authenticated users from /login → /home
-- [ ] Redirect authenticated users from /signup → /home
-- [ ] Keep authenticated user on /forgot-password (no redirect)
-- [ ] Add logout button to Home header
+- [x] Block unauthenticated users from /home, /learn, /lesson, /skills, /mission
+- [x] Redirect anon users to /login
+- [x] Redirect authenticated users from /login → /home
+- [x] Redirect authenticated users from /signup → /home
+- [x] Keep authenticated user on /forgot-password (no redirect)
+- [x] Add logout button to Home header
 
 ---
 

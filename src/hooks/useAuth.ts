@@ -73,6 +73,19 @@ export function useAuth() {
     }
   }
 
+  const updatePassword = async (password: string) => {
+    try {
+      const { data, error: err } = await supabase.auth.updateUser({
+        password,
+      })
+      if (err) throw err
+      return { success: true, user: data.user }
+    } catch (err: any) {
+      const errorMsg = err?.message || "Erro ao atualizar senha"
+      return { success: false, error: errorMsg }
+    }
+  }
+
   return {
     user,
     loading,
@@ -82,5 +95,6 @@ export function useAuth() {
     logout,
     resetPassword,
     loginWithGoogle,
+    updatePassword,
   }
 }

@@ -10,13 +10,16 @@ import {
   Pencil,
   ThumbsUp,
   BarChart3,
+  LogOut,
 } from "lucide-react"
 import { BrandLogo } from "@/components/BrandLogo"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/hooks/useAuth"
+import { sileo } from "sileo"
 
 const features = [
-  { title: "My Skills", icon: PawPrint, to: "#" },
-  { title: "Prompt Library", icon: Lightbulb, to: "#" },
+  { title: "My Skills", icon: PawPrint, to: "/skills" },
+  { title: "Prompt Library", icon: Lightbulb, to: "/skills" },
   { title: "Learning Lab", icon: GraduationCap, to: "/learn" },
 ]
 
@@ -31,6 +34,17 @@ const chips = [
 ]
 
 export default function Home() {
+  const { user, logout } = useAuth()
+
+  const handleLogout = async () => {
+    const result = await logout()
+    if (result.success) {
+      sileo.success({ title: "Até logo!" })
+    } else {
+      sileo.error({ title: result.error || "Erro ao sair" })
+    }
+  }
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-white via-[#EAF7EF] to-[#BFE6CF]">
       {/* Running cat mascot bleeding off the right edge */}
@@ -44,16 +58,30 @@ export default function Home() {
         {/* Top bar */}
         <header className="flex items-center justify-between">
           <BrandLogo className="text-3xl" />
-          <button
-            aria-label="Account"
-            className="h-12 w-12 overflow-hidden rounded-full border border-[#BFE3CC] bg-white shadow-sm"
-          >
-            <img
-              src="/assets/avatar-cat.png"
-              alt="Account"
-              className="h-full w-full object-contain"
-            />
-          </button>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/profile"
+              className="flex items-center gap-2 rounded-full border border-[#BFE3CC] bg-white/70 px-3 py-1.5 shadow-sm hover:bg-[#F0FAF3] transition-colors"
+            >
+              <div className="h-8 w-8 overflow-hidden rounded-full border border-[#BFE3CC]">
+                <img
+                  src="/assets/avatar-cat.png"
+                  alt="Account"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <span className="hidden text-sm font-semibold text-[#2A3B30] sm:inline">
+                {user?.email?.split("@")[0] || "Perfil"}
+              </span>
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-1 rounded-full border border-red-200 bg-white/70 p-2 shadow-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
+              aria-label="Sair"
+            >
+              <LogOut className="h-5 w-5" />
+            </button>
+          </div>
         </header>
 
         {/* Hero search */}
@@ -87,18 +115,22 @@ export default function Home() {
         <section className="mt-12">
           <h2 className="text-2xl font-bold text-[#1F2A24]">Continue Learning</h2>
           <div className="no-scrollbar mt-4 flex gap-3 overflow-x-auto pb-2">
-            {chips.map(({ label, icon: Icon }) => (
-              <button
-                key={label}
-                className={cn(
-                  "flex shrink-0 items-center gap-2 rounded-full border border-[#CDEAD8] bg-white px-4 py-2.5",
-                  "text-sm font-medium text-[#2A3B30] shadow-sm transition-colors hover:bg-[#F0FAF3]"
-                )}
-              >
-                <Icon className="h-4 w-4 text-[#3E8E5E]" strokeWidth={2.2} />
-                {label}
-              </button>
-            ))}
+            {chips.map(({ label, icon: Icon }) => {
+              const categoryKey = label.toLowerCase().replace(/ /g, "-")
+              return (
+                <Link
+                  key={label}
+                  to={`/learn?category=${categoryKey}`}
+                  className={cn(
+                    "flex shrink-0 items-center gap-2 rounded-full border border-[#CDEAD8] bg-white px-4 py-2.5",
+                    "text-sm font-medium text-[#2A3B30] shadow-sm transition-colors hover:bg-[#F0FAF3]"
+                  )}
+                >
+                  <Icon className="h-4 w-4 text-[#3E8E5E]" strokeWidth={2.2} />
+                  {label}
+                </Link>
+              )
+            })}
           </div>
         </section>
       </div>
