@@ -1,12 +1,9 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { Mail, Lock } from "lucide-react"
+import { ArrowLeft, User, Mail, Lock, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-import { BrandLogo } from "@/components/BrandLogo"
-import { MascotGlow } from "@/components/MascotGlow"
-import { CircleRevealEntry } from "@/components/CircleTransition"
 
 function GoogleIcon() {
   return (
@@ -39,36 +36,82 @@ function AppleIcon() {
   )
 }
 
-export default function Login() {
+export default function Signup() {
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
-      {/* Shrinking circle reveal — plays when arriving from Hero */}
-      <CircleRevealEntry />
-      <div className="mx-auto flex w-full max-w-[420px] flex-col items-center">
-        {/* Mascot with animated glow halo */}
-        <MascotGlow size={260}>
+      <div className="mx-auto flex w-full max-w-[420px] flex-col">
+        {/* Back */}
+        <Link
+          to="/login"
+          className="mb-2 flex w-fit items-center text-[#2E8B57] hover:text-primary"
+        >
+          <ArrowLeft className="h-6 w-6" strokeWidth={2.2} />
+        </Link>
+
+        {/* Title */}
+        <h1 className="mb-5 text-center text-4xl font-extrabold text-[#2B5D3A]">
+          Criar Conta
+        </h1>
+
+        {/* Mascot + speech bubble */}
+        <div className="mb-5 flex items-center justify-center gap-2">
           <img
             src="/assets/mascot-login-new.png"
-            alt="PromptLab mascot"
-            className="h-56 w-auto object-contain drop-shadow-md"
+            alt="Mascot"
+            className="h-36 w-auto object-contain drop-shadow-md"
           />
-        </MascotGlow>
+          <div className="relative rounded-2xl border border-[#BFE3CC] bg-white px-3 py-2 text-sm font-medium leading-snug text-[#1F2A24] shadow-sm">
+            Vamos começar! 🐱
+            {/* bubble tail pointing left */}
+            <div
+              style={{
+                position: "absolute",
+                left: -8,
+                top: 12,
+                width: 0,
+                height: 0,
+                borderTop: "6px solid transparent",
+                borderBottom: "6px solid transparent",
+                borderRight: "8px solid #BFE3CC",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                left: -6,
+                top: 12,
+                width: 0,
+                height: 0,
+                borderTop: "6px solid transparent",
+                borderBottom: "6px solid transparent",
+                borderRight: "8px solid white",
+              }}
+            />
+          </div>
+        </div>
 
-        {/* Wordmark */}
-        <BrandLogo className="mt-1 text-5xl" />
-
-        {/* Login card */}
-        <Card className="mt-7 w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
+        {/* Form card */}
+        <Card className="w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
           <form
             className="flex flex-col gap-4"
             onSubmit={(e) => e.preventDefault()}
           >
             <Input
+              type="text"
+              placeholder="Nome completo"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              icon={<User className="h-5 w-5" strokeWidth={2.2} />}
+              autoComplete="name"
+            />
+            <Input
               type="email"
-              placeholder="Seu e-mail"
+              placeholder="E-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               icon={<Mail className="h-5 w-5" strokeWidth={2.2} />}
@@ -76,22 +119,40 @@ export default function Login() {
             />
             <Input
               type="password"
-              placeholder="Sua senha"
+              placeholder="Senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               icon={<Lock className="h-5 w-5" strokeWidth={2.2} />}
-              autoComplete="current-password"
+              autoComplete="new-password"
+            />
+            <Input
+              type="password"
+              placeholder="Confirmar senha"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              icon={<CheckCircle2 className="h-5 w-5" strokeWidth={2.2} />}
+              autoComplete="new-password"
             />
 
-            <Link
-              to="/forgot-password"
-              className="-mt-1 self-end text-sm font-medium text-[#2E8B57] underline underline-offset-2 hover:text-primary"
-            >
-              Esqueci minha senha
-            </Link>
+            <p className="text-center text-xs text-[#4A5E52]">
+              Ao criar a conta, você concorda com os{" "}
+              <Link
+                to="#"
+                className="font-medium text-[#2E8B57] underline underline-offset-2"
+              >
+                Termos de Uso
+              </Link>{" "}
+              e{" "}
+              <Link
+                to="#"
+                className="font-medium text-[#2E8B57] underline underline-offset-2"
+              >
+                Política de Privacidade
+              </Link>
+            </p>
 
             <Button type="submit" size="lg" className="mt-1 w-full">
-              Entrar
+              Criar Conta
             </Button>
 
             {/* Divider */}
@@ -118,16 +179,15 @@ export default function Login() {
 
         {/* Footer */}
         <p className="mt-7 text-center text-base text-[#1F2A24]">
-          Não tem uma conta?{" "}
+          Já tem uma conta?{" "}
           <Link
-            to="/signup"
+            to="/login"
             className="font-semibold text-[#2E8B57] underline underline-offset-2 hover:text-primary"
           >
-            Crie agora
+            Faça login
           </Link>
         </p>
       </div>
-
     </div>
   )
 }
