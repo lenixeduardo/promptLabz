@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom"
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import {
   Search,
   Sparkles,
@@ -11,14 +12,18 @@ import {
   ThumbsUp,
   BarChart3,
   LogOut,
+  Loader2,
+  BookOpen,
 } from "lucide-react"
 import { BrandLogo } from "@/components/BrandLogo"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
+import { PROMPTS } from "@/data/promptsData"
+import { lessonsData } from "@/data/lessonsData"
 
 const features = [
-  { title: "My Skills", icon: PawPrint, to: "/skills" },
+  { title: "Skills", icon: PawPrint, to: "/skills" },
   { title: "Prompt Library", icon: Lightbulb, to: "/skills" },
   { title: "Learning Lab", icon: GraduationCap, to: "/learn" },
 ]
@@ -35,6 +40,9 @@ const chips = [
 
 export default function Home() {
   const { user, logout } = useAuth()
+  const navigate = useNavigate()
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isOptimizing, setIsOptimizing] = useState(false)
 
   const handleLogout = async () => {
     const result = await logout()
@@ -44,6 +52,87 @@ export default function Home() {
       sileo.error({ title: result.error || "Erro ao sair" })
     }
   }
+
+  // Optimize prompt draft client-side
+  const handleOptimize = () => {
+    if (!searchQuery.trim()) {
+      sileo.error({ 
+        title: "Escreva algo primeiro", 
+        description: "Digite uma ideia de prompt na barra de busca para otimizar." 
+      })
+      return
+    }
+
+    setIsOptimizing(true)
+    setTimeout(() => {
+      const draft = searchQuery.trim()
+      const optimized = `# PAPEL: Assistente Especialista de Inteligência Artificial
+# CONTEXTO: Otimização de tarefa baseada na requisição do usuário.
+# INSTRUÇÃO: Realize a seguinte ação com máxima precisão e clareza:
+> "${draft}"
+
+# FORMATO DA SAÍDA ESPERADA:
+- Explicação direta do resultado em português.
+- Formatação em tópicos limpos (Markdown).
+- Exemplos de aplicação prática, se aplicável.`
+
+      setSearchQuery(optimized)
+      setIsOptimizing(false)
+      sileo.success({ 
+        title: "Prompt Otimizado! ✨", 
+        description: "O prompt básico foi reestruturado com engenharia de prompts avançada." 
+      })
+    }, 1000)
+  }
+
+  // Search logic for prompts and lessons
+  const searchResults = (() => {
+    if (!searchQuery.trim()) return { prompts: [], lessons: [] }
+    const query = searchQuery.toLowerCase()
+
+    // Match prompts
+    const matchedPrompts = PROMPTS.filter(p => 
+      p.title.toLowerCase().includes(query) ||
+      p.description.toLowerCase().includes(query) ||
+      p.category.toLowerCase().includes(query)
+    ).slice(0, 3)
+
+    // Match lessons
+    const matchedLessons: { 
+      categoryKey: string
+      categoryTitle: string
+      moduleIndex: number
+      lessonIndex: number
+      lessonTitle: string 
+    }[] = []
+
+    Object.entries(lessonsData).forEach(([catKey, cat]) => {
+      cat.modules.forEach((mod, modIdx) => {
+        mod.lessons.forEach((les, lesIdx) => {
+          if (
+            les.title.toLowerCase().includes(query) || 
+            mod.title.toLowerCase().includes(query) ||
+            cat.title.toLowerCase().includes(query)
+          ) {
+            matchedLessons.push({
+              categoryKey: catKey,
+              categoryTitle: cat.title,
+              moduleIndex: modIdx,
+              lessonIndex: lesIdx,
+              lessonTitle: les.title
+            })
+          }
+        })
+      })
+    })
+
+    return {
+      prompts: matchedPrompts,
+      lessons: matchedLessons.slice(0, 3)
+    }
+  })()
+
+  const hasResults = searchResults.prompts.length > 0 || searchResults.lessons.length > 0
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-white via-[#EAF7EF] to-[#BFE6CF]">
@@ -84,17 +173,91 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Hero search */}
-        <div className="mx-auto mt-12 w-full max-w-2xl">
+        {/* Hero search wrapper */}
+        <div className="mx-auto mt-12 w-full max-w-2xl relative">
           <div className="flex items-center gap-3 rounded-full border border-[#BFE3CC] bg-white px-6 py-4 shadow-md ring-4 ring-[#DCF1E4]">
             <Search className="h-6 w-6 text-primary" strokeWidth={2.2} />
             <input
               type="text"
               placeholder="Search skills, prompts, lessons…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 bg-transparent text-lg text-foreground placeholder:text-[#8A998F] focus:outline-none"
             />
-            <Sparkles className="h-6 w-6 text-[#3E8E5E]" strokeWidth={2.2} />
+            <button
+              type="button"
+              onClick={handleOptimize}
+              disabled={isOptimizing}
+              className="rounded-full p-1 text-[#3E8E5E] hover:bg-[#F0FAF3] transition-colors disabled:opacity-50"
+              title="Otimizar Prompt"
+            >
+              {isOptimizing ? (
+                <Loader2 className="h-6 w-6 animate-spin text-[#3E8E5E]" />
+              ) : (
+                <Sparkles className="h-6 w-6 text-[#3E8E5E]" strokeWidth={2.2} />
+              )}
+            </button>
           </div>
+
+          {/* Search Dropdown Results */}
+          {searchQuery && (
+            <div className="absolute top-[105%] left-0 right-0 z-30 max-h-[380px] overflow-y-auto rounded-3xl border border-[#CDEAD8] bg-white p-4 shadow-lg flex flex-col gap-4">
+              {!hasResults ? (
+                <div className="text-center py-6 text-sm text-[#6B7A70]">
+                  Nenhum resultado encontrado para "{searchQuery}"
+                </div>
+              ) : (
+                <>
+                  {/* Matched Prompts */}
+                  {searchResults.prompts.length > 0 && (
+                    <div>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-[#3E8E5E] mb-2 px-1">
+                        Biblioteca de Prompts
+                      </h3>
+                      <div className="flex flex-col gap-2">
+                        {searchResults.prompts.map((prompt) => (
+                          <Link
+                            key={prompt.title}
+                            to="/skills"
+                            className="flex items-center justify-between rounded-2xl border border-[#E1F2E7] bg-[#F9FCFA] px-4 py-2.5 hover:bg-[#EAF7EF] transition-colors"
+                          >
+                            <span className="text-sm font-semibold text-[#1F2A24]">{prompt.title}</span>
+                            <span className="text-xs bg-[#DCF1E4] text-[#2E7A4E] px-2.5 py-0.5 rounded-full font-medium">
+                              {prompt.category}
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Matched Lessons */}
+                  {searchResults.lessons.length > 0 && (
+                    <div>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-[#3E8E5E] mb-2 px-1">
+                        Lições e Conteúdos
+                      </h3>
+                      <div className="flex flex-col gap-2">
+                        {searchResults.lessons.map((les) => (
+                          <Link
+                            key={les.lessonTitle}
+                            to={`/lesson?category=${les.categoryKey}&moduleIndex=${les.moduleIndex}&lessonIndex=${les.lessonIndex}`}
+                            className="flex items-center gap-2.5 rounded-2xl border border-[#E1F2E7] bg-[#F9FCFA] px-4 py-2.5 hover:bg-[#EAF7EF] transition-colors text-left"
+                          >
+                            <BookOpen className="h-4 w-4 text-[#3E8E5E] shrink-0" />
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-semibold text-[#1F2A24] truncate">{les.lessonTitle}</p>
+                              <p className="text-[10px] text-[#6B7A70]">{les.categoryTitle}</p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Feature cards */}
