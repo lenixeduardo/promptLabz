@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mint theme tuned to the PromptLab wireframes */
+    --background: 140 40% 98%;
+    --foreground: 150 30% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 150 30% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 30% 15%;
+
+    /* primary green is set as a literal hex in tailwind.config (#2B5D3A) */
+    --primary-foreground: 0 0% 100%;
+    --secondary-foreground: 0 0% 100%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 145 30% 94%;
+    --muted-foreground: 150 12% 42%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 145 35% 82%;
+    --input: 145 35% 82%;
+    --ring: 145 45% 35%;
+
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+      Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Hide scrollbars on horizontal chip rows while keeping scroll behavior */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ── Login mascot glow / rotating-circle animations ───────────────── */
+@keyframes spin-cw {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin-ccw {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.08);
+  }
+}
+@keyframes sparkle-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@layer utilities {
+  /* Rotating conic "shine" sweeping around the circle */
+  .animate-shine {
+    animation: spin-cw 8s linear infinite;
+  }
+  /* Counter-rotating dashed ring */
+  .animate-ring {
+    animation: spin-ccw 18s linear infinite;
+  }
+  /* Pulsing radial glow */
+  .animate-glow {
+    animation: glow-pulse 3.5s ease-in-out infinite;
+  }
+  .animate-twinkle {
+    animation: sparkle-twinkle 2.8s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-shine,
+  .animate-ring,
+  .animate-glow,
+  .animate-twinkle {
+    animation: none;
+  }
+}
