@@ -1410,5 +1410,437 @@ export const lessonsData: Record<string, Category> = {
         ]
       }
     ]
+  },
+  "agent-orchestration": {
+    id: "agent-orchestration",
+    title: "Orquestracao de Agentes",
+    modules: [
+      {
+        id: "ao-mod-1",
+        title: "Modulo 1: Sistemas com Agentes de IA",
+        lessons: [
+          {
+            id: "ao-mod-1-l1",
+            title: "Do Chatbot ao Agente Executor",
+            icon: "Bot",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "Agentes trabalham com objetivo, memoria e ferramentas"
+              },
+              {
+                type: "text",
+                text: "Um chatbot responde a uma mensagem. Um agente recebe um objetivo, divide o trabalho em etapas, consulta ferramentas e revisa o proprio progresso. Essa mudanca permite automatizar tarefas como pesquisar, comparar opcoes, gerar documentos e validar resultados antes de devolver a resposta final."
+              },
+              {
+                type: "quote",
+                text: "\"Um bom agente nao e uma IA solta: e um fluxo com papel claro, limites, ferramentas autorizadas e criterio de parada.\""
+              },
+              {
+                type: "text",
+                text: "Para criar agentes confiaveis, defina: papel, objetivo, contexto, ferramentas permitidas, formato de saida e regras de escalonamento quando houver incerteza."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que diferencia um agente de IA de um chatbot simples?",
+                options: [
+                  { letter: "A", text: "O agente sempre usa uma tela maior." },
+                  { letter: "B", text: "O agente pode planejar etapas, usar ferramentas e avaliar progresso rumo a um objetivo." },
+                  { letter: "C", text: "O agente nao precisa de nenhum limite ou instrucao." },
+                  { letter: "D", text: "O agente funciona apenas sem internet." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual item deve existir em um desenho seguro de agente?",
+                options: [
+                  { letter: "A", text: "Ferramentas autorizadas e criterio claro de parada." },
+                  { letter: "B", text: "Permissao para executar qualquer acao sem revisao." },
+                  { letter: "C", text: "Objetivos vagos para deixar a IA improvisar." },
+                  { letter: "D", text: "Ausencia total de logs." }
+                ],
+                correct: "A"
+              }
+            ]
+          },
+          {
+            id: "ao-mod-1-l2",
+            title: "Orquestracao Multiagente",
+            icon: "Workflow",
+            duration: "16 min",
+            content: [
+              {
+                type: "heading",
+                text: "Especialistas pequenos vencem generalistas confusos"
+              },
+              {
+                type: "text",
+                text: "Orquestrar agentes significa dividir um trabalho complexo em papeis menores. Um agente pesquisador coleta evidencias, um analista estrutura hipoteses, um revisor procura falhas e um coordenador consolida a resposta. O ganho aparece quando cada papel tem responsabilidade e saida bem definida."
+              },
+              {
+                type: "quote",
+                text: "\"Multiagente nao e colocar varias IAs conversando sem direcao; e desenhar uma linha de montagem cognitiva.\""
+              },
+              {
+                type: "text",
+                text: "O coordenador deve evitar duplicidade, resolver conflitos entre agentes e pedir nova rodada apenas quando a evidencia for insuficiente."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual e a funcao de um agente coordenador?",
+                options: [
+                  { letter: "A", text: "Ignorar todos os especialistas." },
+                  { letter: "B", text: "Consolidar resultados, resolver conflitos e decidir se nova rodada e necessaria." },
+                  { letter: "C", text: "Fazer apenas design visual." },
+                  { letter: "D", text: "Apagar evidencias divergentes." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Quando sistemas multiagente trazem mais valor?",
+                options: [
+                  { letter: "A", text: "Quando tarefas exigem pesquisa, analise, revisao e consolidacao com papeis diferentes." },
+                  { letter: "B", text: "Quando a tarefa e responder uma pergunta de uma palavra." },
+                  { letter: "C", text: "Quando nao existe criterio de qualidade." },
+                  { letter: "D", text: "Quando todos os agentes fazem exatamente a mesma coisa." }
+                ],
+                correct: "A"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ai-finance": {
+    id: "ai-finance",
+    title: "IA para Financeiro",
+    modules: [
+      {
+        id: "fin-mod-1",
+        title: "Modulo 1: Analise Financeira com IA",
+        lessons: [
+          {
+            id: "fin-mod-1-l1",
+            title: "Leitura de Fluxo de Caixa com IA",
+            icon: "LineChart",
+            duration: "13 min",
+            content: [
+              {
+                type: "heading",
+                text: "Transformando numeros em decisoes"
+              },
+              {
+                type: "text",
+                text: "A IA pode ajudar a ler extratos, tabelas e categorias de despesas para encontrar padroes: sazonalidade, gastos recorrentes, gargalos de caixa e sinais de risco. O papel da IA nao e substituir o financeiro, mas acelerar a leitura e tornar as perguntas melhores."
+              },
+              {
+                type: "quote",
+                text: "\"Separe observacao factual de recomendacao: primeiro o que os dados mostram, depois o que fazer.\""
+              },
+              {
+                type: "text",
+                text: "Um bom prompt financeiro pede periodo analisado, categorias, limites, premissas e formato de saida com alertas, oportunidades e proximas acoes."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual e uma boa forma de usar IA em fluxo de caixa?",
+                options: [
+                  { letter: "A", text: "Pedir para inventar saldos sem dados." },
+                  { letter: "B", text: "Identificar padroes, recorrencias, riscos e oportunidades a partir de dados fornecidos." },
+                  { letter: "C", text: "Substituir conciliacao bancaria sem conferencia." },
+                  { letter: "D", text: "Ignorar premissas e periodo analisado." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Por que separar fatos de recomendacoes em analises financeiras?",
+                options: [
+                  { letter: "A", text: "Para deixar claro o que veio dos dados e o que e sugestao de acao." },
+                  { letter: "B", text: "Para esconder erros." },
+                  { letter: "C", text: "Para aumentar o tamanho do relatorio sem motivo." },
+                  { letter: "D", text: "Para impedir revisao humana." }
+                ],
+                correct: "A"
+              }
+            ]
+          },
+          {
+            id: "fin-mod-1-l2",
+            title: "Cenarios, Orcamento e Risco",
+            icon: "ShieldCheck",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Simular antes de decidir"
+              },
+              {
+                type: "text",
+                text: "Com IA, voce pode testar cenarios como queda de receita, aumento de custos, inadimplencia ou contratacao de uma nova ferramenta. O modelo ajuda a estruturar hipoteses e explicar impacto, mas os numeros finais devem ser conferidos em planilha ou sistema financeiro."
+              },
+              {
+                type: "quote",
+                text: "\"Cenario financeiro bom sempre mostra premissas, faixa de variacao e risco de erro.\""
+              },
+              {
+                type: "text",
+                text: "Use prompts que peçam melhor caso, caso base e pior caso, incluindo gatilhos de decisao e indicadores que devem ser monitorados."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que um bom cenario financeiro deve explicitar?",
+                options: [
+                  { letter: "A", text: "Premissas, variacoes, impacto e risco de erro." },
+                  { letter: "B", text: "Apenas uma previsao otimista." },
+                  { letter: "C", text: "Somente opinioes sem dados." },
+                  { letter: "D", text: "Resultados sem possibilidade de revisao." }
+                ],
+                correct: "A"
+              },
+              {
+                id: 2,
+                question: "Qual cuidado e essencial ao usar IA para orcamento?",
+                options: [
+                  { letter: "A", text: "Conferir os numeros finais em fonte financeira confiavel." },
+                  { letter: "B", text: "Aceitar qualquer resultado sem validar." },
+                  { letter: "C", text: "Nunca informar premissas." },
+                  { letter: "D", text: "Misturar moedas e periodos." }
+                ],
+                correct: "A"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ai-marketing": {
+    id: "ai-marketing",
+    title: "IA para Marketing",
+    modules: [
+      {
+        id: "mkt-mod-1",
+        title: "Modulo 1: Estrategia e Conteudo com IA",
+        lessons: [
+          {
+            id: "mkt-mod-1-l1",
+            title: "Pesquisa de Publico e Persona",
+            icon: "Target",
+            duration: "12 min",
+            content: [
+              {
+                type: "heading",
+                text: "Marketing bom comeca com pergunta boa"
+              },
+              {
+                type: "text",
+                text: "A IA ajuda a transformar entrevistas, reviews, comentarios e dados de CRM em segmentos de publico. Ela pode identificar dores, desejos, objeções, linguagem do cliente e momentos de decisao. Quanto mais real for a entrada, menos generica sera a persona."
+              },
+              {
+                type: "quote",
+                text: "\"Persona gerada sem evidencia vira personagem. Persona gerada com dados vira ferramenta de decisao.\""
+              },
+              {
+                type: "text",
+                text: "Peça para a IA citar evidencias, separar segmentos e listar mensagens que devem ser testadas em campanha."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual entrada melhora muito a criacao de personas com IA?",
+                options: [
+                  { letter: "A", text: "Comentarios reais, entrevistas, reviews e dados de CRM." },
+                  { letter: "B", text: "Apenas pedir uma persona generica." },
+                  { letter: "C", text: "Nao informar produto nem publico." },
+                  { letter: "D", text: "Usar somente slogans prontos." }
+                ],
+                correct: "A"
+              },
+              {
+                id: 2,
+                question: "O que diferencia persona util de personagem inventado?",
+                options: [
+                  { letter: "A", text: "Evidencia concreta que sustenta dores, desejos e linguagem." },
+                  { letter: "B", text: "Nome bonito e foto ilustrativa." },
+                  { letter: "C", text: "Texto longo sem dados." },
+                  { letter: "D", text: "Uso de termos tecnicos sem aplicacao." }
+                ],
+                correct: "A"
+              }
+            ]
+          },
+          {
+            id: "mkt-mod-1-l2",
+            title: "Campanhas, Copy e Testes A/B",
+            icon: "Megaphone",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "Criatividade com criterio"
+              },
+              {
+                type: "text",
+                text: "A IA pode gerar anuncios, emails, landing pages e variações de copy rapidamente. O valor aparece quando cada versao testa uma hipotese clara: preco, urgencia, prova social, dor principal, beneficio ou garantia."
+              },
+              {
+                type: "quote",
+                text: "\"Nao teste dez frases aleatorias. Teste dez hipoteses de comportamento.\""
+              },
+              {
+                type: "text",
+                text: "Um prompt de campanha deve incluir canal, publico, oferta, objeções, tom de voz, restricoes legais e metrica principal de sucesso."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que uma boa variacao de teste A/B deve mudar?",
+                options: [
+                  { letter: "A", text: "Uma hipotese clara, como beneficio principal ou prova social." },
+                  { letter: "B", text: "Tudo ao mesmo tempo sem criterio." },
+                  { letter: "C", text: "Apenas cor de fundo sempre." },
+                  { letter: "D", text: "Nada, para manter resultados iguais." }
+                ],
+                correct: "A"
+              },
+              {
+                id: 2,
+                question: "Quais dados ajudam a IA a criar copy mais precisa?",
+                options: [
+                  { letter: "A", text: "Canal, publico, oferta, objecoes, tom de voz e metrica de sucesso." },
+                  { letter: "B", text: "Somente a frase 'faca um anuncio legal'." },
+                  { letter: "C", text: "A senha das contas de anuncio." },
+                  { letter: "D", text: "Nenhuma informacao sobre produto." }
+                ],
+                correct: "A"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ai-project-management": {
+    id: "ai-project-management",
+    title: "IA para Projetos",
+    modules: [
+      {
+        id: "pm-mod-1",
+        title: "Modulo 1: Gestao de Projetos com IA",
+        lessons: [
+          {
+            id: "pm-mod-1-l1",
+            title: "Escopo, Backlog e Priorizacao",
+            icon: "Kanban",
+            duration: "13 min",
+            content: [
+              {
+                type: "heading",
+                text: "Da ideia solta ao backlog executavel"
+              },
+              {
+                type: "text",
+                text: "A IA pode transformar uma conversa confusa em epicos, historias, criterios de aceite e riscos. Para isso, informe objetivo do produto, usuarios, restricoes, prazo e o que esta fora do escopo."
+              },
+              {
+                type: "quote",
+                text: "\"Backlog bom nao e lista gigante: e uma sequencia de decisoes priorizadas.\""
+              },
+              {
+                type: "text",
+                text: "Peça para a IA classificar itens por impacto, esforco, dependencia e risco. Depois valide com time tecnico e stakeholders."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Como a IA ajuda na criacao de backlog?",
+                options: [
+                  { letter: "A", text: "Convertendo objetivos em epicos, historias, criterios de aceite e riscos." },
+                  { letter: "B", text: "Eliminando toda conversa com stakeholders." },
+                  { letter: "C", text: "Criando tarefas infinitas sem prioridade." },
+                  { letter: "D", text: "Substituindo validacao tecnica." }
+                ],
+                correct: "A"
+              },
+              {
+                id: 2,
+                question: "Quais criterios ajudam a priorizar backlog com IA?",
+                options: [
+                  { letter: "A", text: "Impacto, esforco, dependencia e risco." },
+                  { letter: "B", text: "Ordem alfabetica." },
+                  { letter: "C", text: "Tamanho do titulo da tarefa." },
+                  { letter: "D", text: "Preferencia aleatoria do modelo." }
+                ],
+                correct: "A"
+              }
+            ]
+          },
+          {
+            id: "pm-mod-1-l2",
+            title: "Reunioes, Riscos e Status Report",
+            icon: "CalendarCheck",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Menos reuniao perdida, mais decisao registrada"
+              },
+              {
+                type: "text",
+                text: "A IA pode resumir reunioes, extrair decisoes, donos, prazos, bloqueios e riscos. Tambem pode transformar notas soltas em status report executivo com semaforo, progresso, proximas acoes e pedidos de decisao."
+              },
+              {
+                type: "quote",
+                text: "\"Toda reuniao deve sair com decisoes, responsaveis e data. A IA ajuda a nao perder isso no ruido.\""
+              },
+              {
+                type: "text",
+                text: "Um bom prompt de status pede fatos verificados, mudancas desde a ultima atualizacao, riscos com impacto e acoes que precisam de patrocinio."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que a IA deve extrair de uma reuniao de projeto?",
+                options: [
+                  { letter: "A", text: "Decisoes, responsaveis, prazos, bloqueios e riscos." },
+                  { letter: "B", text: "Somente piadas ditas na chamada." },
+                  { letter: "C", text: "Dados que nao foram mencionados." },
+                  { letter: "D", text: "Senhas e informacoes sensiveis sem necessidade." }
+                ],
+                correct: "A"
+              },
+              {
+                id: 2,
+                question: "O que torna um status report executivo util?",
+                options: [
+                  { letter: "A", text: "Progresso, riscos, proximas acoes e decisoes necessarias." },
+                  { letter: "B", text: "Texto longo sem conclusao." },
+                  { letter: "C", text: "Apenas elogios ao projeto." },
+                  { letter: "D", text: "Detalhes irrelevantes sem prioridade." }
+                ],
+                correct: "A"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 };

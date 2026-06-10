@@ -16,25 +16,25 @@ import { sileo } from "sileo"
 import { Button } from "@/components/ui/button"
 import { PROMPTS, PromptCard } from "@/data/promptsData"
 
-type Category = "Creativity" | "Marketing" | "Coding" | "Education" | "Productivity" | "Product Management"
-type FilterState = "All" | Category
+type Category = "Criatividade" | "Marketing" | "Programacao" | "Educacao" | "Produtividade" | "Gestao de Produto"
+type FilterState = "Todos" | Category
 
 const CATEGORY_MASCOT: Record<Category, { src: string; flip?: boolean }> = {
-  Creativity:           { src: "/assets/mascot-creativity.png" },
-  Coding:               { src: "/assets/mascot-coding.png" },
+  Criatividade:         { src: "/assets/mascot-creativity.png" },
+  Programacao:          { src: "/assets/mascot-coding.png" },
   Marketing:            { src: "/assets/mascot-login-new.png", flip: true },
-  Education:            { src: "/assets/mascot-learn-new.png" },
-  Productivity:         { src: "/assets/mascot-home.png" },
-  "Product Management": { src: "/assets/mascot-teacher.png" },
+  Educacao:             { src: "/assets/mascot-learn-new.png" },
+  Produtividade:        { src: "/assets/mascot-home.png" },
+  "Gestao de Produto": { src: "/assets/mascot-teacher.png" },
 }
 
 const CATEGORIES: { label: Category; icon: React.ReactNode }[] = [
-  { label: "Creativity",         icon: <Palette className="h-4 w-4" /> },
+  { label: "Criatividade",         icon: <Palette className="h-4 w-4" /> },
   { label: "Marketing",          icon: <Megaphone className="h-4 w-4" /> },
-  { label: "Coding",             icon: <Code2 className="h-4 w-4" /> },
-  { label: "Education",          icon: <BookOpen className="h-4 w-4" /> },
-  { label: "Productivity",       icon: <ClipboardList className="h-4 w-4" /> },
-  { label: "Product Management", icon: <Target className="h-4 w-4" /> },
+  { label: "Programacao",             icon: <Code2 className="h-4 w-4" /> },
+  { label: "Educacao",          icon: <BookOpen className="h-4 w-4" /> },
+  { label: "Produtividade",       icon: <ClipboardList className="h-4 w-4" /> },
+  { label: "Gestao de Produto", icon: <Target className="h-4 w-4" /> },
 ]
 
 const BADGE: Record<string, { dot: string; text: string; bg: string }> = {
@@ -104,13 +104,13 @@ function EmptyState({ category }: { category: string }) {
 
 export default function Skills() {
   const navigate = useNavigate()
-  const [activeFilter, setActiveFilter] = useState<FilterState>("All")
+  const [activeFilter, setActiveFilter] = useState<FilterState>("Todos")
   const [selectedPrompt, setSelectedPrompt] = useState<PromptCard | null>(null)
 
   const countFor = (cat: Category) => PROMPTS.filter(p => p.category === cat).length
 
   const filtered =
-    activeFilter === "All"
+    activeFilter === "Todos"
       ? PROMPTS
       : PROMPTS.filter(p => p.category === activeFilter)
 
@@ -145,23 +145,23 @@ export default function Skills() {
             />
           </div>
           <h1 className="mt-2 text-center text-xl font-extrabold text-[#1F2A24]">
-            Prompt Library
+            Biblioteca de Prompts
           </h1>
         </div>
 
         {/* Category filter chips */}
         <div className="no-scrollbar mb-6 flex gap-2 overflow-x-auto pb-2">
-          {/* All chip */}
+          {/* Todos chip */}
           <button
-            onClick={() => setActiveFilter("All")}
+            onClick={() => setActiveFilter("Todos")}
             className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-              activeFilter === "All"
+              activeFilter === "Todos"
                 ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
                 : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
             }`}
           >
             <LayoutGrid className="h-4 w-4" />
-            All
+            Todos
             <CountBadge count={PROMPTS.length} />
           </button>
 
@@ -190,7 +190,7 @@ export default function Skills() {
         <div className="mb-4 flex items-center justify-between">
           <p className="text-sm font-medium text-[#6B9E7E]">
             {filtered.length} prompt{filtered.length !== 1 ? "s" : ""}{" "}
-            {activeFilter !== "All" && <span>em <strong className="text-[#2F6B45]">{activeFilter}</strong></span>}
+            {activeFilter !== "Todos" && <span>em <strong className="text-[#2F6B45]">{activeFilter}</strong></span>}
           </p>
         </div>
 

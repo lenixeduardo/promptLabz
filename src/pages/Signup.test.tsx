@@ -7,9 +7,15 @@ import { sileo } from "sileo"
 
 const mockSignup = vi.fn()
 const mockLoginWithGoogle = vi.fn()
+const mockLoginWithApple = vi.fn()
 
 vi.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ signup: mockSignup, loginWithGoogle: mockLoginWithGoogle, user: null }),
+  useAuth: () => ({
+    signup: mockSignup,
+    loginWithGoogle: mockLoginWithGoogle,
+    loginWithApple: mockLoginWithApple,
+    user: null,
+  }),
 }))
 
 vi.mock("sileo", () => ({
@@ -33,6 +39,7 @@ function renderSignup() {
 }
 
 async function fillForm(email = "novo@test.com", password = "Senha123", confirm = "Senha123") {
+  await userEvent.type(screen.getByPlaceholderText("Nome completo"), "Novo User")
   await userEvent.type(screen.getByPlaceholderText("E-mail"), email)
   await userEvent.type(screen.getByPlaceholderText("Senha"), password)
   await userEvent.type(screen.getByPlaceholderText("Confirmar senha"), confirm)
@@ -95,6 +102,7 @@ describe("Signup — submissão", () => {
     await userEvent.click(screen.getByRole("button", { name: /criar conta/i }))
 
     await waitFor(() => expect(screen.getByText("home")).toBeInTheDocument())
+    expect(mockSignup).toHaveBeenCalledWith("novo@test.com", "Senha123", "Novo User")
   })
 
   it("exibe tela 'Confirme seu e-mail' quando confirmação é necessária", async () => {

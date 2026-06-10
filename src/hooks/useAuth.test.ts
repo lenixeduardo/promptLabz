@@ -67,6 +67,35 @@ describe("useAuth — login", () => {
   })
 })
 
+describe("useAuth - loginWithApple", () => {
+  it("inicia fluxo OAuth com Apple sem erro", async () => {
+    mockAuth.signInWithOAuth.mockResolvedValue({ error: null })
+
+    const { result } = renderHook(() => useAuth())
+    let res: any
+    await act(async () => { res = await result.current.loginWithApple() })
+
+    expect(res.success).toBe(true)
+    expect(mockAuth.signInWithOAuth).toHaveBeenCalledWith({
+      provider: "apple",
+      options: expect.objectContaining({ redirectTo: expect.stringContaining("/home") }),
+    })
+  })
+
+  it("retorna erro quando OAuth Apple falha", async () => {
+    mockAuth.signInWithOAuth.mockResolvedValue({
+      error: { message: "Apple OAuth error" },
+    })
+
+    const { result } = renderHook(() => useAuth())
+    let res: any
+    await act(async () => { res = await result.current.loginWithApple() })
+
+    expect(res.success).toBe(false)
+    expect(res.error).toBe("Apple OAuth error")
+  })
+})
+
 describe("useAuth — signup", () => {
   it("retorna sucesso e needsConfirmation=true quando session é null", async () => {
     mockAuth.signUp.mockResolvedValue({
@@ -76,10 +105,17 @@ describe("useAuth — signup", () => {
 
     const { result } = renderHook(() => useAuth())
     let res: any
-    await act(async () => { res = await result.current.signup("novo@test.com", "senha123") })
+    await act(async () => { res = await result.current.signup("novo@test.com", "senha123", "Novo User") })
 
     expect(res.success).toBe(true)
     expect(res.needsConfirmation).toBe(true)
+    expect(mockAuth.signUp).toHaveBeenCalledWith(
+      expect.objectContaining({
+        options: expect.objectContaining({
+          data: { full_name: "Novo User" },
+        }),
+      })
+    )
   })
 
   it("retorna needsConfirmation=false quando session está presente", async () => {
@@ -148,7 +184,7 @@ describe("useAuth — resetPassword", () => {
     expect(res.success).toBe(true)
     expect(mockAuth.resetPasswordForEmail).toHaveBeenCalledWith(
       "test@test.com",
-      expect.objectContaining({ redirectTo: expect.stringContaining("/login") })
+      expect.objectContaining({ redirectTo: expect.stringContaining("/reset-password") })
     )
   })
 
@@ -175,7 +211,10 @@ describe("useAuth — loginWithGoogle", () => {
     await act(async () => { res = await result.current.loginWithGoogle() })
 
     expect(res.success).toBe(true)
-    expect(mockAuth.signInWithOAuth).toHaveBeenCalledWith({ provider: "google" })
+    expect(mockAuth.signInWithOAuth).toHaveBeenCalledWith({
+      provider: "google",
+      options: expect.objectContaining({ redirectTo: expect.stringContaining("/home") }),
+    })
   })
 
   it("retorna erro quando OAuth falha", async () => {

@@ -7,9 +7,15 @@ import { sileo } from "sileo"
 
 const mockLogin = vi.fn()
 const mockLoginWithGoogle = vi.fn()
+const mockLoginWithApple = vi.fn()
 
 vi.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ login: mockLogin, loginWithGoogle: mockLoginWithGoogle, user: null }),
+  useAuth: () => ({
+    login: mockLogin,
+    loginWithGoogle: mockLoginWithGoogle,
+    loginWithApple: mockLoginWithApple,
+    user: null,
+  }),
 }))
 
 vi.mock("sileo", () => ({

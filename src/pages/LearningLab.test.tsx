@@ -3,9 +3,23 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import LearningLab from "./LearningLab"
 
+const mockUser = { id: "user-1", email: "aluno@test.com" }
+
 // Mock useAuth
 vi.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ user: { email: "aluno@test.com" } }),
+  useAuth: () => ({ user: mockUser }),
+}))
+
+vi.mock("@/lib/db", () => ({
+  loadProgress: vi.fn().mockImplementation(() => {
+    try {
+      const saved = localStorage.getItem("promptlab_progress")
+      return Promise.resolve(saved ? JSON.parse(saved) : {})
+    } catch {
+      return Promise.resolve({})
+    }
+  }),
+  saveProgress: vi.fn().mockResolvedValue(undefined),
 }))
 
 // Mock sileo
@@ -56,6 +70,14 @@ describe("LearningLab — renderização e progresso", () => {
     expect(screen.getByText(/0 de \d+ lições concluídas/i)).toBeInTheDocument()
   })
 
+  it("lista trilhas profissionais novas no seletor do lab", () => {
+    renderLearningLab()
+    expect(screen.getByText("Orquestracao de Agentes")).toBeInTheDocument()
+    expect(screen.getByText("IA para Financeiro")).toBeInTheDocument()
+    expect(screen.getByText("IA para Marketing")).toBeInTheDocument()
+    expect(screen.getByText("IA para Projetos")).toBeInTheDocument()
+  })
+
   it("muda a categoria ativa quando selecionado outro chip de categoria", async () => {
     renderLearningLab()
     const designChip = screen.getByText("Design")
@@ -67,7 +89,7 @@ describe("LearningLab — renderização e progresso", () => {
     })
   })
 
-  it("exibe lição como concluída se salva no localStorage", () => {
+  it("exibe lição como concluída se salva no localStorage", async () => {
     // Definir progresso no localStorage
     const fakeProgress = {
       "trending-skills": {
@@ -82,7 +104,7 @@ describe("LearningLab — renderização e progresso", () => {
 
     // A primeira lição (Revolução dos LLMs) deve estar concluída
     // A segunda deve estar com o botão "Começar"
-    expect(screen.getByText("Rever")).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByText("Rever")).toBeInTheDocument())
     expect(screen.getByText("Começar")).toBeInTheDocument()
   })
 })

@@ -41,7 +41,7 @@ function AppleIcon() {
 
 export default function Signup() {
   const navigate = useNavigate()
-  const { signup, loginWithGoogle, user } = useAuth()
+  const { signup, loginWithGoogle, loginWithApple, user } = useAuth()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -84,7 +84,7 @@ export default function Signup() {
     }
 
     setLoading(true)
-    const result = await signup(email, password)
+    const result = await signup(email, password, name.trim())
     if (result.success) {
       sileo.success({ title: "Conta criada com sucesso!" })
       if (result.needsConfirmation) {
@@ -106,6 +106,18 @@ export default function Signup() {
       navigate("/home")
     } else {
       sileo.error({ title: result.error || "Erro ao criar conta com Google" })
+    }
+    setLoading(false)
+  }
+
+  const handleAppleSignup = async () => {
+    setLoading(true)
+    const result = await loginWithApple()
+    if (result.success) {
+      sileo.success({ title: "Conta criada com Apple!" })
+      navigate("/home")
+    } else {
+      sileo.error({ title: result.error || "Erro ao criar conta com Apple" })
     }
     setLoading(false)
   }
@@ -270,7 +282,14 @@ export default function Signup() {
               >
                 <GoogleIcon />
               </Button>
-              <Button type="button" variant="social" size="icon" aria-label="Apple" disabled>
+              <Button
+                type="button"
+                variant="social"
+                size="icon"
+                aria-label="Apple"
+                onClick={handleAppleSignup}
+                disabled={loading}
+              >
                 <AppleIcon />
               </Button>
               <Button type="button" variant="social" size="icon" aria-label="E-mail" disabled>

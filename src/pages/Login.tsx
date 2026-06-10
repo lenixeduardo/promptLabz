@@ -43,7 +43,7 @@ function AppleIcon() {
 
 export default function Login() {
   const navigate = useNavigate()
-  const { login, loginWithGoogle, user } = useAuth()
+  const { login, loginWithGoogle, loginWithApple, user } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -76,6 +76,18 @@ export default function Login() {
       navigate("/home")
     } else {
       sileo.error({ title: result.error || "Erro ao fazer login com Google" })
+    }
+    setLoading(false)
+  }
+
+  const handleAppleLogin = async () => {
+    setLoading(true)
+    const result = await loginWithApple()
+    if (result.success) {
+      sileo.success({ title: "Login com Apple realizado!" })
+      navigate("/home")
+    } else {
+      sileo.error({ title: result.error || "Erro ao fazer login com Apple" })
     }
     setLoading(false)
   }
@@ -151,7 +163,14 @@ export default function Login() {
               >
                 <GoogleIcon />
               </Button>
-              <Button type="button" variant="social" size="icon" aria-label="Apple" disabled>
+              <Button
+                type="button"
+                variant="social"
+                size="icon"
+                aria-label="Apple"
+                onClick={handleAppleLogin}
+                disabled={loading}
+              >
                 <AppleIcon />
               </Button>
               <Button type="button" variant="social" size="icon" aria-label="E-mail" disabled>

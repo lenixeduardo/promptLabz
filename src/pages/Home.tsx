@@ -23,19 +23,19 @@ import { PROMPTS } from "@/data/promptsData"
 import { lessonsData } from "@/data/lessonsData"
 
 const features = [
-  { title: "Skills", icon: PawPrint, to: "/skills" },
-  { title: "Prompt Library", icon: Lightbulb, to: "/skills" },
-  { title: "Learning Lab", icon: GraduationCap, to: "/learn" },
+  { title: "Habilidades", icon: PawPrint, to: "/skills" },
+  { title: "Biblioteca de Prompts", icon: Lightbulb, to: "/skills" },
+  { title: "Laboratorio de Aprendizado", icon: GraduationCap, to: "/learn" },
 ]
 
 const chips = [
-  { label: "Trending Skills", icon: TrendingUp },
-  { label: "Community Hub", icon: Users },
-  { label: "Design", icon: Pencil },
-  { label: "Prompt Science", icon: ThumbsUp },
-  { label: "Prompt Engineering", icon: Lightbulb },
-  { label: "Advanced Science", icon: GraduationCap },
-  { label: "Hour of Focus", icon: BarChart3 },
+  { label: "Habilidades em Alta", icon: TrendingUp, categoryKey: "trending-skills" },
+  { label: "Comunidade", icon: Users, categoryKey: "community-hub" },
+  { label: "Design", icon: Pencil, categoryKey: "design" },
+  { label: "Ciencia de Prompts", icon: ThumbsUp, categoryKey: "prompt-science" },
+  { label: "Engenharia de Prompts", icon: Lightbulb, categoryKey: "prompt-engineering" },
+  { label: "Ciencia Avancada", icon: GraduationCap, categoryKey: "advanced-science" },
+  { label: "Hora de Foco", icon: BarChart3, categoryKey: "hour-of-focus" },
 ]
 
 export default function Home() {
@@ -274,12 +274,11 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Continue Learning */}
+        {/* Continue Aprendendo */}
         <section className="mt-12">
-          <h2 className="text-2xl font-bold text-[#1F2A24]">Continue Learning</h2>
+          <h2 className="text-2xl font-bold text-[#1F2A24]">Continue Aprendendo</h2>
           <div className="no-scrollbar mt-4 flex gap-3 overflow-x-auto pb-2">
-            {chips.map(({ label, icon: Icon }) => {
-              const categoryKey = label.toLowerCase().replace(/ /g, "-")
+            {chips.map(({ label, icon: Icon, categoryKey }) => {
               return (
                 <Link
                   key={label}

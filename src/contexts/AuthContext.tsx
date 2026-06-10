@@ -16,14 +16,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
+    supabase.auth
+      .getSession()
+      .then(({ data: { session }, error: sessionError }) => {
+        if (sessionError) {
+          setError(sessionError.message)
+        }
+        setUser(session?.user ?? null)
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Erro ao carregar sessão")
+        setUser(null)
+      })
+      .finally(() => setLoading(false))
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null)
+        setError(null)
         setLoading(false)
       }
     )
@@ -38,6 +48,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
+// Hook lives beside provider to keep auth API centralized.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuthContext() {
   const context = useContext(AuthContext)
   if (context === undefined) {
