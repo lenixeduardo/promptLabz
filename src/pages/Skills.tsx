@@ -7,10 +7,7 @@ import {
   Code2,
   BookOpen,
   ClipboardList,
-  Sparkles,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-
 // ── Types ──────────────────────────────────────────────────────────────────
 
 type Difficulty = "Beginner" | "Intermediate" | "Advanced"
@@ -94,49 +91,6 @@ function PromptCardItem({ card }: { card: PromptCard }) {
   )
 }
 
-// ── Promo banner ────────────────────────────────────────────────────────────
-
-function PromoBanner() {
-  return (
-    <div className="relative col-span-2 sm:col-span-3 lg:col-span-5 overflow-hidden rounded-3xl border border-[#BFE3CC] bg-gradient-to-br from-[#E6F8EE] via-[#D4F0E0] to-[#BFE8D0] shadow-lg">
-
-      {/* Sparkle decorations */}
-      <Sparkles className="animate-twinkle absolute left-4 top-4 h-5 w-5 text-[#F5A623]/70" style={{ animationDelay:"0s" }} />
-      <Sparkles className="animate-twinkle absolute right-8 top-5 h-4 w-4 text-[#F5A623]/60" style={{ animationDelay:"0.8s" }} />
-      <Sparkles className="animate-twinkle absolute left-10 bottom-4 h-3 w-3 text-[#7CC79A]"  style={{ animationDelay:"1.4s" }} />
-      <Sparkles className="animate-twinkle absolute right-4 bottom-6 h-4 w-4 text-[#F5A623]/50" style={{ animationDelay:"0.4s" }} />
-
-      {/* FREE corner badges */}
-      <span className="absolute left-3 top-3 rounded-lg bg-[#2F6B45] px-2.5 py-0.5 text-xs font-extrabold text-white shadow">FREE</span>
-      <span className="absolute right-3 top-3 rounded-lg bg-[#2F6B45] px-2.5 py-0.5 text-xs font-extrabold text-white shadow">FREE</span>
-      <span className="absolute bottom-3 left-3 rounded-lg bg-[#2F6B45] px-2.5 py-0.5 text-xs font-extrabold text-white shadow">FREE</span>
-      <span className="absolute bottom-3 right-3 rounded-lg bg-[#2F6B45] px-2.5 py-0.5 text-xs font-extrabold text-white shadow">FREE</span>
-
-      <div className="relative flex flex-col items-center gap-4 px-8 py-6 sm:flex-row sm:justify-center sm:gap-10">
-        {/* Cat mascot */}
-        <img
-          src="/assets/mascot-promo.png"
-          alt="Promo cat"
-          className="h-36 w-auto object-contain drop-shadow-lg sm:h-32"
-        />
-
-        {/* Text + CTA */}
-        <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
-          <p className="flex items-center gap-2 text-3xl font-extrabold text-[#2F6B45]">
-            🎁 1 MÊS GRÁTIS
-          </p>
-          <p className="max-w-xs text-sm text-[#3A5A45]">
-            Teste a IA do PromptLab sem custos por 30 dias 🧪🐱
-          </p>
-          <Button size="default" className="w-full max-w-xs text-base font-bold sm:w-auto">
-            Ativar Oferta
-          </Button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 // ── Page ────────────────────────────────────────────────────────────────────
 
 export default function Skills() {
@@ -206,8 +160,6 @@ export default function Skills() {
             <PromptCardItem key={idx} card={card} />
           ))}
 
-          {/* Promo banner always visible, spans full row */}
-          <PromoBanner />
         </div>
       </div>
     </div>
