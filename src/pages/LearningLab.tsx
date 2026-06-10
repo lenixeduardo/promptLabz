@@ -116,7 +116,7 @@ export default function LearningLab() {
         <Card className="relative mt-12 overflow-visible border-[#C6E7D2] bg-gradient-to-b from-[#D9F0E1] to-[#C2E8D0] p-5 pt-16 shadow-md">
           <div className="absolute -top-[68px] left-1/2 -translate-x-1/2">
             <img
-              src="/assets/mascot-learn.png"
+              src="/assets/mascot-learn-new.png"
               alt="PromptLab mascot"
               className="h-28 w-auto object-contain drop-shadow-md"
             />
