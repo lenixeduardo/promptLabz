@@ -78,6 +78,12 @@
     transform: scale(1.08);
   }
 }
+@keyframes confettiFall {
+  0%   { transform: translateY(-10px) rotate(var(--r, 20deg)); opacity: 1; }
+  80%  { opacity: 0.8; }
+  100% { transform: translateY(100vh) rotate(calc(var(--r, 20deg) + 360deg)); opacity: 0; }
+}
+
 @keyframes sparkle-twinkle {
   0%,
   100% {
@@ -91,6 +97,9 @@
 }
 
 @layer utilities {
+  .animate-spin-slow {
+    animation: spin-cw 20s linear infinite;
+  }
   /* Rotating conic "shine" sweeping around the circle */
   .animate-shine {
     animation: spin-cw 8s linear infinite;
