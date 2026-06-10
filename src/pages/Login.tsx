@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Mail, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -8,6 +8,7 @@ import { BrandLogo } from "@/components/BrandLogo"
 import { MascotGlow } from "@/components/MascotGlow"
 import { CircleRevealEntry } from "@/components/CircleTransition"
 import { useAuth } from "@/hooks/useAuth"
+import { sileo } from "sileo"
 
 function GoogleIcon() {
   return (
@@ -42,34 +43,51 @@ function AppleIcon() {
 
 export default function Login() {
   const navigate = useNavigate()
-  const { login, loginWithGoogle } = useAuth()
+  const { login, loginWithGoogle, loginWithApple, user } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home")
+    }
+  }, [user, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
     setLoading(true)
 
     const result = await login(email, password)
     if (result.success) {
+      sileo.success({ title: "Login realizado com sucesso!" })
       navigate("/home")
     } else {
-      setError(result.error || "Erro ao fazer login")
+      sileo.error({ title: result.error || "Erro ao fazer login" })
     }
     setLoading(false)
   }
 
   const handleGoogleLogin = async () => {
-    setError("")
     setLoading(true)
     const result = await loginWithGoogle()
     if (result.success) {
+      sileo.success({ title: "Login com Google realizado!" })
       navigate("/home")
     } else {
-      setError(result.error || "Erro ao fazer login com Google")
+      sileo.error({ title: result.error || "Erro ao fazer login com Google" })
+    }
+    setLoading(false)
+  }
+
+  const handleAppleLogin = async () => {
+    setLoading(true)
+    const result = await loginWithApple()
+    if (result.success) {
+      sileo.success({ title: "Login com Apple realizado!" })
+      navigate("/home")
+    } else {
+      sileo.error({ title: result.error || "Erro ao fazer login com Apple" })
     }
     setLoading(false)
   }
@@ -93,11 +111,6 @@ export default function Login() {
 
         {/* Login card */}
         <Card className="mt-7 w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
-          {error && (
-            <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700">
-              {error}
-            </div>
-          )}
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <Input
               type="email"
@@ -150,7 +163,14 @@ export default function Login() {
               >
                 <GoogleIcon />
               </Button>
-              <Button type="button" variant="social" size="icon" aria-label="Apple" disabled>
+              <Button
+                type="button"
+                variant="social"
+                size="icon"
+                aria-label="Apple"
+                onClick={handleAppleLogin}
+                disabled={loading}
+              >
                 <AppleIcon />
               </Button>
               <Button type="button" variant="social" size="icon" aria-label="E-mail" disabled>

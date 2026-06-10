@@ -29,7 +29,7 @@ export function CircleTransition({ to, active, color = "#2B5D3A" }: CircleTransi
     }, 620)
 
     return () => clearTimeout(t1)
-  }, [active])
+  }, [active, navigate, to])
 
   if (phase === "idle") return null
 

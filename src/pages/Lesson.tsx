@@ -1,98 +1,34 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { X, BookOpen, ChevronLeft, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLives } from "@/contexts/LivesContext"
 import { cn } from "@/lib/utils"
+import { sileo } from "sileo"
+import { lessonsData, type ContentBlock, type Question } from "@/data/lessonsData"
+import { useAuth } from "@/hooks/useAuth"
+import { saveProgress as saveProgressDb } from "@/lib/db"
 
-// ── Lesson data ─────────────────────────────────────────────────────────────
-
-const LESSON = {
-  module: "Módulo 1 · Fundamentos",
-  title: "Chain-of-Thought Prompting",
-  content: [
-    {
-      type: "text",
-      text: "Chain-of-Thought (CoT) Prompting é uma técnica que instrui o modelo de linguagem a raciocinar passo a passo antes de chegar à resposta final.",
-    },
-    {
-      type: "text",
-      text: 'Em vez de pedir uma resposta direta, você guia o modelo a "pensar em voz alta", decompondo o problema em etapas intermediárias.',
-    },
-    {
-      type: "quote",
-      text: '"Resolva o problema abaixo. Pense passo a passo antes de dar a resposta final."',
-    },
-    {
-      type: "heading",
-      text: "Por que funciona?",
-    },
-    {
-      type: "text",
-      text: "Modelos de linguagem cometem menos erros quando decompõem problemas complexos. O raciocínio intermediário serve como rascunho que melhora a acurácia e permite auditar o processo, não só a resposta.",
-    },
-    {
-      type: "text",
-      text: "Sem CoT: \"Qual é 17 × 24?\" — o modelo pode errar diretamente.",
-    },
-    {
-      type: "quote",
-      text: '"Calcule 17 × 24 explicando cada etapa." → 17×20=340, 17×4=68, 340+68=408',
-    },
-  ],
-  questions: [
-    {
-      id: 1,
-      question: "O que é Chain-of-Thought (CoT) Prompting?",
-      options: [
-        { letter: "A", text: "Uma técnica que instrui o modelo a raciocinar passo a passo antes de responder" },
-        { letter: "B", text: "Um método para reduzir o tamanho do modelo de linguagem" },
-        { letter: "C", text: "Uma forma de treinar modelos com menos dados" },
-        { letter: "D", text: "Uma técnica para comprimir textos longos" },
-      ],
-      correct: "A",
-    },
-    {
-      id: 2,
-      question: "Qual é o principal benefício do Chain-of-Thought Prompting?",
-      options: [
-        { letter: "A", text: "Reduz o tempo de resposta do modelo" },
-        { letter: "B", text: "Permite auditar o raciocínio e reduz erros em problemas complexos" },
-        { letter: "C", text: "Diminui o custo de uso da API" },
-        { letter: "D", text: "Aumenta a velocidade de digitação" },
-      ],
-      correct: "B",
-    },
-    {
-      id: 3,
-      question: "Qual destes é um exemplo de prompt Chain-of-Thought?",
-      options: [
-        { letter: "A", text: '"Quanto é 17 × 24?"' },
-        { letter: "B", text: '"Calcule 17 × 24 explicando cada etapa da multiplicação."' },
-        { letter: "C", text: '"Responda em uma palavra."' },
-        { letter: "D", text: '"Seja direto e objetivo."' },
-      ],
-      correct: "B",
-    },
-  ],
+interface ContentViewProps {
+  content: ContentBlock[]
 }
 
-// ── Sub-components ───────────────────────────────────────────────────────────
-
-function ContentView() {
+function ContentView({ content }: ContentViewProps) {
   return (
     <div className="flex flex-col gap-3.5">
-      {LESSON.content.map((block, i) => {
-        if (block.type === "heading")
+      {content.map((block, index) => {
+        if (block.type === "heading") {
           return (
-            <p key={i} className="mt-1 text-base font-bold text-[#1F2A24]">
+            <p key={index} className="mt-1 text-base font-bold text-[#1F2A24]">
               {block.text}
             </p>
           )
-        if (block.type === "quote")
+        }
+
+        if (block.type === "quote") {
           return (
             <div
-              key={i}
+              key={index}
               className="rounded-2xl border border-[#BFE3CC] bg-[#EAF7EF] px-4 py-3"
             >
               <p className="text-sm italic leading-relaxed text-[#2B5D3A]">
@@ -100,8 +36,10 @@ function ContentView() {
               </p>
             </div>
           )
+        }
+
         return (
-          <p key={i} className="text-sm leading-relaxed text-[#3A4B40]">
+          <p key={index} className="text-sm leading-relaxed text-[#3A4B40]">
             {block.text}
           </p>
         )
@@ -111,7 +49,7 @@ function ContentView() {
 }
 
 interface QuestionViewProps {
-  question: (typeof LESSON.questions)[0]
+  question: Question
   questionIndex: number
   total: number
   selected: string | null
@@ -137,17 +75,17 @@ function QuestionView({
       </p>
 
       <div className="mt-1 flex flex-col gap-2.5">
-        {question.options.map((opt) => {
-          const isSelected = selected === opt.letter
-          const isCorrect = opt.letter === question.correct
+        {question.options.map((option) => {
+          const isSelected = selected === option.letter
+          const isCorrect = option.letter === question.correct
           const showCorrect = confirmed && isCorrect
           const showWrong = confirmed && isSelected && !isCorrect
           const dimmed = confirmed && !isSelected && !isCorrect
 
           return (
             <button
-              key={opt.letter}
-              onClick={() => !confirmed && onSelect(opt.letter)}
+              key={option.letter}
+              onClick={() => !confirmed && onSelect(option.letter)}
               disabled={confirmed}
               className={cn(
                 "flex items-center gap-3 rounded-2xl border bg-white px-4 py-3.5 text-left transition-all",
@@ -155,7 +93,7 @@ function QuestionView({
                 !confirmed && isSelected && "border-[#3E8E5E] bg-[#EAF7EF]",
                 showCorrect && "border-[#3E9A63] bg-[#DCF1E4]",
                 showWrong && "border-[#E05252] bg-[#FEE2E2]",
-                dimmed && "border-[#CDEAD8] opacity-50",
+                dimmed && "border-[#CDEAD8] opacity-50"
               )}
             >
               <span
@@ -165,10 +103,10 @@ function QuestionView({
                   !confirmed && isSelected && "border-[#3E8E5E] bg-[#3E8E5E] text-white",
                   showCorrect && "border-[#3E9A63] bg-[#3E9A63] text-white",
                   showWrong && "border-[#E05252] bg-[#E05252] text-white",
-                  dimmed && "border-[#CDEAD8] text-[#A0A8A3]",
+                  dimmed && "border-[#CDEAD8] text-[#A0A8A3]"
                 )}
               >
-                {opt.letter}
+                {option.letter}
               </span>
               <span
                 className={cn(
@@ -177,10 +115,10 @@ function QuestionView({
                   !confirmed && isSelected && "font-semibold text-[#2B5D3A]",
                   showCorrect && "font-semibold text-[#1E6B3A]",
                   showWrong && "text-[#991B1B]",
-                  dimmed && "text-[#A0A8A3]",
+                  dimmed && "text-[#A0A8A3]"
                 )}
               >
-                {opt.text}
+                {option.text}
               </span>
             </button>
           )
@@ -191,7 +129,7 @@ function QuestionView({
         <div
           className={cn(
             "mt-1 flex items-start gap-2.5 rounded-2xl p-3.5",
-            selected === question.correct ? "bg-[#DCF1E4]" : "bg-[#FEE2E2]",
+            selected === question.correct ? "bg-[#DCF1E4]" : "bg-[#FEE2E2]"
           )}
         >
           {selected === question.correct ? (
@@ -202,13 +140,13 @@ function QuestionView({
           <p
             className={cn(
               "text-sm font-semibold leading-snug",
-              selected === question.correct ? "text-[#1E6B3A]" : "text-[#991B1B]",
+              selected === question.correct ? "text-[#1E6B3A]" : "text-[#991B1B]"
             )}
           >
             {selected === question.correct
-              ? "Correto! Muito bem! 🎉"
+              ? "Correto! Muito bem!"
               : `Incorreto. A resposta certa é: ${
-                  question.options.find((o) => o.letter === question.correct)?.text
+                  question.options.find((option) => option.letter === question.correct)?.text
                 }`}
           </p>
         </div>
@@ -217,59 +155,151 @@ function QuestionView({
   )
 }
 
-// ── Page ─────────────────────────────────────────────────────────────────────
-
 export default function Lesson() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const { user } = useAuth()
   const { awardPerfectBonus } = useLives()
-  const [step, setStep] = useState(0)        // 0 = content, 1-3 = questions
+
+  const categoryId = searchParams.get("category") || "trending-skills"
+  const moduleIndex = parseInt(searchParams.get("moduleIndex") || "0", 10)
+  const lessonIndex = parseInt(searchParams.get("lessonIndex") || "0", 10)
+
+  const categoryObj = lessonsData[categoryId] || lessonsData["trending-skills"]
+  const moduleObj = categoryObj.modules[moduleIndex] || categoryObj.modules[0]
+  const lessonObj = moduleObj?.lessons[lessonIndex] || moduleObj?.lessons[0]
+
+  const [step, setStep] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
   const [confirmed, setConfirmed] = useState(false)
-  const [score, setScore] = useState(0)
+  const [answerResults, setAnswerResults] = useState<Record<number, boolean>>({})
+  const [isSaving, setIsSaving] = useState(false)
 
-  const totalSteps = 1 + LESSON.questions.length
-  const currentQuestion = step > 0 ? LESSON.questions[step - 1] : null
+  if (!lessonObj) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#F7FBF8] p-5 text-center">
+        <div>
+          <p className="text-lg font-bold text-red-600">Erro: lição não encontrada.</p>
+          <Button onClick={() => navigate("/learn")} className="mt-4">
+            Voltar ao Lab
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  const totalSteps = 1 + lessonObj.questions.length
+  const currentQuestion = step > 0 ? lessonObj.questions[step - 1] : null
 
   function goBack() {
     if (step > 0) {
-      setStep((s) => s - 1)
+      setStep((value) => value - 1)
       setSelected(null)
       setConfirmed(false)
     } else {
-      navigate("/learn")
+      navigate(`/learn?category=${categoryId}`)
     }
   }
 
   function handleConfirm() {
     if (!selected || !currentQuestion) return
-    if (selected === currentQuestion.correct) setScore((s) => s + 1)
+
+    const isCorrect = selected === currentQuestion.correct
+    setAnswerResults((results) => ({
+      ...results,
+      [currentQuestion.id]: isCorrect,
+    }))
+
+    if (isCorrect) {
+      sileo.success({ title: "Correto!", description: "Muito bem! 🎉" })
+    } else {
+      sileo.error({ title: "Incorreto", description: "Verifique a resposta correta abaixo." })
+    }
     setConfirmed(true)
   }
 
-  function handleNext() {
+  async function saveProgress() {
+    try {
+      const saved = localStorage.getItem("promptlab_progress")
+      const progress = saved ? JSON.parse(saved) : {}
+
+      const catProgress = progress[categoryId] || {
+        currentModuleIndex: 0,
+        currentLessonIndex: 0,
+        completedLessonIds: [],
+      }
+
+      if (!catProgress.completedLessonIds.includes(lessonObj.id)) {
+        catProgress.completedLessonIds.push(lessonObj.id)
+      }
+
+      if (
+        moduleIndex === catProgress.currentModuleIndex &&
+        lessonIndex === catProgress.currentLessonIndex
+      ) {
+        const nextLessonIndex = lessonIndex + 1
+        if (nextLessonIndex < moduleObj.lessons.length) {
+          catProgress.currentLessonIndex = nextLessonIndex
+        } else {
+          const nextModuleIndex = moduleIndex + 1
+          if (nextModuleIndex < categoryObj.modules.length) {
+            catProgress.currentModuleIndex = nextModuleIndex
+            catProgress.currentLessonIndex = 0
+          }
+        }
+      }
+
+      const result = await saveProgressDb(user?.id || "", categoryId, catProgress)
+      if (result?.error && user?.id) {
+        sileo.error({
+          title: "Progresso salvo neste dispositivo",
+          description: "Não foi possível sincronizar com a nuvem agora.",
+        })
+      }
+    } catch (err) {
+      console.error("Error saving progress:", err)
+    }
+  }
+
+  async function handleNext() {
     if (step < totalSteps - 1) {
-      setStep((s) => s + 1)
+      setStep((value) => value + 1)
       setSelected(null)
       setConfirmed(false)
-    } else {
-      const total = LESSON.questions.length
-      const perfect = score === total
-      const bonusAwarded = perfect ? awardPerfectBonus() : false
-      navigate("/mission", { state: { score, total, perfect, bonusAwarded } })
+      return
     }
+
+    const total = lessonObj.questions.length
+    const score = lessonObj.questions.filter((question) => answerResults[question.id]).length
+    const perfect = score === total
+
+    if (!perfect) {
+      sileo.error({
+        title: "Atividade não concluída",
+        description: "Acerte todas as questões para marcar a lição como concluída.",
+      })
+      setStep(1)
+      setSelected(null)
+      setConfirmed(false)
+      return
+    }
+
+    setIsSaving(true)
+    await saveProgress()
+    setIsSaving(false)
+
+    const bonusAwarded = awardPerfectBonus()
+    navigate("/mission", { state: { score, total, perfect, bonusAwarded } })
   }
 
   const isLastStep = step === totalSteps - 1
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7FBF8]">
-
-      {/* ── Sticky header ── */}
-      <div className="sticky top-0 z-10 bg-[#F7FBF8] px-4 pb-3 pt-4">
-        {/* Top row: close + book */}
+      <div className="sticky top-0 z-10 border-b border-[#EAF2ED] bg-[#F7FBF8] px-4 pb-3 pt-4">
         <div className="mb-3 flex items-center justify-between">
           <button
-            onClick={() => navigate("/learn")}
+            onClick={() => navigate(`/learn?category=${categoryId}`)}
             className="rounded-full p-1.5 text-[#1F2A24] transition-colors hover:bg-[#DCF1E4]"
           >
             <X className="h-5 w-5" />
@@ -277,38 +307,34 @@ export default function Lesson() {
           <BookOpen className="h-5 w-5 text-[#3E8E5E]" />
         </div>
 
-        {/* Breadcrumb + step counter */}
         <div className="flex items-center justify-between">
           <button
             onClick={goBack}
-            className="flex items-center gap-0.5 text-sm font-medium text-[#3E8E5E] transition-colors hover:text-[#2B5D3A]"
+            className="flex items-center gap-0.5 text-xs font-bold text-[#3E8E5E] transition-colors hover:text-[#2B5D3A]"
           >
-            <ChevronLeft className="h-4 w-4" />
-            {LESSON.module}
+            <ChevronLeft className="h-4 w-4" strokeWidth={2.5} />
+            {moduleObj.title}
           </button>
-          <span className="text-sm font-medium text-[#8A998F]">
+          <span className="text-sm font-semibold text-[#8A998F]">
             {step + 1}/{totalSteps}
           </span>
         </div>
 
-        {/* Lesson title */}
-        <h1 className="mt-2 text-xl font-extrabold text-[#1F2A24]">
-          {LESSON.title}
+        <h1 className="mt-2 text-lg font-extrabold leading-snug text-[#1F2A24]">
+          {lessonObj.title}
         </h1>
-        {/* Green accent underline */}
         <div className="mt-1.5 h-0.5 w-10 rounded-full bg-[#3E8E5E]" />
       </div>
 
-      {/* ── Scrollable content ── */}
-      <div className="flex-1 overflow-y-auto px-4 py-2 pb-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 pb-6">
         {step === 0 ? (
-          <ContentView />
+          <ContentView content={lessonObj.content} />
         ) : (
           currentQuestion && (
             <QuestionView
               question={currentQuestion}
               questionIndex={step - 1}
-              total={LESSON.questions.length}
+              total={lessonObj.questions.length}
               selected={selected}
               confirmed={confirmed}
               onSelect={setSelected}
@@ -317,8 +343,7 @@ export default function Lesson() {
         )}
       </div>
 
-      {/* ── Bottom button ── */}
-      <div className="px-4 pb-10 pt-3">
+      <div className="border-t border-[#EAF2ED] px-4 pb-8 pt-3">
         {step === 0 ? (
           <Button size="lg" className="w-full" onClick={handleNext}>
             Entendi, vamos lá! →
@@ -326,18 +351,15 @@ export default function Lesson() {
         ) : !confirmed ? (
           <Button
             size="lg"
-            className={cn(
-              "w-full transition-opacity",
-              !selected && "opacity-50",
-            )}
+            className={cn("w-full transition-opacity", !selected && "opacity-50")}
             disabled={!selected}
             onClick={handleConfirm}
           >
             Confirmar resposta
           </Button>
         ) : (
-          <Button size="lg" className="w-full" onClick={handleNext}>
-            {isLastStep ? "Ver resultado 🏆" : "Próxima →"}
+          <Button size="lg" className="w-full" onClick={handleNext} disabled={isSaving}>
+            {isSaving ? "Salvando..." : isLastStep ? "Ver resultado" : "Próxima →"}
           </Button>
         )}
       </div>

@@ -5,24 +5,24 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { useAuth } from "@/hooks/useAuth"
+import { sileo } from "sileo"
 
 export default function ForgotPassword() {
   const { resetPassword } = useAuth()
   const [email, setEmail] = useState("")
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
     setLoading(true)
 
     const result = await resetPassword(email)
     if (result.success) {
+      sileo.success({ title: "E-mail de redefinição enviado com sucesso!" })
       setSent(true)
     } else {
-      setError(result.error || "Erro ao enviar email")
+      sileo.error({ title: result.error || "Erro ao enviar e-mail" })
     }
     setLoading(false)
   }
@@ -82,11 +82,6 @@ export default function ForgotPassword() {
 
         {/* Card */}
         <Card className="w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
-          {error && (
-            <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700">
-              {error}
-            </div>
-          )}
           {sent ? (
             <div className="flex flex-col items-center gap-3 py-2 text-center">
               <Mail className="h-10 w-10 text-[#2E8B57]" strokeWidth={1.8} />

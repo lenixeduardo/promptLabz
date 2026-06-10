@@ -17,8 +17,9 @@ vi.mock("@/lib/supabase", () => ({
 }))
 
 function TestConsumer() {
-  const { user, loading } = useAuthContext()
+  const { user, loading, error } = useAuthContext()
   if (loading) return <div>carregando</div>
+  if (error) return <div>{error}</div>
   return <div>{user ? `logado: ${user.email}` : "deslogado"}</div>
 }
 
@@ -73,5 +74,20 @@ describe("AuthProvider", () => {
       "useAuthContext must be used within AuthProvider"
     )
     consoleSpy.mockRestore()
+  })
+
+  it("exibe erro quando getSession falha", async () => {
+    mockGetSession.mockResolvedValue({
+      data: { session: null },
+      error: { message: "Sessão inválida" },
+    })
+
+    render(
+      <AuthProvider>
+        <TestConsumer />
+      </AuthProvider>
+    )
+
+    await waitFor(() => expect(screen.getByText("Sessão inválida")).toBeInTheDocument())
   })
 })

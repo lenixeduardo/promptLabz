@@ -3,11 +3,20 @@ import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import ForgotPassword from "./ForgotPassword"
+import { sileo } from "sileo"
 
 const mockResetPassword = vi.fn()
 
 vi.mock("@/hooks/useAuth", () => ({
   useAuth: () => ({ resetPassword: mockResetPassword }),
+}))
+
+vi.mock("sileo", () => ({
+  sileo: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+  Toaster: () => null,
 }))
 
 function renderForgotPassword() {
@@ -78,7 +87,7 @@ describe("ForgotPassword — submissão", () => {
     )
 
     await waitFor(() =>
-      expect(screen.getByText("Email não encontrado")).toBeInTheDocument()
+      expect(sileo.error).toHaveBeenCalledWith({ title: "Email não encontrado" })
     )
   })
 

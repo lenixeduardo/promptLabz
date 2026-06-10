@@ -18,12 +18,13 @@ export function useAuth() {
     }
   }
 
-  const signup = async (email: string, password: string) => {
+  const signup = async (email: string, password: string, fullName?: string) => {
     try {
       const { data, error: err } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          data: fullName ? { full_name: fullName } : undefined,
           emailRedirectTo: `${window.location.origin}/login`,
         },
       })
@@ -50,7 +51,7 @@ export function useAuth() {
   const resetPassword = async (email: string) => {
     try {
       const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/login`,
+        redirectTo: `${window.location.origin}/reset-password`,
       })
       if (err) throw err
       return { success: true }
@@ -61,14 +62,38 @@ export function useAuth() {
   }
 
   const loginWithGoogle = async () => {
+    return loginWithProvider("google", "Erro ao fazer login com Google")
+  }
+
+  const loginWithApple = async () => {
+    return loginWithProvider("apple", "Erro ao fazer login com Apple")
+  }
+
+  const loginWithProvider = async (provider: "google" | "apple", fallback: string) => {
     try {
       const { error: err } = await supabase.auth.signInWithOAuth({
-        provider: "google",
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/home`,
+        },
       })
       if (err) throw err
       return { success: true, user: null }
     } catch (err: any) {
-      const errorMsg = err?.message || "Erro ao fazer login com Google"
+      const errorMsg = err?.message || fallback
+      return { success: false, error: errorMsg }
+    }
+  }
+
+  const updatePassword = async (password: string) => {
+    try {
+      const { data, error: err } = await supabase.auth.updateUser({
+        password,
+      })
+      if (err) throw err
+      return { success: true, user: data.user }
+    } catch (err: any) {
+      const errorMsg = err?.message || "Erro ao atualizar senha"
       return { success: false, error: errorMsg }
     }
   }
@@ -82,5 +107,7 @@ export function useAuth() {
     logout,
     resetPassword,
     loginWithGoogle,
+    loginWithApple,
+    updatePassword,
   }
 }

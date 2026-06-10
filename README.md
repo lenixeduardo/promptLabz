@@ -1,50 +1,98 @@
-# React + TypeScript + Vite
+# PromptLab
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PromptLab ajuda estudantes e criadores iniciantes a praticar prompts e habilidades de IA sem depender de aulas soltas ou progresso manual.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Autenticacao com Supabase: email/senha, reset de senha, Google OAuth e Apple OAuth.
+- Rotas protegidas para home, trilhas, licoes, skills, missao e perfil.
+- Progresso por categoria salvo em `localStorage` e sincronizado em Supabase.
+- Perfil do usuario em `public.users`, criado automaticamente por trigger.
+- Base preparada para premium com status e IDs Stripe protegidos contra update pelo cliente.
 
-## Expanding the ESLint configuration
+## Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- React + Vite: UI SPA rapida e simples de hospedar.
+- TypeScript: contratos claros entre telas, hooks e camada de dados.
+- Supabase Auth + Postgres: backend gerenciado com RLS.
+- Vitest + Testing Library: testes unitarios e de fluxo de UI.
+- ESLint + GitHub Actions: validacao automatica em PR/push.
 
-- Configure the top-level `parserOptions` property like this:
+## Arquitetura
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```mermaid
+flowchart LR
+  UI[React pages] --> Hooks[useAuth + db helpers]
+  Hooks --> Supabase[Supabase JS client]
+  Supabase --> Auth[Supabase Auth]
+  Supabase --> DB[(Postgres + RLS)]
+  Auth --> Trigger[handle_new_user trigger]
+  Trigger --> Users[public.users]
+  DB --> Progress[public.user_progress]
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Backend
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- `supabase/migrations/20260610_000_initial_schema.sql`: tabelas `users` e `user_progress`, RLS, triggers e checks.
+- `supabase/migrations/20260610_001_users_premium.sql`: campos premium, constraint idempotente e indexes Stripe.
+- `supabase/seed.sql`: placeholder documentando que cursos ainda ficam em `src/data`.
+- `src/lib/supabase.ts`: cliente Supabase, falha explicita sem env fora de teste.
+- `src/lib/db.ts`: camada de perfil/progresso com colunas explicitas.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+## Como Rodar
+
+```bash
+pnpm install
+cp .env.example .env.local
+pnpm dev
 ```
+
+Preencha `.env.local`:
+
+```bash
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
+```
+
+Para Supabase local:
+
+```bash
+supabase start
+supabase db reset
+```
+
+Depois copie URL e anon key exibidas pelo CLI para `.env.local`.
+
+## Validacao
+
+```bash
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm build
+pnpm smoke:supabase
+```
+
+`pnpm smoke:supabase` valida envs e conectividade quando credenciais reais existem. Sem envs, pula sem falhar para permitir CI de PR sem segredos.
+
+## Deploy
+
+1. Configure `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`.
+2. Rode migrations no Supabase antes do deploy.
+3. Cadastre URLs de redirect no Supabase Auth: `/login`, `/reset-password` e `/home`.
+4. Ative providers Google e Apple no Supabase Auth. Apple exige Service ID, Team ID, Key ID e private key configurados no painel da Apple Developer.
+5. Rode `pnpm build`.
+
+## Decisoes
+
+- Supabase foi escolhido para entregar Auth + Postgres + RLS sem manter servidor proprio.
+- Cursos continuam em `src/data` por enquanto para manter MVP rapido; se virarem conteudo editavel, devem migrar para tabelas com seeds.
+- Campos premium ficam em `public.users` por compatibilidade, mas update do cliente foi restringido por grants. Proximo passo ideal: tabela privada `billing_profiles`.
+
+## Roadmap
+
+- Criar testes de integracao com Supabase local para RLS e migrations.
+- Adicionar demo user/seed quando conteudo sair do front.
+- Integrar Sentry ou Logtail para erros de producao.
+- Implementar webhook Stripe via Edge Function.
+- Publicar URL demo com screenshots/GIF curto.

@@ -1,10 +1,12 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { ArrowLeft, User, Mail, Lock, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { useAuth } from "@/hooks/useAuth"
+import { sileo } from "sileo"
+import { z } from "zod"
 
 function GoogleIcon() {
   return (
@@ -39,51 +41,83 @@ function AppleIcon() {
 
 export default function Signup() {
   const navigate = useNavigate()
-  const { signup, loginWithGoogle } = useAuth()
+  const { signup, loginWithGoogle, loginWithApple, user } = useAuth()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
   const [pendingEmail, setPendingEmail] = useState("")
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home")
+    }
+  }, [user, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
 
-    if (password !== confirmPassword) {
-      setError("As senhas não coincidem")
+    // Email validation
+    const emailParsed = z.string().email("Formato de e-mail inválido").safeParse(email)
+    if (!emailParsed.success) {
+      sileo.error({ title: emailParsed.error.errors[0].message })
       return
     }
 
-    if (password.length < 6) {
-      setError("A senha deve ter pelo menos 6 caracteres")
+    if (password !== confirmPassword) {
+      sileo.error({ title: "As senhas não coincidem" })
+      return
+    }
+
+    // Password strength validation (8+ chars, uppercase, number)
+    const passwordParsed = z
+      .string()
+      .min(8, "A senha deve ter pelo menos 8 caracteres")
+      .regex(/[A-Z]/, "A senha deve conter pelo menos uma letra maiúscula")
+      .regex(/[0-9]/, "A senha deve conter pelo menos um número")
+      .safeParse(password)
+
+    if (!passwordParsed.success) {
+      sileo.error({ title: passwordParsed.error.errors[0].message })
       return
     }
 
     setLoading(true)
-    const result = await signup(email, password)
+    const result = await signup(email, password, name.trim())
     if (result.success) {
+      sileo.success({ title: "Conta criada com sucesso!" })
       if (result.needsConfirmation) {
         setPendingEmail(email)
       } else {
         navigate("/home")
       }
     } else {
-      setError(result.error || "Erro ao criar conta")
+      sileo.error({ title: result.error || "Erro ao criar conta" })
     }
     setLoading(false)
   }
 
   const handleGoogleSignup = async () => {
-    setError("")
     setLoading(true)
     const result = await loginWithGoogle()
     if (result.success) {
+      sileo.success({ title: "Conta criada com o Google!" })
       navigate("/home")
     } else {
-      setError(result.error || "Erro ao criar conta com Google")
+      sileo.error({ title: result.error || "Erro ao criar conta com Google" })
+    }
+    setLoading(false)
+  }
+
+  const handleAppleSignup = async () => {
+    setLoading(true)
+    const result = await loginWithApple()
+    if (result.success) {
+      sileo.success({ title: "Conta criada com Apple!" })
+      navigate("/home")
+    } else {
+      sileo.error({ title: result.error || "Erro ao criar conta com Apple" })
     }
     setLoading(false)
   }
@@ -167,11 +201,6 @@ export default function Signup() {
 
         {/* Form card */}
         <Card className="w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
-          {error && (
-            <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700">
-              {error}
-            </div>
-          )}
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <Input
               type="text"
@@ -253,7 +282,14 @@ export default function Signup() {
               >
                 <GoogleIcon />
               </Button>
-              <Button type="button" variant="social" size="icon" aria-label="Apple" disabled>
+              <Button
+                type="button"
+                variant="social"
+                size="icon"
+                aria-label="Apple"
+                onClick={handleAppleSignup}
+                disabled={loading}
+              >
                 <AppleIcon />
               </Button>
               <Button type="button" variant="social" size="icon" aria-label="E-mail" disabled>

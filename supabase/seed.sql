@@ -1,0 +1,3 @@
+-- PromptLab seed placeholder.
+-- Course content currently lives in src/data/*.ts, so no app rows are required
+-- to boot a local Supabase database.
