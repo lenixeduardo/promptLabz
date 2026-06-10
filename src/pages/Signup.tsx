@@ -46,6 +46,7 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [pendingEmail, setPendingEmail] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -64,7 +65,11 @@ export default function Signup() {
     setLoading(true)
     const result = await signup(email, password)
     if (result.success) {
-      navigate("/home")
+      if (result.needsConfirmation) {
+        setPendingEmail(email)
+      } else {
+        navigate("/home")
+      }
     } else {
       setError(result.error || "Erro ao criar conta")
     }
@@ -81,6 +86,30 @@ export default function Signup() {
       setError(result.error || "Erro ao criar conta com Google")
     }
     setLoading(false)
+  }
+
+  if (pendingEmail) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-6 text-center">
+        <img
+          src="/assets/mascot-login-new.png"
+          alt="Mascot"
+          className="h-36 w-auto drop-shadow-md"
+        />
+        <h1 className="text-3xl font-extrabold text-[#2B5D3A]">Confirme seu e-mail</h1>
+        <p className="max-w-sm text-sm text-[#4A5E52]">
+          Enviamos um link de confirmação para{" "}
+          <span className="font-semibold text-[#2B5D3A]">{pendingEmail}</span>.
+          <br />Clique no link para ativar sua conta.
+        </p>
+        <Link
+          to="/login"
+          className="mt-2 rounded-full bg-[#2B5D3A] px-8 py-3 text-sm font-semibold text-white hover:opacity-90"
+        >
+          Ir para o login
+        </Link>
+      </div>
+    )
   }
 
   return (
