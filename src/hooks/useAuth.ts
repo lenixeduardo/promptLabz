@@ -23,12 +23,16 @@ export function useAuth() {
       const { data, error: err } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/login`,
+        },
       })
       if (err) throw err
-      return { success: true, user: data.user }
+      const needsConfirmation = !data.session
+      return { success: true, user: data.user, needsConfirmation }
     } catch (err: any) {
       const errorMsg = err?.message || "Erro ao criar conta"
-      return { success: false, error: errorMsg }
+      return { success: false, error: errorMsg, needsConfirmation: false }
     }
   }
 
@@ -45,7 +49,9 @@ export function useAuth() {
 
   const resetPassword = async (email: string) => {
     try {
-      const { error: err } = await supabase.auth.resetPasswordForEmail(email)
+      const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/login`,
+      })
       if (err) throw err
       return { success: true }
     } catch (err: any) {
