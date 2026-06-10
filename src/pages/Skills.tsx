@@ -18,21 +18,40 @@ interface PromptCard {
   title: string
   difficulty: Difficulty
   color: DotColor
+  /** Which cat asset to use */
+  mascot: string
+  /** Flip horizontally for visual variety */
+  flip?: boolean
 }
+
+// ── Cat assets — each card uses a distinct pose / orientation ──────────────
+
+const CATS = [
+  { src: "/assets/mascot-login-new.png", flip: false },  // 0 standing + phone
+  { src: "/assets/mascot-learn-new.png", flip: false },  // 1 at desk writing
+  { src: "/assets/mascot-home.png",      flip: false },  // 2 running
+  { src: "/assets/mascot-login-new.png", flip: true  },  // 3 standing + phone (mirrored)
+  { src: "/assets/mascot-learn-new.png", flip: true  },  // 4 at desk (mirrored)
+  { src: "/assets/mascot-home.png",      flip: true  },  // 5 running (mirrored)
+  { src: "/assets/mascot-login.png",     flip: false },  // 6 seated cat
+  { src: "/assets/mascot-login.png",     flip: true  },  // 7 seated cat (mirrored)
+  { src: "/assets/mascot-learn-new.png", flip: false },  // 8 at desk
+  { src: "/assets/mascot-home.png",      flip: true  },  // 9 running (mirrored)
+]
 
 // ── Data ───────────────────────────────────────────────────────────────────
 
 const PROMPTS: PromptCard[] = [
-  { title: "Prompt for Storytelling",  difficulty: "Beginner",     color: "green"  },
-  { title: "Customer Support Prompt",  difficulty: "Intermediate", color: "yellow" },
-  { title: "Data Analysis Script",     difficulty: "Advanced",     color: "green"  },
-  { title: "Graphic Design Prompts",   difficulty: "Advanced",     color: "green"  },
-  { title: "Resume Writing",           difficulty: "Advanced",     color: "red"    },
-  { title: "Graphic Design Prompts",   difficulty: "Beginner",     color: "green"  },
-  { title: "Prompt itor Prompt",       difficulty: "Intermediate", color: "yellow" },
-  { title: "Resources Prompt",         difficulty: "Advanced",     color: "green"  },
-  { title: "Precountaien Learning",    difficulty: "Beginner",     color: "green"  },
-  { title: "Customer Prompt",          difficulty: "Advanced",     color: "red"    },
+  { title: "Prompt for Storytelling",  difficulty: "Beginner",     color: "green",  ...CATS[0] },
+  { title: "Customer Support Prompt",  difficulty: "Intermediate", color: "yellow", ...CATS[1] },
+  { title: "Data Analysis Script",     difficulty: "Advanced",     color: "green",  ...CATS[2] },
+  { title: "Graphic Design Prompts",   difficulty: "Advanced",     color: "green",  ...CATS[3] },
+  { title: "Resume Writing",           difficulty: "Advanced",     color: "red",    ...CATS[4] },
+  { title: "Graphic Design Prompts",   difficulty: "Beginner",     color: "green",  ...CATS[5] },
+  { title: "Prompt itor Prompt",       difficulty: "Intermediate", color: "yellow", ...CATS[6] },
+  { title: "Resources Prompt",         difficulty: "Advanced",     color: "green",  ...CATS[7] },
+  { title: "Precountaien Learning",    difficulty: "Beginner",     color: "green",  ...CATS[8] },
+  { title: "Customer Prompt",          difficulty: "Advanced",     color: "red",    ...CATS[9] },
 ]
 
 type Category = "Creativity" | "Marketing" | "Coding" | "Education" | "Productivity"
@@ -54,12 +73,10 @@ const BADGE_STYLES: Record<DotColor, { dot: string; text: string; bg: string }> 
 }
 
 function DifficultyBadge({ difficulty, color }: { difficulty: Difficulty; color: DotColor }) {
-  const styles = BADGE_STYLES[color]
+  const s = BADGE_STYLES[color]
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${styles.bg} ${styles.text}`}
-    >
-      <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${s.bg} ${s.text}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
       {difficulty}
     </span>
   )
@@ -69,14 +86,15 @@ function DifficultyBadge({ difficulty, color }: { difficulty: Difficulty; color:
 
 function PromptCardItem({ card }: { card: PromptCard }) {
   return (
-    <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 flex flex-col items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer">
-      <p className="text-center text-sm font-bold text-[#1F2A24] leading-tight line-clamp-2 min-h-[2.5rem] flex items-center">
+    <div className="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+      <p className="flex min-h-[2.5rem] items-center text-center text-sm font-bold leading-tight text-[#1F2A24] line-clamp-2">
         {card.title}
       </p>
       <img
-        src="/assets/mascot-login-new.png"
+        src={card.src}
         alt="prompt illustration"
-        className="h-20 w-auto object-contain opacity-80"
+        className="h-20 w-auto object-contain"
+        style={card.flip ? { transform: "scaleX(-1)" } : undefined}
       />
       <DifficultyBadge difficulty={card.difficulty} color={card.color} />
     </div>
@@ -94,10 +112,10 @@ export default function Skills() {
       <div className="mx-auto w-full max-w-[1200px]">
 
         {/* Top bar */}
-        <div className="relative flex items-center justify-center mb-6">
+        <div className="relative mb-6 flex items-center justify-center">
           <button
             onClick={() => navigate(-1)}
-            className="absolute left-0 flex items-center gap-1 rounded-full p-1.5 text-[#2F6B45] hover:bg-[#DCF1E4] transition-colors"
+            className="absolute left-0 flex items-center gap-1 rounded-full p-1.5 text-[#2F6B45] transition-colors hover:bg-[#DCF1E4]"
             aria-label="Voltar"
           >
             <ChevronLeft className="h-6 w-6" />
@@ -105,22 +123,21 @@ export default function Skills() {
           <h1 className="text-lg font-bold text-[#1F2A24]">Prompt Library</h1>
         </div>
 
-        {/* Hero banner with mascot overflowing top */}
-        <div className="relative mb-8 flex justify-center">
-          {/* Mascot floating above banner */}
+        {/* Hero banner — professor cat overflows the top center */}
+        <div className="relative mb-10 flex justify-center">
           <img
-            src="/assets/mascot-login-new.png"
-            alt="PromptLab mascot"
-            className="absolute -top-8 z-10 h-24 w-auto object-contain drop-shadow-md"
+            src="/assets/mascot-teacher.png"
+            alt="Professor cat"
+            className="absolute -top-10 left-1/2 z-10 h-28 w-auto -translate-x-1/2 object-contain drop-shadow-md"
           />
-          {/* Banner background */}
-          <div className="w-full rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0]"
+          <div
+            className="w-full rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0]"
             style={{ height: 140 }}
           />
         </div>
 
         {/* Category filter chips */}
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 mb-6">
+        <div className="no-scrollbar mb-6 flex gap-2 overflow-x-auto pb-2">
           {CATEGORIES.map(({ label, icon }) => {
             const isActive = activeCategory === label
             return (
