@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom"
 import { AuthProvider } from "@/contexts/AuthContext"
+import { LivesProvider } from "@/contexts/LivesContext"
 import { PrivateRoute } from "@/components/PrivateRoute"
 import Hero from "@/pages/Hero"
 import Login from "@/pages/Login"
@@ -14,6 +15,7 @@ import MissionComplete from "@/pages/MissionComplete"
 export default function App() {
   return (
     <AuthProvider>
+      <LivesProvider>
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/login" element={<Login />} />
@@ -60,6 +62,7 @@ export default function App() {
           }
         />
       </Routes>
+      </LivesProvider>
     </AuthProvider>
   )
 }

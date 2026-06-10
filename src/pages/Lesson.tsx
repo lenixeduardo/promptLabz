@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { X, BookOpen, ChevronLeft, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useLives } from "@/contexts/LivesContext"
 import { cn } from "@/lib/utils"
 
 // ── Lesson data ─────────────────────────────────────────────────────────────
@@ -220,6 +221,7 @@ function QuestionView({
 
 export default function Lesson() {
   const navigate = useNavigate()
+  const { awardPerfectBonus } = useLives()
   const [step, setStep] = useState(0)        // 0 = content, 1-3 = questions
   const [selected, setSelected] = useState<string | null>(null)
   const [confirmed, setConfirmed] = useState(false)
@@ -250,7 +252,10 @@ export default function Lesson() {
       setSelected(null)
       setConfirmed(false)
     } else {
-      navigate("/mission")
+      const total = LESSON.questions.length
+      const perfect = score === total
+      const bonusAwarded = perfect ? awardPerfectBonus() : false
+      navigate("/mission", { state: { score, total, perfect, bonusAwarded } })
     }
   }
 

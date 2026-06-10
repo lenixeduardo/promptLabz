@@ -136,11 +136,23 @@
   }
 }
 
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0);    }
+}
+
+@layer utilities {
+  .animate-slide-up {
+    animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-shine,
   .animate-ring,
   .animate-glow,
-  .animate-twinkle {
+  .animate-twinkle,
+  .animate-slide-up {
     animation: none;
   }
 }
