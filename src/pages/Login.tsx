@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { BrandLogo } from "@/components/BrandLogo"
 import { HelpButton } from "@/components/HelpButton"
-import { CroppedImage } from "@/components/CroppedImage"
 import { MascotGlow } from "@/components/MascotGlow"
 
 function GoogleIcon() {
@@ -49,14 +48,10 @@ export default function Login() {
       <div className="mx-auto flex w-full max-w-[420px] flex-col items-center">
         {/* Mascot with animated glow halo */}
         <MascotGlow size={260}>
-          <CroppedImage
-            src="/assets/login-wireframe.jpeg"
-            naturalWidth={1179}
-            naturalHeight={2049}
-            crop={[250, 70, 740, 470]}
-            displayWidth={230}
-            blend
+          <img
+            src="/assets/mascot-login.png"
             alt="PromptLab mascot"
+            className="h-56 w-auto object-contain drop-shadow-md"
           />
         </MascotGlow>
 

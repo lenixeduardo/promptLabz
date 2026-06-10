@@ -12,7 +12,6 @@ import {
   BarChart3,
 } from "lucide-react"
 import { BrandLogo } from "@/components/BrandLogo"
-import { CroppedImage } from "@/components/CroppedImage"
 import { cn } from "@/lib/utils"
 
 const features = [
@@ -35,15 +34,10 @@ export default function Home() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-white via-[#EAF7EF] to-[#BFE6CF]">
       {/* Running cat mascot bleeding off the right edge */}
-      <CroppedImage
-        src="/assets/home-wireframe.jpeg"
-        naturalWidth={1179}
-        naturalHeight={806}
-        crop={[930, 205, 1179, 645]}
-        displayWidth={230}
-        blend
+      <img
+        src="/assets/mascot-home.png"
         alt="PromptLab mascot"
-        className="pointer-events-none absolute right-0 top-28 hidden lg:block"
+        className="pointer-events-none absolute right-0 top-24 hidden h-80 w-auto object-contain lg:block"
       />
 
       <div className="relative mx-auto w-full max-w-6xl px-6 py-7">
@@ -54,14 +48,10 @@ export default function Home() {
             aria-label="Account"
             className="h-12 w-12 overflow-hidden rounded-full border border-[#BFE3CC] bg-white shadow-sm"
           >
-            <CroppedImage
-              src="/assets/home-wireframe.jpeg"
-              naturalWidth={1179}
-              naturalHeight={806}
-              crop={[1048, 34, 1126, 112]}
-              displayWidth={48}
-              blend
+            <img
+              src="/assets/avatar-cat.png"
               alt="Account"
+              className="h-full w-full object-contain"
             />
           </button>
         </header>

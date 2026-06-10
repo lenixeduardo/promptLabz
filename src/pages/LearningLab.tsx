@@ -16,7 +16,6 @@ import {
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { HelpButton } from "@/components/HelpButton"
-import { CroppedImage } from "@/components/CroppedImage"
 import { cn } from "@/lib/utils"
 
 const tabs = [
@@ -116,14 +115,10 @@ export default function LearningLab() {
         {/* Header hero card */}
         <Card className="relative mt-12 overflow-visible border-[#C6E7D2] bg-gradient-to-b from-[#D9F0E1] to-[#C2E8D0] p-5 pt-16 shadow-md">
           <div className="absolute -top-[68px] left-1/2 -translate-x-1/2">
-            <CroppedImage
-              src="/assets/login-wireframe.jpeg"
-              naturalWidth={1179}
-              naturalHeight={2049}
-              crop={[300, 70, 690, 470]}
-              displayWidth={104}
-              blend
+            <img
+              src="/assets/mascot-learn.png"
               alt="PromptLab mascot"
+              className="h-28 w-auto object-contain drop-shadow-md"
             />
           </div>
 
