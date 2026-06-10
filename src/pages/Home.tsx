@@ -15,7 +15,7 @@ import { BrandLogo } from "@/components/BrandLogo"
 import { cn } from "@/lib/utils"
 
 const features = [
-  { title: "My Skills", icon: PawPrint, to: "#" },
+  { title: "Learning Skills", icon: PawPrint, to: "/skills" },
   { title: "Prompt Library", icon: Lightbulb, to: "#" },
   { title: "Learning Lab", icon: GraduationCap, to: "/learn" },
 ]
