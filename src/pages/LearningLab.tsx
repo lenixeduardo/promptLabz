@@ -122,6 +122,7 @@ export default function LearningLab() {
               naturalHeight={2049}
               crop={[300, 70, 690, 470]}
               displayWidth={104}
+              blend
               alt="PromptLab mascot"
             />
           </div>

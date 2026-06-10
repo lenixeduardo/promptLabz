@@ -55,6 +55,7 @@ export default function Login() {
             naturalHeight={2049}
             crop={[250, 70, 740, 470]}
             displayWidth={230}
+            blend
             alt="PromptLab mascot"
           />
         </MascotGlow>

@@ -17,6 +17,7 @@ export function HelpButton() {
         naturalHeight={2049}
         crop={[882, 1838, 1130, 2046]}
         displayWidth={84}
+        blend
         alt="Help"
       />
     </button>

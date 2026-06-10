@@ -11,6 +11,12 @@ interface CroppedImageProps {
   crop: [number, number, number, number]
   /** Rendered width of the crop in px (height is derived from the crop ratio) */
   displayWidth: number
+  /**
+   * Blends the (near-white) source background into the page using
+   * `mix-blend-mode: multiply`, so the cat appears to sit on a transparent
+   * background instead of a white box. Works against light page backgrounds.
+   */
+  blend?: boolean
   className?: string
   alt?: string
 }
@@ -26,6 +32,7 @@ export function CroppedImage({
   naturalHeight,
   crop,
   displayWidth,
+  blend = false,
   className,
   alt = "",
 }: CroppedImageProps) {
@@ -46,6 +53,7 @@ export function CroppedImage({
         backgroundImage: `url(${src})`,
         backgroundSize: `${naturalWidth * scale}px ${naturalHeight * scale}px`,
         backgroundPosition: `${-x0 * scale}px ${-y0 * scale}px`,
+        mixBlendMode: blend ? "multiply" : undefined,
       }}
     />
   )

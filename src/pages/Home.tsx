@@ -41,6 +41,7 @@ export default function Home() {
         naturalHeight={806}
         crop={[930, 205, 1179, 645]}
         displayWidth={230}
+        blend
         alt="PromptLab mascot"
         className="pointer-events-none absolute right-0 top-28 hidden lg:block"
       />
@@ -59,6 +60,7 @@ export default function Home() {
               naturalHeight={806}
               crop={[1048, 34, 1126, 112]}
               displayWidth={48}
+              blend
               alt="Account"
             />
           </button>
