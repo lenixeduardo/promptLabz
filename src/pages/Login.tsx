@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { BrandLogo } from "@/components/BrandLogo"
-import { HelpButton } from "@/components/HelpButton"
 import { MascotGlow } from "@/components/MascotGlow"
 
 function GoogleIcon() {
@@ -126,7 +125,6 @@ export default function Login() {
         </p>
       </div>
 
-      <HelpButton />
     </div>
   )
 }
