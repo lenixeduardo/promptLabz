@@ -151,26 +151,32 @@ export default function Skills() {
     <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white px-4 py-6">
       <div className="mx-auto w-full max-w-[1200px]">
 
-        {/* Top bar */}
-        <div className="relative mb-6 flex items-center justify-center">
+        {/* Nav — back button only */}
+        <div className="mb-4 flex items-center">
           <button
             onClick={() => navigate(-1)}
-            className="absolute left-0 flex items-center gap-1 rounded-full p-1.5 text-[#2F6B45] transition-colors hover:bg-[#DCF1E4]"
+            className="flex items-center gap-1 rounded-full p-1.5 text-[#2F6B45] transition-colors hover:bg-[#DCF1E4]"
             aria-label="Voltar"
           >
             <ChevronLeft className="h-6 w-6" />
           </button>
-          <h1 className="text-lg font-bold text-[#1F2A24]">Prompt Library</h1>
         </div>
 
-        {/* Hero banner — professor cat overflows the top */}
-        <div className="relative mb-10 flex justify-center">
-          <img
-            src="/assets/mascot-teacher.png"
-            alt="Professor cat"
-            className="absolute -top-10 left-1/2 z-10 h-28 w-auto -translate-x-1/2 object-contain drop-shadow-md"
-          />
-          <div className="w-full rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0]" style={{ height: 140 }} />
+        {/* Hero banner — cat centered inside, title below it */}
+        <div className="relative mb-8 w-full overflow-hidden rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0] pb-5 pt-4 shadow-sm">
+          {/* Professor cat — multiply blend removes any residual white bg */}
+          <div className="flex justify-center">
+            <img
+              src="/assets/mascot-teacher.png"
+              alt="Professor cat"
+              className="h-32 w-auto object-contain"
+              style={{ mixBlendMode: "multiply" }}
+            />
+          </div>
+          {/* Title clearly below the cat, inside the banner */}
+          <h1 className="mt-2 text-center text-xl font-extrabold text-[#1F2A24]">
+            Prompt Library
+          </h1>
         </div>
 
         {/* Category filter chips */}
