@@ -4,10 +4,28 @@ import { ArrowLeft, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
+import { useAuth } from "@/hooks/useAuth"
 
 export default function ForgotPassword() {
+  const { resetPassword } = useAuth()
   const [email, setEmail] = useState("")
   const [sent, setSent] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+
+    const result = await resetPassword(email)
+    if (result.success) {
+      setSent(true)
+    } else {
+      setError(result.error || "Erro ao enviar email")
+    }
+    setLoading(false)
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
@@ -64,6 +82,11 @@ export default function ForgotPassword() {
 
         {/* Card */}
         <Card className="w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
+          {error && (
+            <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
           {sent ? (
             <div className="flex flex-col items-center gap-3 py-2 text-center">
               <Mail className="h-10 w-10 text-[#2E8B57]" strokeWidth={1.8} />
@@ -73,13 +96,7 @@ export default function ForgotPassword() {
               </p>
             </div>
           ) : (
-            <form
-              className="flex flex-col gap-4"
-              onSubmit={(e) => {
-                e.preventDefault()
-                setSent(true)
-              }}
-            >
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               <Input
                 type="email"
                 placeholder="Digite seu e-mail cadastrado"
@@ -88,12 +105,13 @@ export default function ForgotPassword() {
                 icon={<Mail className="h-5 w-5" strokeWidth={2.2} />}
                 autoComplete="email"
                 required
+                disabled={loading}
               />
               <p className="text-center text-sm text-[#4A5E52]">
                 Enviaremos um link de redefinição de senha para o seu e-mail.
               </p>
-              <Button type="submit" size="lg" className="mt-1 w-full">
-                Enviar link de redefinição
+              <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
+                {loading ? "Enviando..." : "Enviar link de redefinição"}
               </Button>
             </form>
           )}

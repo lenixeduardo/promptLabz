@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Mail, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card"
 import { BrandLogo } from "@/components/BrandLogo"
 import { MascotGlow } from "@/components/MascotGlow"
 import { CircleRevealEntry } from "@/components/CircleTransition"
+import { useAuth } from "@/hooks/useAuth"
 
 function GoogleIcon() {
   return (
@@ -40,8 +41,38 @@ function AppleIcon() {
 }
 
 export default function Login() {
+  const navigate = useNavigate()
+  const { login, loginWithGoogle } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+
+    const result = await login(email, password)
+    if (result.success) {
+      navigate("/home")
+    } else {
+      setError(result.error || "Erro ao fazer login")
+    }
+    setLoading(false)
+  }
+
+  const handleGoogleLogin = async () => {
+    setError("")
+    setLoading(true)
+    const result = await loginWithGoogle()
+    if (result.success) {
+      navigate("/home")
+    } else {
+      setError(result.error || "Erro ao fazer login com Google")
+    }
+    setLoading(false)
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
@@ -62,10 +93,12 @@ export default function Login() {
 
         {/* Login card */}
         <Card className="mt-7 w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => e.preventDefault()}
-          >
+          {error && (
+            <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <Input
               type="email"
               placeholder="Seu e-mail"
@@ -73,6 +106,8 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               icon={<Mail className="h-5 w-5" strokeWidth={2.2} />}
               autoComplete="email"
+              required
+              disabled={loading}
             />
             <Input
               type="password"
@@ -81,6 +116,8 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               icon={<Lock className="h-5 w-5" strokeWidth={2.2} />}
               autoComplete="current-password"
+              required
+              disabled={loading}
             />
 
             <Link
@@ -90,8 +127,8 @@ export default function Login() {
               Esqueci minha senha
             </Link>
 
-            <Button type="submit" size="lg" className="mt-1 w-full">
-              Entrar
+            <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
+              {loading ? "Entrando..." : "Entrar"}
             </Button>
 
             {/* Divider */}
@@ -103,13 +140,20 @@ export default function Login() {
 
             {/* Social logins */}
             <div className="flex justify-center gap-5">
-              <Button type="button" variant="social" size="icon" aria-label="Google">
+              <Button
+                type="button"
+                variant="social"
+                size="icon"
+                aria-label="Google"
+                onClick={handleGoogleLogin}
+                disabled={loading}
+              >
                 <GoogleIcon />
               </Button>
-              <Button type="button" variant="social" size="icon" aria-label="Apple">
+              <Button type="button" variant="social" size="icon" aria-label="Apple" disabled>
                 <AppleIcon />
               </Button>
-              <Button type="button" variant="social" size="icon" aria-label="E-mail">
+              <Button type="button" variant="social" size="icon" aria-label="E-mail" disabled>
                 <Mail className="h-6 w-6 text-primary" strokeWidth={2.2} />
               </Button>
             </div>
@@ -127,7 +171,6 @@ export default function Login() {
           </Link>
         </p>
       </div>
-
     </div>
   )
 }
