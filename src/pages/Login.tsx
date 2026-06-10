@@ -49,7 +49,7 @@ export default function Login() {
         {/* Mascot with animated glow halo */}
         <MascotGlow size={260}>
           <img
-            src="/assets/mascot-login.png"
+            src="/assets/mascot-login-new.png"
             alt="PromptLab mascot"
             className="h-56 w-auto object-contain drop-shadow-md"
           />
