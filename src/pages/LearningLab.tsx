@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   BookOpen,
   Pencil,
@@ -57,7 +58,7 @@ function Checkbox({ checked }: { checked: boolean }) {
   )
 }
 
-function LessonRow({ lesson }: { lesson: Lesson }) {
+function LessonRow({ lesson, onPlay }: { lesson: Lesson; onPlay: () => void }) {
   const { title, icon: Icon, duration, status } = lesson
   const done = status === "done"
   const inProgress = status === "in-progress"
@@ -80,9 +81,12 @@ function LessonRow({ lesson }: { lesson: Lesson }) {
           <span className="rounded-full bg-[#FCE9B8] px-3 py-1 text-xs font-semibold text-[#9A7B22]">
             In Progress
           </span>
-          <span className="flex items-center gap-1 text-sm font-semibold text-[#2E8B57]">
+          <button
+            onClick={onPlay}
+            className="flex items-center gap-1 text-sm font-semibold text-[#2E8B57] hover:text-[#1E6B3A] transition-colors"
+          >
             <Play className="h-4 w-4 fill-current" /> Play
-          </span>
+          </button>
         </div>
       ) : (
         <span
@@ -108,6 +112,7 @@ function LessonRow({ lesson }: { lesson: Lesson }) {
 
 export default function LearningLab() {
   const [active, setActive] = useState(0)
+  const navigate = useNavigate()
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] to-[#D2EEDD] px-5 py-6">
@@ -158,13 +163,13 @@ export default function LearningLab() {
         {/* Lesson list */}
         <div className="mt-4 flex flex-col gap-3">
           {lessons.map((lesson) => (
-            <LessonRow key={lesson.title} lesson={lesson} />
+            <LessonRow key={lesson.title} lesson={lesson} onPlay={() => navigate("/lesson")} />
           ))}
         </div>
 
         {/* Start Lesson button */}
         <div className="mt-6 flex justify-center">
-          <Button size="lg" className="w-full max-w-xs">
+          <Button size="lg" className="w-full max-w-xs" onClick={() => navigate("/lesson")}>
             <Play className="h-5 w-5 fill-current" /> Start Lesson
           </Button>
         </div>

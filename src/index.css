@@ -78,6 +78,25 @@
     transform: scale(1.08);
   }
 }
+/* ── Page transition: growing circle reveal ───────────────────────────── */
+@keyframes circleGrow {
+  0%   { clip-path: circle(0% at 50% 60%); }
+  100% { clip-path: circle(150% at 50% 60%); }
+}
+@keyframes circleShrink {
+  0%   { clip-path: circle(150% at 50% 60%); }
+  100% { clip-path: circle(0% at 50% 60%); }
+}
+
+@layer utilities {
+  .animate-circle-grow {
+    animation: circleGrow 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .animate-circle-shrink {
+    animation: circleShrink 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
 @keyframes confettiFall {
   0%   { transform: translateY(-10px) rotate(var(--r, 20deg)); opacity: 1; }
   80%  { opacity: 0.8; }

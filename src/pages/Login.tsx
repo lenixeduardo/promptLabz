@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { BrandLogo } from "@/components/BrandLogo"
 import { MascotGlow } from "@/components/MascotGlow"
+import { CircleRevealEntry } from "@/components/CircleTransition"
 
 function GoogleIcon() {
   return (
@@ -44,6 +45,8 @@ export default function Login() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
+      {/* Shrinking circle reveal — plays when arriving from Hero */}
+      <CircleRevealEntry />
       <div className="mx-auto flex w-full max-w-[420px] flex-col items-center">
         {/* Mascot with animated glow halo */}
         <MascotGlow size={260}>

@@ -3,6 +3,7 @@ import Hero from "@/pages/Hero"
 import Login from "@/pages/Login"
 import Home from "@/pages/Home"
 import LearningLab from "@/pages/LearningLab"
+import Lesson from "@/pages/Lesson"
 import Skills from "@/pages/Skills"
 import MissionComplete from "@/pages/MissionComplete"
 
@@ -13,6 +14,7 @@ export default function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/learn" element={<LearningLab />} />
+      <Route path="/lesson" element={<Lesson />} />
       <Route path="/skills" element={<Skills />} />
       <Route path="/mission" element={<MissionComplete />} />
     </Routes>
