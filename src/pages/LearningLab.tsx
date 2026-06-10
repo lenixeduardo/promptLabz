@@ -7,6 +7,9 @@ import { HelpButton } from "@/components/HelpButton"
 import { cn } from "@/lib/utils"
 import { lessonsData } from "@/data/lessonsData"
 
+import { useAuth } from "@/hooks/useAuth"
+import { loadProgress } from "@/lib/db"
+
 function getIcon(name: string) {
   const IconComponent = (Icons as any)[name]
   return IconComponent || Icons.BookOpen
@@ -21,27 +24,22 @@ interface CategoryProgress {
 export default function LearningLab() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
+  const { user } = useAuth()
   
   // Get active category from URL or default to first category
   const activeCategoryKey = searchParams.get("category") || "trending-skills"
   const activeCategory = lessonsData[activeCategoryKey] || lessonsData["trending-skills"]
 
-  const [progress, setProgress] = useState<Record<string, CategoryProgress>>(() => {
-    const saved = localStorage.getItem("promptlab_progress")
-    return saved ? JSON.parse(saved) : {}
-  })
+  const [progress, setProgress] = useState<Record<string, CategoryProgress>>({})
 
-  // Synchronize search param changes or storage changes if any
+  // Fetch progress from database or localStorage
   useEffect(() => {
-    const handleStorageChange = () => {
-      const saved = localStorage.getItem("promptlab_progress")
-      if (saved) {
-        setProgress(JSON.parse(saved))
-      }
+    async function initProgress() {
+      const data = await loadProgress(user?.id || "")
+      setProgress(data)
     }
-    window.addEventListener("storage", handleStorageChange)
-    return () => window.removeEventListener("storage", handleStorageChange)
-  }, [])
+    initProgress()
+  }, [user])
 
   const getProgressForCategory = (catId: string, categoryObj: typeof activeCategory): CategoryProgress => {
     if (progress[catId]) {

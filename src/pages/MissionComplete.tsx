@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -17,6 +17,8 @@ const CONFETTI = [
 
 export default function MissionComplete() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const earnedHeart = location.state?.earnedHeart === true
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-white via-[#EAF7EF] to-[#D2EEDD] px-6 py-10">
@@ -110,19 +112,21 @@ export default function MissionComplete() {
           Continuar
         </Button>
 
-        <div className="flex items-center gap-2">
-          {/* Diamond gem */}
-          <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none">
-            <polygon
-              points="12,2 22,9 12,22 2,9"
-              fill="#4ADE80"
-              stroke="#2E7A4E"
-              strokeWidth="1.5"
-            />
-            <polygon points="12,2 22,9 12,13 2,9" fill="#86EFAC" />
-          </svg>
-          <span className="text-xl font-bold text-[#2F6B45]">+1 Vida</span>
-        </div>
+        {earnedHeart && (
+          <div className="flex items-center gap-2">
+            {/* Diamond gem */}
+            <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none">
+              <polygon
+                points="12,2 22,9 12,22 2,9"
+                fill="#4ADE80"
+                stroke="#2E7A4E"
+                strokeWidth="1.5"
+              />
+              <polygon points="12,2 22,9 12,13 2,9" fill="#86EFAC" />
+            </svg>
+            <span className="text-xl font-bold text-[#2F6B45]">+1 Vida</span>
+          </div>
+        )}
       </div>
     </div>
   )

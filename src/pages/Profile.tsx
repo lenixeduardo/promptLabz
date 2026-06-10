@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { useAuth } from "@/hooks/useAuth"
-import { supabase } from "@/lib/supabase"
+import { updateUserProfile } from "@/lib/db"
 import { sileo } from "sileo"
 
 export default function Profile() {
@@ -18,11 +18,15 @@ export default function Profile() {
     e.preventDefault()
     setLoading(true)
 
+    if (!user?.id) {
+      sileo.error({ title: "Usuário não encontrado" })
+      setLoading(false)
+      return
+    }
+
     try {
-      const { error } = await supabase.auth.updateUser({
-        data: { full_name: fullName },
-      })
-      if (error) throw error
+      const { error } = await updateUserProfile(user.id, fullName)
+      if (error) throw new Error(error)
       sileo.success({ title: "Perfil atualizado com sucesso!" })
     } catch (err: any) {
       sileo.error({ title: err?.message || "Erro ao atualizar perfil" })

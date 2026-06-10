@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { sileo } from "sileo"
 import { lessonsData, ContentBlock, Question } from "@/data/lessonsData"
+import { useAuth } from "@/hooks/useAuth"
+import { saveProgress as saveProgressDb } from "@/lib/db"
 
 // ── Sub-components ───────────────────────────────────────────────────────────
 
@@ -155,6 +157,7 @@ function QuestionView({
 export default function Lesson() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { user } = useAuth()
 
   const categoryId = searchParams.get("category") || "trending-skills"
   const moduleIndex = parseInt(searchParams.get("moduleIndex") || "0", 10)
@@ -167,7 +170,8 @@ export default function Lesson() {
   const [step, setStep] = useState(0)        // 0 = content, 1+ = questions
   const [selected, setSelected] = useState<string | null>(null)
   const [confirmed, setConfirmed] = useState(false)
-  const [score, setScore] = useState(0)
+  const [answerResults, setAnswerResults] = useState<Record<number, boolean>>({})
+  const [isSaving, setIsSaving] = useState(false)
 
   // Safeguard if data is missing
   if (!lessonObj) {
@@ -198,8 +202,13 @@ export default function Lesson() {
 
   function handleConfirm() {
     if (!selected || !currentQuestion) return
-    if (selected === currentQuestion.correct) {
-      setScore((s) => s + 1)
+    const isCorrect = selected === currentQuestion.correct
+    setAnswerResults((results) => ({
+      ...results,
+      [currentQuestion.id]: isCorrect,
+    }))
+
+    if (isCorrect) {
       sileo.success({ title: "Correto!", description: "Muito bem! 🎉" })
     } else {
       sileo.error({ title: "Incorreto", description: "Verifique a resposta correta abaixo." })
@@ -207,7 +216,7 @@ export default function Lesson() {
     setConfirmed(true)
   }
 
-  function saveProgress() {
+  async function saveProgress() {
     try {
       const saved = localStorage.getItem("promptlab_progress")
       const progress = saved ? JSON.parse(saved) : {}
@@ -237,27 +246,45 @@ export default function Lesson() {
           if (nextModuleIndex < categoryObj.modules.length) {
             catProgress.currentModuleIndex = nextModuleIndex
             catProgress.currentLessonIndex = 0
-          } else {
-            // Already fully completed the category modules
           }
         }
       }
 
-      progress[categoryId] = catProgress
-      localStorage.setItem("promptlab_progress", JSON.stringify(progress))
+      // Save using db service helper (handles Supabase + LocalStorage sync)
+      const result = await saveProgressDb(user?.id || "", categoryId, catProgress)
+      if (result?.error && user?.id) {
+        sileo.error({
+          title: "Progresso salvo neste dispositivo",
+          description: "Não foi possível sincronizar com a nuvem agora.",
+        })
+      }
     } catch (err) {
-      console.error("Error saving progress to localStorage", err)
+      console.error("Error saving progress:", err)
     }
   }
 
-  function handleNext() {
+  async function handleNext() {
     if (step < totalSteps - 1) {
       setStep((s) => s + 1)
       setSelected(null)
       setConfirmed(false)
     } else {
-      saveProgress()
-      navigate("/mission")
+      const passedLesson = lessonObj.questions.every((question) => answerResults[question.id])
+      if (!passedLesson) {
+        sileo.error({
+          title: "Atividade não concluída",
+          description: "Acerte todas as questões para marcar a lição como concluída.",
+        })
+        setStep(1)
+        setSelected(null)
+        setConfirmed(false)
+        return
+      }
+
+      setIsSaving(true)
+      await saveProgress()
+      setIsSaving(false)
+      navigate("/mission", { state: { earnedHeart: true } })
     }
   }
 
@@ -338,8 +365,8 @@ export default function Lesson() {
             Confirmar resposta
           </Button>
         ) : (
-          <Button size="lg" className="w-full" onClick={handleNext}>
-            {isLastStep ? "Ver resultado 🏆" : "Próxima →"}
+          <Button size="lg" className="w-full" onClick={handleNext} disabled={isSaving}>
+            {isSaving ? "Salvando..." : isLastStep ? "Ver resultado 🏆" : "Próxima →"}
           </Button>
         )}
       </div>
