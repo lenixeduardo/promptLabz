@@ -1,4 +1,4 @@
-# Backend TODO - PromptLabzzz
+﻿# Backend TODO - PromptLabz
 
 Auditoria feita com agentes em 2026-06-10. Status atualizado apos correcoes.
 
@@ -98,3 +98,4 @@ Auditoria feita com agentes em 2026-06-10. Status atualizado apos correcoes.
 - [x] `npm.cmd run test -- --reporter=dot` - 9 arquivos, 59 testes.
 - [x] `npm.cmd run build`
 - [x] `npm.cmd run smoke:supabase` - pula corretamente sem envs reais.
+

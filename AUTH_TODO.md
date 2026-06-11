@@ -1,6 +1,6 @@
-# Authentication Implementation Roadmap - PromptLabzz
+﻿# Authentication Implementation Roadmap - PromptLabz
 
-## ✅ COMPLETED (Phase 1 - Login)
+## âœ… COMPLETED (Phase 1 - Login)
 
 - [x] Firebase replaced with Supabase SDK
 - [x] AuthContext created for global state
@@ -14,7 +14,7 @@
 
 ---
 
-## 🔧 NEXT STEPS
+## ðŸ”§ NEXT STEPS
 
 ### Phase 2: Setup & Initial Test (REQUIRED FIRST)
 - [ ] Create Supabase project at https://supabase.com
@@ -38,7 +38,7 @@
 - [ ] Send verification email after signup
 - [ ] Create user profile in `users` table after signup
 - [ ] Handle duplicate email error gracefully
-- [ ] Test full signup → email verification → login flow
+- [ ] Test full signup â†’ email verification â†’ login flow
 
 ---
 
@@ -96,8 +96,8 @@
 ### Phase 8: Protected Routes & Navigation
 - [x] Block unauthenticated users from /home, /learn, /lesson, /skills, /mission
 - [x] Redirect anon users to /login
-- [x] Redirect authenticated users from /login → /home
-- [x] Redirect authenticated users from /signup → /home
+- [x] Redirect authenticated users from /login â†’ /home
+- [x] Redirect authenticated users from /signup â†’ /home
 - [x] Keep authenticated user on /forgot-password (no redirect)
 - [x] Add logout button to Home header
 
@@ -193,23 +193,23 @@ pnpm run dev
 
 ```
 src/
-├── contexts/
-│   └── AuthContext.tsx          ← NEW: Global auth state
-├── hooks/
-│   └── useAuth.ts               ← NEW: Auth methods
-├── components/
-│   └── PrivateRoute.tsx         ← NEW: Protected routes
-├── lib/
-│   └── supabase.ts              ← NEW: Supabase client
-├── pages/
-│   ├── Login.tsx                ← MODIFIED: + useAuth integration
-│   ├── Signup.tsx               ← MODIFIED: + useAuth integration
-│   └── ForgotPassword.tsx       ← MODIFIED: + useAuth integration
-├── App.tsx                      ← MODIFIED: + AuthProvider + PrivateRoute
-└── main.tsx                     ← Ready for auth context wrapper
+â”œâ”€â”€ contexts/
+â”‚   â””â”€â”€ AuthContext.tsx          â† NEW: Global auth state
+â”œâ”€â”€ hooks/
+â”‚   â””â”€â”€ useAuth.ts               â† NEW: Auth methods
+â”œâ”€â”€ components/
+â”‚   â””â”€â”€ PrivateRoute.tsx         â† NEW: Protected routes
+â”œâ”€â”€ lib/
+â”‚   â””â”€â”€ supabase.ts              â† NEW: Supabase client
+â”œâ”€â”€ pages/
+â”‚   â”œâ”€â”€ Login.tsx                â† MODIFIED: + useAuth integration
+â”‚   â”œâ”€â”€ Signup.tsx               â† MODIFIED: + useAuth integration
+â”‚   â””â”€â”€ ForgotPassword.tsx       â† MODIFIED: + useAuth integration
+â”œâ”€â”€ App.tsx                      â† MODIFIED: + AuthProvider + PrivateRoute
+â””â”€â”€ main.tsx                     â† Ready for auth context wrapper
 
-.env.example                      ← NEW: Environment template
-tsconfig.app.json               ← MODIFIED: + vite/client types
+.env.example                      â† NEW: Environment template
+tsconfig.app.json               â† MODIFIED: + vite/client types
 ```
 
 ---
@@ -244,7 +244,8 @@ CREATE POLICY "Users can update own data" ON users
 
 ## Current Status
 
-**Phase 1 Complete** ✅ - Login/Signup/ForgotPassword UI + Supabase integration  
-**Phase 2 In Progress** 🔧 - Awaiting Supabase setup and .env.local configuration
+**Phase 1 Complete** âœ… - Login/Signup/ForgotPassword UI + Supabase integration  
+**Phase 2 In Progress** ðŸ”§ - Awaiting Supabase setup and .env.local configuration
 
 Next: Test authentication flow with real Supabase project
+

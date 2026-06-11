@@ -4,11 +4,12 @@ import { defineConfig } from "vitest/config"
 import sourceIdentifierPlugin from 'vite-plugin-source-identifier'
 
 const isProd = process.env.BUILD_MODE === 'prod'
+const isTest = process.env.VITEST === "true" || process.env.NODE_ENV === "test"
 export default defineConfig({
   plugins: [
     react(),
     sourceIdentifierPlugin({
-      enabled: !isProd,
+      enabled: !isProd && !isTest,
       attributePrefix: 'data-matrix',
       includeProps: true,
     })

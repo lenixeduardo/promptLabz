@@ -1,10 +1,10 @@
-# Community Premium — Implementation Plan
+﻿# Community Premium â€” Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a premium Community section with Stripe monthly subscription, automated RSS news (summarized by Claude), daily tips, and copy-paste project templates.
 
-**Architecture:** Supabase Edge Functions handle all Stripe and RSS logic — no secrets in the frontend. The frontend reads `public.users.premium_status` in real-time via Supabase listener and gates the `/community` route behind a `PremiumGate` component that calls `stripe-checkout` Edge Function on upgrade.
+**Architecture:** Supabase Edge Functions handle all Stripe and RSS logic â€” no secrets in the frontend. The frontend reads `public.users.premium_status` in real-time via Supabase listener and gates the `/community` route behind a `PremiumGate` component that calls `stripe-checkout` Edge Function on upgrade.
 
 **Tech Stack:** React 18 + TypeScript + Vite, Supabase JS v2, Stripe (Edge Functions only), Deno (Edge Functions runtime), Vitest + React Testing Library, Tailwind CSS.
 
@@ -40,12 +40,12 @@
 
 Before starting:
 1. Install Supabase CLI: `npm install -g supabase` (or use `npx supabase`)
-2. In Stripe Dashboard: create Product "PromptLabzz Premium" → recurring Price (monthly) → copy Price ID
+2. In Stripe Dashboard: create Product "PromptLabz Premium" â†’ recurring Price (monthly) â†’ copy Price ID
 3. Have ready: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID`, `ANTHROPIC_API_KEY`
 
 ---
 
-## Task 1: DB Migration — Premium Fields on `users` Table
+## Task 1: DB Migration â€” Premium Fields on `users` Table
 
 **Files:**
 - Create: `supabase/migrations/20260610_001_users_premium.sql`
@@ -69,16 +69,16 @@ ALTER TABLE public.users
 
 - [ ] **Step 2: Apply migration via Supabase MCP or Dashboard**
 
-Option A — Supabase MCP (if available in session):
+Option A â€” Supabase MCP (if available in session):
 ```
 Use mcp__claude_ai_Supabase__apply_migration with the SQL above
 ```
 
-Option B — Supabase Dashboard → SQL Editor → paste and run.
+Option B â€” Supabase Dashboard â†’ SQL Editor â†’ paste and run.
 
 - [ ] **Step 3: Verify columns exist**
 
-In Supabase Dashboard → Table Editor → `users` table.
+In Supabase Dashboard â†’ Table Editor â†’ `users` table.
 Expected: new columns `premium_status`, `stripe_customer_id`, `stripe_subscription_id`, `trial_ends_at`, `premium_since` visible.
 
 - [ ] **Step 4: Commit**
@@ -90,7 +90,7 @@ git commit -m "feat: add premium subscription fields to users table"
 
 ---
 
-## Task 2: DB Migration — Community Tables + RLS
+## Task 2: DB Migration â€” Community Tables + RLS
 
 **Files:**
 - Create: `supabase/migrations/20260610_002_community_tables.sql`
@@ -165,7 +165,7 @@ CREATE POLICY "Premium users can read templates"
 -- Seed one daily tip so the UI has data immediately
 INSERT INTO public.daily_tips (tip_text, category, scheduled_date)
 VALUES (
-  'Use "pense passo a passo" no final de prompts complexos. Isso ativa o raciocínio encadeado (Chain of Thought) e reduz erros em tarefas analíticas.',
+  'Use "pense passo a passo" no final de prompts complexos. Isso ativa o raciocÃ­nio encadeado (Chain of Thought) e reduz erros em tarefas analÃ­ticas.',
   'Prompt',
   CURRENT_DATE
 ) ON CONFLICT (scheduled_date) DO NOTHING;
@@ -173,11 +173,11 @@ VALUES (
 
 - [ ] **Step 2: Apply migration**
 
-Same as Task 1 Step 2 — Supabase MCP or Dashboard SQL Editor.
+Same as Task 1 Step 2 â€” Supabase MCP or Dashboard SQL Editor.
 
 - [ ] **Step 3: Verify tables exist**
 
-Supabase Dashboard → Table Editor → confirm `news`, `daily_tips`, `templates` present.
+Supabase Dashboard â†’ Table Editor â†’ confirm `news`, `daily_tips`, `templates` present.
 
 - [ ] **Step 4: Commit**
 
@@ -188,7 +188,7 @@ git commit -m "feat: create community tables (news, daily_tips, templates) with 
 
 ---
 
-## Task 3: Edge Function — Shared CORS + stripe-checkout
+## Task 3: Edge Function â€” Shared CORS + stripe-checkout
 
 **Files:**
 - Create: `supabase/functions/_shared/cors.ts`
@@ -311,7 +311,7 @@ git commit -m "feat: add stripe-checkout edge function with 30-day trial"
 
 ---
 
-## Task 4: Edge Function — stripe-webhook
+## Task 4: Edge Function â€” stripe-webhook
 
 **Files:**
 - Create: `supabase/functions/stripe-webhook/index.ts`
@@ -414,7 +414,7 @@ npx supabase functions deploy stripe-webhook --no-verify-jwt
 
 - [ ] **Step 4: Register webhook in Stripe Dashboard**
 
-Stripe Dashboard → Developers → Webhooks → Add endpoint:
+Stripe Dashboard â†’ Developers â†’ Webhooks â†’ Add endpoint:
 - URL: `https://<your-project-ref>.supabase.co/functions/v1/stripe-webhook`
 - Events: `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`
 
@@ -427,7 +427,7 @@ git commit -m "feat: add stripe-webhook edge function for subscription status sy
 
 ---
 
-## Task 5: Edge Function — stripe-portal
+## Task 5: Edge Function â€” stripe-portal
 
 **Files:**
 - Create: `supabase/functions/stripe-portal/index.ts`
@@ -477,7 +477,7 @@ Deno.serve(async (req) => {
 
 - [ ] **Step 2: Enable Customer Portal in Stripe Dashboard**
 
-Stripe Dashboard → Billing → Customer portal → Activate session.
+Stripe Dashboard â†’ Billing â†’ Customer portal â†’ Activate session.
 
 - [ ] **Step 3: Deploy function**
 
@@ -494,7 +494,7 @@ git commit -m "feat: add stripe-portal edge function for subscription management
 
 ---
 
-## Task 6: Edge Function — rss-fetcher (Cron)
+## Task 6: Edge Function â€” rss-fetcher (Cron)
 
 **Files:**
 - Create: `supabase/functions/rss-fetcher/index.ts`
@@ -560,7 +560,7 @@ async function summarize(title: string, description: string): Promise<string> {
     messages: [
       {
         role: "user",
-        content: `Resuma em exatamente 3 frases diretas em português para um profissional que quer se atualizar em IA:\n\nTítulo: ${title}\n\nConteúdo: ${description}`,
+        content: `Resuma em exatamente 3 frases diretas em portuguÃªs para um profissional que quer se atualizar em IA:\n\nTÃ­tulo: ${title}\n\nConteÃºdo: ${description}`,
       },
     ],
   })
@@ -630,7 +630,7 @@ npx supabase functions deploy rss-fetcher --no-verify-jwt
 
 - [ ] **Step 4: Schedule cron via Supabase Dashboard**
 
-Supabase Dashboard → Database → Extensions → enable `pg_cron`.
+Supabase Dashboard â†’ Database â†’ Extensions â†’ enable `pg_cron`.
 
 Then run in SQL Editor:
 ```sql
@@ -657,7 +657,7 @@ git commit -m "feat: add rss-fetcher edge function with Claude summarization and
 
 ---
 
-## Task 7: Hook — useSubscription
+## Task 7: Hook â€” useSubscription
 
 **Files:**
 - Create: `src/hooks/useSubscription.ts`
@@ -756,7 +756,7 @@ describe("useSubscription", () => {
 pnpm test -- useSubscription
 ```
 
-Expected: FAIL — `useSubscription` not found.
+Expected: FAIL â€” `useSubscription` not found.
 
 - [ ] **Step 3: Implement hook**
 
@@ -861,7 +861,7 @@ git commit -m "feat: add useSubscription hook with real-time premium status"
 
 ---
 
-## Task 8: Component — PremiumGate
+## Task 8: Component â€” PremiumGate
 
 **Files:**
 - Create: `src/components/PremiumGate.tsx`
@@ -947,7 +947,7 @@ describe("PremiumGate", () => {
 pnpm test -- PremiumGate
 ```
 
-Expected: FAIL — `PremiumGate` not found.
+Expected: FAIL â€” `PremiumGate` not found.
 
 - [ ] **Step 3: Implement component**
 
@@ -991,16 +991,16 @@ export function PremiumGate({ children }: PremiumGateProps) {
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EAF7EF]">
           <Lock className="h-7 w-7 text-[#3E8E5E]" />
         </div>
-        <h2 className="text-xl font-extrabold text-[#1F2A24]">Conteúdo Exclusivo</h2>
-        <p className="mt-1 text-sm text-[#6B7A70]">Acesso à Comunidade Premium</p>
+        <h2 className="text-xl font-extrabold text-[#1F2A24]">ConteÃºdo Exclusivo</h2>
+        <p className="mt-1 text-sm text-[#6B7A70]">Acesso Ã  Comunidade Premium</p>
         <ul className="mt-6 flex flex-col gap-2 text-left">
-          {["Notícias diárias de IA", "Dica do dia", "Templates prontos"].map((item) => (
+          {["NotÃ­cias diÃ¡rias de IA", "Dica do dia", "Templates prontos"].map((item) => (
             <li key={item} className="flex items-center gap-2 text-sm font-medium text-[#2B5D3A]">
               <Check className="h-4 w-4 text-[#3E9A63]" /> {item}
             </li>
           ))}
         </ul>
-        <p className="mt-6 text-xs text-[#6B7A70]">1 mês grátis · cancele quando quiser</p>
+        <p className="mt-6 text-xs text-[#6B7A70]">1 mÃªs grÃ¡tis Â· cancele quando quiser</p>
         <Button onClick={handleActivate} className="mt-4 w-full gap-2">
           <Sparkles className="h-4 w-4" /> Ativar Premium
         </Button>
@@ -1027,7 +1027,7 @@ git commit -m "feat: add PremiumGate component with paywall and Stripe checkout 
 
 ---
 
-## Task 9: Component — DailyTip
+## Task 9: Component â€” DailyTip
 
 **Files:**
 - Create: `src/components/DailyTip.tsx`
@@ -1053,7 +1053,7 @@ describe("DailyTip", () => {
         maybeSingle: () => Promise.resolve({
           data: {
             id: "1",
-            tip_text: "Use Chain of Thought para raciocínio complexo.",
+            tip_text: "Use Chain of Thought para raciocÃ­nio complexo.",
             category: "Prompt",
             scheduled_date: "2026-06-10",
           },
@@ -1063,7 +1063,7 @@ describe("DailyTip", () => {
 
     render(<DailyTip />)
     await waitFor(() => {
-      expect(screen.getByText("Use Chain of Thought para raciocínio complexo.")).toBeInTheDocument()
+      expect(screen.getByText("Use Chain of Thought para raciocÃ­nio complexo.")).toBeInTheDocument()
     })
     expect(screen.getByText("Prompt")).toBeInTheDocument()
   })
@@ -1166,7 +1166,7 @@ git commit -m "feat: add DailyTip component"
 
 ---
 
-## Task 10: Component — NewsCard
+## Task 10: Component â€” NewsCard
 
 **Files:**
 - Create: `src/components/NewsCard.tsx`
@@ -1182,8 +1182,8 @@ import { NewsCard } from "./NewsCard"
 
 const mockNews = {
   id: "1",
-  title: "OpenAI lança novo modelo",
-  summary: "O modelo GPT-5 foi anunciado. Traz capacidades multimodais avançadas. Disponível via API em breve.",
+  title: "OpenAI lanÃ§a novo modelo",
+  summary: "O modelo GPT-5 foi anunciado. Traz capacidades multimodais avanÃ§adas. DisponÃ­vel via API em breve.",
   source_url: "https://openai.com/blog/gpt-5",
   source_name: "OpenAI Blog",
   published_at: "2026-06-10T08:00:00Z",
@@ -1192,7 +1192,7 @@ const mockNews = {
 describe("NewsCard", () => {
   it("renders title, summary, and source", () => {
     render(<NewsCard news={mockNews} />)
-    expect(screen.getByText("OpenAI lança novo modelo")).toBeInTheDocument()
+    expect(screen.getByText("OpenAI lanÃ§a novo modelo")).toBeInTheDocument()
     expect(screen.getByText(/GPT-5 foi anunciado/)).toBeInTheDocument()
     expect(screen.getByText("OpenAI Blog")).toBeInTheDocument()
   })
@@ -1247,7 +1247,7 @@ export function NewsCard({ news }: NewsCardProps) {
       <div className="mt-3 flex items-center justify-between">
         <span className="text-xs text-[#6B7A70]">
           {news.source_name}
-          {formattedDate && ` · ${formattedDate}`}
+          {formattedDate && ` Â· ${formattedDate}`}
         </span>
         <a
           href={news.source_url}
@@ -1280,7 +1280,7 @@ git commit -m "feat: add NewsCard component"
 
 ---
 
-## Task 11: Component — TemplateCard
+## Task 11: Component â€” TemplateCard
 
 **Files:**
 - Create: `src/components/TemplateCard.tsx`
@@ -1296,10 +1296,10 @@ import { TemplateCard } from "./TemplateCard"
 
 const mockTemplate = {
   id: "1",
-  title: "Email de Prospecção",
+  title: "Email de ProspecÃ§Ã£o",
   description: "Template para cold email com IA generativa.",
   category: "Marketing",
-  code: "Olá [Nome], vi que você trabalha com...",
+  code: "OlÃ¡ [Nome], vi que vocÃª trabalha com...",
   created_at: "2026-06-10T00:00:00Z",
 }
 
@@ -1312,7 +1312,7 @@ describe("TemplateCard", () => {
 
   it("renders title, description, and category", () => {
     render(<TemplateCard template={mockTemplate} />)
-    expect(screen.getByText("Email de Prospecção")).toBeInTheDocument()
+    expect(screen.getByText("Email de ProspecÃ§Ã£o")).toBeInTheDocument()
     expect(screen.getByText("Template para cold email com IA generativa.")).toBeInTheDocument()
     expect(screen.getByText("Marketing")).toBeInTheDocument()
   })
@@ -1321,7 +1321,7 @@ describe("TemplateCard", () => {
     render(<TemplateCard template={mockTemplate} />)
     const btn = screen.getByRole("button", { name: /copiar/i })
     fireEvent.click(btn)
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith("Olá [Nome], vi que você trabalha com...")
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith("OlÃ¡ [Nome], vi que vocÃª trabalha com...")
   })
 })
 ```
@@ -1409,7 +1409,7 @@ git commit -m "feat: add TemplateCard component with copy-to-clipboard"
 
 ---
 
-## Task 12: Page — Community
+## Task 12: Page â€” Community
 
 **Files:**
 - Create: `src/pages/Community.tsx`
@@ -1476,7 +1476,7 @@ describe("Community page", () => {
     })
     renderCommunity()
     await waitFor(() => {
-      expect(screen.getByText("Notícias de IA")).toBeInTheDocument()
+      expect(screen.getByText("NotÃ­cias de IA")).toBeInTheDocument()
     })
     expect(screen.getByText("Templates")).toBeInTheDocument()
   })
@@ -1489,7 +1489,7 @@ describe("Community page", () => {
     })
     renderCommunity("/community?subscribed=true")
     await waitFor(() => {
-      expect(screen.getByText("Notícias de IA")).toBeInTheDocument()
+      expect(screen.getByText("NotÃ­cias de IA")).toBeInTheDocument()
     })
   })
 })
@@ -1601,7 +1601,7 @@ function CommunityContent() {
             <div>
               <p className="text-sm font-extrabold text-[#1F2A24]">Membro Premium</p>
               {trialEnd && (
-                <p className="text-xs text-[#4A5D50]">Trial até {trialEnd}</p>
+                <p className="text-xs text-[#4A5D50]">Trial atÃ© {trialEnd}</p>
               )}
             </div>
           </div>
@@ -1623,7 +1623,7 @@ function CommunityContent() {
           <div className="mb-4 flex items-center gap-2">
             <Newspaper className="h-4 w-4 text-[#3E8E5E]" />
             <h2 className="text-sm font-extrabold uppercase tracking-wider text-[#2B5D3A]">
-              Notícias de IA
+              NotÃ­cias de IA
             </h2>
           </div>
           {loadingNews ? (
@@ -1633,7 +1633,7 @@ function CommunityContent() {
               ))}
             </div>
           ) : news.length === 0 ? (
-            <p className="text-sm text-[#6B7A70]">Nenhuma notícia disponível ainda.</p>
+            <p className="text-sm text-[#6B7A70]">Nenhuma notÃ­cia disponÃ­vel ainda.</p>
           ) : (
             <div className="flex flex-col gap-3">
               {news.map((item) => <NewsCard key={item.id} news={item} />)}
@@ -1691,7 +1691,7 @@ export default function Community() {
 
   useEffect(() => {
     if (searchParams.get("subscribed") === "true") {
-      sileo.success("Bem-vindo ao Premium! 🎉 Seu mês grátis começou.")
+      sileo.success("Bem-vindo ao Premium! ðŸŽ‰ Seu mÃªs grÃ¡tis comeÃ§ou.")
     }
   }, [])
 
@@ -1763,7 +1763,7 @@ Find the section in `Home.tsx` where navigation cards are rendered (look for car
 >
   <Crown className="h-6 w-6 text-[#3E8E5E]" />
   <span className="text-xs font-bold text-[#1F2A24]">Comunidade</span>
-  <span className="text-center text-[10px] text-[#6B7A70]">Notícias · Dicas · Templates</span>
+  <span className="text-center text-[10px] text-[#6B7A70]">NotÃ­cias Â· Dicas Â· Templates</span>
 </button>
 ```
 
@@ -1795,7 +1795,7 @@ git commit -m "feat: add /community route and Home navigation card"
 
 Add to `.env.example`:
 ```bash
-# Stripe (server-side only — never expose in frontend)
+# Stripe (server-side only â€” never expose in frontend)
 # Set these via: npx supabase secrets set KEY=value
 STRIPE_SECRET_KEY=sk_live_...
 STRIPE_WEBHOOK_SECRET=whsec_...
@@ -1820,21 +1820,22 @@ git commit -m "docs: add premium/stripe/anthropic env vars to .env.example"
 ## Self-Review
 
 **Spec coverage check:**
-- ✅ Premium access (Stripe monthly, 30-day trial) → Tasks 3–5
-- ✅ DB schema with RLS → Tasks 1–2
-- ✅ RSS automation with Claude summaries → Task 6
-- ✅ News feed → Task 10 + Community page
-- ✅ Daily tip → Task 9 + Community page
-- ✅ Templates (copy-paste, category, description) → Task 11 + Community page
-- ✅ Paywall for free/cancelled → Task 8
-- ✅ Real-time status sync → Task 7 (Supabase listener)
-- ✅ Manage subscription (portal) → Community page handleManageSubscription
-- ✅ Route + navigation → Task 13
+- âœ… Premium access (Stripe monthly, 30-day trial) â†’ Tasks 3â€“5
+- âœ… DB schema with RLS â†’ Tasks 1â€“2
+- âœ… RSS automation with Claude summaries â†’ Task 6
+- âœ… News feed â†’ Task 10 + Community page
+- âœ… Daily tip â†’ Task 9 + Community page
+- âœ… Templates (copy-paste, category, description) â†’ Task 11 + Community page
+- âœ… Paywall for free/cancelled â†’ Task 8
+- âœ… Real-time status sync â†’ Task 7 (Supabase listener)
+- âœ… Manage subscription (portal) â†’ Community page handleManageSubscription
+- âœ… Route + navigation â†’ Task 13
 
 **Type consistency check:**
-- `NewsItem` defined in `NewsCard.tsx`, re-exported, used in `Community.tsx` ✅
-- `Template` defined in `TemplateCard.tsx`, re-exported, used in `Community.tsx` ✅
-- `PremiumStatus` defined in `useSubscription.ts`, used in `PremiumGate.tsx` via hook ✅
-- `supabase.from("users")` used consistently (not "profiles") ✅
+- `NewsItem` defined in `NewsCard.tsx`, re-exported, used in `Community.tsx` âœ…
+- `Template` defined in `TemplateCard.tsx`, re-exported, used in `Community.tsx` âœ…
+- `PremiumStatus` defined in `useSubscription.ts`, used in `PremiumGate.tsx` via hook âœ…
+- `supabase.from("users")` used consistently (not "profiles") âœ…
 
-**Placeholder scan:** No TBDs, no "implement later", all steps have actual code ✅
+**Placeholder scan:** No TBDs, no "implement later", all steps have actual code âœ…
+

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest"
+﻿import { describe, it, expect, vi, beforeEach } from "vitest"
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
@@ -33,7 +33,7 @@ vi.mock("@/components/MascotGlow", () => ({
 }))
 
 vi.mock("@/components/BrandLogo", () => ({
-  BrandLogo: () => <div>PromptLabzz</div>,
+  BrandLogo: () => <div>PromptLabz</div>,
 }))
 
 function renderLogin() {
@@ -51,14 +51,14 @@ function renderLogin() {
 
 beforeEach(() => vi.clearAllMocks())
 
-describe("Login — renderização", () => {
+describe("Login â€” renderizaÃ§Ã£o", () => {
   it("exibe campos de email e senha", () => {
     renderLogin()
     expect(screen.getByPlaceholderText("Seu e-mail")).toBeInTheDocument()
     expect(screen.getByPlaceholderText("Sua senha")).toBeInTheDocument()
   })
 
-  it("exibe o botão de entrar", () => {
+  it("exibe o botÃ£o de entrar", () => {
     renderLogin()
     expect(screen.getByRole("button", { name: /entrar/i })).toBeInTheDocument()
   })
@@ -74,7 +74,7 @@ describe("Login — renderização", () => {
   })
 })
 
-describe("Login — submissão", () => {
+describe("Login â€” submissÃ£o", () => {
   it("navega para /home ao fazer login com sucesso", async () => {
     mockLogin.mockResolvedValue({ success: true, user: { email: "a@a.com" } })
 
@@ -87,7 +87,7 @@ describe("Login — submissão", () => {
   })
 
   it("exibe mensagem de erro quando login falha", async () => {
-    mockLogin.mockResolvedValue({ success: false, error: "Credenciais inválidas" })
+    mockLogin.mockResolvedValue({ success: false, error: "Credenciais invÃ¡lidas" })
 
     renderLogin()
     await userEvent.type(screen.getByPlaceholderText("Seu e-mail"), "a@a.com")
@@ -95,11 +95,11 @@ describe("Login — submissão", () => {
     await userEvent.click(screen.getByRole("button", { name: /entrar/i }))
 
     await waitFor(() =>
-      expect(sileo.error).toHaveBeenCalledWith({ title: "Credenciais inválidas" })
+      expect(sileo.error).toHaveBeenCalledWith({ title: "Credenciais invÃ¡lidas" })
     )
   })
 
-  it("exibe 'Entrando...' enquanto request está em andamento", async () => {
+  it("exibe 'Entrando...' enquanto request estÃ¡ em andamento", async () => {
     mockLogin.mockImplementation(() => new Promise(() => {}))
 
     renderLogin()
@@ -111,7 +111,7 @@ describe("Login — submissão", () => {
   })
 })
 
-describe("Login — navegação", () => {
+describe("Login â€” navegaÃ§Ã£o", () => {
   it("navega para /forgot-password ao clicar em 'Esqueci minha senha'", async () => {
     renderLogin()
     await userEvent.click(screen.getByText(/esqueci minha senha/i))
@@ -128,3 +128,4 @@ describe("Login — navegação", () => {
     )
   })
 })
+

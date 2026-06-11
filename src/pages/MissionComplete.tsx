@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom"
+﻿import { useLocation, useNavigate } from "react-router-dom"
 import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LivesBar } from "@/components/LivesBar"
@@ -87,7 +87,7 @@ export default function MissionComplete() {
 
           <img
             src="/assets/mascot-login-new.png"
-            alt="PromptLabzz mascot celebrating"
+            alt="PromptLabz mascot celebrating"
             className="relative z-10 h-52 w-auto object-contain drop-shadow-lg"
           />
         </div>
@@ -145,3 +145,4 @@ export default function MissionComplete() {
     </div>
   )
 }
+

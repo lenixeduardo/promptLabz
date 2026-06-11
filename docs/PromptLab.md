@@ -1,10 +1,10 @@
-# PromptLabzz
+﻿# PromptLabz
 
-Documento de projeto consolidado em 2026-06-10 a partir de `README.md`, `AUTH_TODO.md`, `BACKEND_TODO.md` e docs locais. Busca no Mem por notas relacionadas a PromptLabzz, Supabase, Stripe, Auth e comunidade nao retornou resultados relevantes.
+Documento de projeto consolidado em 2026-06-10 a partir de `README.md`, `AUTH_TODO.md`, `BACKEND_TODO.md` e docs locais. Busca no Mem por notas relacionadas a PromptLabz, Supabase, Stripe, Auth e comunidade nao retornou resultados relevantes.
 
 ## Resumo
 
-PromptLabzz ajuda estudantes e criadores iniciantes a praticar prompts e habilidades de IA sem depender de aulas soltas ou progresso manual.
+PromptLabz ajuda estudantes e criadores iniciantes a praticar prompts e habilidades de IA sem depender de aulas soltas ou progresso manual.
 
 ## Funcionalidades
 
@@ -247,3 +247,4 @@ Baseado em `docs/superpowers/specs/2026-06-10-community-premium-design.md` e `do
 - `BACKEND_TODO.md`
 - `docs/superpowers/specs/2026-06-10-community-premium-design.md`
 - `docs/superpowers/plans/2026-06-10-community-premium.md`
+

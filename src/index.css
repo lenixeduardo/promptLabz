@@ -1,10 +1,10 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Light mint theme tuned to the PromptLabzz wireframes */
+    /* Light mint theme tuned to the PromptLabz wireframes */
     --background: 140 40% 98%;
     --foreground: 150 30% 15%;
 
@@ -56,7 +56,7 @@
   }
 }
 
-/* ── Login mascot glow / rotating-circle animations ───────────────── */
+/* â”€â”€ Login mascot glow / rotating-circle animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes spin-cw {
   to {
     transform: rotate(360deg);
@@ -78,7 +78,7 @@
     transform: scale(1.08);
   }
 }
-/* ── Page transition: growing circle reveal ───────────────────────────── */
+/* â”€â”€ Page transition: growing circle reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes circleGrow {
   0%   { clip-path: circle(0% at 50% 60%); }
   100% { clip-path: circle(150% at 50% 60%); }
@@ -156,3 +156,4 @@
     animation: none;
   }
 }
+

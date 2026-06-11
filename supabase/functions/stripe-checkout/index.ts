@@ -9,6 +9,8 @@ const supabaseAdmin = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 )
+const supabaseUrl = Deno.env.get("SUPABASE_URL")!
+const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -16,14 +18,30 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { userId } = await req.json()
-    if (!userId) {
-      return new Response(JSON.stringify({ error: "userId required" }), {
-        status: 400,
+    const authorization = req.headers.get("Authorization")
+    if (!authorization) {
+      return new Response(JSON.stringify({ error: "Missing authorization header" }), {
+        status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       })
     }
 
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authorization } },
+    })
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseClient.auth.getUser()
+
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      })
+    }
+
+    const userId = user.id
     const { data: userRow } = await supabaseAdmin
       .from("users")
       .select("stripe_customer_id")
@@ -33,9 +51,8 @@ Deno.serve(async (req) => {
     let customerId = userRow?.stripe_customer_id as string | undefined
 
     if (!customerId) {
-      const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(userId)
       const customer = await stripe.customers.create({
-        email: authUser.user?.email,
+        email: user.email,
         metadata: { supabase_uid: userId },
       })
       customerId = customer.id

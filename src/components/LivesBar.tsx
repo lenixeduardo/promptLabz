@@ -1,5 +1,6 @@
 import { Heart } from "lucide-react"
-import { useLives, MAX_LIVES } from "@/contexts/LivesContext"
+import { useLives } from "@/contexts/useLives"
+import { MAX_LIVES } from "@/contexts/lives-config"
 import { cn } from "@/lib/utils"
 
 interface LivesBarProps {

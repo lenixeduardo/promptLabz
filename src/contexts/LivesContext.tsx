@@ -1,8 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useAuthContext } from "./AuthContext"
-
-export const MAX_LIVES = 5
-export const RECHARGE_MS = 60 * 60 * 1000 // 1 hour
+import { MAX_LIVES, RECHARGE_MS } from "./lives-config"
+import { LivesContext } from "./LivesState"
 
 interface Stored {
   lives: number
@@ -25,19 +24,6 @@ function applyPassiveRecharge(s: Stored): Stored {
     lastRechargeTime: s.lastRechargeTime + hours * RECHARGE_MS,
   }
 }
-
-interface LivesCtx {
-  lives: number
-  maxLives: number
-  canPlay: boolean
-  /** Returns ms until the next +1 passive recharge */
-  msUntilNextLife: () => number
-  consumeLife: () => void
-  /** Call on lesson 100%. Returns true if a bonus life was actually granted (respects daily cap). */
-  awardPerfectBonus: () => boolean
-}
-
-const Ctx = createContext<LivesCtx | undefined>(undefined)
 
 export function LivesProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuthContext()
@@ -99,7 +85,7 @@ export function LivesProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <Ctx.Provider value={{
+    <LivesContext.Provider value={{
       lives: stored.lives,
       maxLives: MAX_LIVES,
       canPlay: stored.lives > 0,
@@ -108,12 +94,6 @@ export function LivesProvider({ children }: { children: React.ReactNode }) {
       awardPerfectBonus,
     }}>
       {children}
-    </Ctx.Provider>
+    </LivesContext.Provider>
   )
-}
-
-export function useLives() {
-  const ctx = useContext(Ctx)
-  if (!ctx) throw new Error("useLives must be used inside <LivesProvider>")
-  return ctx
 }

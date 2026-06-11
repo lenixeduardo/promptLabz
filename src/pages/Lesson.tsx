@@ -2,12 +2,16 @@ import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { X, BookOpen, ChevronLeft, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useLives } from "@/contexts/LivesContext"
+import { useLives } from "@/contexts/useLives"
 import { cn } from "@/lib/utils"
 import { sileo } from "sileo"
 import { lessonsData, type ContentBlock, type Question } from "@/data/lessonsData"
 import { useAuth } from "@/hooks/useAuth"
 import { saveProgress as saveProgressDb } from "@/lib/db"
+
+function getProgressStorageKey(userId?: string) {
+  return userId ? `promptlabz_progress:${userId}` : "promptlabz_progress"
+}
 
 interface ContentViewProps {
   content: ContentBlock[]
@@ -220,7 +224,7 @@ export default function Lesson() {
 
   async function saveProgress() {
     try {
-      const saved = localStorage.getItem("promptlabz_progress")
+      const saved = localStorage.getItem(getProgressStorageKey(user?.id))
       const progress = saved ? JSON.parse(saved) : {}
 
       const catProgress = progress[categoryId] || {

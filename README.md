@@ -1,6 +1,6 @@
-# PromptLabzz
+﻿# PromptLabz
 
-PromptLabzz ajuda estudantes e criadores iniciantes a praticar prompts e habilidades de IA sem depender de aulas soltas ou progresso manual.
+PromptLabz ajuda estudantes e criadores iniciantes a praticar prompts e habilidades de IA sem depender de aulas soltas ou progresso manual.
 
 ## Funcionalidades
 
@@ -38,6 +38,7 @@ flowchart LR
 - `supabase/seed.sql`: placeholder documentando que cursos ainda ficam em `src/data`.
 - `src/lib/supabase.ts`: cliente Supabase, falha explicita sem env fora de teste.
 - `src/lib/db.ts`: camada de perfil/progresso com colunas explicitas.
+- `supabase/functions/send-auth-email/index.ts`: hook de email do Supabase Auth com template HTML proprio, mascote e remetente do app via Resend.
 
 ## Como Rodar
 
@@ -52,6 +53,11 @@ Preencha `.env.local`:
 ```bash
 VITE_SUPABASE_URL=...
 VITE_SUPABASE_ANON_KEY=...
+APP_URL=...
+APP_NAME=PromptLabz
+RESEND_FROM_EMAIL=no-reply@seudominio.com
+RESEND_API_KEY=...
+SEND_EMAIL_HOOK_SECRET=...
 ```
 
 Para Supabase local:
@@ -81,7 +87,19 @@ pnpm smoke:supabase
 2. Rode migrations no Supabase antes do deploy.
 3. Cadastre URLs de redirect no Supabase Auth: `/login`, `/reset-password` e `/home`.
 4. Ative providers Google e Apple no Supabase Auth. Apple exige Service ID, Team ID, Key ID e private key configurados no painel da Apple Developer.
-5. Rode `pnpm build`.
+5. Configure envio de email com remetente do app:
+   - Verifique dominio no Resend.
+   - Defina `RESEND_FROM_EMAIL` com email do seu dominio.
+   - Deploy: `supabase functions deploy send-auth-email --no-verify-jwt`
+   - Secrets: `supabase secrets set --env-file .env.local`
+   - Dashboard Supabase > Auth > Hooks > Send Email Hook > HTTPS > URL da function > Generate Secret.
+6. Rode `pnpm build`.
+
+## Email de confirmacao personalizado
+
+- Template usa `public/assets/mascot-login-new.png` servido por `APP_URL`.
+- Remetente sai como `${APP_NAME} <${RESEND_FROM_EMAIL}>`, nao como endereco padrao do Supabase.
+- Hook cobre `signup`, `recovery`, `magiclink` e `email_change`, com foco principal em confirmacao de cadastro.
 
 ## Decisoes
 
@@ -96,3 +114,4 @@ pnpm smoke:supabase
 - Integrar Sentry ou Logtail para erros de producao.
 - Implementar webhook Stripe via Edge Function.
 - Publicar URL demo com screenshots/GIF curto.
+

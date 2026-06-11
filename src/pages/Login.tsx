@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+﻿import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Mail, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -74,14 +74,14 @@ export default function Login() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
-      {/* Shrinking circle reveal — plays when arriving from Hero */}
+      {/* Shrinking circle reveal â€” plays when arriving from Hero */}
       <CircleRevealEntry />
       <div className="mx-auto flex w-full max-w-[420px] flex-col items-center">
         {/* Mascot with animated glow halo */}
         <MascotGlow size={260}>
           <img
             src="/assets/mascot-login-new.png"
-            alt="PromptLabzz mascot"
+            alt="PromptLabz mascot"
             className="h-56 w-auto object-contain drop-shadow-md"
           />
         </MascotGlow>
@@ -152,7 +152,7 @@ export default function Login() {
 
         {/* Footer */}
         <p className="mt-7 text-center text-base text-[#1F2A24]">
-          Não tem uma conta?{" "}
+          NÃ£o tem uma conta?{" "}
           <Link
             to="/signup"
             className="font-semibold text-[#2E8B57] underline underline-offset-2 hover:text-primary"
@@ -164,3 +164,4 @@ export default function Login() {
     </div>
   )
 }
+

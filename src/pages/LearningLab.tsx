@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react"
+﻿import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import * as Icons from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { HelpButton } from "@/components/HelpButton"
 import { LivesBar } from "@/components/LivesBar"
-import { useLives, MAX_LIVES } from "@/contexts/LivesContext"
+import { MAX_LIVES } from "@/contexts/lives-config"
+import { useLives } from "@/contexts/useLives"
 import { useAuth } from "@/hooks/useAuth"
 import { cn } from "@/lib/utils"
 import { lessonsData } from "@/data/lessonsData"
@@ -70,13 +71,13 @@ function NoLivesModal({ onClose }: { onClose: () => void }) {
           Suas vidas acabaram!
         </h2>
         <p className="mt-1 text-center text-sm text-[#6B9E7E]">
-          Você precisa de pelo menos 1 vida para começar uma lição.
+          VocÃª precisa de pelo menos 1 vida para comeÃ§ar uma liÃ§Ã£o.
         </p>
 
         <div className="mt-5 flex items-center justify-between rounded-2xl bg-[#EAF7EF] px-4 py-3.5">
           <div className="flex items-center gap-2 text-sm text-[#2F6B45]">
             <Icons.Clock className="h-4 w-4 shrink-0" />
-            <span>Próxima vida em</span>
+            <span>PrÃ³xima vida em</span>
           </div>
           <span className="text-lg font-bold text-[#2F6B45]">{countdown}</span>
         </div>
@@ -191,7 +192,7 @@ export default function LearningLab() {
           <div className="absolute -top-[55px] left-1/2 -translate-x-1/2">
             <img
               src="/assets/mascot-learn-new.png"
-              alt="PromptLabzz mascot"
+              alt="PromptLabz mascot"
               className="h-24 w-auto object-contain drop-shadow-md"
             />
           </div>
@@ -221,11 +222,11 @@ export default function LearningLab() {
             />
           </div>
           <div className="mt-2 flex items-center justify-between text-xs text-[#3A4B40]">
-            <span>{completedCount} de {totalLessonsCount} lições concluídas ({progressPercent}%)</span>
+            <span>{completedCount} de {totalLessonsCount} liÃ§Ãµes concluÃ­das ({progressPercent}%)</span>
             <span className="font-semibold">
               {nextLessonInfo
-                ? `Atual: Mod. ${nextLessonInfo.moduleIndex + 1}, Lição ${nextLessonInfo.lessonIndex + 1}`
-                : "Concluído!"}
+                ? `Atual: Mod. ${nextLessonInfo.moduleIndex + 1}, LiÃ§Ã£o ${nextLessonInfo.lessonIndex + 1}`
+                : "ConcluÃ­do!"}
             </span>
           </div>
         </Card>
@@ -268,7 +269,7 @@ export default function LearningLab() {
                   {mod.title}
                 </h2>
                 <span className="text-xs font-medium text-[#6B7A70]">
-                  Módulo {modIndex + 1}
+                  MÃ³dulo {modIndex + 1}
                 </span>
               </div>
 
@@ -310,7 +311,7 @@ export default function LearningLab() {
                           {lesson.title}
                         </p>
                         <p className="text-xs text-[#6B7A70]">
-                          Duração: {lesson.duration}
+                          DuraÃ§Ã£o: {lesson.duration}
                         </p>
                       </div>
 
@@ -324,7 +325,7 @@ export default function LearningLab() {
                               : "bg-[#EEF1EF] text-[#8A998F]"
                           )}
                         >
-                          <Icons.Play className="h-3.5 w-3.5 fill-current" /> Começar
+                          <Icons.Play className="h-3.5 w-3.5 fill-current" /> ComeÃ§ar
                         </button>
                       ) : isDone ? (
                         <button
@@ -376,7 +377,7 @@ export default function LearningLab() {
 
         {!canPlay && (
           <p className="mt-3 text-center text-xs text-[#9AB0A4]">
-            Próxima vida em {countdown}. 1 vida/hora
+            PrÃ³xima vida em {countdown}. 1 vida/hora
           </p>
         )}
       </div>
@@ -387,3 +388,4 @@ export default function LearningLab() {
     </div>
   )
 }
+

@@ -21,11 +21,16 @@ export interface DbResult<T> {
 }
 
 const profileColumns = "id,email,full_name,avatar_url,premium_status,trial_ends_at"
+const LEGACY_PROGRESS_KEYS = ["promptlabz_progress", "promptlab_progress"] as const
 
 const isSupabaseConfigured = (): boolean => {
   const url = import.meta.env.VITE_SUPABASE_URL
   const key = import.meta.env.VITE_SUPABASE_ANON_KEY
   return !!url && !!key && url !== "your_supabase_url_here"
+}
+
+function getProgressStorageKey(userId?: string) {
+  return userId ? `promptlabz_progress:${userId}` : LEGACY_PROGRESS_KEYS[0]
 }
 
 // ── Profile Operations ────────────────────────────────────────────────────────
@@ -75,7 +80,7 @@ export async function saveProgress(
   progress: CategoryProgress
 ) {
   // Always update local storage
-  updateLocalProgress(categoryId, progress)
+  updateLocalProgress(userId, categoryId, progress)
 
   if (!isSupabaseConfigured()) return { error: "Supabase não configurado" }
 
@@ -102,7 +107,7 @@ export async function saveProgress(
 
 export async function loadProgress(userId: string): Promise<Record<string, CategoryProgress>> {
   // Start with whatever is in local storage
-  const localData = getLocalProgress()
+  const localData = getLocalProgress(userId)
 
   if (!isSupabaseConfigured() || !userId) {
     return localData
@@ -127,7 +132,7 @@ export async function loadProgress(userId: string): Promise<Record<string, Categ
       })
       
       // Update local storage to stay in sync
-      localStorage.setItem("promptlabz_progress", JSON.stringify(dbProgress))
+      localStorage.setItem(getProgressStorageKey(userId), JSON.stringify(dbProgress))
       return dbProgress
     }
   } catch (err) {
@@ -142,7 +147,7 @@ export async function syncLocalProgressToSupabase(userId: string) {
   if (!isSupabaseConfigured() || !userId) return { error: "Supabase não configurado" }
 
   try {
-    const localData = getLocalProgress()
+    const localData = getLocalProgress(userId)
     const promises = Object.entries(localData).map(([catId, progress]) => {
       return supabase
         .from("user_progress")
@@ -168,20 +173,34 @@ export async function syncLocalProgressToSupabase(userId: string) {
 }
 
 // Helper local storage functions
-function getLocalProgress(): Record<string, CategoryProgress> {
+function getLocalProgress(userId?: string): Record<string, CategoryProgress> {
   try {
-    const saved = localStorage.getItem("promptlabz_progress")
-    return saved ? JSON.parse(saved) : {}
+    const key = getProgressStorageKey(userId)
+    const saved = localStorage.getItem(key)
+    if (saved) return JSON.parse(saved)
+
+    for (const legacyKey of LEGACY_PROGRESS_KEYS) {
+      const legacySaved = localStorage.getItem(legacyKey)
+      if (!legacySaved) continue
+
+      const parsed = JSON.parse(legacySaved) as Record<string, CategoryProgress>
+      localStorage.setItem(key, JSON.stringify(parsed))
+      localStorage.removeItem(legacyKey)
+      return parsed
+    }
+
+    return {}
   } catch {
     return {}
   }
 }
 
-function updateLocalProgress(categoryId: string, progress: CategoryProgress) {
+function updateLocalProgress(userId: string, categoryId: string, progress: CategoryProgress) {
   try {
-    const data = getLocalProgress()
+    const key = getProgressStorageKey(userId)
+    const data = getLocalProgress(userId)
     data[categoryId] = progress
-    localStorage.setItem("promptlabz_progress", JSON.stringify(data))
+    localStorage.setItem(key, JSON.stringify(data))
   } catch (err) {
     console.error("Error updating local progress storage:", getErrorMessage(err, "Erro ao atualizar storage local"))
   }

@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { BrandLogo } from "@/components/BrandLogo"
@@ -10,7 +10,7 @@ export default function Hero() {
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center gap-8 bg-gradient-to-b from-white via-[#F0FAF5] to-[#E0F3E9] px-6 overflow-hidden">
 
-      {/* Growing-circle overlay — fires when "Começar" is clicked */}
+      {/* Growing-circle overlay â€” fires when "ComeÃ§ar" is clicked */}
       <CircleTransition to="/login" active={transitioning} />
 
       {/* Animated circular frame around the mascot */}
@@ -45,7 +45,7 @@ export default function Hero() {
         {/* Mascot */}
         <img
           src="/assets/mascot-login-new.png"
-          alt="PromptLabzz mascot"
+          alt="PromptLabz mascot"
           className="relative z-10 h-52 w-auto object-contain drop-shadow-md"
         />
       </div>
@@ -54,19 +54,20 @@ export default function Hero() {
       <div className="flex flex-col items-center gap-3 -mt-2">
         <BrandLogo className="text-5xl" />
         <p className="text-center text-base font-medium text-[#4A7A5C]">
-          Seu laboratório de ideias com IA ✏️🧪
+          Seu laboratÃ³rio de ideias com IA âœï¸ðŸ§ª
         </p>
       </div>
 
-      {/* CTA — triggers circle transition to Login */}
+      {/* CTA â€” triggers circle transition to Login */}
       <Button
         size="lg"
         className="px-12"
         disabled={transitioning}
         onClick={() => setTransitioning(true)}
       >
-        Começar
+        ComeÃ§ar
       </Button>
     </div>
   )
 }
+
