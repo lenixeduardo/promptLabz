@@ -87,7 +87,7 @@ export default function MissionComplete() {
 
           <img
             src="/assets/mascot-login-new.png"
-            alt="PromptLab mascot celebrating"
+            alt="PromptLabzz mascot celebrating"
             className="relative z-10 h-52 w-auto object-contain drop-shadow-lg"
           />
         </div>

@@ -4,7 +4,7 @@ interface BrandLogoProps {
   className?: string
 }
 
-/** Two-tone "PromptLab" wordmark: "Prompt" dark forest green, "Lab" light mint-green. */
+/** Two-tone "PromptLabzz" wordmark: "Prompt" dark forest green, "Lab" light mint-green. */
 export function BrandLogo({ className }: BrandLogoProps) {
   return (
     <span className={cn("font-extrabold tracking-tight", className)}>

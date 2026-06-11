@@ -45,7 +45,7 @@ export default function Hero() {
         {/* Mascot */}
         <img
           src="/assets/mascot-login-new.png"
-          alt="PromptLab mascot"
+          alt="PromptLabzz mascot"
           className="relative z-10 h-52 w-auto object-contain drop-shadow-md"
         />
       </div>

@@ -139,7 +139,7 @@ export default function Home() {
       {/* Running cat mascot bleeding off the right edge */}
       <img
         src="/assets/mascot-home.png"
-        alt="PromptLab mascot"
+        alt="PromptLabzz mascot"
         className="pointer-events-none absolute right-0 top-24 hidden h-80 w-auto object-contain lg:block"
       />
 

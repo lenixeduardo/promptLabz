@@ -22,7 +22,7 @@ vi.mock("@/contexts/AuthContext", () => ({
 vi.mock("@/lib/db", () => ({
   loadProgress: vi.fn().mockImplementation(() => {
     try {
-      const saved = localStorage.getItem("promptlab_progress")
+      const saved = localStorage.getItem("promptlabz_progress")
       return Promise.resolve(saved ? JSON.parse(saved) : {})
     } catch {
       return Promise.resolve({})

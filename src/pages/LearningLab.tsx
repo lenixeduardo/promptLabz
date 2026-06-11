@@ -191,7 +191,7 @@ export default function LearningLab() {
           <div className="absolute -top-[55px] left-1/2 -translate-x-1/2">
             <img
               src="/assets/mascot-learn-new.png"
-              alt="PromptLab mascot"
+              alt="PromptLabzz mascot"
               className="h-24 w-auto object-contain drop-shadow-md"
             />
           </div>

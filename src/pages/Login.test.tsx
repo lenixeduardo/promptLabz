@@ -7,13 +7,11 @@ import { sileo } from "sileo"
 
 const mockLogin = vi.fn()
 const mockLoginWithGoogle = vi.fn()
-const mockLoginWithApple = vi.fn()
 
 vi.mock("@/hooks/useAuth", () => ({
   useAuth: () => ({
     login: mockLogin,
     loginWithGoogle: mockLoginWithGoogle,
-    loginWithApple: mockLoginWithApple,
     user: null,
   }),
 }))
@@ -35,7 +33,7 @@ vi.mock("@/components/MascotGlow", () => ({
 }))
 
 vi.mock("@/components/BrandLogo", () => ({
-  BrandLogo: () => <div>PromptLab</div>,
+  BrandLogo: () => <div>PromptLabzz</div>,
 }))
 
 function renderLogin() {

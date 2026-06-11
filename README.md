@@ -1,6 +1,6 @@
-# PromptLab
+# PromptLabzz
 
-PromptLab ajuda estudantes e criadores iniciantes a praticar prompts e habilidades de IA sem depender de aulas soltas ou progresso manual.
+PromptLabzz ajuda estudantes e criadores iniciantes a praticar prompts e habilidades de IA sem depender de aulas soltas ou progresso manual.
 
 ## Funcionalidades
 

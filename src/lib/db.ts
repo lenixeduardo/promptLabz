@@ -127,7 +127,7 @@ export async function loadProgress(userId: string): Promise<Record<string, Categ
       })
       
       // Update local storage to stay in sync
-      localStorage.setItem("promptlab_progress", JSON.stringify(dbProgress))
+      localStorage.setItem("promptlabz_progress", JSON.stringify(dbProgress))
       return dbProgress
     }
   } catch (err) {
@@ -170,7 +170,7 @@ export async function syncLocalProgressToSupabase(userId: string) {
 // Helper local storage functions
 function getLocalProgress(): Record<string, CategoryProgress> {
   try {
-    const saved = localStorage.getItem("promptlab_progress")
+    const saved = localStorage.getItem("promptlabz_progress")
     return saved ? JSON.parse(saved) : {}
   } catch {
     return {}
@@ -181,7 +181,7 @@ function updateLocalProgress(categoryId: string, progress: CategoryProgress) {
   try {
     const data = getLocalProgress()
     data[categoryId] = progress
-    localStorage.setItem("promptlab_progress", JSON.stringify(data))
+    localStorage.setItem("promptlabz_progress", JSON.stringify(data))
   } catch (err) {
     console.error("Error updating local progress storage:", getErrorMessage(err, "Erro ao atualizar storage local"))
   }

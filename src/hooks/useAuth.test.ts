@@ -67,34 +67,6 @@ describe("useAuth — login", () => {
   })
 })
 
-describe("useAuth - loginWithApple", () => {
-  it("inicia fluxo OAuth com Apple sem erro", async () => {
-    mockAuth.signInWithOAuth.mockResolvedValue({ error: null })
-
-    const { result } = renderHook(() => useAuth())
-    let res: any
-    await act(async () => { res = await result.current.loginWithApple() })
-
-    expect(res.success).toBe(true)
-    expect(mockAuth.signInWithOAuth).toHaveBeenCalledWith({
-      provider: "apple",
-      options: expect.objectContaining({ redirectTo: expect.stringContaining("/home") }),
-    })
-  })
-
-  it("retorna erro quando OAuth Apple falha", async () => {
-    mockAuth.signInWithOAuth.mockResolvedValue({
-      error: { message: "Apple OAuth error" },
-    })
-
-    const { result } = renderHook(() => useAuth())
-    let res: any
-    await act(async () => { res = await result.current.loginWithApple() })
-
-    expect(res.success).toBe(false)
-    expect(res.error).toBe("Apple OAuth error")
-  })
-})
 
 describe("useAuth — signup", () => {
   it("retorna sucesso e needsConfirmation=true quando session é null", async () => {

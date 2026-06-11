@@ -20,7 +20,7 @@ vi.mock("@/contexts/AuthContext", () => ({
 vi.mock("@/lib/db", () => ({
   loadProgress: vi.fn().mockImplementation(() => {
     try {
-      const saved = localStorage.getItem("promptlab_progress")
+      const saved = localStorage.getItem("promptlabz_progress")
       return Promise.resolve(saved ? JSON.parse(saved) : {})
     } catch {
       return Promise.resolve({})
@@ -107,7 +107,7 @@ describe("LearningLab — renderização e progresso", () => {
         completedLessonIds: ["ts-mod-1-l1"]
       }
     }
-    localStorage.setItem("promptlab_progress", JSON.stringify(fakeProgress))
+    localStorage.setItem("promptlabz_progress", JSON.stringify(fakeProgress))
 
     renderLearningLab()
 

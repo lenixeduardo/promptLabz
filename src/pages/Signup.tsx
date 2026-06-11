@@ -31,17 +31,9 @@ function GoogleIcon() {
   )
 }
 
-function AppleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6 fill-black">
-      <path d="M16.37 1.43c.07.86-.28 1.7-.84 2.31-.6.66-1.58 1.17-2.5 1.1-.1-.84.31-1.72.83-2.27.58-.63 1.6-1.1 2.51-1.14ZM19 17.2c-.5 1.15-.74 1.66-1.39 2.68-.9 1.42-2.18 3.2-3.76 3.21-1.4.01-1.76-.92-3.66-.91-1.9.01-2.3.93-3.7.9-1.58-.01-2.79-1.6-3.7-3.02-2.53-3.97-2.8-8.63-1.24-11.1 1.11-1.77 2.86-2.8 4.5-2.8 1.68 0 2.73.92 4.12.92 1.34 0 2.16-.92 4.1-.92 1.46 0 3.01.8 4.12 2.18-3.62 1.98-3.03 7.16.21 8.86Z" />
-    </svg>
-  )
-}
-
 export default function Signup() {
   const navigate = useNavigate()
-  const { signup, loginWithGoogle, loginWithApple, user } = useAuth()
+  const { signup, loginWithGoogle, user } = useAuth()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -106,18 +98,6 @@ export default function Signup() {
       navigate("/home")
     } else {
       sileo.error({ title: result.error || "Erro ao criar conta com Google" })
-    }
-    setLoading(false)
-  }
-
-  const handleAppleSignup = async () => {
-    setLoading(true)
-    const result = await loginWithApple()
-    if (result.success) {
-      sileo.success({ title: "Conta criada com Apple!" })
-      navigate("/home")
-    } else {
-      sileo.error({ title: result.error || "Erro ao criar conta com Apple" })
     }
     setLoading(false)
   }
@@ -281,16 +261,6 @@ export default function Signup() {
                 disabled={loading}
               >
                 <GoogleIcon />
-              </Button>
-              <Button
-                type="button"
-                variant="social"
-                size="icon"
-                aria-label="Apple"
-                onClick={handleAppleSignup}
-                disabled={loading}
-              >
-                <AppleIcon />
               </Button>
               <Button type="button" variant="social" size="icon" aria-label="E-mail" disabled>
                 <Mail className="h-6 w-6 text-primary" strokeWidth={2.2} />

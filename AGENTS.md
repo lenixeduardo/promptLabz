@@ -1,4 +1,4 @@
-# PromptLab — AGENTS.md
+# PromptLabzz — AGENTS.md
 
 ## Checklist de Qualidade para Todo Projeto Desenvolvido
 

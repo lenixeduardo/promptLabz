@@ -33,17 +33,9 @@ function GoogleIcon() {
   )
 }
 
-function AppleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6 fill-black">
-      <path d="M16.37 1.43c.07.86-.28 1.7-.84 2.31-.6.66-1.58 1.17-2.5 1.1-.1-.84.31-1.72.83-2.27.58-.63 1.6-1.1 2.51-1.14ZM19 17.2c-.5 1.15-.74 1.66-1.39 2.68-.9 1.42-2.18 3.2-3.76 3.21-1.4.01-1.76-.92-3.66-.91-1.9.01-2.3.93-3.7.9-1.58-.01-2.79-1.6-3.7-3.02-2.53-3.97-2.8-8.63-1.24-11.1 1.11-1.77 2.86-2.8 4.5-2.8 1.68 0 2.73.92 4.12.92 1.34 0 2.16-.92 4.1-.92 1.46 0 3.01.8 4.12 2.18-3.62 1.98-3.03 7.16.21 8.86Z" />
-    </svg>
-  )
-}
-
 export default function Login() {
   const navigate = useNavigate()
-  const { login, loginWithGoogle, loginWithApple, user } = useAuth()
+  const { login, loginWithGoogle, user } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -80,18 +72,6 @@ export default function Login() {
     setLoading(false)
   }
 
-  const handleAppleLogin = async () => {
-    setLoading(true)
-    const result = await loginWithApple()
-    if (result.success) {
-      sileo.success({ title: "Login com Apple realizado!" })
-      navigate("/home")
-    } else {
-      sileo.error({ title: result.error || "Erro ao fazer login com Apple" })
-    }
-    setLoading(false)
-  }
-
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
       {/* Shrinking circle reveal — plays when arriving from Hero */}
@@ -101,7 +81,7 @@ export default function Login() {
         <MascotGlow size={260}>
           <img
             src="/assets/mascot-login-new.png"
-            alt="PromptLab mascot"
+            alt="PromptLabzz mascot"
             className="h-56 w-auto object-contain drop-shadow-md"
           />
         </MascotGlow>
@@ -162,16 +142,6 @@ export default function Login() {
                 disabled={loading}
               >
                 <GoogleIcon />
-              </Button>
-              <Button
-                type="button"
-                variant="social"
-                size="icon"
-                aria-label="Apple"
-                onClick={handleAppleLogin}
-                disabled={loading}
-              >
-                <AppleIcon />
               </Button>
               <Button type="button" variant="social" size="icon" aria-label="E-mail" disabled>
                 <Mail className="h-6 w-6 text-primary" strokeWidth={2.2} />

@@ -65,11 +65,7 @@ export function useAuth() {
     return loginWithProvider("google", "Erro ao fazer login com Google")
   }
 
-  const loginWithApple = async () => {
-    return loginWithProvider("apple", "Erro ao fazer login com Apple")
-  }
-
-  const loginWithProvider = async (provider: "google" | "apple", fallback: string) => {
+  const loginWithProvider = async (provider: "google", fallback: string) => {
     try {
       const { error: err } = await supabase.auth.signInWithOAuth({
         provider,
@@ -107,7 +103,6 @@ export function useAuth() {
     logout,
     resetPassword,
     loginWithGoogle,
-    loginWithApple,
     updatePassword,
   }
 }

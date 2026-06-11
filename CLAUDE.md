@@ -1,4 +1,4 @@
-# PromptLab — CLAUDE.md
+# PromptLabzz — CLAUDE.md
 
 ## Checklist de Qualidade para Todo Projeto Desenvolvido
 

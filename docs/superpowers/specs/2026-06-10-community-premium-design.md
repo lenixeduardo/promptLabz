@@ -10,7 +10,7 @@ Ajuda profissionais e estudantes de IA a se manterem atualizados e produtivos se
 
 ## Usuário-alvo
 
-Usuários do PromptLab que querem ir além das lições e ter acesso contínuo a conteúdo curado de IA.
+Usuários do PromptLabzz que querem ir além das lições e ter acesso contínuo a conteúdo curado de IA.
 
 ---
 
@@ -47,7 +47,7 @@ Supabase
         └── rss-fetcher (cron diário 08h UTC)
 
 Stripe
-  └── Product: PromptLab Premium (mensal, trial 30 dias)
+  └── Product: PromptLabzz Premium (mensal, trial 30 dias)
 ```
 
 ---

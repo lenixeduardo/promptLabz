@@ -40,7 +40,7 @@
 
 Before starting:
 1. Install Supabase CLI: `npm install -g supabase` (or use `npx supabase`)
-2. In Stripe Dashboard: create Product "PromptLab Premium" → recurring Price (monthly) → copy Price ID
+2. In Stripe Dashboard: create Product "PromptLabzz Premium" → recurring Price (monthly) → copy Price ID
 3. Have ready: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID`, `ANTHROPIC_API_KEY`
 
 ---

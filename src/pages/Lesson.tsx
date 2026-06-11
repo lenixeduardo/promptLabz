@@ -220,7 +220,7 @@ export default function Lesson() {
 
   async function saveProgress() {
     try {
-      const saved = localStorage.getItem("promptlab_progress")
+      const saved = localStorage.getItem("promptlabz_progress")
       const progress = saved ? JSON.parse(saved) : {}
 
       const catProgress = progress[categoryId] || {
