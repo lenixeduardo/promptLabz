@@ -3,11 +3,18 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import LearningLab from "./LearningLab"
 
+import { LivesProvider } from "@/contexts/LivesContext"
+
 const mockUser = { id: "user-1", email: "aluno@test.com" }
 
 // Mock useAuth
 vi.mock("@/hooks/useAuth", () => ({
   useAuth: () => ({ user: mockUser }),
+}))
+
+// Mock useAuthContext
+vi.mock("@/contexts/AuthContext", () => ({
+  useAuthContext: () => ({ user: mockUser, loading: false, error: null }),
 }))
 
 vi.mock("@/lib/db", () => ({
@@ -38,11 +45,13 @@ vi.mock("@/components/HelpButton", () => ({
 function renderLearningLab(initialUrl = "/learn") {
   return render(
     <MemoryRouter initialEntries={[initialUrl]}>
-      <Routes>
-        <Route path="/learn" element={<LearningLab />} />
-        <Route path="/home" element={<div>Home Page</div>} />
-        <Route path="/lesson" element={<div>Lesson Page</div>} />
-      </Routes>
+      <LivesProvider>
+        <Routes>
+          <Route path="/learn" element={<LearningLab />} />
+          <Route path="/home" element={<div>Home Page</div>} />
+          <Route path="/lesson" element={<div>Lesson Page</div>} />
+        </Routes>
+      </LivesProvider>
     </MemoryRouter>
   )
 }

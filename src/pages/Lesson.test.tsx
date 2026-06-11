@@ -5,11 +5,18 @@ import Lesson from "./Lesson"
 import { sileo } from "sileo"
 import { saveProgress } from "@/lib/db"
 
+import { LivesProvider } from "@/contexts/LivesContext"
+
 const mockUser = { id: "user-1", email: "aluno@test.com" }
 
 // Mock useAuth
 vi.mock("@/hooks/useAuth", () => ({
   useAuth: () => ({ user: mockUser }),
+}))
+
+// Mock useAuthContext
+vi.mock("@/contexts/AuthContext", () => ({
+  useAuthContext: () => ({ user: mockUser, loading: false, error: null }),
 }))
 
 vi.mock("@/lib/db", () => ({
@@ -35,11 +42,13 @@ vi.mock("sileo", () => ({
 function renderLesson(url = "/lesson?category=trending-skills&moduleIndex=0&lessonIndex=0") {
   return render(
     <MemoryRouter initialEntries={[url]}>
-      <Routes>
-        <Route path="/lesson" element={<Lesson />} />
-        <Route path="/learn" element={<div>Learning Lab Page</div>} />
-        <Route path="/mission" element={<div>Mission Completed Page<span>+1 Vida</span></div>} />
-      </Routes>
+      <LivesProvider>
+        <Routes>
+          <Route path="/lesson" element={<Lesson />} />
+          <Route path="/learn" element={<div>Learning Lab Page</div>} />
+          <Route path="/mission" element={<div>Mission Completed Page<span>+1 Vida</span></div>} />
+        </Routes>
+      </LivesProvider>
     </MemoryRouter>
   )
 }
