@@ -72,7 +72,7 @@ export default function Home() {
   const handleLogout = async () => {
     const result = await logout()
     if (result.success) {
-      sileo.success({ title: "AtÃ© logo!" })
+      sileo.success({ title: "Até logo!" })
     } else {
       sileo.error({ title: result.error || "Erro ao sair" })
     }
@@ -91,21 +91,21 @@ export default function Home() {
     setIsOptimizing(true)
     setTimeout(() => {
       const draft = searchQuery.trim()
-      const optimized = `# PAPEL: Assistente Especialista de InteligÃªncia Artificial
-# CONTEXTO: OtimizaÃ§Ã£o de tarefa baseada na requisiÃ§Ã£o do usuÃ¡rio.
-# INSTRUÃ‡ÃƒO: Realize a seguinte aÃ§Ã£o com mÃ¡xima precisÃ£o e clareza:
+      const optimized = `# PAPEL: Assistente Especialista de Inteligência Artificial
+# CONTEXTO: Otimização de tarefa baseada na requisição do usuário.
+# INSTRUÇÃO: Realize a seguinte ação com máxima precisão e clareza:
 > "${draft}"
 
-# FORMATO DA SAÃDA ESPERADA:
-- ExplicaÃ§Ã£o direta do resultado em portuguÃªs.
-- FormataÃ§Ã£o em tÃ³picos limpos (Markdown).
-- Exemplos de aplicaÃ§Ã£o prÃ¡tica, se aplicÃ¡vel.`
+# FORMATO DA SAÍDA ESPERADA:
+- Explicação direta do resultado em português.
+- Formatação em tópicos limpos (Markdown).
+- Exemplos de aplicação prática, se aplicável.`
 
       setSearchQuery(optimized)
       setIsOptimizing(false)
       sileo.success({ 
         title: "Prompt Otimizado! âœ¨", 
-        description: "O prompt bÃ¡sico foi reestruturado com engenharia de prompts avanÃ§ada." 
+        description: "O prompt básico foi reestruturado com engenharia de prompts avançada." 
       })
     }, 1000)
   }
@@ -204,7 +204,7 @@ export default function Home() {
             <Search className="h-6 w-6 text-primary" strokeWidth={2.2} />
             <input
               type="text"
-              placeholder="Search skills, prompts, lessonsâ€¦"
+              placeholder="Search skills, prompts, lessons…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 bg-transparent text-lg text-foreground placeholder:text-[#8A998F] focus:outline-none"
@@ -260,7 +260,7 @@ export default function Home() {
                   {searchResults.lessons.length > 0 && (
                     <div>
                       <h3 className="text-xs font-bold uppercase tracking-wider text-[#3E8E5E] mb-2 px-1">
-                        LiÃ§Ãµes e ConteÃºdos
+                        Lições e Conteúdos
                       </h3>
                       <div className="flex flex-col gap-2">
                         {searchResults.lessons.map((les) => (

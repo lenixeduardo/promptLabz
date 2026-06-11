@@ -54,7 +54,7 @@ export default function Hero() {
       <div className="flex flex-col items-center gap-3 -mt-2">
         <BrandLogo className="text-5xl" />
         <p className="text-center text-base font-medium text-[#4A7A5C]">
-          Seu laboratÃ³rio de ideias com IA âœï¸ðŸ§ª
+          Seu laboratório de ideias com IA ✏️🧪
         </p>
       </div>
 
@@ -65,7 +65,7 @@ export default function Hero() {
         disabled={transitioning}
         onClick={() => setTransitioning(true)}
       >
-        ComeÃ§ar
+        Começar
       </Button>
     </div>
   )

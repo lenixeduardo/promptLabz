@@ -165,7 +165,7 @@ CREATE POLICY "Premium users can read templates"
 -- Seed one daily tip so the UI has data immediately
 INSERT INTO public.daily_tips (tip_text, category, scheduled_date)
 VALUES (
-  'Use "pense passo a passo" no final de prompts complexos. Isso ativa o raciocÃ­nio encadeado (Chain of Thought) e reduz erros em tarefas analÃ­ticas.',
+  'Use "pense passo a passo" no final de prompts complexos. Isso ativa o raciocínio encadeado (Chain of Thought) e reduz erros em tarefas analíticas.',
   'Prompt',
   CURRENT_DATE
 ) ON CONFLICT (scheduled_date) DO NOTHING;
@@ -560,7 +560,7 @@ async function summarize(title: string, description: string): Promise<string> {
     messages: [
       {
         role: "user",
-        content: `Resuma em exatamente 3 frases diretas em portuguÃªs para um profissional que quer se atualizar em IA:\n\nTÃ­tulo: ${title}\n\nConteÃºdo: ${description}`,
+        content: `Resuma em exatamente 3 frases diretas em português para um profissional que quer se atualizar em IA:\n\nTítulo: ${title}\n\nConteúdo: ${description}`,
       },
     ],
   })
@@ -991,16 +991,16 @@ export function PremiumGate({ children }: PremiumGateProps) {
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EAF7EF]">
           <Lock className="h-7 w-7 text-[#3E8E5E]" />
         </div>
-        <h2 className="text-xl font-extrabold text-[#1F2A24]">ConteÃºdo Exclusivo</h2>
-        <p className="mt-1 text-sm text-[#6B7A70]">Acesso Ã  Comunidade Premium</p>
+        <h2 className="text-xl font-extrabold text-[#1F2A24]">Conteúdo Exclusivo</h2>
+        <p className="mt-1 text-sm text-[#6B7A70]">Acesso à Comunidade Premium</p>
         <ul className="mt-6 flex flex-col gap-2 text-left">
-          {["NotÃ­cias diÃ¡rias de IA", "Dica do dia", "Templates prontos"].map((item) => (
+          {["Notícias diárias de IA", "Dica do dia", "Templates prontos"].map((item) => (
             <li key={item} className="flex items-center gap-2 text-sm font-medium text-[#2B5D3A]">
               <Check className="h-4 w-4 text-[#3E9A63]" /> {item}
             </li>
           ))}
         </ul>
-        <p className="mt-6 text-xs text-[#6B7A70]">1 mÃªs grÃ¡tis Â· cancele quando quiser</p>
+        <p className="mt-6 text-xs text-[#6B7A70]">1 mês grátis · cancele quando quiser</p>
         <Button onClick={handleActivate} className="mt-4 w-full gap-2">
           <Sparkles className="h-4 w-4" /> Ativar Premium
         </Button>
@@ -1053,7 +1053,7 @@ describe("DailyTip", () => {
         maybeSingle: () => Promise.resolve({
           data: {
             id: "1",
-            tip_text: "Use Chain of Thought para raciocÃ­nio complexo.",
+            tip_text: "Use Chain of Thought para raciocínio complexo.",
             category: "Prompt",
             scheduled_date: "2026-06-10",
           },
@@ -1063,7 +1063,7 @@ describe("DailyTip", () => {
 
     render(<DailyTip />)
     await waitFor(() => {
-      expect(screen.getByText("Use Chain of Thought para raciocÃ­nio complexo.")).toBeInTheDocument()
+      expect(screen.getByText("Use Chain of Thought para raciocínio complexo.")).toBeInTheDocument()
     })
     expect(screen.getByText("Prompt")).toBeInTheDocument()
   })
@@ -1182,8 +1182,8 @@ import { NewsCard } from "./NewsCard"
 
 const mockNews = {
   id: "1",
-  title: "OpenAI lanÃ§a novo modelo",
-  summary: "O modelo GPT-5 foi anunciado. Traz capacidades multimodais avanÃ§adas. DisponÃ­vel via API em breve.",
+  title: "OpenAI lança novo modelo",
+  summary: "O modelo GPT-5 foi anunciado. Traz capacidades multimodais avançadas. Disponível via API em breve.",
   source_url: "https://openai.com/blog/gpt-5",
   source_name: "OpenAI Blog",
   published_at: "2026-06-10T08:00:00Z",
@@ -1192,7 +1192,7 @@ const mockNews = {
 describe("NewsCard", () => {
   it("renders title, summary, and source", () => {
     render(<NewsCard news={mockNews} />)
-    expect(screen.getByText("OpenAI lanÃ§a novo modelo")).toBeInTheDocument()
+    expect(screen.getByText("OpenAI lança novo modelo")).toBeInTheDocument()
     expect(screen.getByText(/GPT-5 foi anunciado/)).toBeInTheDocument()
     expect(screen.getByText("OpenAI Blog")).toBeInTheDocument()
   })
@@ -1247,7 +1247,7 @@ export function NewsCard({ news }: NewsCardProps) {
       <div className="mt-3 flex items-center justify-between">
         <span className="text-xs text-[#6B7A70]">
           {news.source_name}
-          {formattedDate && ` Â· ${formattedDate}`}
+          {formattedDate && ` · ${formattedDate}`}
         </span>
         <a
           href={news.source_url}
@@ -1296,10 +1296,10 @@ import { TemplateCard } from "./TemplateCard"
 
 const mockTemplate = {
   id: "1",
-  title: "Email de ProspecÃ§Ã£o",
+  title: "Email de Prospecção",
   description: "Template para cold email com IA generativa.",
   category: "Marketing",
-  code: "OlÃ¡ [Nome], vi que vocÃª trabalha com...",
+  code: "Olá [Nome], vi que você trabalha com...",
   created_at: "2026-06-10T00:00:00Z",
 }
 
@@ -1312,7 +1312,7 @@ describe("TemplateCard", () => {
 
   it("renders title, description, and category", () => {
     render(<TemplateCard template={mockTemplate} />)
-    expect(screen.getByText("Email de ProspecÃ§Ã£o")).toBeInTheDocument()
+    expect(screen.getByText("Email de Prospecção")).toBeInTheDocument()
     expect(screen.getByText("Template para cold email com IA generativa.")).toBeInTheDocument()
     expect(screen.getByText("Marketing")).toBeInTheDocument()
   })
@@ -1321,7 +1321,7 @@ describe("TemplateCard", () => {
     render(<TemplateCard template={mockTemplate} />)
     const btn = screen.getByRole("button", { name: /copiar/i })
     fireEvent.click(btn)
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith("OlÃ¡ [Nome], vi que vocÃª trabalha com...")
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith("Olá [Nome], vi que você trabalha com...")
   })
 })
 ```
@@ -1476,7 +1476,7 @@ describe("Community page", () => {
     })
     renderCommunity()
     await waitFor(() => {
-      expect(screen.getByText("NotÃ­cias de IA")).toBeInTheDocument()
+      expect(screen.getByText("Notícias de IA")).toBeInTheDocument()
     })
     expect(screen.getByText("Templates")).toBeInTheDocument()
   })
@@ -1489,7 +1489,7 @@ describe("Community page", () => {
     })
     renderCommunity("/community?subscribed=true")
     await waitFor(() => {
-      expect(screen.getByText("NotÃ­cias de IA")).toBeInTheDocument()
+      expect(screen.getByText("Notícias de IA")).toBeInTheDocument()
     })
   })
 })
@@ -1601,7 +1601,7 @@ function CommunityContent() {
             <div>
               <p className="text-sm font-extrabold text-[#1F2A24]">Membro Premium</p>
               {trialEnd && (
-                <p className="text-xs text-[#4A5D50]">Trial atÃ© {trialEnd}</p>
+                <p className="text-xs text-[#4A5D50]">Trial até {trialEnd}</p>
               )}
             </div>
           </div>
@@ -1623,7 +1623,7 @@ function CommunityContent() {
           <div className="mb-4 flex items-center gap-2">
             <Newspaper className="h-4 w-4 text-[#3E8E5E]" />
             <h2 className="text-sm font-extrabold uppercase tracking-wider text-[#2B5D3A]">
-              NotÃ­cias de IA
+              Notícias de IA
             </h2>
           </div>
           {loadingNews ? (
@@ -1633,7 +1633,7 @@ function CommunityContent() {
               ))}
             </div>
           ) : news.length === 0 ? (
-            <p className="text-sm text-[#6B7A70]">Nenhuma notÃ­cia disponÃ­vel ainda.</p>
+            <p className="text-sm text-[#6B7A70]">Nenhuma notícia disponível ainda.</p>
           ) : (
             <div className="flex flex-col gap-3">
               {news.map((item) => <NewsCard key={item.id} news={item} />)}
@@ -1691,7 +1691,7 @@ export default function Community() {
 
   useEffect(() => {
     if (searchParams.get("subscribed") === "true") {
-      sileo.success("Bem-vindo ao Premium! ðŸŽ‰ Seu mÃªs grÃ¡tis comeÃ§ou.")
+      sileo.success("Bem-vindo ao Premium! ðŸŽ‰ Seu mês grátis começou.")
     }
   }, [])
 
@@ -1763,7 +1763,7 @@ Find the section in `Home.tsx` where navigation cards are rendered (look for car
 >
   <Crown className="h-6 w-6 text-[#3E8E5E]" />
   <span className="text-xs font-bold text-[#1F2A24]">Comunidade</span>
-  <span className="text-center text-[10px] text-[#6B7A70]">NotÃ­cias Â· Dicas Â· Templates</span>
+  <span className="text-center text-[10px] text-[#6B7A70]">Notícias · Dicas · Templates</span>
 </button>
 ```
 
