@@ -185,7 +185,7 @@ describe("useAuth — loginWithGoogle", () => {
     expect(res.success).toBe(true)
     expect(mockAuth.signInWithOAuth).toHaveBeenCalledWith({
       provider: "google",
-      options: expect.objectContaining({ redirectTo: expect.stringContaining("/home") }),
+      options: expect.objectContaining({ redirectTo: expect.stringContaining("/auth/callback") }),
     })
   })
 

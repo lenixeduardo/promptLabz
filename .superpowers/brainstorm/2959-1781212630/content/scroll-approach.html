@@ -1,0 +1,56 @@
+<h2>Desktop: como rolar entre os módulos/trilhas?</h2>
+<p class="subtitle">Hoje o seletor de categorias usa <code>overflow-x: auto</code> com scrollbar escondida — funciona no mobile (swipe), mas no desktop não tem como arrastar. Qual abordagem prefere?</p>
+
+<div class="cards">
+  <div class="card" data-choice="arrows" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#EAF7EF;border-radius:12px;padding:20px;display:flex;align-items:center;justify-content:center;gap:12px;font-family:monospace;">
+      <div style="width:32px;height:32px;border-radius:50%;background:#2B5D3A;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;">‹</div>
+      <div style="display:flex;gap:8px;overflow:hidden;width:200px;">
+        <div style="background:#2B5D3A;color:white;border-radius:20px;padding:6px 14px;font-size:12px;white-space:nowrap;font-family:sans-serif;">Trending</div>
+        <div style="background:white;border:1px solid #CDEAD8;border-radius:20px;padding:6px 14px;font-size:12px;white-space:nowrap;font-family:sans-serif;">Design</div>
+        <div style="background:white;border:1px solid #CDEAD8;border-radius:20px;padding:6px 14px;font-size:12px;white-space:nowrap;font-family:sans-serif;">Cloud</div>
+      </div>
+      <div style="width:32px;height:32px;border-radius:50%;background:#2B5D3A;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;cursor:pointer;">›</div>
+    </div>
+    <div class="card-body">
+      <h3>A — Botões de seta</h3>
+      <p>Setas ‹ › nos extremos do carrossel. Clique avança/recua. Familiar, claro, sem surpresa.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="scrollbar" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#EAF7EF;border-radius:12px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+      <div style="display:flex;gap:8px;overflow:hidden;width:100%;justify-content:center;">
+        <div style="background:#2B5D3A;color:white;border-radius:20px;padding:6px 14px;font-size:12px;white-space:nowrap;font-family:sans-serif;">Trending</div>
+        <div style="background:white;border:1px solid #CDEAD8;border-radius:20px;padding:6px 14px;font-size:12px;white-space:nowrap;font-family:sans-serif;">Design</div>
+        <div style="background:white;border:1px solid #CDEAD8;border-radius:20px;padding:6px 14px;font-size:12px;white-space:nowrap;font-family:sans-serif;">Cloud</div>
+      </div>
+      <div style="width:80%;height:4px;background:#CDEAD8;border-radius:4px;">
+        <div style="width:40%;height:4px;background:#2B5D3A;border-radius:4px;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Scrollbar visível</h3>
+      <p>Remove <code>no-scrollbar</code> e estiliza a scrollbar horizontal como uma barra fina e verde. Scroll com mouse/trackpad fica óbvio.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="wrap" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#EAF7EF;border-radius:12px;padding:20px;">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+        <div style="background:#2B5D3A;color:white;border-radius:20px;padding:6px 14px;font-size:12px;font-family:sans-serif;">Trending</div>
+        <div style="background:white;border:1px solid #CDEAD8;border-radius:20px;padding:6px 14px;font-size:12px;font-family:sans-serif;">Design</div>
+        <div style="background:white;border:1px solid #CDEAD8;border-radius:20px;padding:6px 14px;font-size:12px;font-family:sans-serif;">Cloud & Infra</div>
+        <div style="background:white;border:1px solid #CDEAD8;border-radius:20px;padding:6px 14px;font-size:12px;font-family:sans-serif;">Marketing</div>
+        <div style="background:white;border:1px solid #CDEAD8;border-radius:20px;padding:6px 14px;font-size:12px;font-family:sans-serif;">Produtividade</div>
+        <div style="background:white;border:1px solid #CDEAD8;border-radius:20px;padding:6px 14px;font-size:12px;font-family:sans-serif;">Agentes</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Wrap no desktop</h3>
+      <p>No desktop (&ge;768px) os chips quebram linha em vez de scrollar. Todos visíveis de uma vez, sem scroll. Mobile mantém scroll horizontal.</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:16px">Isso se aplica ao seletor de trilhas no <strong>Learning Lab</strong> e ao "Continue Aprendendo" no <strong>Home</strong>.</p>

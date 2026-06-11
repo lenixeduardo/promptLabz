@@ -1842,5 +1842,1690 @@ export const lessonsData: Record<string, Category> = {
         ]
       }
     ]
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // NOVAS CATEGORIAS BASEADAS EM SKILLS.SH
+  // ════════════════════════════════════════════════════════════════════════
+
+  "desenvolvimento": {
+    id: "desenvolvimento",
+    title: "Desenvolvimento",
+    modules: [
+      {
+        id: "dev-mod-1",
+        title: "Modulo 1: Qualidade e Testes de Codigo",
+        lessons: [
+          {
+            id: "dev-mod-1-l1",
+            title: "Test-Driven Development (TDD)",
+            icon: "CheckSquare",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "O Ciclo Red-Green-Refactor"
+              },
+              {
+                type: "text",
+                text: "TDD e uma metodologia onde voce escreve o teste antes do codigo de producao. O ciclo e simples: primeiro escreva um teste que falha (Red), depois escreva o codigo minimo para passar (Green), e por fim refatore o codigo mantendo os testes verdes (Refactor). Isso garante que seu codigo seja testavel desde o inicio."
+              },
+              {
+                type: "quote",
+                text: "\"TDD nao e sobre testar tudo — e sobre projetar seu codigo para ser testavel, o que naturalmente leva a um design mais limpo e desacoplado.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como Vitest, Jest e Testing Library sao as mais usadas no ecossistema JavaScript para implementar TDD. No ecossistema Python, pytest e unittest cumprem o mesmo papel."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual e a ordem correta do ciclo TDD?",
+                options: [
+                  { letter: "A", text: "Codigo → Teste → Refactor" },
+                  { letter: "B", text: "Teste que falha → Codigo minimo → Refactor" },
+                  { letter: "C", text: "Refactor → Teste → Codigo" },
+                  { letter: "D", text: "Teste que passa → Codigo → Otimizar" }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual o principal beneficio do TDD além da deteccao de bugs?",
+                options: [
+                  { letter: "A", text: "Eliminar a necessidade de documentacao." },
+                  { letter: "B", text: "Forcar um design de codigo mais limpo e desacoplado." },
+                  { letter: "C", text: "Aumentar a velocidade de escrita de codigo." },
+                  { letter: "D", text: "Substituir a necessidade de code review." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "dev-mod-1-l2",
+            title: "Diagnose e Debugging Sistematico",
+            icon: "Bug",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "O Loop de Diagnostico Disciplinado"
+              },
+              {
+                type: "text",
+                text: "Debugging eficiente segue um ciclo: Reproduza o bug de forma consistente, Minimize o cenario removendo codigo irrelevante até isolar a causa raiz, Hipotetize sobre o que esta errado, Instrumente com logs ou ferramentas para confirmar, Corrija com a menor mudanca possivel, e por fim Teste regressao para garantir que nada quebrou."
+              },
+              {
+                type: "quote",
+                text: "\"A maior parte do tempo em debugging e gasto tentando reproduzir o bug. Se voce nao consegue reproduzir sob demanda, voce nao pode prova-lo resolvido.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como Chrome DevTools, VS Code Debugger, e extensoes como React DevTools sao essenciais para instrumentar e identificar problemas em aplicacoes web."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual e o primeiro passo no loop de diagnostico?",
+                options: [
+                  { letter: "A", text: "Corrigir o codigo imediatamente." },
+                  { letter: "B", text: "Reproduzir o bug de forma consistente." },
+                  { letter: "C", text: "Adicionar logs no codigo." },
+                  { letter: "D", text: "Pedir ajuda para outro desenvolvedor." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "O que significa 'Minimizar' no contexto de debugging?",
+                options: [
+                  { letter: "A", text: "Reduzir o tamanho da fonte no editor." },
+                  { letter: "B", text: "Remover codigo irrelevante para isolar a causa raiz." },
+                  { letter: "C", text: "Minimizar a janela do navegador." },
+                  { letter: "D", text: "Usar menos ferramentas de debugging." }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "dev-mod-2",
+        title: "Modulo 2: Frameworks Modernos e Boas Praticas",
+        lessons: [
+          {
+            id: "dev-mod-2-l1",
+            title: "React Best Practices no Ecossistema Vercel",
+            icon: "Globe",
+            duration: "16 min",
+            content: [
+              {
+                type: "heading",
+                text: "React Moderno: Server Components e Streaming"
+              },
+              {
+                type: "text",
+                text: "O ecossistema React moderno, especialmente com Vercel, introduziu conceitos como Server Components (componentes que rodam no servidor), Data Fetching com Server Actions, Streaming com Suspense boundaries, e otimizacao de Core Web Vitals. Saber quando usar cada abordagem e essencial para construir aplicacoes performaticas."
+              },
+              {
+                type: "quote",
+                text: "\"Server Components permitem que voce mantenha logica pesada e acesso a banco de dados no servidor, enviando apenas o HTML final para o cliente. Menos JavaScript, mais velocidade.\""
+              },
+              {
+                type: "text",
+                text: "O Edge Runtime da Vercel permite executar codigo em servidores distribuidos globalmente, reduzindo a latencia para usuarios em qualquer regiao do mundo."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual a principal vantagem dos Server Components no React?",
+                options: [
+                  { letter: "A", text: "Eles rodam mais rapido no cliente." },
+                  { letter: "B", text: "Eles executam no servidor e enviam apenas HTML, reduzindo JavaScript." },
+                  { letter: "C", text: "Eles substituem a necessidade de CSS." },
+                  { letter: "D", text: "Eles funcionam apenas com bancos NoSQL." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "O que e o Edge Runtime no contexto da Vercel?",
+                options: [
+                  { letter: "A", text: "Um ambiente de execucao distribuido globalmente para baixa latencia." },
+                  { letter: "B", text: "Uma biblioteca de componentes React prontos." },
+                  { letter: "C", text: "Um editor de codigo online." },
+                  { letter: "D", text: "Um sistema de banco de dados em memoria." }
+                ],
+                correct: "A"
+              }
+            ]
+          },
+          {
+            id: "dev-mod-2-l2",
+            title: "Web App Testing com Playwright e Vitest",
+            icon: "ShieldCheck",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Testes em Multiplos Niveis"
+              },
+              {
+                type: "text",
+                text: "Uma estrategia completa de testes envolve tres niveis: testes unitarios (Vitest) para funcoes e hooks, testes de componente (React Testing Library) para verificar comportamento de componentes, e testes E2E (Playwright) para simular fluxos completos do usuario no navegador. Cada nivel tem seu proposito e juntos formam a piramide de testes."
+              },
+              {
+                type: "quote",
+                text: "\"Testes E2E sao os mais lentos e caros — use-os para fluxos criticos. Invista mais em testes unitarios e de componente, que sao rapidos e focados.\""
+              },
+              {
+                type: "text",
+                text: "Playwright permite testar em varios navegadores (Chromium, Firefox, WebKit) com uma unica API, incluindo recursos como gravacao de video e captura de traces para debugging."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual a ordem recomendada da piramide de testes?",
+                options: [
+                  { letter: "A", text: "Mais testes E2E, menos unitarios." },
+                  { letter: "B", text: "Mais testes unitarios, menos E2E." },
+                  { letter: "C", text: "Apenas testes de componente." },
+                  { letter: "D", text: "Apenas testes E2E." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual biblioteca e recomendada para testes E2E em varios navegadores?",
+                options: [
+                  { letter: "A", text: "Jest" },
+                  { letter: "B", text: "React Testing Library" },
+                  { letter: "C", text: "Playwright" },
+                  { letter: "D", text: "Mocha" }
+                ],
+                correct: "C"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "dev-mod-3",
+        title: "Modulo 3: Infraestrutura de Dados e Backend",
+        lessons: [
+          {
+            id: "dev-mod-3-l1",
+            title: "Supabase e PosgreSQL — Boas Praticas",
+            icon: "Database",
+            duration: "16 min",
+            content: [
+              {
+                type: "heading",
+                text: "Backend como Servico com Supabase"
+              },
+              {
+                type: "text",
+                text: "Supabase e uma plataforma open source que oferece banco de dados PostgreSQL, autenticacao, storage e Edge Functions. As boas praticas incluem: design de esquemas com normalizacao adequada, implementacao de Row-Level Security (RLS) para seguranca em nivel de linha, uso de real-time subscriptions para dados ao vivo, e estrategias de migracao com ferramentas como Prisma ou migrations SQL."
+              },
+              {
+                type: "quote",
+                text: "\"RLS no Supabase permite que voce defina politicas de acesso diretamente no banco: 'um usuario so pode ver suas proprias tarefas'. A segurança e aplicada no banco, nao no codigo.\""
+              },
+              {
+                type: "text",
+                text: "Edge Functions do Supabase (baseadas em Deno) permitem executar logica de servidor perto do usuario, ideais para webhooks e integracoes com servicos externos."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que e Row-Level Security (RLS) no Supabase?",
+                options: [
+                  { letter: "A", text: "Um sistema de criptografia de senhas." },
+                  { letter: "B", text: "Politicas de acesso aplicadas diretamente no banco para controlar quem ve cada linha." },
+                  { letter: "C", text: "Um firewall de rede para o banco de dados." },
+                  { letter: "D", text: "Uma ferramenta de backup automatico." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Em qual runtime as Edge Functions do Supabase sao baseadas?",
+                options: [
+                  { letter: "A", text: "Node.js" },
+                  { letter: "B", text: "Python" },
+                  { letter: "C", text: "Deno" },
+                  { letter: "D", text: "Bun" }
+                ],
+                correct: "C"
+              }
+            ]
+          },
+          {
+            id: "dev-mod-3-l2",
+            title: "Skill Creator e Automacao de Ferramentas",
+            icon: "Wand2",
+            duration: "12 min",
+            content: [
+              {
+                type: "heading",
+                text: "Criando Skills para Agentes de IA"
+              },
+              {
+                type: "text",
+                text: "Skills sao instrucoes modulares que estendem as capacidades de agentes de IA como Claude Code e Cursor. Criar uma skill envolve definir um nome, descricao, instrucoes claras de comportamento, e recursos auxiliares. O ecossistema de skills permite que desenvolvedores compartilhem e reutilizem comportamentos especializados."
+              },
+              {
+                type: "quote",
+                text: "\"Uma boa skill resolve um problema especifico de forma declarativa — nao diga como fazer, diga o que fazer e deixe o agente decidir a implementacao.\""
+              },
+              {
+                type: "text",
+                text: "O Skill Creator da Anthropic fornece templates e validacao automatica para garantir que sua skill siga as melhores praticas do ecossistema."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual e a estrutura basica de uma skill para agentes de IA?",
+                options: [
+                  { letter: "A", text: "Nome, descricao, instrucoes e recursos auxiliares." },
+                  { letter: "B", text: "Apenas um arquivo de codigo fonte." },
+                  { letter: "C", text: "Um arquivo binario compilado." },
+                  { letter: "D", text: "Uma URL e uma chave de API." }
+                ],
+                correct: "A"
+              },
+              {
+                id: 2,
+                question: "Qual filosofias uma boa skill deve seguir?",
+                options: [
+                  { letter: "A", text: "Ser o mais generica possivel para cobrir todos os casos." },
+                  { letter: "B", text: "Resolver um problema especifico de forma declarativa." },
+                  { letter: "C", text: "Exigir acesso total ao sistema operacional." },
+                  { letter: "D", text: "Ser escrita apenas em Python." }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "design-ui": {
+    id: "design-ui",
+    title: "Design & UI",
+    modules: [
+      {
+        id: "dui-mod-1",
+        title: "Modulo 1: Design Visual Premium",
+        lessons: [
+          {
+            id: "dui-mod-1-l1",
+            title: "High-End Visual Design",
+            icon: "Palette",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "Fazendo um Site Parecer Caro"
+              },
+              {
+                type: "text",
+                text: "Design visual de alto nivel vai alem de escolher cores bonitas. Envolve um sistema intencional de tipografia (hierarquia, contrastes, pares de fontes), espacamento (ritmo vertical consistente), sombras e elevacao (profundidade), estrutura de cards, micro-interacoes, e paleta de cores estrategica. Cada elemento deve ter um proposito."
+              },
+              {
+                type: "quote",
+                text: "\"Design caro e design onde cada pixel tem intencao. Nada e aleatorio — desde o tracking do texto ate o raio da borda de um card, tudo e decidido por um sistema.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como Figma sao usadas para criar design systems, enquanto Tailwind CSS permite implementar esses sistemas no codigo com consistencia."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que faz um design parecer 'caro' ou premium?",
+                options: [
+                  { letter: "A", text: "Usar muitas cores e animacoes." },
+                  { letter: "B", text: "Um sistema intencional com tipografia, espacamento, sombras e hierarquia consistentes." },
+                  { letter: "C", text: "Ter muitos efeitos de vidro e blur." },
+                  { letter: "D", text: "Usar imagens de banco de imagens." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual ferramenta e comumente usada para criar Design Systems?",
+                options: [
+                  { letter: "A", text: "Photoshop" },
+                  { letter: "B", text: "Figma" },
+                  { letter: "C", text: "Illustrator" },
+                  { letter: "D", text: "Blender" }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "dui-mod-1-l2",
+            title: "Design Taste — Anti-Slop Frontend",
+            icon: "Paintbrush",
+            duration: "13 min",
+            content: [
+              {
+                type: "heading",
+                text: "Evitando o Generic AI Design"
+              },
+              {
+                type: "text",
+                text: "O 'Design Taste' e uma abordagem que visa evitar interfaces genericas que parecem templates prontos. As tecnicas incluem: audit-first (avaliar o design atual antes de mudar), pre-flight check (verificar se o design atende criterios de qualidade antes de finalizar), e aplicacao de principios de design intencional em vez de depender de defaults de frameworks."
+              },
+              {
+                type: "quote",
+                text: "\"Se parece com um template que qualquer um poderia ter feito, nao e design — e apenas marcacao. Bom design exige decisao visual em cada elemento.\""
+              },
+              {
+                type: "text",
+                text: "Esta abordagem e especialmente importante ao usar geradores de codigo por IA, que tendem a produzir layouts seguros e genericos se nao forem guiados por principios de design."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que significa 'audit-first' no contexto de Design Taste?",
+                options: [
+                  { letter: "A", text: "Auditar o orcamento do projeto antes de comecar." },
+                  { letter: "B", text: "Avaliar o design atual antes de fazer mudancas." },
+                  { letter: "C", text: "Entrevistar usuarios antes de projetar." },
+                  { letter: "D", text: "Testar acessibilidade com ferramentas automaticas." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Por que geradores de IA tendem a produzir designs genericos?",
+                options: [
+                  { letter: "A", text: "Por que eles nao tem acesso a imagens." },
+                  { letter: "B", text: "Por que eles optam por layouts seguros e comuns sem orientacao especifica." },
+                  { letter: "C", text: "Por que eles so usam preto e branco." },
+                  { letter: "D", text: "Por que eles nao suportam CSS moderno." }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "dui-mod-2",
+        title: "Modulo 2: Branding e Design de Produto",
+        lessons: [
+          {
+            id: "dui-mod-2-l1",
+            title: "Brand Kit — Identidade de Marca",
+            icon: "Trophy",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Construindo uma Identidade Visual Coesa"
+              },
+              {
+                type: "text",
+                text: "Um Brand Kit e o conjunto de diretrizes que define a identidade visual de uma marca: paleta de cores (primarias, secundarias, neutras), tipografia (fontes para titulos, corpo e codigo), sistema de logos (variacoes horizontal, vertical, icone), tom de voz, e aplicacoes praticas. Um bom brand kit garante consistencia em todos os pontos de contato."
+              },
+              {
+                type: "quote",
+                text: "\"Marca nao e o que voce diz que ela e — marca e o que o cliente percebe. O brand kit e o manual para garantir que essa percepcao seja consistente.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como sistemas de design no Figma e plataformas como Zeroheight ajudam a documentar e compartilhar brand kits com equipes inteiras."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que um Brand Kit tipicamente inclui?",
+                options: [
+                  { letter: "A", text: "Apenas o logo da empresa." },
+                  { letter: "B", text: "Paleta de cores, tipografia, sistema de logos, tom de voz e aplicacoes." },
+                  { letter: "C", text: "Apenas as cores da marca." },
+                  { letter: "D", text: "Um manual de funcionarios." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual o principal objetivo de um Brand Kit?",
+                options: [
+                  { letter: "A", text: "Aumentar o valor das acoes da empresa." },
+                  { letter: "B", text: "Garantir consistencia visual em todos os pontos de contato da marca." },
+                  { letter: "C", text: "Substituir o departamento de marketing." },
+                  { letter: "D", text: "Criar um manual juridico para a marca." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "dui-mod-2-l2",
+            title: "Frontend Design e Diretrizes de UI",
+            icon: "Layout",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "Sistemas de Design e Acessibilidade"
+              },
+              {
+                type: "text",
+                text: "Frontend Design vai alem da aparencia — e sobre criar sistemas de componentes reutilizaveis com acessibilidade incorporada. Diretrizes incluem: design responsivo (mobile-first), suporte a teclado e leitores de tela (WCAG), contraste de cores adequado, estados de interacao (hover, focus, active, disabled), e consistencia de interacao em toda a aplicacao."
+              },
+              {
+                type: "quote",
+                text: "\"Acessibilidade nao e um recurso — e um requisito. Um design que funciona para todos e simplesmente um design melhor.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como Storybook permitem desenvolver e documentar componentes de forma isolada, garantindo que cada peca do sistema de design funcione corretamente."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual abordagem de design responsivo e recomendada atualmente?",
+                options: [
+                  { letter: "A", text: "Desktop-first." },
+                  { letter: "B", text: "Mobile-first." },
+                  { letter: "C", text: "Apenas desktop." },
+                  { letter: "D", text: "Apenas mobile." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual ferramenta e usada para desenvolver componentes de UI de forma isolada?",
+                options: [
+                  { letter: "A", text: "Figma" },
+                  { letter: "B", text: "Storybook" },
+                  { letter: "C", text: "Photoshop" },
+                  { letter: "D", text: "Webflow" }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "ia-media": {
+    id: "ia-media",
+    title: "IA & Media",
+    modules: [
+      {
+        id: "mid-mod-1",
+        title: "Modulo 1: Geracao de Conteudo com IA",
+        lessons: [
+          {
+            id: "mid-mod-1-l1",
+            title: "Geracao de Imagens com IA",
+            icon: "Image",
+            duration: "16 min",
+            content: [
+              {
+                type: "heading",
+                text: "Modelos de Difusao e Engenharia de Prompt Visual"
+              },
+              {
+                type: "text",
+                text: "Modelos de geracao de imagem como Flux, DALL-E 3 e Stable Diffusion funcionam atraves de difusao: eles comecam com ruido aleatorio e gradualmente o removem, guiados por uma descricao textual. Para obter resultados de qualidade, o prompt precisa descrever: o sujeito principal, o estilo visual (fotografia, ilustracao 3D, pintura a oleo), a iluminacao, a composicao e as proporcoes."
+              },
+              {
+                type: "quote",
+                text: "\"Um prompt de imagem eficaz e como uma direcao de arte: quanto mais especifico voce for sobre o que quer, menos espaco o modelo tera para 'alucinar' elementos indesejados.\""
+              },
+              {
+                type: "text",
+                text: "Tecnicas avancadas incluem ControlNet para controle de pose, inpainting para editar partes especificas da imagem, e img2img para transformar uma imagem existente em algo novo."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Como funcionam os modelos de difusao para geracao de imagens?",
+                options: [
+                  { letter: "A", text: "Eles copiam imagens existentes da internet." },
+                  { letter: "B", text: "Eles comecam com ruido e gradualmente o removem guiados por um prompt textual." },
+                  { letter: "C", text: "Eles desenham pixel por pixel usando regras matematicas." },
+                  { letter: "D", text: "Eles usam redes neurais para colorir rascunhos em preto e branco." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "O que e ControlNet no contexto de geracao de imagens?",
+                options: [
+                  { letter: "A", text: "Uma ferramenta para controlar a temperatura do modelo." },
+                  { letter: "B", text: "Uma tecnica para controlar a pose e estrutura de personagens na imagem gerada." },
+                  { letter: "C", text: "Um filtro de cores aplicado apos a geracao." },
+                  { letter: "D", text: "Um tipo de rede neural para deteccao de objetos." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "mid-mod-1-l2",
+            title: "Geracao de Videos e Musica com IA",
+            icon: "Video",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Texto-para-Video e Composicao Musical"
+              },
+              {
+                type: "text",
+                text: "A geracao de videos com IA (como Kling 3.0 e WAN 2.7) permite criar clips a partir de descricoes textuais, alem de editar, estender e aplicar efeitos em videos existentes. A geracao musical com ElevenLabs e outras ferramentas permite compor musicas royalty-free com controle de estilo e genero, ideal para trilhas sonoras de projetos."
+              },
+              {
+                type: "quote",
+                text: "\"A geracao de video por IA ainda enfrenta desafios de consistencia temporal — manter a aparencia de objetos e personagens ao longo de varios frames.\""
+              },
+              {
+                type: "text",
+                text: "A sincronizacao labial (lip-sync) movida a IA permite dublar automaticamente videos em varios idiomas, preservando a sincronia dos labios com o audio traduzido."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual e um dos principais desafios da geracao de video por IA?",
+                options: [
+                  { letter: "A", text: "Alta resolucao insuficiente." },
+                  { letter: "B", text: "Consistencia temporal de objetos e personagens entre frames." },
+                  { letter: "C", text: "Falta de suporte a cores." },
+                  { letter: "D", text: "Impossibilidade de exportar em MP4." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual tecnologia permite dublar videos preservando a sincronia labial?",
+                options: [
+                  { letter: "A", text: "Text-to-Speech" },
+                  { letter: "B", text: "Lip-sync com IA" },
+                  { letter: "C", text: "Legendas automaticas" },
+                  { letter: "D", text: "Traducao simultanea" }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "mid-mod-2",
+        title: "Modulo 2: Edicao e Avatares com IA",
+        lessons: [
+          {
+            id: "mid-mod-2-l1",
+            title: "Edicao Avancada de Imagens com IA",
+            icon: "Scissors",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "Inpainting, Outpainting e Relighting"
+              },
+              {
+                type: "text",
+                text: "As tecnicas de edicao com IA vao muito alem de filtros. Inpainting permite remover ou substituir objetos especificos em uma imagem. Outpainting estende a imagem alem de suas bordas originais, criando novo conteudo que se integra a cena. Relighting ajusta a iluminacao de uma foto para combinar com uma nova cena ou horario."
+              },
+              {
+                type: "quote",
+                text: "\"Inpainting e a versao IA do Photoshop — mas em vez de clonar pixels vizinhos, o modelo realmente entende o contexto e gera conteudo novo que faz sentido na cena.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como ControlNet permitem controle ainda mais preciso, como definir a pose exata de uma pessoa na imagem gerada atraves de deteccao de esqueleto (OpenPose)."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual a diferencia entre inpainting e outpainting?",
+                options: [
+                  { letter: "A", text: "Inpainting edita dentro da imagem; outpainting estende alem das bordas." },
+                  { letter: "B", text: "Inpainting adiciona cor; outpainting remove cor." },
+                  { letter: "C", text: "Ambos sao a mesma coisa." },
+                  { letter: "D", text: "Inpainting e para videos; outpainting para imagens." }
+                ],
+                correct: "A"
+              },
+              {
+                id: 2,
+                question: "O que e OpenPose no contexto de geracao de imagens?",
+                options: [
+                  { letter: "A", text: "Uma ferramenta de edicao de poses de yoga." },
+                  { letter: "B", text: "Deteccao de esqueleto para controlar a pose de personagens." },
+                  { letter: "C", text: "Um filtro artistico para fotos." },
+                  { letter: "D", text: "Um banco de dados de poses humanas." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "mid-mod-2-l2",
+            title: "Avatares e Audio com IA",
+            icon: "UserCircle",
+            duration: "13 min",
+            content: [
+              {
+                type: "heading",
+                text: "Criacao de Avatares Realistas e Vozes Sinteticas"
+              },
+              {
+                type: "text",
+                text: "Avatares de IA sao gerados a partir de uma foto real e depois animados com text-to-speech natural. A tecnologia de lip-sync sincroniza os movimentos da boca com o audio gerado, criando a ilusao de que o avatar esta realmente falando. As aplicacoes incluem apresentacoes corporativas, videos de marketing, tutoriais educacionais e conteudo para redes sociais."
+              },
+              {
+                type: "quote",
+                text: "\"Avatares com IA estao democratizando a producao de video — qualquer um pode criar um apresentador virtual sem precisar de equipamento de estidio ou atores.\""
+              },
+              {
+                type: "text",
+                text: "Plataformas como HeyGen, Synthesia e D-ID oferecem criacao de avatares com suporte a multiplos idiomas, permitindo que um unico video seja traduzido e dublado para diversos mercados."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Como avatares de IA sao tipicamente criados?",
+                options: [
+                  { letter: "A", text: "Desenhando manualmente cada frame." },
+                  { letter: "B", text: "Gerados a partir de uma foto real e animados com text-to-speech." },
+                  { letter: "C", text: "Escaneamento 3D com cameras especiais." },
+                  { letter: "D", text: "Selecionados de uma biblioteca de avatares pre-prontos." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual tecnologia sincroniza o movimento dos labios com o audio gerado?",
+                options: [
+                  { letter: "A", text: "Text-to-Speech" },
+                  { letter: "B", text: "Reconhecimento facial" },
+                  { letter: "C", text: "Lip-sync com IA" },
+                  { letter: "D", text: "Geracao de legendas" }
+                ],
+                correct: "C"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "cloud-infra": {
+    id: "cloud-infra",
+    title: "Cloud & Infra",
+    modules: [
+      {
+        id: "cin-mod-1",
+        title: "Modulo 1: Cloud Computing com Azure",
+        lessons: [
+          {
+            id: "cin-mod-1-l1",
+            title: "Azure Kubernetes Service (AKS)",
+            icon: "Box",
+            duration: "16 min",
+            content: [
+              {
+                type: "heading",
+                text: "Orquestracao de Containers na Nuvem"
+              },
+              {
+                type: "text",
+                text: "O Azure Kubernetes Service (AKS) simplifica o gerenciamento de clusters Kubernetes na nuvem Microsoft. Ele cuida de tarefas complexas como provisionamento de nos, atualizacoes de versao, escalonamento automatico e monitoramento integrado. AKS permite que equipes foquem no desenvolvimento de aplicacoes enquanto a Microsoft gerencia o plano de controle."
+              },
+              {
+                type: "quote",
+                text: "\"Kubernetes nao e sobre containers — e sobre orquestracao: garantir que o estado real do seu sistema corresponda ao estado desejado que voce declarou.\""
+              },
+              {
+                type: "text",
+                text: "Estrategias de deploy como rolling update, blue-green e canary podem ser implementadas no AKS para minimizar downtime durante atualizacoes."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que o AKS gerencia automaticamente?",
+                options: [
+                  { letter: "A", text: "O codigo da aplicacao." },
+                  { letter: "B", text: "Provisionamento de nos, atualizacoes e escalonamento." },
+                  { letter: "C", text: "O banco de dados da aplicacao." },
+                  { letter: "D", text: "A autenticacao dos usuarios." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual estrategia de deploy minimiza downtime durante atualizacoes?",
+                options: [
+                  { letter: "A", text: "Recreate (recriar todos os pods)." },
+                  { letter: "B", text: "Blue-green ou canary." },
+                  { letter: "C", text: "Rollback automatico." },
+                  { letter: "D", text: "Deploy em horario comercial." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "cin-mod-1-l2",
+            title: "Seguranca no Azure — Entra ID e RBAC",
+            icon: "Shield",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Identity, Access Management e Compliance"
+              },
+              {
+                type: "text",
+                text: "A seguranca no Azure comeca com o Entra ID (formerly Azure AD) para gerenciamento de identidades, RBAC (Role-Based Access Control) para controle de acesso granulado, Key Vault para gerenciamento centralizado de segredos e certificados, e o Microsoft Defender for Cloud para monitoramento continuo de ameacas. A conformidade com frameworks como SOC 2, ISO 27001 e HIPAA e facilitada por ferramentas nativas."
+              },
+              {
+                type: "quote",
+                text: "\"No modelo de responsabilidade compartilhada da nuvem, a Microsoft garante a seguranca da nuvem — voce e responsavel pela seguranca dentro da nuvem.\""
+              },
+              {
+                type: "text",
+                text: "Network Security Groups (NSGs) funcionam como firewalls distribuidos, permitindo controlar o trafego de entrada e saida para recursos de rede no Azure."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual servico do Azure gerencia identidades e acessos?",
+                options: [
+                  { letter: "A", text: "Azure SQL" },
+                  { letter: "B", text: "Entra ID" },
+                  { letter: "C", text: "Azure Functions" },
+                  { letter: "D", text: "Azure DevOps" }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "O que significa 'responsabilidade compartilhada' na nuvem?",
+                options: [
+                  { letter: "A", text: "O provedor cuida de tudo." },
+                  { letter: "B", text: "O cliente e responsavel por tudo." },
+                  { letter: "C", text: "O provedor garante a seguranca da nuvem; o cliente, a seguranca dentro dela." },
+                  { letter: "D", text: "Nenhuma das alternativas." }
+                ],
+                correct: "C"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "cin-mod-2",
+        title: "Modulo 2: Otimizacao e Linux na Nuvem",
+        lessons: [
+          {
+            id: "cin-mod-2-l1",
+            title: "Cost Optimization e FinOps no Azure",
+            icon: "Coins",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "Gerenciando Custos na Nuvem"
+              },
+              {
+                type: "text",
+                text: "Otimizacao de custos em nuvem (FinOps) envolve varias estrategias: analise de custos com Azure Cost Management, configuracao de budgets e alertas, uso de Reserved Instances e Savings Plans para descontos por compromisso de uso, rightsizing de recursos subutilizados, e escolha de tiers de armazenamento adequados. Uma abordagem FinOps disciplinada pode reduzir custos em 30-50%."
+              },
+              {
+                type: "quote",
+                text: "\"O maior custo na nuvem nao e o que voce usa — e o que voce provisiona mas nao usa. Instancias esquecidas rodando 24/7 sao a maior fonte de desperdicio.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como Azure Advisor fornecem recomendacoes personalizadas de otimizacao baseadas nos seus padroes de uso."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual e a maior fonte de desperdicio em nuvem?",
+                options: [
+                  { letter: "A", text: "Custo de banda de rede." },
+                  { letter: "B", text: "Instancias provisionadas mas subutilizadas ou esquecidas." },
+                  { letter: "C", text: "Custo de licencas de software." },
+                  { letter: "D", text: "Taxas de suporte tecnico." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "O que sao Reserved Instances no Azure?",
+                options: [
+                  { letter: "A", text: "Instancias reservadas para uso exclusivo." },
+                  { letter: "B", text: "Descontos por compromisso de uso de 1 ou 3 anos." },
+                  { letter: "C", text: "Maquinas virtuais com IP fixo." },
+                  { letter: "D", text: "Servidores dedicados fisicos." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "cin-mod-2-l2",
+            title: "Linux Server Hardening na Nuvem",
+            icon: "Terminal",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Protegendo Servidores Linux"
+              },
+              {
+                type: "text",
+                text: "Hardening de servidores Linux envolve: configuracao de firewall (UFW/iptables) para permitir apenas portas necessarias, autenticacao SSH exclusivamente por chave (sem senha), instalacao de fail2ban para bloquear tentativas de invasao, monitoramento com Prometheus e node_exporter, backups automatizados com rotacao, e auditoria regular de seguranca com ferramentas como Lynis."
+              },
+              {
+                type: "quote",
+                text: "\"Um servidor seguro nao e configurado uma vez — e um processo continuo de atualizacao, monitoramento e resposta a incidentes.\""
+              },
+              {
+                type: "text",
+                text: "Praticas como minimal install (instalar apenas o necessario), desabilitar servicos nao utilizados, e manter o sistema atualizado com patches de seguranca formam a base de qualquer estrategia de hardening."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual a melhor pratica para autenticacao SSH em servidores?",
+                options: [
+                  { letter: "A", text: "Senhas fortes com 12+ caracteres." },
+                  { letter: "B", text: "Autenticacao exclusivamente por chave (sem senha)." },
+                  { letter: "C", text: "Autenticacao por biometria." },
+                  { letter: "D", text: "Login apenas como root." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual ferramenta e usada para bloquear tentativas de invasao por brute force?",
+                options: [
+                  { letter: "A", text: "Prometheus" },
+                  { letter: "B", text: "Docker" },
+                  { letter: "C", text: "Fail2ban" },
+                  { letter: "D", text: "Nginx" }
+                ],
+                correct: "C"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "marketing-digital": {
+    id: "marketing-digital",
+    title: "Marketing",
+    modules: [
+      {
+        id: "mkt2-mod-1",
+        title: "Modulo 1: Estrategia e Conteudo",
+        lessons: [
+          {
+            id: "mkt2-mod-1-l1",
+            title: "Copywriting para Conversao",
+            icon: "PenLine",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "A Arte da Persuasao Escrita"
+              },
+              {
+                type: "text",
+                text: "Copywriting e a pratica de escrever textos persuasivos que levam o leitor a agir. Os principios fundamentais incluem: conhecer a dor e o desejo do publico-alvo, escrever titulos que prendam a atencao (hooks), usar tecnicas como AIDA (Atencao, Interesse, Desejo, Acao) e PAS (Problema, Agitacao, Solucao), e sempre incluir uma chamada para acao (CTA) clara."
+              },
+              {
+                type: "quote",
+                text: "\"As pessoas nao compram produtos — compram resolucoes para seus problemas. O copywriting eficaz fala da dor que o cliente sente, nao das features que o produto tem.\""
+              },
+              {
+                type: "text",
+                text: "Testes A/B sao essenciais para otimizar copy: teste diferentes versoes de titulos, CTAs e abordagens para descobrir o que ressoa melhor com seu publico."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que significa a sigla AIDA no copywriting?",
+                options: [
+                  { letter: "A", text: "Acordo, Interesse, Duvida, Acao." },
+                  { letter: "B", text: "Atencao, Interesse, Desejo, Acao." },
+                  { letter: "C", text: "Analise, Ideia, Desenvolvimento, Aprovacao." },
+                  { letter: "D", text: "Abordagem, Investigacao, Decisao, Avaliacao." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual o foco principal de um bom copywriting?",
+                options: [
+                  { letter: "A", text: "Descrever todas as features do produto em detalhe." },
+                  { letter: "B", text: "Falar da dor do cliente e como o produto a resolve." },
+                  { letter: "C", text: "Usar linguagem tecnica para parecer autoritario." },
+                  { letter: "D", text: "Escrever textos longos para parecer completo." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "mkt2-mod-1-l2",
+            title: "Content Strategy e Marketing de Conteudo",
+            icon: "Layers",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Planejamento Estrategico de Conteudo"
+              },
+              {
+                type: "text",
+                text: "Content strategy vai alem de simplesmente publicar posts. Envolve: definicao de topic clusters (grupos de conteudo em torno de um tema central), criacao de pilares de conteudo (paginas abrangentes sobre topicos principais), planejamento de calendario editorial, analise de gaps de conteudo (o que seus concorrentes cobrem que voce nao cobre), e alinhamento com a jornada do cliente (consciencia, consideracao, decisao)."
+              },
+              {
+                type: "quote",
+                text: "\"Conteudo e o unico ativo de marketing que acumula valor com o tempo. Um post de blog de 2015 ainda pode trazer trafego hoje. Um anuncio pago morre quando o orcamento acaba.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como SEMrush, Ahrefs e Google Search Console ajudam a identificar topicos com potencial de trafego e baixa concorrencia."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que sao 'topic clusters' em content strategy?",
+                options: [
+                  { letter: "A", text: "Listas de topicos proibidos para a marca." },
+                  { letter: "B", text: "Grupos de conteudo interligados em torno de um tema central." },
+                  { letter: "C", text: "Categorias de anuncios pagos." },
+                  { letter: "D", text: "Tags de redes sociais." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual e uma vantagem do conteudo em relacao a anuncios pagos?",
+                options: [
+                  { letter: "A", text: "Conteudo acumula valor com o tempo; anuncios morrem quando o orcamento acaba." },
+                  { letter: "B", text: "Conteudo e mais barato de produzir." },
+                  { letter: "C", text: "Conteudo nao precisa de revisao." },
+                  { letter: "D", text: "Conteudo funciona sem internet." }
+                ],
+                correct: "A"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "mkt2-mod-2",
+        title: "Modulo 2: SEO e Otimizacao",
+        lessons: [
+          {
+            id: "mkt2-mod-2-l1",
+            title: "SEO Audit e Diagnostico Tecnico",
+            icon: "Search",
+            duration: "16 min",
+            content: [
+              {
+                type: "heading",
+                text: "Auditando a Saude SEO do Seu Site"
+              },
+              {
+                type: "text",
+                text: "Um SEO audit completo cobre: technical SEO (crawlability, indexacao, Core Web Vitals), on-page SEO (meta tags, headers, otimizacao de conteudo), off-page SEO (perfil de backlinks, autoridade de dominio), analise de gaps de conteudo, e structured data (schema markup) para rich snippets. Cada area e avaliada com recomendacoes priorizadas por impacto."
+              },
+              {
+                type: "quote",
+                text: "\"SEO nao e sobre enganar o Google — e sobre tornar seu site tao bom que o Google queira mostra-lo para os usuarios. As diretrizes sao claras: faca o melhor conteudo, e o resto vem.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como Google Search Console, Lighthouse e Screaming Frog sao essenciais para identificar problemas tecnicos de SEO."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que cobre a parte 'technical SEO' de um audit?",
+                options: [
+                  { letter: "A", text: "Apenas palavras-chave." },
+                  { letter: "B", text: "Crawlability, indexacao e Core Web Vitals." },
+                  { letter: "C", text: "Apenas backlinks." },
+                  { letter: "D", text: "Redes sociais." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "O que sao rich snippets no SEO?",
+                options: [
+                  { letter: "A", text: "Extratos de codigo fonte." },
+                  { letter: "B", text: "Resultados enriquecidos com estrelas, precos e imagens nos buscadores." },
+                  { letter: "C", text: "Trechos de texto aleatorios." },
+                  { letter: "D", text: "Anuncios em formato de texto." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "mkt2-mod-2-l2",
+            title: "AI SEO — Otimizacao para Busca com IA",
+            icon: "Sparkles",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "Preparando Conteudo para AI Overviews e LLMs"
+              },
+              {
+                type: "text",
+                text: "Com o crescimento de buscas por IA (AI Overviews do Google, ChatGPT Search, Perplexity), uma nova disciplina surge: AI SEO. Envolve otimizar conteudo para ser citado por LLMs, usando structured data para facilitar a extracao por IA, formatando conteudo de forma que seja facilmente consumivel (listas, tabelas, respostas diretas), e adotando estrategias de entity SEO para que sua marca seja reconhecida como autoridade em topicos especificos."
+              },
+              {
+                type: "quote",
+                text: "\"No mundo da busca com IA, seu conteudo nao precisa ser o primeiro do Google — precisa ser o mais citavel pelos LLMs. Estruture suas respostas como se estivesse escrevendo uma enciclopedia para maquinas.\""
+              },
+              {
+                type: "text",
+                text: "Monitorar a visibilidade em AI search esta se tornando uma metrica importante, com ferramentas emergentes para rastrear citacoes em respostas de LLMs."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que e AI SEO?",
+                options: [
+                  { letter: "A", text: "Usar IA para escrever artigos de blog." },
+                  { letter: "B", text: "Otimizar conteudo para ser citado por LLMs e buscadores com IA." },
+                  { letter: "C", text: "Automatizar a construcao de backlinks." },
+                  { letter: "D", text: "Criar imagens com IA para o blog." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual formato de conteudo e mais facil para LLMs consumirem?",
+                options: [
+                  { letter: "A", text: "Paragrafos longos e densos." },
+                  { letter: "B", text: "Listas, tabelas e respostas diretas e estruturadas." },
+                  { letter: "C", text: "Videos incorporados." },
+                  { letter: "D", text: "Arquivos PDF para download." }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "mkt2-mod-3",
+        title: "Modulo 3: Psicologia e Conversao",
+        lessons: [
+          {
+            id: "mkt2-mod-3-l1",
+            title: "Marketing Psychology e Comportamento",
+            icon: "Brain",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Vieses Cognitivos Aplicados ao Marketing"
+              },
+              {
+                type: "text",
+                text: "A psicologia do marketing aplica principios de behavioral science para influenciar decisoes de compra. Principais vieses: prova social (pessoas seguem o comportamento de outras), escassez (itens limitados sao mais valorizados), ancoragem (a primeira informacao serve como referencia), e framing (como a informacao e apresentada afeta a decisao). O uso etico desses principios pode aumentar significativamente a conversao."
+              },
+              {
+                type: "quote",
+                text: "\"Robert Cialdini identificou seis principios universais de persuasao: reciprocidade, compromisso, aprovacao social, autoridade, afinidade e escassez. Domine estes seis e voce domina a arte de influenciar.\""
+              },
+              {
+                type: "text",
+                text: "A choice architecture (arquitetura de escolha) no UX design usa esses principios para guiar usuarios a decisoes desejadas sem manipular."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que e o principio de 'ancoragem' em psicologia do consumo?",
+                options: [
+                  { letter: "A", text: "A primeira informacao recebida serve como referencia para decisoes futuras." },
+                  { letter: "B", text: "Produtos sao mais valorizados quando escassos." },
+                  { letter: "C", text: "Pessoas seguem o comportamento da maioria." },
+                  { letter: "D", text: "Uma vez comprometidas, pessoas tendem a manter a decisao." }
+                ],
+                correct: "A"
+              },
+              {
+                id: 2,
+                question: "Quantos principios universais de persuasao Robert Cialdini identificou?",
+                options: [
+                  { letter: "A", text: "Tres" },
+                  { letter: "B", text: "Quatro" },
+                  { letter: "C", text: "Seis" },
+                  { letter: "D", text: "Oito" }
+                ],
+                correct: "C"
+              }
+            ]
+          },
+          {
+            id: "mkt2-mod-3-l2",
+            title: "CRO — Conversion Rate Optimisation",
+            icon: "TrendingUp",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "Otimizando Taxas de Conversao com Dados"
+              },
+              {
+                type: "text",
+                text: "CRO e o processo sistematico de aumentar a porcentagem de usuarios que realizam uma acao desejada. Envolve: analise de funil para identificar onde os usuarios estao desistindo, geracao de hipoteses baseadas em dados (nao em achismos), design e implementacao de testes A/B, analise estatistica dos resultados, e implementacao das variantes vencedoras. Ferramentas como Google Optimize e VWO auxiliam neste processo."
+              },
+              {
+                type: "quote",
+                text: "\"Nunca confie no seu palpite. Teste tudo. O que parece obvio para voce pode surpreender completamente quando confrontado com dados reais de usuarios.\""
+              },
+              {
+                type: "text",
+                text: "O framework de CRO mais eficaz segue o ciclo: Pesquisa → Hipotese → Priorizacao → Teste → Analise → Implementacao."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual o primeiro passo do processo de CRO?",
+                options: [
+                  { letter: "A", text: "Implementar mudancas no site." },
+                  { letter: "B", text: "Criar variacoes de pagina." },
+                  { letter: "C", text: "Analisar o funil para identificar pontos de desistencia." },
+                  { letter: "D", text: "Aumentar o orcamento de trafego." }
+                ],
+                correct: "C"
+              },
+              {
+                id: 2,
+                question: "Qual a melhor forma de validar uma hipotese de CRO?",
+                options: [
+                  { letter: "A", text: "Perguntar a opiniao do time." },
+                  { letter: "B", text: "Implementar e medir com um teste A/B." },
+                  { letter: "C", text: "Seguir o que os concorrentes fazem." },
+                  { letter: "D", text: "Usar a intuicao do product manager." }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "produtividade": {
+    id: "produtividade",
+    title: "Produtividade",
+    modules: [
+      {
+        id: "pro-mod-1",
+        title: "Modulo 1: Planejamento e Estrategia",
+        lessons: [
+          {
+            id: "pro-mod-1-l1",
+            title: "Brainstorming Estruturado com IA",
+            icon: "Lightbulb",
+            duration: "13 min",
+            content: [
+              {
+                type: "heading",
+                text: "Geracao e Selecao de Ideias"
+              },
+              {
+                type: "text",
+                text: "Brainstorming com IA combina pensamento divergente (gerar muitas ideias) com convergente (selecionar as melhores). A IA pode atuar como facilitadora, gerando dezenas de variacoes rapidamente e depois ajudando a categorizar e priorizar usando matrizes de decisao. O segredo e dar papeis especificos: 'ato como advogado do diabo' ou 'ato como usuario iniciante'."
+              },
+              {
+                type: "quote",
+                text: "\"A IA e excelente para quantidade de ideias; o humano e insubstituivel para qualidade e contexto. A melhor sessao de brainstorming e uma parceria entre os dois.\""
+              },
+              {
+                type: "text",
+                text: "Tecnicas como SCAMPER (Substitute, Combine, Adapt, Modify, Put to another use, Eliminate, Rearrange) funcionam muito bem quando aplicadas por LLMs."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual a melhor forma de usar IA em sessoes de brainstorming?",
+                options: [
+                  { letter: "A", text: "Deixar a IA decidir tudo sozinha." },
+                  { letter: "B", text: "Usar a IA para gerar quantidade e variedade, e o humano para selecionar e contextualizar." },
+                  { letter: "C", text: "Pedir apenas uma ideia final pronta." },
+                  { letter: "D", text: "Nao usar IA, apenas metodos tradicionais." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "O que significa a tecnica SCAMPER no brainstorming?",
+                options: [
+                  { letter: "A", text: "Um metodo de votacao para selecionar ideias." },
+                  { letter: "B", text: "Uma sigla para tecnicas de modificacao e combinacao de ideias existentes." },
+                  { letter: "C", text: "Um software de brainstorming." },
+                  { letter: "D", text: "Um tipo de reuniao criativa." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "pro-mod-1-l2",
+            title: "Writing Plans — Planos de Execucao",
+            icon: "ClipboardList",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "De Objetivos a Passos Acionaveis"
+              },
+              {
+                type: "text",
+                text: "Transformar objetivos amplos em planos de execucao e uma habilidade critica. O processo envolve: decompor o objetivo em marcos (milestones), identificar dependencias entre tarefas, estimar recursos e tempo necessarios, avaliar riscos e criar planos de mitigacao, definir criterios de progresso, e estabelecer canais de comunicacao com stakeholders. A IA pode ajudar a estruturar estes planos e identificar pontos cegos."
+              },
+              {
+                type: "quote",
+                text: "\"Um plano sem prazos nao e um plano — e uma lista de desejos. Toda tarefa precisa de uma estimativa, mesmo que aproximada, para que o progresso possa ser medido.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como Notion, Linear e Jira ajudam a documentar e acompanhar planos de execucao, enquanto a IA pode sugerir breakdowns otimizados baseados em experiencias anteriores."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual a diferenca entre um plano e uma lista de desejos?",
+                options: [
+                  { letter: "A", text: "Nenhuma, sao a mesma coisa." },
+                  { letter: "B", text: "Um plano tem prazos e metricas de progresso." },
+                  { letter: "C", text: "Uma lista de desejos e mais detalhada." },
+                  { letter: "D", text: "Um plano e mais curto." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual o primeiro passo ao criar um plano de execucao?",
+                options: [
+                  { letter: "A", text: "Estimar o orcamento total." },
+                  { letter: "B", text: "Decompor o objetivo em marcos e tarefas." },
+                  { letter: "C", text: "Contratar mais pessoas." },
+                  { letter: "D", text: "Comprar ferramentas de gestao." }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "pro-mod-2",
+        title: "Modulo 2: Execucao e Colaboracao",
+        lessons: [
+          {
+            id: "pro-mod-2-l1",
+            title: "Executing Plans — Execucao Disciplinada",
+            icon: "ListChecks",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Acompanhamento e Verificacao de Progresso"
+              },
+              {
+                type: "text",
+                text: "Executar um plano requer disciplina: gate de verificacao em cada marco (checklist de requisitos atendidos), tracking de progresso com indicadores visuais (semaforo verde/amarelo/vermelho), identificacao e escalonamento de blockers, adaptacao do plano com base em novas informacoes, e comunicacao de status atualizada para stakeholders. O ciclo e: Executar → Verificar → Reportar → Ajustar."
+              },
+              {
+                type: "quote",
+                text: "\"Nenhum plano sobrevive ao primeiro contato com a realidade — mas um processo de execucao disciplinado sim. Nao se apaixone pelo plano, se apaixone pelo sistema de adaptacao.\""
+              },
+              {
+                type: "text",
+                text: "Ferramentas como status reports semanais e dashboards de progresso ajudam a manter todos alinhados durante a execucao."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que sao 'verification gates' na execucao de planos?",
+                options: [
+                  { letter: "A", text: "Portas fisicas que bloqueiam a entrada do escritorio." },
+                  { letter: "B", text: "Checklists de requisitos que devem ser atendidos antes de avancar para o proximo marco." },
+                  { letter: "C", text: "Aprovacoes de orcamento." },
+                  { letter: "D", text: "Reunioes diarias em pe." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual o ciclo recomendado para execucao de planos?",
+                options: [
+                  { letter: "A", text: "Planejar → Executar → Esquecer" },
+                  { letter: "B", text: "Executar → Verificar → Reportar → Ajustar" },
+                  { letter: "C", text: "Delegar → Monitorar → Cobrar" },
+                  { letter: "D", text: "Comecar → Parar → Replanejar" }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "pro-mod-2-l2",
+            title: "Ferramentas Lark — Documentos e OKRs",
+            icon: "FileText",
+            duration: "13 min",
+            content: [
+              {
+                type: "heading",
+                text: "Produtividade Colaborativa com Lark/Feishu"
+              },
+              {
+                type: "text",
+                text: "Lark (Feishu) e uma plataforma de produtividade que integra documentos, planilhas, OKRs, reunioes e aprovacoes. Lark Docs permite criacao colaborativa com formatacao rica e automacao. Lark Base funciona como uma planilha-banco de dados hibrida com formulas automacoes e visualizacoes. Lark OKR facilita o alinhamento de metas com check-ins semanais e tracking de progresso."
+              },
+              {
+                type: "quote",
+                text: "\"OKRs bem escritos tem duas partes: o Objetivo (inspiracional, qualitativo) e os Key Results (mensuraveis, quantitativos). 'Aumentar a satisfacao do cliente' nao e um OKR — 'Aumentar NPS de 70 para 85' e um Key Result.\""
+              },
+              {
+                type: "text",
+                text: "A integracao entre as ferramentas Lark permite criar fluxos como: um documento vira uma tarefa, que vira um OKR, com aprovacao automatizada."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que e Lark Base?",
+                options: [
+                  { letter: "A", text: "Um editor de textos simples." },
+                  { letter: "B", text: "Uma ferramenta hibrida de planilha e banco de dados com automacoes." },
+                  { letter: "C", text: "Um sistema de CRM." },
+                  { letter: "D", text: "Um chat corporativo." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual a estrutura correta de um OKR?",
+                options: [
+                  { letter: "A", text: "Apenas metas numericas." },
+                  { letter: "B", text: "Objetivo inspiracional + Key Results mensuraveis." },
+                  { letter: "C", text: "Lista de tarefas diarias." },
+                  { letter: "D", text: "Descricao do cargo e responsabilidades." }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "agentes-workflows": {
+    id: "agentes-workflows",
+    title: "Agentes & Workflows",
+    modules: [
+      {
+        id: "agw-mod-1",
+        title: "Modulo 1: Orquestracao de Agentes de IA",
+        lessons: [
+          {
+            id: "agw-mod-1-l1",
+            title: "Dispatching Parallel Agents",
+            icon: "GitBranch",
+            duration: "16 min",
+            content: [
+              {
+                type: "heading",
+                text: "Executando Multiplos Agentes em Paralelo"
+              },
+              {
+                type: "text",
+                text: "Orquestrar agentes em paralelo envolve dividir um trabalho grande em tarefas independentes, despachar cada uma para um agente especializado, coletar e consolidar os resultados, tratar falhas com retry e escalonamento, e garantir que dependencias entre tarefas sejam respeitadas. O orquestrador coordena o fluxo sem micromanager cada agente."
+              },
+              {
+                type: "quote",
+                text: "\"O ganho de performance com agentes paralelos nao e linear — depende de quao bem voce divide o trabalho. Duas tarefas que competem pelo mesmo recurso nao sao paralelizaveis.\""
+              },
+              {
+                type: "text",
+                text: "Frameworks como LangGraph, CrewAI e o proprio sistema de subagentes do Claude Code permitem implementar orquestracao paralela com diferentes niveis de sofisticacao."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual o principal desafio ao paralelizar agentes de IA?",
+                options: [
+                  { letter: "A", text: "Custo de API." },
+                  { letter: "B", text: "Dividir o trabalho em tarefas verdadeiramente independentes." },
+                  { letter: "C", text: "Velocidade de conexao com a internet." },
+                  { letter: "D", text: "Escolher o modelo de IA certo." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual o papel do orquestrador em um sistema multi-agente?",
+                options: [
+                  { letter: "A", text: "Executar todas as tarefas sozinho." },
+                  { letter: "B", text: "Coordenar o fluxo, consolidar resultados e tratar falhas." },
+                  { letter: "C", text: "Apenas monitorar o progresso." },
+                  { letter: "D", text: "Decidir qual modelo de IA usar." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "agw-mod-1-l2",
+            title: "Subagent-Driven Development",
+            icon: "Workflow",
+            duration: "17 min",
+            content: [
+              {
+                type: "heading",
+                text: "Dividir para Conquistar com Subagentes"
+              },
+              {
+                type: "text",
+                text: "Subagent-Driven Development e uma abordagem onde tarefas de desenvolvimento sao divididas entre subagentes especializados: um agente de arquitetura projeta a solucao, um de implementacao escreve o codigo, um revisor valida a correcao, um de testes garante cobertura, e um de documentacao escreve a documentacao. Cada agente tem um papel claro e produz uma saida especifica."
+              },
+              {
+                type: "quote",
+                text: "\"Um desenvolvedor humano orquestrando 5 subagentes de IA pode produzir o trabalho de 3 desenvolvedores — mas apenas se o humano tiver clareza suficiente para dividir o trabalho corretamente.\""
+              },
+              {
+                type: "text",
+                text: "Esta abordagem e particularmente eficaz para tarefas bem definidas como criar componentes de UI, escrever testes, ou refatorar codigo seguindo padroes estabelecidos."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Quantos papeis de subagentes sao tipicamente usados no Subagent-Driven Development?",
+                options: [
+                  { letter: "A", text: "Apenas 1 agente generalista." },
+                  { letter: "B", text: "5 papeis: arquitetura, implementacao, revisao, testes, documentacao." },
+                  { letter: "C", text: "Apenas 2: frontend e backend." },
+                  { letter: "D", text: "Depende do projeto, sem estrutura fixa." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Quando esta abordagem e mais eficaz?",
+                options: [
+                  { letter: "A", text: "Para tarefas ambíguas e mal definidas." },
+                  { letter: "B", text: "Para tarefas bem definidas como criar componentes ou escrever testes." },
+                  { letter: "C", text: "Para reunioes de alinhamento." },
+                  { letter: "D", text: "Para design thinking." }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "agw-mod-2",
+        title: "Modulo 2: Qualidade e Ferramentas de Agentes",
+        lessons: [
+          {
+            id: "agw-mod-2-l1",
+            title: "Verification Before Completion",
+            icon: "CheckCircle2",
+            duration: "14 min",
+            content: [
+              {
+                type: "heading",
+                text: "Gates de Qualidade Antes de Finalizar"
+              },
+              {
+                type: "text",
+                text: "Verification Before Completion e um conjunto de gates de qualidade que devem ser superados antes de marcar uma tarefa como completa. Inclui: checklist de requisitos funcionais e nao funcionais, execucao de testes automatizados e verificacao de cobertura, revisao de edge cases e cenarios de erro, confirmacao de que a documentacao foi atualizada, e sinalizacao de aprovacao final. Cada gate e uma oportunidade de capturar problemas cedo."
+              },
+              {
+                type: "quote",
+                text: "\"Nao existe 'vou ajustar depois'. Ou esta completo de acordo com os criterios de aceite, ou nao esta. 'Depois' e o cemiterio onde os bugs esquecidos vao morrer.\""
+              },
+              {
+                type: "text",
+                text: "Automatizar estes gates com CI/CD (GitHub Actions, GitLab CI) garante que sejam executados consistentemente sem depender de memoria humana."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "Qual o objetivo dos gates de verificacao antes de completar uma tarefa?",
+                options: [
+                  { letter: "A", text: "Atrasar a entrega propositalmente." },
+                  { letter: "B", text: "Capturar problemas cedo antes de considerar a tarefa completa." },
+                  { letter: "C", text: "Aumentar a burocracia do processo." },
+                  { letter: "D", text: "Substituir o code review." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Como garantir que os gates de verificacao sejam executados consistentemente?",
+                options: [
+                  { letter: "A", text: "Pedindo para cada desenvolvedor lembrar." },
+                  { letter: "B", text: "Automatizando com CI/CD." },
+                  { letter: "C", text: "Colocando cartazes no escritorio." },
+                  { letter: "D", text: "Realizando reunioes diarias." }
+                ],
+                correct: "B"
+              }
+            ]
+          },
+          {
+            id: "agw-mod-2-l2",
+            title: "MCP Builder — Conectando Ferramentas a Agentes",
+            icon: "Plug",
+            duration: "15 min",
+            content: [
+              {
+                type: "heading",
+                text: "Model Context Protocol para Agentes"
+              },
+              {
+                type: "text",
+                text: "O Model Context Protocol (MCP) e um padrao aberto que permite agentes de IA se conectarem a ferramentas externas de forma padronizada. Um servidor MCP expoe ferramentas (tools), recursos (resources) e templates de prompt que o agente pode descobrir e usar. Construir um servidor MCP envolve definir schemas, implementar handlers, configurar autenticacao e fazer deploy."
+              },
+              {
+                type: "quote",
+                text: "\"MCP e para agentes de IA o que USB e para perifericos de computador — um padrao universal que permite conectar qualquer ferramenta a qualquer agente sem integracoes customizadas.\""
+              },
+              {
+                type: "text",
+                text: "O MCP ja e suportado por Claude Code, Cursor e outras ferramentas, e a comunidade esta crescendo rapidamente com servidores para bancos de dados, APIs, sistemas de arquivos e mais."
+              }
+            ],
+            questions: [
+              {
+                id: 1,
+                question: "O que e o Model Context Protocol (MCP)?",
+                options: [
+                  { letter: "A", text: "Um protocolo de rede para servidores." },
+                  { letter: "B", text: "Um padrao aberto para conectar agentes de IA a ferramentas externas." },
+                  { letter: "C", text: "Um formato de arquivo para configuracao." },
+                  { letter: "D", text: "Um framework de testes." }
+                ],
+                correct: "B"
+              },
+              {
+                id: 2,
+                question: "Qual analogia descreve bem o proposito do MCP?",
+                options: [
+                  { letter: "A", text: "MCP e como HDMI para video." },
+                  { letter: "B", text: "MCP e como USB para perifericos de computador — um padrao universal." },
+                  { letter: "C", text: "MCP e como Bluetooth para audio." },
+                  { letter: "D", text: "MCP e como Wi-Fi para internet." }
+                ],
+                correct: "B"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 };

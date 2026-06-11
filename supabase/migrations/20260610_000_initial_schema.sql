@@ -1,4 +1,4 @@
--- Initial Supabase schema for PromptLab.
+-- Initial Supabase schema for PromptLabz.
 
 CREATE OR REPLACE FUNCTION public.set_updated_at()
 RETURNS TRIGGER AS $$

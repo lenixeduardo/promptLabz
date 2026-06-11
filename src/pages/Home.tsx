@@ -14,10 +14,17 @@ import {
   LogOut,
   Loader2,
   BookOpen,
+  Code2,
+  Image,
+  Server,
+  Megaphone,
+  ClipboardList,
+  Workflow,
 } from "lucide-react"
 import { BrandLogo } from "@/components/BrandLogo"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/useAuth"
+import { useAchievements } from "@/hooks/useAchievements"
 import { sileo } from "sileo"
 import { PROMPTS } from "@/data/promptsData"
 import { lessonsData } from "@/data/lessonsData"
@@ -30,6 +37,13 @@ const features = [
 
 const chips = [
   { label: "Habilidades em Alta", icon: TrendingUp, categoryKey: "trending-skills" },
+  { label: "Desenvolvimento", icon: Code2, categoryKey: "desenvolvimento" },
+  { label: "Design & UI", icon: Pencil, categoryKey: "design-ui" },
+  { label: "IA & Media", icon: Image, categoryKey: "ia-media" },
+  { label: "Cloud & Infra", icon: Server, categoryKey: "cloud-infra" },
+  { label: "Marketing", icon: Megaphone, categoryKey: "marketing-digital" },
+  { label: "Produtividade", icon: ClipboardList, categoryKey: "produtividade" },
+  { label: "Agentes & Workflows", icon: Workflow, categoryKey: "agentes-workflows" },
   { label: "Comunidade", icon: Users, categoryKey: "community-hub" },
   { label: "Design", icon: Pencil, categoryKey: "design" },
   { label: "Ciencia de Prompts", icon: ThumbsUp, categoryKey: "prompt-science" },
@@ -41,8 +55,19 @@ const chips = [
 export default function Home() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const achievements = useAchievements()
   const [searchQuery, setSearchQuery] = useState("")
   const [isOptimizing, setIsOptimizing] = useState(false)
+
+  // Check daily streak + visit on mount
+  const [streakChecked, setStreakChecked] = useState(false)
+  if (!streakChecked) {
+    const newAchs = achievements.checkDailyVisit()
+    if (newAchs.length > 0 && import.meta.env.DEV) {
+      console.log("[DEV] Novas conquistas desbloqueadas:", newAchs.map((a) => a.title))
+    }
+    setStreakChecked(true)
+  }
 
   const handleLogout = async () => {
     const result = await logout()

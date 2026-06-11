@@ -1,0 +1,74 @@
+<h2>Prompita — chat de onboarding (com mascote real)</h2>
+<p class="subtitle">Interface de chat usando o mascote do projeto. Prompita "digita" perguntas e exibe chips de resposta. Confirma se esse visual está certo antes de ir para as próximas perguntas.</p>
+
+<div class="mockup">
+  <div class="mockup-header">Preview — tela de onboarding (chat com Prompita)</div>
+  <div class="mockup-body" style="background:#F4FBF6;border-radius:12px;padding:0;overflow:hidden;max-width:380px;margin:0 auto;font-family:sans-serif;">
+
+    <!-- Header -->
+    <div style="background:linear-gradient(to right,#D5EFE0,#C2E8D0);padding:16px 20px 12px;display:flex;align-items:center;gap:12px;">
+      <img src="/assets/mascot-home.png" alt="Prompita" style="height:52px;width:auto;object-fit:contain;mix-blend-mode:multiply;" />
+      <div>
+        <div style="font-weight:800;font-size:15px;color:#1F2A24;">Prompita</div>
+        <div style="font-size:11px;color:#3E8E5E;">Sua guia de aprendizado 🐾</div>
+      </div>
+    </div>
+
+    <!-- Chat area -->
+    <div style="padding:16px;display:flex;flex-direction:column;gap:12px;min-height:220px;">
+
+      <!-- Prompita bubble -->
+      <div style="display:flex;align-items:flex-end;gap:8px;">
+        <img src="/assets/mascot-home.png" alt="" style="height:32px;width:auto;object-fit:contain;mix-blend-mode:multiply;flex-shrink:0;" />
+        <div style="background:white;border:1px solid #CDEAD8;border-radius:14px 14px 14px 2px;padding:10px 14px;font-size:13px;color:#1F2A24;max-width:240px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+          Oi! 👋 Sou a <strong>Prompita</strong>. Vou te indicar o melhor caminho para aprender.<br/><br/>
+          <span style="color:#3E8E5E;">Qual é seu principal objetivo?</span>
+        </div>
+      </div>
+
+      <!-- Answer chips -->
+      <div style="display:flex;flex-direction:column;gap:6px;padding-left:40px;">
+        <div style="background:#EAF7EF;border:1px solid #BFE3CC;border-radius:20px;padding:8px 14px;font-size:12px;color:#2B5D3A;cursor:pointer;font-weight:600;">🤖 Usar IA no trabalho</div>
+        <div style="background:#EAF7EF;border:1px solid #BFE3CC;border-radius:20px;padding:8px 14px;font-size:12px;color:#2B5D3A;cursor:pointer;font-weight:600;">💻 Desenvolver com IA</div>
+        <div style="background:#EAF7EF;border:1px solid #BFE3CC;border-radius:20px;padding:8px 14px;font-size:12px;color:#2B5D3A;cursor:pointer;font-weight:600;">🎨 Criar conteúdo</div>
+        <div style="background:#EAF7EF;border:1px solid #BFE3CC;border-radius:20px;padding:8px 14px;font-size:12px;color:#2B5D3A;cursor:pointer;font-weight:600;">📈 Marketing & Negócios</div>
+      </div>
+    </div>
+
+    <!-- Progress dots -->
+    <div style="padding:10px 20px 16px;display:flex;align-items:center;gap:6px;">
+      <div style="width:20px;height:4px;border-radius:4px;background:#2B5D3A;"></div>
+      <div style="width:8px;height:4px;border-radius:4px;background:#CDEAD8;"></div>
+      <div style="width:8px;height:4px;border-radius:4px;background:#CDEAD8;"></div>
+      <div style="margin-left:auto;font-size:10px;color:#8AB89A;">Pergunta 1 de 3</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px;">
+  <h3>Perguntas planejadas (3 no total)</h3>
+  <div class="options">
+    <div class="option" data-choice="q1" onclick="toggleSelect(this)">
+      <div class="letter">1</div>
+      <div class="content">
+        <h3>Objetivo</h3>
+        <p>"Qual seu principal objetivo?" — determina a categoria principal (IA cotidiana, dev, design, marketing…)</p>
+      </div>
+    </div>
+    <div class="option" data-choice="q2" onclick="toggleSelect(this)">
+      <div class="letter">2</div>
+      <div class="content">
+        <h3>Experiência</h3>
+        <p>"Já usou IA antes?" — iniciante / intermediário / avançado. Ajusta o módulo de entrada dentro da categoria.</p>
+      </div>
+    </div>
+    <div class="option" data-choice="q3" onclick="toggleSelect(this)">
+      <div class="letter">3</div>
+      <div class="content">
+        <h3>Tempo disponível</h3>
+        <p>"Quanto tempo por semana?" — 15min / 30min / 1h+. Prompita ajusta expectativa e ritmo sugerido.</p>
+      </div>
+    </div>
+  </div>
+  <p class="subtitle" style="margin-top:12px">Após a 3ª resposta, Prompita exibe a recomendação e redireciona direto pro módulo no Learning Lab.</p>
+</div>

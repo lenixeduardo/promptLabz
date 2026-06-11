@@ -6,6 +6,7 @@ import { sileo } from "sileo"
 import { saveProgress } from "@/lib/db"
 
 import { LivesProvider } from "@/contexts/LivesContext"
+import { AchievementsProvider } from "@/contexts/AchievementsContext"
 
 const mockUser = { id: "user-1", email: "aluno@test.com" }
 
@@ -43,11 +44,13 @@ function renderLesson(url = "/lesson?category=trending-skills&moduleIndex=0&less
   return render(
     <MemoryRouter initialEntries={[url]}>
       <LivesProvider>
+        <AchievementsProvider>
         <Routes>
           <Route path="/lesson" element={<Lesson />} />
           <Route path="/learn" element={<div>Learning Lab Page</div>} />
           <Route path="/mission" element={<div>Mission Completed Page<span>+1 Vida</span></div>} />
         </Routes>
+        </AchievementsProvider>
       </LivesProvider>
     </MemoryRouter>
   )

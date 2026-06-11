@@ -1,0 +1,254 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// Achievement System — Definitions, Storage & Condition Logic
+// This runs in all environments but the UI display is gated by DEV mode.
+// ═══════════════════════════════════════════════════════════════════════════
+
+export interface Achievement {
+  id: string
+  title: string
+  description: string
+  icon: string    // lucide-react icon name
+  category: "progress" | "performance" | "streak" | "exploration"
+}
+
+export interface AchievementsData {
+  unlocked: string[]                      // achievement IDs
+  totalLessonsCompleted: number
+  perfectCount: number
+  lastVisitDate: string | null            // "YYYY-MM-DD"
+  consecutiveDays: number
+  visitedCategories: string[]             // category IDs visited
+  completedCategoryIds: string[]          // category IDs fully completed
+}
+
+// ─── Achievement Definitions ─────────────────────────────────────────────
+
+export const ACHIEVEMENTS: Achievement[] = [
+  // ── Progress ───────────────────────────────────────────────────────────
+  {
+    id: "first-lesson",
+    title: "Primeira Lição",
+    description: "Complete sua primeira lição",
+    icon: "BookOpen",
+    category: "progress",
+  },
+  {
+    id: "ten-lessons",
+    title: "Dedicação",
+    description: "Complete 10 lições",
+    icon: "BookOpen",
+    category: "progress",
+  },
+  {
+    id: "fifty-lessons",
+    title: "Mestre dos Estudos",
+    description: "Complete 50 lições",
+    icon: "GraduationCap",
+    category: "progress",
+  },
+  {
+    id: "first-category",
+    title: "Explorador",
+    description: "Complete sua primeira categoria de aprendizado",
+    icon: "Trophy",
+    category: "progress",
+  },
+
+  // ── Performance ────────────────────────────────────────────────────────
+  {
+    id: "first-perfect",
+    title: "Perfeição Inicial",
+    description: "Acerte 100% em uma lição",
+    icon: "Target",
+    category: "performance",
+  },
+  {
+    id: "three-perfect",
+    title: "Três Vezes Perfeito",
+    description: "Acerte 100% em 3 lições",
+    icon: "Award",
+    category: "performance",
+  },
+  {
+    id: "ten-perfect",
+    title: "Dez de Dez",
+    description: "Acerte 100% em 10 lições",
+    icon: "Award",
+    category: "performance",
+  },
+
+  // ── Streak ─────────────────────────────────────────────────────────────
+  {
+    id: "streak-3",
+    title: "Consistente",
+    description: "Use o app por 3 dias consecutivos",
+    icon: "Zap",
+    category: "streak",
+  },
+  {
+    id: "streak-7",
+    title: "Determinado",
+    description: "Use o app por 7 dias consecutivos",
+    icon: "Sparkles",
+    category: "streak",
+  },
+  {
+    id: "streak-30",
+    title: "Viciado em Aprender",
+    description: "Use o app por 30 dias consecutivos",
+    icon: "Award",
+    category: "streak",
+  },
+
+  // ── Exploration ────────────────────────────────────────────────────────
+  {
+    id: "five-favorites",
+    title: "Colecionador",
+    description: "Favorita 5 skills",
+    icon: "Heart",
+    category: "exploration",
+  },
+  {
+    id: "social",
+    title: "Social",
+    description: "Visite todas as categorias de aprendizado",
+    icon: "Globe",
+    category: "exploration",
+  },
+]
+
+export const ACHIEVEMENTS_MAP = new Map(ACHIEVEMENTS.map((a) => [a.id, a]))
+
+// ─── Storage ─────────────────────────────────────────────────────────────
+
+const STORAGE_KEY = "pl:achievements"
+
+function getDefaultData(): AchievementsData {
+  return {
+    unlocked: [],
+    totalLessonsCompleted: 0,
+    perfectCount: 0,
+    lastVisitDate: null,
+    consecutiveDays: 0,
+    visitedCategories: [],
+    completedCategoryIds: [],
+  }
+}
+
+export function loadAchievements(): AchievementsData {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return getDefaultData()
+    return { ...getDefaultData(), ...JSON.parse(raw) }
+  } catch {
+    return getDefaultData()
+  }
+}
+
+export function saveAchievements(data: AchievementsData): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+  } catch {
+    // localStorage full or unavailable — silently ignore
+  }
+}
+
+// ─── Condition Checking ──────────────────────────────────────────────────
+
+export type CheckResult = { newUnlocks: Achievement[]; data: AchievementsData }
+
+/**
+ * Check all achievement conditions and return any newly unlocked achievements
+ * along with the updated data (without persisting).
+ */
+export function checkAchievements(
+  data: AchievementsData,
+  params: {
+    totalLessonsCompleted?: number               // from progress
+    perfectCount?: number                         // from lesson results
+    consecutiveDays?: number                      // from streak
+    visitedCategories?: string[]                  // from page visits
+    completedCategoryIds?: string[]               // from progress
+    favoritesCount?: number                       // from favorites
+  },
+): CheckResult {
+  const newUnlocks: Achievement[] = []
+  const next = { ...data }
+
+  // Apply params that are provided
+  if (params.totalLessonsCompleted !== undefined) {
+    next.totalLessonsCompleted = params.totalLessonsCompleted
+  }
+  if (params.perfectCount !== undefined) {
+    next.perfectCount = params.perfectCount
+  }
+  if (params.consecutiveDays !== undefined) {
+    next.consecutiveDays = params.consecutiveDays
+  }
+  if (params.visitedCategories !== undefined) {
+    next.visitedCategories = [...new Set([...data.visitedCategories, ...params.visitedCategories])]
+  }
+  if (params.completedCategoryIds !== undefined) {
+    next.completedCategoryIds = [...new Set([...data.completedCategoryIds, ...params.completedCategoryIds])]
+  }
+
+  const unlockedSet = new Set(data.unlocked)
+
+  // ── Progress checks ──────────────────────────────────────────────────
+  checkAndUnlock("first-lesson", () => next.totalLessonsCompleted >= 1)
+  checkAndUnlock("ten-lessons", () => next.totalLessonsCompleted >= 10)
+  checkAndUnlock("fifty-lessons", () => next.totalLessonsCompleted >= 50)
+  checkAndUnlock("first-category", () => next.completedCategoryIds.length >= 1)
+
+  // ── Performance checks ───────────────────────────────────────────────
+  checkAndUnlock("first-perfect", () => next.perfectCount >= 1)
+  checkAndUnlock("three-perfect", () => next.perfectCount >= 3)
+  checkAndUnlock("ten-perfect", () => next.perfectCount >= 10)
+
+  // ── Streak checks ────────────────────────────────────────────────────
+  checkAndUnlock("streak-3", () => next.consecutiveDays >= 3)
+  checkAndUnlock("streak-7", () => next.consecutiveDays >= 7)
+  checkAndUnlock("streak-30", () => next.consecutiveDays >= 30)
+
+  // ── Exploration checks ───────────────────────────────────────────────
+  checkAndUnlock("five-favorites", () => (params.favoritesCount ?? 0) >= 5)
+
+  // Social: visited at least 8 categories (most/all of the existing ones)
+  checkAndUnlock("social", () => next.visitedCategories.length >= 8)
+
+  function checkAndUnlock(id: string, condition: () => boolean) {
+    if (!unlockedSet.has(id) && condition()) {
+      const ach = ACHIEVEMENTS_MAP.get(id)
+      if (ach) {
+        newUnlocks.push(ach)
+        unlockedSet.add(id)
+      }
+    }
+  }
+
+  next.unlocked = [...unlockedSet]
+  return { newUnlocks, data: next }
+}
+
+// ─── Streak Helper ───────────────────────────────────────────────────────
+
+export function updateStreak(lastVisitDate: string | null, consecutiveDays: number): {
+  newLastVisit: string
+  newConsecutive: number
+} {
+  const today = new Date().toISOString().slice(0, 10) // "YYYY-MM-DD"
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
+
+  if (lastVisitDate === today) {
+    // Already visited today — no change
+    return { newLastVisit: today, newConsecutive: consecutiveDays }
+  }
+
+  if (lastVisitDate === yesterday) {
+    // Visited yesterday — increment streak
+    return { newLastVisit: today, newConsecutive: consecutiveDays + 1 }
+  }
+
+  // Streak broken or first visit
+  return { newLastVisit: today, newConsecutive: 1 }
+}

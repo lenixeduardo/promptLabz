@@ -1,4 +1,4 @@
--- Supabase Database Schema for PromptLab
+-- Supabase Database Schema for PromptLabz
 -- Keep this file as a readable snapshot. Versioned changes live in supabase/migrations.
 
 CREATE OR REPLACE FUNCTION public.set_updated_at()

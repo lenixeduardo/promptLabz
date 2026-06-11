@@ -70,7 +70,7 @@ export function useAuth() {
       const { error: err } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/home`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       })
       if (err) throw err

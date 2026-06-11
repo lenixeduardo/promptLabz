@@ -1,0 +1,67 @@
+<h2>Prompita no primeiro acesso — onde e como ela aparece?</h2>
+<p class="subtitle">Usuário faz login pela primeira vez. Prompita precisa fazer perguntas para recomendar o módulo certo. Qual formato?</p>
+
+<div class="cards">
+  <div class="card" data-choice="modal" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f0f4f0;border-radius:12px;padding:16px;position:relative;min-height:160px;display:flex;align-items:center;justify-content:center;">
+      <!-- Faded page behind -->
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);border-radius:12px;"></div>
+      <!-- Modal -->
+      <div style="position:relative;z-index:1;background:white;border-radius:16px;padding:16px;width:200px;box-shadow:0 8px 24px rgba(0,0,0,0.2);">
+        <div style="text-align:center;margin-bottom:8px;">
+          <div style="font-size:28px;">🐱</div>
+          <div style="font-size:11px;font-weight:700;color:#1F2A24;font-family:sans-serif;">Olá! Sou a Prompita</div>
+          <div style="font-size:10px;color:#6B9E7E;font-family:sans-serif;margin-top:4px;">O que você quer aprender?</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="background:#EAF7EF;border-radius:8px;padding:6px 10px;font-size:9px;font-family:sans-serif;color:#2B5D3A;cursor:pointer;">🤖 Usar IA no dia a dia</div>
+          <div style="background:#EAF7EF;border-radius:8px;padding:6px 10px;font-size:9px;font-family:sans-serif;color:#2B5D3A;cursor:pointer;">💻 Desenvolvimento com IA</div>
+          <div style="background:#EAF7EF;border-radius:8px;padding:6px 10px;font-size:9px;font-family:sans-serif;color:#2B5D3A;cursor:pointer;">🎨 Design & Criatividade</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Modal sobre o Home</h3>
+      <p>Aparece como overlay logo após o login. Home fica visível atrás. Quiz rápido (2–3 perguntas). Fecha e já redireciona pro módulo.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="fullscreen" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#D9F0E1;border-radius:12px;padding:16px;min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+      <div style="font-size:36px;">🐱</div>
+      <div style="font-size:12px;font-weight:800;color:#1F2A24;font-family:sans-serif;text-align:center;">Oi! Eu sou a Prompita</div>
+      <div style="font-size:10px;color:#2B5D3A;font-family:sans-serif;text-align:center;max-width:180px;">Vamos descobrir por onde você deve começar?</div>
+      <div style="display:flex;gap:6px;margin-top:4px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#2B5D3A;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#CDEAD8;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#CDEAD8;"></div>
+      </div>
+      <div style="background:#2B5D3A;color:white;border-radius:20px;padding:6px 20px;font-size:10px;font-family:sans-serif;margin-top:4px;">Começar →</div>
+    </div>
+    <div class="card-body">
+      <h3>B — Tela dedicada (onboarding)</h3>
+      <p>Página própria de onboarding com Prompita em destaque. Estilo wizard: 1 pergunta por tela, barra de progresso. Mais imersivo, mas adiciona uma rota nova.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="chat" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8fdf9;border-radius:12px;padding:16px;min-height:160px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;">
+      <!-- Chat bubbles -->
+      <div style="display:flex;align-items:flex-end;gap:6px;">
+        <div style="font-size:18px;">🐱</div>
+        <div style="background:#EAF7EF;border-radius:12px 12px 12px 2px;padding:7px 10px;font-size:9px;font-family:sans-serif;color:#1F2A24;max-width:160px;">Oi! Qual é seu objetivo com IA? 🐾</div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;">
+        <div style="background:#2B5D3A;border-radius:12px 12px 2px 12px;padding:7px 10px;font-size:9px;font-family:sans-serif;color:white;max-width:140px;">Quero usar no trabalho</div>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:6px;">
+        <div style="font-size:18px;">🐱</div>
+        <div style="background:#EAF7EF;border-radius:12px 12px 12px 2px;padding:7px 10px;font-size:9px;font-family:sans-serif;color:#1F2A24;max-width:160px;">Perfeito! Nível de experiência?</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Chat com Prompita</h3>
+      <p>Interface de chat. Prompita "digita" e manda opções como chips. Mais personalidade, sensação de conversa real. Maior complexidade de implementação.</p>
+    </div>
+  </div>
+</div>

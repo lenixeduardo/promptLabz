@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { X, BookOpen, ChevronLeft, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLives } from "@/contexts/useLives"
+import { useAchievements } from "@/hooks/useAchievements"
 import { cn } from "@/lib/utils"
 import { sileo } from "sileo"
 import { lessonsData, type ContentBlock, type Question } from "@/data/lessonsData"
@@ -164,6 +165,7 @@ export default function Lesson() {
   const [searchParams] = useSearchParams()
   const { user } = useAuth()
   const { awardPerfectBonus } = useLives()
+  const achievements = useAchievements()
 
   const categoryId = searchParams.get("category") || "trending-skills"
   const moduleIndex = parseInt(searchParams.get("moduleIndex") || "0", 10)
@@ -292,8 +294,14 @@ export default function Lesson() {
     await saveProgress()
     setIsSaving(false)
 
+    // Check achievements — increment internal counters
+    const newAchievements = achievements.checkLessonComplete(perfect)
+    if (newAchievements.length > 0 && import.meta.env.DEV) {
+      console.log("[DEV] Novas conquistas desbloqueadas:", newAchievements.map((a) => a.title))
+    }
+
     const bonusAwarded = awardPerfectBonus()
-    navigate("/mission", { state: { score, total, perfect, bonusAwarded } })
+    navigate("/mission", { state: { score, total, perfect, bonusAwarded, newAchievements } })
   }
 
   const isLastStep = step === totalSteps - 1

@@ -1,82 +1,29 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import * as Icons from "@/lib/icons"
 import {
-  ChevronLeft,
-  Palette,
-  Megaphone,
-  Code2,
-  BookOpen,
-  ClipboardList,
-  Target,
-  LayoutGrid,
-  X,
-  Copy,
-} from "lucide-react"
-import { sileo } from "sileo"
-import { Button } from "@/components/ui/button"
-import { PROMPTS, PromptCard } from "@/data/promptsData"
+  TRENDING_SKILLS,
+  type TrendingSkill,
+  type SkillCategory,
+} from "@/data/trendingSkillsData"
+import { useFavorites } from "@/hooks/useFavorites"
+import { useAchievements } from "@/hooks/useAchievements"
 
-type Category = "Criatividade" | "Marketing" | "Programacao" | "Educacao" | "Produtividade" | "Gestao de Produto"
-type FilterState = "Todos" | Category
+type ViewMode = "all" | "favorites" | "ranking"
 
-const CATEGORY_MASCOT: Record<Category, { src: string; flip?: boolean }> = {
-  Criatividade:         { src: "/assets/mascot-creativity.png" },
-  Programacao:          { src: "/assets/mascot-coding.png" },
-  Marketing:            { src: "/assets/mascot-login-new.png", flip: true },
-  Educacao:             { src: "/assets/mascot-learn-new.png" },
-  Produtividade:        { src: "/assets/mascot-home.png" },
-  "Gestao de Produto": { src: "/assets/mascot-teacher.png" },
-}
-
-const CATEGORIES: { label: Category; icon: React.ReactNode }[] = [
-  { label: "Criatividade",         icon: <Palette className="h-4 w-4" /> },
-  { label: "Marketing",          icon: <Megaphone className="h-4 w-4" /> },
-  { label: "Programacao",             icon: <Code2 className="h-4 w-4" /> },
-  { label: "Educacao",          icon: <BookOpen className="h-4 w-4" /> },
-  { label: "Produtividade",       icon: <ClipboardList className="h-4 w-4" /> },
-  { label: "Gestao de Produto", icon: <Target className="h-4 w-4" /> },
+const SKILL_CATEGORIES: { label: SkillCategory; icon: React.ReactNode }[] = [
+  { label: "Desenvolvimento",    icon: <Icons.Code2 className="h-4 w-4" /> },
+  { label: "Design & UI",        icon: <Icons.Palette className="h-4 w-4" /> },
+  { label: "IA & Media",         icon: <Icons.Image className="h-4 w-4" /> },
+  { label: "Cloud & Infra",      icon: <Icons.Server className="h-4 w-4" /> },
+  { label: "Marketing",          icon: <Icons.TrendingUp className="h-4 w-4" /> },
+  { label: "Produtividade",      icon: <Icons.ClipboardList className="h-4 w-4" /> },
+  { label: "Agentes & Workflows",icon: <Icons.GitBranch className="h-4 w-4" /> },
 ]
 
-const BADGE: Record<string, { dot: string; text: string; bg: string }> = {
-  green:  { dot: "bg-green-500",  text: "text-[#2E7A4E]", bg: "bg-[#DCF1E4]" },
-  yellow: { dot: "bg-yellow-400", text: "text-[#8A6A00]", bg: "bg-[#FEF3C7]" },
-  red:    { dot: "bg-red-500",    text: "text-[#991B1B]", bg: "bg-[#FEE2E2]" },
-}
-
-function DifficultyBadge({ difficulty, color }: { difficulty: string; color: string }) {
-  const s = BADGE[color] || BADGE.green
-  return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${s.bg} ${s.text}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
-      {difficulty}
-    </span>
-  )
-}
-
-interface PromptCardItemProps {
-  card: PromptCard
-  onClick: () => void
-}
-
-function PromptCardItem({ card, onClick }: PromptCardItemProps) {
-  const mascot = CATEGORY_MASCOT[card.category]
-  return (
-    <div 
-      onClick={onClick}
-      className="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md active:scale-95"
-    >
-      <p className="flex min-h-[2.5rem] items-center text-center text-sm font-bold leading-tight text-[#1F2A24] line-clamp-2">
-        {card.title}
-      </p>
-      <img
-        src={mascot.src}
-        alt={card.category}
-        className="h-20 w-auto object-contain"
-        style={mascot.flip ? { transform: "scaleX(-1)", mixBlendMode: "multiply" } : { mixBlendMode: "multiply" }}
-      />
-      <DifficultyBadge difficulty={card.difficulty} color={card.color} />
-    </div>
-  )
+function SkillIcon({ iconName, className }: { iconName: string; className?: string }) {
+  const Icon = (Icons as unknown as Record<string, Icons.LucideIcon>)[iconName] || Icons.BookOpen
+  return <Icon className={className || "h-5 w-5 text-[#3E8E5E]"} strokeWidth={2} />
 }
 
 function CountBadge({ count }: { count: number }) {
@@ -87,42 +34,236 @@ function CountBadge({ count }: { count: number }) {
   )
 }
 
-function EmptyState({ category }: { category: string }) {
+// ─── Skill Card ───────────────────────────────────────────────────────────
+function SkillCard({
+  skill,
+  isFav,
+  onToggleFav,
+  onClick,
+}: {
+  skill: TrendingSkill
+  isFav: boolean
+  onToggleFav: () => void
+  onClick: () => void
+}) {
   return (
-    <div className="col-span-full flex flex-col items-center gap-3 py-16 text-[#6B9E7E]">
-      <img
-        src="/assets/mascot-home.png"
-        alt="sem resultados"
-        className="h-24 w-auto opacity-50"
-        style={{ mixBlendMode: "multiply" }}
-      />
-      <p className="text-base font-semibold">Nenhum prompt em "{category}" ainda</p>
-      <p className="text-sm opacity-70">Em breve novos prompts serão adicionados aqui.</p>
+    <div className="group relative flex flex-col gap-2 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md active:scale-95">
+      {/* Favorite heart button */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onToggleFav() }}
+        className="absolute right-2.5 top-2.5 z-10 flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-[#FEE2E2]"
+        aria-label={isFav ? "Remover dos favoritos" : "Favoritar"}
+      >
+        <Icons.Heart
+          className={`h-4 w-4 transition-all ${
+            isFav
+              ? "fill-red-500 text-red-500"
+              : "text-[#BFE3CC] group-hover:text-red-300"
+          }`}
+          strokeWidth={isFav ? 2.5 : 2}
+        />
+      </button>
+
+      <div onClick={onClick} className="flex flex-col gap-2 cursor-pointer">
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+            <SkillIcon iconName={skill.icon} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold leading-tight text-[#1F2A24] line-clamp-2">{skill.name}</p>
+            <p className="text-[11px] font-medium text-[#6B9E7E]">por {skill.author}</p>
+          </div>
+        </div>
+        <p className="text-xs leading-relaxed text-[#4A5E52] line-clamp-2">{skill.description}</p>
+        <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-1">
+            {skill.tags.slice(0, 2).map((tag) => (
+              <span key={tag} className="rounded-full bg-[#F4F9F5] px-2 py-0.5 text-[10px] font-medium text-[#2B5D3A]">
+                {tag}
+              </span>
+            ))}
+          </div>
+          <span className="flex items-center gap-0.5 text-[11px] font-semibold text-[#8AB89A]">
+            <Icons.Download className="h-3 w-3" />
+            {skill.installs}
+          </span>
+        </div>
+      </div>
     </div>
   )
 }
 
+// ─── Grid View (all / favorites) ──────────────────────────────────────────
+function SkillsGridView({
+  skills,
+  favorites,
+  onToggleFav,
+  onSkillClick,
+}: {
+  skills: TrendingSkill[]
+  favorites: string[]
+  onToggleFav: (name: string) => void
+  onSkillClick: (s: TrendingSkill) => void
+}) {
+  if (skills.length === 0) {
+    return (
+      <div className="col-span-full flex flex-col items-center gap-3 py-16 text-[#6B9E7E]">
+        <img
+          src="/assets/mascot-home.png"
+          alt="sem resultados"
+          className="h-24 w-auto opacity-50"
+          style={{ mixBlendMode: "multiply" }}
+        />
+        <p className="text-base font-semibold">Nenhuma skill encontrada</p>
+        <p className="text-sm opacity-70">Tente ajustar o filtro ou a busca.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      {skills.map((skill) => (
+        <SkillCard
+          key={skill.name}
+          skill={skill}
+          isFav={favorites.includes(skill.name)}
+          onToggleFav={() => onToggleFav(skill.name)}
+          onClick={() => onSkillClick(skill)}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ─── Ranking View ─────────────────────────────────────────────────────────
+function RankingView({
+  skills,
+  favorites,
+  onToggleFav,
+  onSkillClick,
+}: {
+  skills: TrendingSkill[]
+  favorites: string[]
+  onToggleFav: (name: string) => void
+  onSkillClick: (s: TrendingSkill) => void
+}) {
+  const ranked = useMemo(() => [...skills].sort((a, b) => b.installsCount - a.installsCount), [skills])
+
+  return (
+    <div className="flex flex-col gap-2">
+      <p className="mb-2 text-xs font-medium text-[#6B9E7E]">
+        {ranked.length} skills ordenadas por número de instalações
+      </p>
+      {ranked.map((skill, idx) => {
+        const rank = idx + 1
+        const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null
+        const isFav = favorites.includes(skill.name)
+
+        return (
+          <div
+            key={skill.name}
+            onClick={() => onSkillClick(skill)}
+            className="group flex cursor-pointer items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white px-4 py-3 shadow-sm transition-all hover:bg-[#F0FAF3] active:scale-[0.99]"
+          >
+            {/* Favorite heart */}
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggleFav(skill.name) }}
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[#FEE2E2]"
+              aria-label={isFav ? "Remover dos favoritos" : "Favoritar"}
+            >
+              <Icons.Heart
+                className={`h-4 w-4 transition-all ${
+                  isFav ? "fill-red-500 text-red-500" : "text-[#BFE3CC] group-hover:text-red-300"
+                }`}
+                strokeWidth={isFav ? 2.5 : 2}
+              />
+            </button>
+
+            {/* Rank */}
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+              {medal ? (
+                <span className="text-lg">{medal}</span>
+              ) : (
+                <span className="text-sm font-extrabold text-[#8AB89A]">{rank}</span>
+              )}
+            </div>
+
+            {/* Icon */}
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+              <SkillIcon iconName={skill.icon} />
+            </span>
+
+            {/* Info */}
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-bold text-[#1F2A24]">{skill.name}</p>
+              <p className="text-[11px] font-medium text-[#6B9E7E]">{skill.category} · por {skill.author}</p>
+            </div>
+
+            {/* Installs badge */}
+            <div className="flex shrink-0 flex-col items-end gap-0.5">
+              <span className="text-sm font-extrabold text-[#2E7048]">{skill.installs}</span>
+              <span className="text-[10px] font-medium text-[#8AB89A]">instalações</span>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────
 export default function Skills() {
   const navigate = useNavigate()
-  const [activeFilter, setActiveFilter] = useState<FilterState>("Todos")
-  const [selectedPrompt, setSelectedPrompt] = useState<PromptCard | null>(null)
+  const { favorites, toggleFavorite, isFavorite } = useFavorites()
+  const achievements = useAchievements()
+  const [viewMode, setViewMode] = useState<ViewMode>("all")
+  const [activeSkillCat, setActiveSkillCat] = useState<SkillCategory | "Todas">("Todas")
+  const [searchQuery, setSearchQuery] = useState("")
 
-  const countFor = (cat: Category) => PROMPTS.filter(p => p.category === cat).length
+  const filteredByCat =
+    activeSkillCat === "Todas"
+      ? TRENDING_SKILLS
+      : TRENDING_SKILLS.filter((s) => s.category === activeSkillCat)
 
-  const filtered =
-    activeFilter === "Todos"
-      ? PROMPTS
-      : PROMPTS.filter(p => p.category === activeFilter)
+  const searched = useMemo(() => {
+    if (!searchQuery.trim()) return filteredByCat
+    const q = searchQuery.toLowerCase()
+    return filteredByCat.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.description.toLowerCase().includes(q) ||
+        s.author.toLowerCase().includes(q) ||
+        s.category.toLowerCase().includes(q) ||
+        s.tags.some((t) => t.includes(q))
+    )
+  }, [searchQuery, filteredByCat])
 
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text)
-    sileo.success({ title: "Copiado!", description: "Prompt copiado para a área de transferência." })
+  const favoritedSkills = useMemo(
+    () => TRENDING_SKILLS.filter((s) => favorites.includes(s.name)),
+    [favorites]
+  )
+
+  const displaySkills = viewMode === "favorites" ? favoritedSkills : searched
+
+  const handleToggleFav = (skillName: string) => {
+    const wasFav = isFavorite(skillName)
+    toggleFavorite(skillName)
+    // If we just added a favorite, check achievements
+    if (!wasFav) {
+      const newAchs = achievements.checkFavorites(favorites.length + 1)
+      if (newAchs.length > 0 && import.meta.env.DEV) {
+        console.log("[DEV] Novas conquistas desbloqueadas:", newAchs.map((a) => a.title))
+      }
+    }
+  }
+
+  const goToDetail = (skill: TrendingSkill) => {
+    navigate(`/skill/${encodeURIComponent(skill.name)}`, { state: { skill } })
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white px-4 py-6">
       <div className="mx-auto w-full max-w-[1200px]">
-
         {/* Back button */}
         <div className="mb-4 flex items-center">
           <button
@@ -130,158 +271,165 @@ export default function Skills() {
             className="flex items-center gap-1 rounded-full p-1.5 text-[#2F6B45] transition-colors hover:bg-[#DCF1E4]"
             aria-label="Voltar"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <Icons.ChevronLeft className="h-6 w-6" />
           </button>
         </div>
 
         {/* Hero banner */}
-        <div className="relative mb-8 w-full overflow-hidden rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0] pb-5 pt-4 shadow-sm">
+        <div className="relative mb-8 w-full overflow-hidden rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0] pb-6 pt-5 shadow-sm">
           <div className="flex justify-center">
             <img
               src="/assets/mascot-teacher.png"
               alt="Professor cat"
-              className="h-32 w-auto object-contain"
+              className="h-28 w-auto object-contain"
               style={{ mixBlendMode: "multiply" }}
             />
           </div>
-          <h1 className="mt-2 text-center text-xl font-extrabold text-[#1F2A24]">
-            Biblioteca de Prompts
+          <h1 className="mt-1 text-center text-xl font-extrabold text-[#1F2A24]">
+            Central de Skills
           </h1>
+          <p className="mt-0.5 text-center text-sm font-medium text-[#2F6B45]">
+            Skills reais do{" "}
+            <a href="https://www.skills.sh/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#1F2A24]">
+              skills.sh
+            </a>
+          </p>
         </div>
 
-        {/* Category filter chips */}
-        <div className="no-scrollbar mb-6 flex gap-2 overflow-x-auto pb-2">
-          {/* Todos chip */}
+        {/* Search bar */}
+        <div className="relative mb-5">
+          <div className="flex items-center gap-2 rounded-full border border-[#BFE3CC] bg-white px-5 py-3 shadow-sm ring-2 ring-[#EAF7EF]">
+            <Icons.Search className="h-5 w-5 text-[#6B9E7E]" strokeWidth={2} />
+            <input
+              type="text"
+              placeholder="Buscar skills por nome, autor, categoria ou tag…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 bg-transparent text-sm text-[#1F2A24] placeholder:text-[#8A998F] focus:outline-none"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery("")} className="rounded-full p-1 text-[#6B9E7E] hover:bg-[#EAF7EF]">
+                <Icons.X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* View mode tabs */}
+        <div className="mb-5 flex gap-2">
           <button
-            onClick={() => setActiveFilter("Todos")}
-            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-              activeFilter === "Todos"
+            onClick={() => { setViewMode("all"); setActiveSkillCat("Todas") }}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+              viewMode === "all"
                 ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
                 : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
             }`}
           >
-            <LayoutGrid className="h-4 w-4" />
-            Todos
-            <CountBadge count={PROMPTS.length} />
+            <Icons.Grid3x3 className="h-4 w-4" />
+            Todas
+            <CountBadge count={TRENDING_SKILLS.length} />
           </button>
-
-          {CATEGORIES.map(({ label, icon }) => {
-            const isActive = activeFilter === label
-            const count = countFor(label)
-            return (
-              <button
-                key={label}
-                onClick={() => setActiveFilter(label)}
-                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                    : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
-                }`}
-              >
-                {icon}
-                {label}
-                <CountBadge count={count} />
-              </button>
-            )
-          })}
+          <button
+            onClick={() => setViewMode("favorites")}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+              viewMode === "favorites"
+                ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
+                : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+            }`}
+          >
+            <Icons.Heart
+              className={`h-4 w-4 ${viewMode === "favorites" ? "fill-white" : ""}`}
+            />
+            Favoritas
+            <CountBadge count={favorites.length} />
+          </button>
+          <button
+            onClick={() => setViewMode("ranking")}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+              viewMode === "ranking"
+                ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
+                : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+            }`}
+          >
+            <Icons.Trophy className="h-4 w-4" />
+            Mais Instaladas
+          </button>
         </div>
 
-        {/* Results header */}
-        <div className="mb-4 flex items-center justify-between">
-          <p className="text-sm font-medium text-[#6B9E7E]">
-            {filtered.length} prompt{filtered.length !== 1 ? "s" : ""}{" "}
-            {activeFilter !== "Todos" && <span>em <strong className="text-[#2F6B45]">{activeFilter}</strong></span>}
-          </p>
-        </div>
-
-        {/* Cards grid */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {filtered.length === 0 ? (
-            <EmptyState category={activeFilter} />
-          ) : (
-            filtered.map((card, idx) => (
-              <PromptCardItem 
-                key={`${card.category}-${idx}`} 
-                card={card} 
-                onClick={() => setSelectedPrompt(card)}
-              />
-            ))
-          )}
-        </div>
-
-        {/* Prompt detail Modal */}
-        {selectedPrompt && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm transition-all">
-            <div className="relative w-full max-w-2xl rounded-3xl border border-[#BFE3CC] bg-white p-6 shadow-xl max-h-[85vh] overflow-y-auto flex flex-col gap-4 animate-in zoom-in-95 duration-150">
-              
-              {/* Header */}
-              <div className="flex items-start justify-between border-b border-[#EAF2ED] pb-3">
-                <div>
-                  <h2 className="text-lg font-bold text-[#1F2A24]">{selectedPrompt.title}</h2>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <DifficultyBadge difficulty={selectedPrompt.difficulty} color={selectedPrompt.color} />
-                    <span className="text-xs font-bold text-[#6B9E7E] uppercase tracking-wider">{selectedPrompt.category}</span>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => setSelectedPrompt(null)}
-                  className="rounded-full p-1.5 text-[#1F2A24] hover:bg-[#EAF7EF] transition-colors"
+        {/* Category filter — only show in "all" mode */}
+        {viewMode === "all" && (
+          <div className="no-scrollbar mb-5 flex gap-2 overflow-x-auto pb-1">
+            <button
+              onClick={() => setActiveSkillCat("Todas")}
+              className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                activeSkillCat === "Todas"
+                  ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
+                  : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+              }`}
+            >
+              <Icons.LayoutGrid className="h-3.5 w-3.5" />
+              Todas
+              <CountBadge count={searched.length} />
+            </button>
+            {SKILL_CATEGORIES.map(({ label, icon }) => {
+              const isActive = activeSkillCat === label
+              const count = searched.filter((s) => s.category === label).length
+              return (
+                <button
+                  key={label}
+                  onClick={() => setActiveSkillCat(label)}
+                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                    isActive
+                      ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
+                      : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+                  }`}
                 >
-                  <X className="h-5 w-5" />
+                  {icon}
+                  {label}
+                  <CountBadge count={count} />
                 </button>
-              </div>
-
-              {/* Description */}
-              <div>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#2B5D3A] mb-1">Descrição</h3>
-                <p className="text-sm text-[#4A5E52] leading-relaxed">{selectedPrompt.description}</p>
-              </div>
-
-              {/* Template */}
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#2B5D3A]">Template do Prompt</h3>
-                  <button 
-                    onClick={() => handleCopy(selectedPrompt.promptText)}
-                    className="flex items-center gap-1 text-xs font-bold text-[#2E8B57] hover:underline"
-                  >
-                    <Copy className="h-3 w-3" /> Copiar Prompt
-                  </button>
-                </div>
-                <pre className="w-full overflow-x-auto rounded-2xl bg-[#F4F9F5] border border-[#CDEAD8] p-4 text-xs font-mono text-[#2B5D3A] whitespace-pre-wrap leading-relaxed">
-                  {selectedPrompt.promptText}
-                </pre>
-              </div>
-
-              {/* Input Example */}
-              {selectedPrompt.exampleInput && (
-                <div>
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#2B5D3A] mb-1">Exemplo de Entrada</h3>
-                  <div className="w-full rounded-2xl bg-[#F9FCFA] border border-[#E1F2E7] p-3 text-xs text-[#3A4B40] italic">
-                    {selectedPrompt.exampleInput}
-                  </div>
-                </div>
-              )}
-
-              {/* Output Example */}
-              {selectedPrompt.exampleOutput && (
-                <div>
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#2B5D3A] mb-1">Saída Esperada</h3>
-                  <div className="w-full rounded-2xl bg-[#F9FCFA] border border-[#E1F2E7] p-3 text-xs text-[#3A4B40] whitespace-pre-wrap font-sans">
-                    {selectedPrompt.exampleOutput}
-                  </div>
-                </div>
-              )}
-
-              {/* Close footer */}
-              <div className="flex justify-end pt-2 border-t border-[#EAF2ED]">
-                <Button onClick={() => setSelectedPrompt(null)}>Fechar</Button>
-              </div>
-
-            </div>
+              )
+            })}
           </div>
         )}
 
+        {/* Favorites empty state */}
+        {viewMode === "favorites" && favoritedSkills.length === 0 && (
+          <div className="flex flex-col items-center gap-3 py-16 text-[#6B9E7E]">
+            <Icons.Heart className="h-16 w-16 text-[#CDEAD8]" />
+            <p className="text-base font-semibold">Nenhuma skill favoritada</p>
+            <p className="text-sm opacity-70">Clique no ♡ dos cards para favoritar suas skills preferidas.</p>
+          </div>
+        )}
+
+        {/* Content */}
+        {viewMode === "ranking" ? (
+          <RankingView
+            skills={searched}
+            favorites={favorites}
+            onToggleFav={handleToggleFav}
+            onSkillClick={goToDetail}
+          />
+        ) : (
+          viewMode !== "favorites" || favoritedSkills.length > 0 ? (
+            <SkillsGridView
+              skills={displaySkills}
+              favorites={favorites}
+              onToggleFav={handleToggleFav}
+              onSkillClick={goToDetail}
+            />
+          ) : null
+        )}
+
+        {/* Footer */}
+        <div className="mt-10 mb-4 text-center text-xs text-[#8AB89A]">
+          Fonte:{" "}
+          <a href="https://www.skills.sh/" target="_blank" rel="noopener noreferrer" className="font-semibold text-[#2E8B57] hover:underline">
+            skills.sh
+          </a>{" "}
+          · {TRENDING_SKILLS.length} skills catalogadas
+          {favorites.length > 0 && ` · ${favorites.length} favoritadas`}
+        </div>
       </div>
     </div>
   )

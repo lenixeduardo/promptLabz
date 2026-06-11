@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import * as Icons from "lucide-react"
+import * as Icons from "@/lib/icons"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { HelpButton } from "@/components/HelpButton"
@@ -8,6 +8,7 @@ import { LivesBar } from "@/components/LivesBar"
 import { MAX_LIVES } from "@/contexts/lives-config"
 import { useLives } from "@/contexts/useLives"
 import { useAuth } from "@/hooks/useAuth"
+import { useAchievements } from "@/hooks/useAchievements"
 import { cn } from "@/lib/utils"
 import { lessonsData } from "@/data/lessonsData"
 import { loadProgress, type CategoryProgress } from "@/lib/db"
@@ -104,11 +105,18 @@ export default function LearningLab() {
   const [searchParams, setSearchParams] = useSearchParams()
   const { user } = useAuth()
   const { lives, canPlay, consumeLife, msUntilNextLife } = useLives()
+  const achievements = useAchievements()
   const [showNoLives, setShowNoLives] = useState(false)
   const countdown = useCountdown(msUntilNextLife)
 
   const activeCategoryKey = searchParams.get("category") || "trending-skills"
   const activeCategory = lessonsData[activeCategoryKey] || lessonsData["trending-skills"]
+
+  // Track visited categories for achievements
+  useEffect(() => {
+    achievements.visitCategory(activeCategoryKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeCategoryKey])
 
   const [progress, setProgress] = useState<Record<string, CategoryProgress>>({})
 
