@@ -1,0 +1,20 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mascot with star -->
+  <g transform="translate(32, 32)">
+    <!-- Star -->
+    <polygon points="6,-18 7.5,-13.5 13,-13.5 8.5,-9.5 10,-5 6,-9 2,-5 3.5,-9.5 -1,-13.5 4.5,-13.5" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <!-- Head -->
+    <circle cx="0" cy="-8" r="8" fill="#3E8E5E" stroke="#2E7048" stroke-width="0.5"/>
+    <!-- Glasses -->
+    <circle cx="-4" cy="-9" r="2.5" fill="none" stroke="#2E7048" stroke-width="1"/>
+    <circle cx="4" cy="-9" r="2.5" fill="none" stroke="#2E7048" stroke-width="1"/>
+    <line x1="-1.5" y1="-9" x2="1.5" y2="-9" stroke="#2E7048" stroke-width="1"/>
+    <!-- Eyes amazed -->
+    <circle cx="-4" cy="-9.5" r="0.8" fill="#FFF"/>
+    <circle cx="4" cy="-9.5" r="0.8" fill="#FFF"/>
+    <!-- Wow expression -->
+    <ellipse cx="0" cy="-5" rx="1.5" ry="1.2" fill="none" stroke="#2E7048" stroke-width="0.8"/>
+    <!-- Body -->
+    <rect x="-5" y="0" width="10" height="8" fill="#3E8E5E" stroke="#2E7048" stroke-width="0.5" rx="1"/>
+  </g>
+</svg>

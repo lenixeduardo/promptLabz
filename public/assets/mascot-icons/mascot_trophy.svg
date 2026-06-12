@@ -1,0 +1,25 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mascot with trophy -->
+  <g transform="translate(32, 32)">
+    <!-- Trophy -->
+    <path d="M 7 -18 L 5 -12 L 9 -12 Z" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <rect x="5" y="-12" width="4" height="4" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <rect x="4" y="-8" width="6" height="1.5" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <!-- Handles -->
+    <path d="M 4.5 -10 Q 3 -12 4 -13" fill="none" stroke="#FFA500" stroke-width="1"/>
+    <path d="M 9.5 -10 Q 11 -12 10 -13" fill="none" stroke="#FFA500" stroke-width="1"/>
+    <!-- Head -->
+    <circle cx="0" cy="-8" r="8" fill="#3E8E5E" stroke="#2E7048" stroke-width="0.5"/>
+    <!-- Glasses -->
+    <circle cx="-4" cy="-9" r="2.5" fill="none" stroke="#2E7048" stroke-width="1"/>
+    <circle cx="4" cy="-9" r="2.5" fill="none" stroke="#2E7048" stroke-width="1"/>
+    <line x1="-1.5" y1="-9" x2="1.5" y2="-9" stroke="#2E7048" stroke-width="1"/>
+    <!-- Eyes proud -->
+    <circle cx="-4" cy="-9" r="0.8" fill="#FFF"/>
+    <circle cx="4" cy="-9" r="0.8" fill="#FFF"/>
+    <!-- Smile -->
+    <path d="M -3 -5.5 Q 0 -4 3 -5.5" fill="none" stroke="#2E7048" stroke-width="0.8" stroke-linecap="round"/>
+    <!-- Body -->
+    <rect x="-5" y="0" width="10" height="8" fill="#3E8E5E" stroke="#2E7048" stroke-width="0.5" rx="1"/>
+  </g>
+</svg>
