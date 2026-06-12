@@ -4,6 +4,7 @@ import { useAchievements } from "@/hooks/useAchievements"
 import { MascotGlow } from "@/components/MascotGlow"
 import { cn } from "@/lib/utils"
 import * as Icons from "@/lib/icons"
+import { getProgressCount } from "@/lib/achievements"
 
 export default function Achievements() {
   const navigate = useNavigate()
@@ -13,33 +14,6 @@ export default function Achievements() {
     () => Math.round((data.totalLessonsCompleted / 50) * 100),
     [data.totalLessonsCompleted],
   )
-
-  const getProgressCount = (achId: string) => {
-    switch (achId) {
-      case "first-lesson":
-        return { current: Math.min(data.totalLessonsCompleted, 1), max: 1 }
-      case "ten-lessons":
-        return { current: Math.min(data.totalLessonsCompleted, 10), max: 10 }
-      case "fifty-lessons":
-        return { current: Math.min(data.totalLessonsCompleted, 50), max: 50 }
-      case "first-perfect":
-        return { current: Math.min(data.perfectCount, 1), max: 1 }
-      case "three-perfect":
-        return { current: Math.min(data.perfectCount, 3), max: 3 }
-      case "ten-perfect":
-        return { current: Math.min(data.perfectCount, 10), max: 10 }
-      case "streak-3":
-        return { current: Math.min(data.consecutiveDays, 3), max: 3 }
-      case "streak-7":
-        return { current: Math.min(data.consecutiveDays, 7), max: 7 }
-      case "streak-30":
-        return { current: Math.min(data.consecutiveDays, 30), max: 30 }
-      case "first-category":
-        return { current: Math.min(data.visitedCategories.length, 1), max: 1 }
-      default:
-        return null
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white px-4 py-6">
@@ -123,7 +97,7 @@ export default function Achievements() {
           {allAchievements.map((ach) => {
             const isUnlocked = unlocked.includes(ach.id)
             const IconComp = Icons[ach.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }> | undefined
-            const progress = getProgressCount(ach.id)
+            const progress = getProgressCount(ach.id, data)
 
             return (
               <article
