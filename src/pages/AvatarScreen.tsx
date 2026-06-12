@@ -51,11 +51,6 @@ export default function AvatarScreen() {
       {/* Header */}
       <div className="px-5 pt-10 pb-4">
         <div className="flex items-center gap-3 mb-1">
-          <img
-            src="/assets/mascot-icons/mascot_graduation.svg"
-            alt="Avatares"
-            className="h-9 w-9"
-          />
           <h1 className="text-3xl font-extrabold text-[#2B5D3A]">Avatares</h1>
         </div>
         <p className="text-sm text-[#4A5E52]">
