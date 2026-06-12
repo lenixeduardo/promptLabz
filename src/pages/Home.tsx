@@ -33,6 +33,7 @@ const features = [
   { title: "Habilidades", icon: PawPrint, to: "/skills" },
   { title: "Biblioteca de Prompts", icon: Lightbulb, to: "/skills" },
   { title: "Laboratorio de Aprendizado", icon: GraduationCap, to: "/learn" },
+  { title: "Minhas Conquistas", icon: Sparkles, to: "/achievements" },
 ]
 
 const chips = [
