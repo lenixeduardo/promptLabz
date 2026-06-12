@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Validação de Fonte Inter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom right, white, #EAF7EF, #BFE6CF);
+            color: #2A2A2A;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2B5D3A;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-nav {
+            padding: 8px 16px;
+            border: 1px solid #BFE3CC;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-nav:hover {
+            background: #F0FAF3;
+        }
+
+        .btn-logout {
+            padding: 8px 12px;
+            border: 1px solid #ffcccc;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #d32f2f;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #ffebee;
+        }
+
+        /* Search Bar */
+        .search-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            border: 1px solid #BFE3CC;
+            background: white;
+            border-radius: 100px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-bar input::placeholder {
+            color: #999;
+        }
+
+        .search-icon, .sparkle-icon {
+            color: #3E8E5E;
+            font-size: 20px;
+        }
+
+        /* Feature Cards */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 50px;
+        }
+
+        .feature-card {
+            padding: 32px 24px;
+            border: 1px solid #BFE3CC;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .feature-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1F2A24;
+        }
+
+        .feature-card-icon {
+            font-size: 40px;
+            color: #3E8E5E;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1F2A24;
+            margin-bottom: 20px;
+        }
+
+        /* Category Chips */
+        .chips {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+        }
+
+        .chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border: 1px solid #CDEAD8;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2A3B30;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .chip:hover {
+            background: #F0FAF3;
+        }
+
+        /* Validation Box */
+        .validation-box {
+            background: #F0F4F2;
+            border: 2px solid #C5E5D0;
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 60px;
+        }
+
+        .validation-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2B5D3A;
+            margin-bottom: 16px;
+        }
+
+        .validation-subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2B5D3A;
+            margin-top: 16px;
+            margin-bottom: 12px;
+        }
+
+        .validation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .validation-list li {
+            font-size: 14px;
+            font-weight: 400;
+            color: #444;
+            padding-left: 24px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .validation-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2B5D3A;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+            header {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">PromptLabz</div>
+            <div class="header-actions">
+                <button class="btn-nav">👤 Perfil</button>
+                <button class="btn-logout">🚪</button>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Search skills, prompts, lessons…">
+                <span class="sparkle-icon">✨</span>
+            </div>
+        </div>
+
+        <!-- Feature Cards -->
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-card-title">Habilidades</div>
+                <div class="feature-card-icon">🎓</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-title">Biblioteca de Prompts</div>
+                <div class="feature-card-icon">💡</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-title">Laboratório de Aprendizado</div>
+                <div class="feature-card-icon">🔬</div>
+            </div>
+        </div>
+
+        <!-- Continue Learning Section -->
+        <div>
+            <h2 class="section-title">Continue Aprendendo</h2>
+            <div class="chips">
+                <a class="chip" href="#">🚀 Habilidades em Alta</a>
+                <a class="chip" href="#">💻 Desenvolvimento</a>
+                <a class="chip" href="#">🎨 Design & UI</a>
+                <a class="chip" href="#">🤖 IA & Media</a>
+                <a class="chip" href="#">☁️ Cloud & Infra</a>
+                <a class="chip" href="#">📢 Marketing</a>
+                <a class="chip" href="#">⚡ Produtividade</a>
+            </div>
+        </div>
+
+        <!-- Validation Info -->
+        <div class="validation-box">
+            <div class="validation-title">✓ Validação - Fonte Inter Aplicada na Home</div>
+
+            <div class="validation-subtitle">Interface Implementada:</div>
+            <ul class="validation-list">
+                <li>Menu de navegação no header com logo e ações do usuário</li>
+                <li>Barra de busca centralizada com otimizador de prompts</li>
+                <li>3 Feature cards principais (Habilidades, Prompts, Laboratório)</li>
+                <li>Seção "Continue Aprendendo" com chips categorias</li>
+                <li>Design responsivo para mobile e desktop</li>
+            </ul>
+
+            <div class="validation-subtitle">Fonte Inter Aplicada em:</div>
+            <ul class="validation-list">
+                <li>Logo PromptLabz - bold 700 weight</li>
+                <li>Títulos de cards - semibold 600 weight</li>
+                <li>Texto do corpo - regular 400 weight</li>
+                <li>Botões e chips - medium 500 weight</li>
+                <li>Search input - regular 400 weight</li>
+                <li>Placeholder text - regular 400 weight</li>
+            </ul>
+
+            <div class="validation-subtitle">Status de Implementação:</div>
+            <ul class="validation-list">
+                <li>Source code: ✓ Implementado em Home.tsx</li>
+                <li>Fonte Inter: ✓ Importada em src/index.css</li>
+                <li>Tailwind config: ✓ Configurado em tailwind.config.js</li>
+                <li>Build: ✓ Compilado com sucesso</li>
+                <li>Dev server: ✓ Rodando em http://localhost:5173/home</li>
+            </ul>
+
+            <div class="validation-subtitle">Próximas Etapas:</div>
+            <ul class="validation-list">
+                <li>Deploy em produção para validar live</li>
+                <li>Verificar renderização da fonte em diferentes navegadores</li>
+                <li>Testar responsividade em dispositivos móveis</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
