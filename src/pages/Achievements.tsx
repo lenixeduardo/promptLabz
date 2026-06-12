@@ -56,7 +56,11 @@ export default function Achievements() {
 
           <div className="flex flex-1 flex-col items-center">
             <MascotGlow size={120}>
-              <span className="text-4xl">🎉</span>
+              <img
+                src="/assets/mascot-icons/mascot_celebrate.svg"
+                alt="Mascote comemorando"
+                className="h-16 w-16 object-contain"
+              />
             </MascotGlow>
             <div className="mt-2 text-center">
               <p className="text-xs font-medium text-[#6B9E7E]">Parabéns!</p>
