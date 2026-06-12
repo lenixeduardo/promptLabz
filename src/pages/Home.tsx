@@ -24,16 +24,16 @@ const features = [
 
 export default function Home() {
   const { user, logout } = useAuth()
-  const achievements = useAchievements()
+  const { checkDailyVisit } = useAchievements()
   const [searchQuery, setSearchQuery] = useState("")
 
   // Check daily streak on mount
   useEffect(() => {
-    const newAchs = achievements.checkDailyVisit()
+    const newAchs = checkDailyVisit()
     if (newAchs.length > 0 && import.meta.env.DEV) {
       console.log("[DEV] Novas conquistas desbloqueadas:", newAchs.map((a) => a.title))
     }
-  }, [])
+  }, [checkDailyVisit])
 
   const handleLogout = async () => {
     const result = await logout()
