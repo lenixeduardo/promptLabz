@@ -3,161 +3,31 @@ export interface Avatar {
   name: string
   image: string
   price: number
-  rarity: "common" | "rare" | "epic" | "legendary"
 }
 
 export const AVATARS: Avatar[] = [
-  // Common (Free or cheap)
-  {
-    id: "cat-green",
-    name: "Gato Verde",
-    image: "/assets/avatar-cat.png",
-    price: 0,
-    rarity: "common",
-  },
-  {
-    id: "cat-happy",
-    name: "Gato Feliz",
-    image: "/assets/mascot-teacher.png",
-    price: 50,
-    rarity: "common",
-  },
-  {
-    id: "cat-cool",
-    name: "Gato Legal",
-    image: "/assets/mascot-home.png",
-    price: 75,
-    rarity: "common",
-  },
-  {
-    id: "cat-smile",
-    name: "Gato Sorridente",
-    image: "/assets/mascot-login-new.png",
-    price: 100,
-    rarity: "common",
-  },
-
-  // Rare
-  {
-    id: "cat-golden",
-    name: "Gato Dourado",
-    image: "/assets/avatar-cat.png",
-    price: 150,
-    rarity: "rare",
-  },
-  {
-    id: "cat-purple",
-    name: "Gato Roxo",
-    image: "/assets/mascot-teacher.png",
-    price: 180,
-    rarity: "rare",
-  },
-  {
-    id: "cat-pink",
-    name: "Gato Rosa",
-    image: "/assets/mascot-home.png",
-    price: 200,
-    rarity: "rare",
-  },
-  {
-    id: "cat-blue",
-    name: "Gato Azul",
-    image: "/assets/mascot-login-new.png",
-    price: 220,
-    rarity: "rare",
-  },
-
-  // Epic
-  {
-    id: "cat-dragon",
-    name: "Dragão Gato",
-    image: "/assets/avatar-cat.png",
-    price: 270,
-    rarity: "epic",
-  },
-  {
-    id: "cat-ninja",
-    name: "Gato Ninja",
-    image: "/assets/mascot-teacher.png",
-    price: 300,
-    rarity: "epic",
-  },
-  {
-    id: "cat-astronaut",
-    name: "Gato Astronauta",
-    image: "/assets/mascot-home.png",
-    price: 320,
-    rarity: "epic",
-  },
-  {
-    id: "cat-wizard",
-    name: "Gato Feiticeiro",
-    image: "/assets/mascot-login-new.png",
-    price: 350,
-    rarity: "epic",
-  },
-
-  // Legendary
-  {
-    id: "cat-phoenix",
-    name: "Fênix Gato",
-    image: "/assets/avatar-cat.png",
-    price: 500,
-    rarity: "legendary",
-  },
-  {
-    id: "cat-cyber",
-    name: "Gato Cibernético",
-    image: "/assets/mascot-teacher.png",
-    price: 550,
-    rarity: "legendary",
-  },
-  {
-    id: "cat-cosmic",
-    name: "Gato Cósmico",
-    image: "/assets/mascot-home.png",
-    price: 600,
-    rarity: "legendary",
-  },
-  {
-    id: "cat-void",
-    name: "Gato do Vazio",
-    image: "/assets/mascot-login-new.png",
-    price: 999,
-    rarity: "legendary",
-  },
+  { id: "graduation", name: "Formando",    image: "/assets/mascot-icons/mascot_graduation.svg", price: 0   },
+  { id: "book",       name: "Estudioso",   image: "/assets/mascot-icons/mascot_book.svg",        price: 50  },
+  { id: "lightbulb",  name: "Criativo",    image: "/assets/mascot-icons/mascot_lightbulb.svg",   price: 80  },
+  { id: "crown",      name: "Rei",         image: "/assets/mascot-icons/mascot_crown.svg",        price: 120 },
+  { id: "rocket",     name: "Astronauta",  image: "/assets/mascot-icons/mascot_rocket.svg",       price: 150 },
+  { id: "star",       name: "Estrela",     image: "/assets/mascot-icons/mascot_star.svg",         price: 80  },
+  { id: "trophy",     name: "Campeão",     image: "/assets/mascot-icons/mascot_trophy.svg",       price: 120 },
+  { id: "medal",      name: "Medalhista",  image: "/assets/mascot-icons/mascot_medal.svg",        price: 150 },
+  { id: "brain",      name: "Pensador",    image: "/assets/mascot-icons/mascot_brain.svg",        price: 100 },
+  { id: "heart",      name: "Apaixonado",  image: "/assets/mascot-icons/mascot_heart.svg",        price: 180 },
+  { id: "celebrate",  name: "Festeiro",    image: "/assets/mascot-icons/mascot_celebrate.svg",    price: 180 },
+  { id: "code",       name: "Programador", image: "/assets/mascot-icons/mascot_code.svg",         price: 220 },
+  { id: "chart",      name: "Analista",    image: "/assets/mascot-icons/mascot_chart.svg",        price: 250 },
+  { id: "puzzle",     name: "Estrategista",image: "/assets/mascot-icons/mascot_puzzle.svg",       price: 270 },
+  { id: "target",     name: "Focado",      image: "/assets/mascot-icons/mascot_target.svg",       price: 220 },
+  { id: "network",    name: "Conector",    image: "/assets/mascot-icons/mascot_network.svg",      price: 230 },
+  { id: "palette",    name: "Artista",     image: "/assets/mascot-icons/mascot_palette.svg",      price: 260 },
+  { id: "team",       name: "Líder",       image: "/assets/mascot-icons/mascot_team.svg",         price: 280 },
+  { id: "quest",      name: "Aventureiro", image: "/assets/mascot-icons/mascot_quest.svg",        price: 200 },
+  { id: "focus",      name: "Mestre",      image: "/assets/mascot-icons/mascot_focus.svg",        price: 340 },
 ]
 
 export function getAvatarById(id: string): Avatar | undefined {
   return AVATARS.find((a) => a.id === id)
-}
-
-export function getRarityColor(rarity: string): string {
-  switch (rarity) {
-    case "common":
-      return "text-gray-600"
-    case "rare":
-      return "text-blue-600"
-    case "epic":
-      return "text-purple-600"
-    case "legendary":
-      return "text-yellow-600"
-    default:
-      return "text-gray-600"
-  }
-}
-
-export function getRarityBg(rarity: string): string {
-  switch (rarity) {
-    case "common":
-      return "bg-gray-100"
-    case "rare":
-      return "bg-blue-100"
-    case "epic":
-      return "bg-purple-100"
-    case "legendary":
-      return "bg-yellow-100"
-    default:
-      return "bg-gray-100"
-  }
 }
