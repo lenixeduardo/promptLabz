@@ -225,6 +225,60 @@ function updateLocalProgress(userId: string, categoryId: string, progress: Categ
   }
 }
 
+// ── Streak Operations ─────────────────────────────────────────────────────────
+
+export interface StreakData {
+  currentStreak: number
+  longestStreak: number
+  lastVisitDate: string | null
+}
+
+export async function loadStreak(userId: string): Promise<DbResult<StreakData>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { data, error } = await supabase
+      .from("user_streaks")
+      .select("current_streak,longest_streak,last_visit_date")
+      .eq("user_id", userId)
+      .maybeSingle()
+
+    if (error) throw error
+    if (!data) return { data: null, error: null }
+    return {
+      data: {
+        currentStreak: data.current_streak,
+        longestStreak: data.longest_streak,
+        lastVisitDate: data.last_visit_date ?? null,
+      },
+      error: null,
+    }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao carregar streak") }
+  }
+}
+
+export async function saveStreak(
+  userId: string,
+  params: { currentStreak: number; longestStreak: number; lastVisitDate: string }
+): Promise<DbResult<void>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { error } = await supabase.from("user_streaks").upsert(
+      {
+        user_id: userId,
+        current_streak: params.currentStreak,
+        longest_streak: params.longestStreak,
+        last_visit_date: params.lastVisitDate,
+      },
+      { onConflict: "user_id" }
+    )
+    if (error) throw error
+    return { data: null, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao salvar streak") }
+  }
+}
+
 function getErrorMessage(err: unknown, fallback: string) {
   if (err instanceof Error) return err.message
   if (typeof err === "object" && err && "message" in err) {
