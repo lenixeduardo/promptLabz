@@ -2,13 +2,13 @@
 import { Link, useNavigate } from "react-router-dom"
 import {
   Search,
-  Home as HomeIcon,
+  Home,
   User,
   Users,
-  Layers,
-  Bot,
-  MessageSquare,
-  Palette,
+  SquaresFour,
+  Cpu,
+  MessageCircle,
+  Brush,
   Bell,
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
@@ -16,10 +16,10 @@ import { useAchievements } from "@/hooks/useAchievements"
 import { sileo } from "sileo"
 
 const features = [
-  { title: "Skills", icon: Layers, to: "/skills" },
-  { title: "Agentes", icon: Bot, to: "/learn?category=agentes-workflows" },
-  { title: "Comunicação", icon: MessageSquare, to: "/learn?category=desenvolvimento" },
-  { title: "Design", icon: Palette, to: "/learn?category=design-ui" },
+  { title: "Skills", icon: SquaresFour, to: "/skills" },
+  { title: "Agentes", icon: Cpu, to: "/learn?category=agentes-workflows" },
+  { title: "Comunicação", icon: MessageCircle, to: "/learn?category=desenvolvimento" },
+  { title: "Design", icon: Brush, to: "/learn?category=design-ui" },
 ]
 
 export default function Home() {
@@ -101,7 +101,7 @@ export default function Home() {
           to="/home"
           className="flex flex-col items-center gap-1 text-[#2B5D3A] hover:text-[#1F2A24]"
         >
-          <HomeIcon className="h-6 w-6" strokeWidth={2.5} />
+          <Home className="h-6 w-6" strokeWidth={2.5} />
           <span className="text-xs font-semibold">Home</span>
         </Link>
 
