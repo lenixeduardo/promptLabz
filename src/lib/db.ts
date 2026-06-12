@@ -72,6 +72,25 @@ export async function updateUserProfile(userId: string, fullName: string): Promi
   }
 }
 
+export async function updateUserAvatar(userId: string, avatarUrl: string): Promise<DbResult<Profile>> {
+  if (!isSupabaseConfigured()) {
+    return { data: null, error: "Supabase não configurado" }
+  }
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .update({ avatar_url: avatarUrl })
+      .eq("id", userId)
+      .select(profileColumns)
+      .single()
+
+    if (error) throw error
+    return { data: data as Profile, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao atualizar avatar") }
+  }
+}
+
 // ── Progress Operations ────────────────────────────────────────────────────────
 
 export async function saveProgress(

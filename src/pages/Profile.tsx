@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { ArrowLeft, User, Mail, Calendar } from "lucide-react"
+import { ArrowLeft, User, Mail, Calendar, Image } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -96,6 +96,15 @@ export default function Profile() {
             />
           </div>
         </div>
+
+        {/* Avatar Button */}
+        <Link
+          to="/avatars"
+          className="mb-5 flex items-center justify-center gap-2 rounded-2xl border border-[#BFE3CC] bg-gradient-to-r from-[#E8F8F0] to-[#E1F2E7] px-4 py-3 font-semibold text-[#2B5D3A] transition-all hover:shadow-md"
+        >
+          <Image className="h-5 w-5" strokeWidth={2.2} />
+          Escolher Avatar
+        </Link>
 
         {/* Profile details card */}
         <Card className="w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">

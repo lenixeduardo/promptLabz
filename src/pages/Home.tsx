@@ -174,7 +174,7 @@ export default function Home() {
           <BrandLogo className="text-3xl" />
           <div className="flex items-center gap-3">
             <Link
-              to="/profile"
+              to="/avatars"
               className="flex items-center gap-2 rounded-full border border-[#BFE3CC] bg-white/70 px-3 py-1.5 shadow-sm hover:bg-[#F0FAF3] transition-colors"
             >
               <div className="h-8 w-8 overflow-hidden rounded-full border border-[#BFE3CC]">
