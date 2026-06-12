@@ -19,7 +19,7 @@ const features = [
 ]
 
 export default function Home() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const achievements = useAchievements()
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -40,8 +40,9 @@ export default function Home() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] pb-28">
-      <div className="mx-auto w-full max-w-[420px] px-5 py-8">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD]">
+      <div className="flex-1 overflow-y-auto px-5 py-8">
+        <div className="mx-auto w-full max-w-[420px]">
         {/* Header with greeting and notification */}
         <div className="mb-8 flex items-center justify-between">
           <div>
@@ -79,52 +80,31 @@ export default function Home() {
             </Link>
           ))}
         </div>
-
-        {/* Profile link */}
-        <Link
-          to="/profile"
-          className="mb-4 flex items-center gap-3 rounded-2xl border border-[#C6E7D2] bg-[#E1F2E7] px-4 py-3 transition-all hover:shadow-md"
-        >
-          <div className="h-10 w-10 overflow-hidden rounded-full border border-[#BFE3CC] bg-white">
-            <img
-              src="/assets/avatar-cat.png"
-              alt="Avatar"
-              className="h-full w-full object-contain"
-            />
-          </div>
-          <div className="flex-1">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#3E8E5E]">Meu Perfil</p>
-            <p className="text-sm font-semibold text-[#2B5D3A]">{user?.email?.split("@")[0] || "Usuário"}</p>
-          </div>
-        </Link>
-
-        {/* Logout button */}
-        <button
-          onClick={async () => {
-            const result = await logout()
-            if (result.success) {
-              sileo.success({ title: "Até logo!" })
-            }
-          }}
-          className="w-full rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 transition-all hover:bg-red-100"
-        >
-          Sair da Conta
-        </button>
       </div>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 border-t border-[#BFE3CC] bg-white/95 backdrop-blur-sm">
+      <nav className="border-t border-[#BFE3CC] bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex w-full max-w-[420px] items-center justify-around px-5 py-3">
-          {navigationItems.map(({ label, icon: Icon, to }) => (
-            <Link
-              key={label}
-              to={to}
-              className="flex flex-col items-center gap-1 rounded-lg p-2 text-center transition-all hover:bg-[#F0FAF3]"
-            >
-              <Icon className="h-6 w-6 text-[#2E8B57]" strokeWidth={2.2} />
-              <span className="text-xs font-semibold text-[#2B5D3A]">{label}</span>
-            </Link>
-          ))}
+          <div className="flex flex-col items-center gap-1 rounded-lg p-2 text-center">
+            <HomeIcon className="h-6 w-6 text-[#2E8B57]" strokeWidth={2.2} />
+            <span className="text-xs font-bold text-[#2E8B57]">Início</span>
+          </div>
+
+          <Link
+            to="/profile"
+            className="flex flex-col items-center gap-1 rounded-lg p-2 text-center transition-all hover:bg-[#F0FAF3]"
+          >
+            <User className="h-6 w-6 text-[#9BB8A7]" strokeWidth={2.2} />
+            <span className="text-xs font-semibold text-[#9BB8A7]">Perfil</span>
+          </Link>
+
+          <Link
+            to="/achievements"
+            className="flex flex-col items-center gap-1 rounded-lg p-2 text-center transition-all hover:bg-[#F0FAF3]"
+          >
+            <Award className="h-6 w-6 text-[#9BB8A7]" strokeWidth={2.2} />
+            <span className="text-xs font-semibold text-[#9BB8A7]">Conquistas</span>
+          </Link>
         </div>
       </nav>
     </div>
