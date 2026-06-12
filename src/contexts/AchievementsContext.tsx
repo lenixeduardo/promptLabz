@@ -1,43 +1,24 @@
-import { createContext, useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   ACHIEVEMENTS,
-  type Achievement,
-  type AchievementsData,
   checkAchievements,
   loadAchievements,
   saveAchievements,
   updateStreak,
 } from "@/lib/achievements"
+import { AchievementsContext } from "./achievementsContextDef"
 
+export type { AchievementsCtx } from "./achievementsContextDef"
+export { AchievementsContext } from "./achievementsContextDef"
+
+import type { AchievementsData, Achievement } from "@/lib/achievements"
 import type { ReactNode } from "react"
-
-export interface AchievementsCtx {
-  /** All achievement definitions */
-  allAchievements: Achievement[]
-  /** IDs of unlocked achievements */
-  unlocked: string[]
-  /** Raw data object (for condition checks) */
-  data: AchievementsData
-  /** Check achievements after a lesson completion */
-  checkLessonComplete: (wasPerfect: boolean) => Achievement[]
-  /** Check streak achievements on daily visit */
-  checkDailyVisit: (favoritesCount?: number) => Achievement[]
-  /** Add a visited category and check exploration achievements */
-  visitCategory: (categoryId: string) => void
-  /** Check favorites-based achievements */
-  checkFavorites: (count: number) => Achievement[]
-  /** Returns the Achievement object for an ID */
-  getAchievement: (id: string) => Achievement | undefined
-}
-
-export const AchievementsContext = createContext<AchievementsCtx | undefined>(undefined)
 
 export function AchievementsProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<AchievementsData>(loadAchievements)
   const dataRef = useRef(data)
   useEffect(() => { dataRef.current = data }, [data])
 
-  // Persist on changes
   useEffect(() => {
     saveAchievements(data)
   }, [data])
@@ -86,7 +67,6 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
       if (newUnlocks.length > 0) {
         setData(next)
       } else {
-        // Still save the visited category even if no new unlocks
         setData({ ...existing, visitedCategories: [...existing.visitedCategories, categoryId] })
       }
     },
