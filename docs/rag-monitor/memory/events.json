@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "description": "Índice central de eventos do RAG Monitor — PromptLabz",
+    "last_updated": "2026-06-12T00:00:00Z",
+    "total_events": 2,
+    "schema_ref": "docs/rag-monitor/README.md"
+  },
+  "events": [
+    {
+      "id": "EVT-001",
+      "timestamp": "2026-06-11T23:20:31Z",
+      "type": "pr",
+      "title": "PR-013: Fix character encoding / problemas com acentuação em textos",
+      "pr_number": 13,
+      "branch": "problemas-com-acentuação-em-textos-d1fc2",
+      "base": "main",
+      "author": "lenixeduardo (via qwen-chat coder)",
+      "merged_by": "lenixeduardo",
+      "status": "merged",
+      "changed_files": 2,
+      "additions": 3,
+      "deletions": 24,
+      "classification": "mixed",
+      "summary": "Correção válida do lang=pt-BR em index.html + corrupção crítica do .gitignore pelo agente gerador.",
+      "risk_level": "critical",
+      "doc_ref": "docs/rag-monitor/memory/pr-docs/PR-013.md",
+      "related_errors": ["ERR-001"],
+      "tags": ["encoding", "gitignore", "agent-generated", "ai-corruption"]
+    },
+    {
+      "id": "ERR-001",
+      "timestamp": "2026-06-11T23:20:31Z",
+      "type": "error",
+      "severity": "critical",
+      "description": "Arquivo .gitignore completamente corrompido pelo agente qwen-chat. Conteúdo substituído por raciocínio interno do modelo (chain-of-thought bleeding).",
+      "context": "PR #13 — merge automático via qwen-chat coder, task f1a94f42-67f8-404b-b011-169a79ed1fc2",
+      "message": "Conteúdo inválido no .gitignore:\n\"(index.html is a source file, and there are no build artifacts, dependencies, or temp files in the changes)\"\n\"(empty — output nothing)\"",
+      "affected_components": [".gitignore"],
+      "frequency": 1,
+      "status": "open",
+      "resolution_ref": null,
+      "risk": "Qualquer 'git add .' pode commitar node_modules/ ou .env.local com credenciais",
+      "recommended_action": "Verificar estado atual do .gitignore na branch main e restaurar regras originais se necessário.",
+      "tags": ["gitignore", "chain-of-thought-bleeding", "ai-corruption", "security"]
+    }
+  ]
+}
