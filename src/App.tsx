@@ -15,6 +15,7 @@ const AuthCallback = lazy(() => import("@/pages/AuthCallback"))
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"))
 const Home = lazy(() => import("@/pages/Home"))
 const Profile = lazy(() => import("@/pages/Profile"))
+const AvatarScreen = lazy(() => import("@/pages/AvatarScreen"))
 const LearningLab = lazy(() => import("@/pages/LearningLab"))
 const Lesson = lazy(() => import("@/pages/Lesson"))
 const Skills = lazy(() => import("@/pages/Skills"))
@@ -58,6 +59,14 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <Profile />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/avatars"
+                element={
+                  <PrivateRoute>
+                    <AvatarScreen />
                   </PrivateRoute>
                 }
               />
