@@ -1,4 +1,4 @@
-﻿import { useState } from "react"
+﻿import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Bell, Search, Home as HomeIcon, User, Award, Layers2, MessageSquare, Palette } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
@@ -23,15 +23,13 @@ export default function Home() {
   const achievements = useAchievements()
   const [searchQuery, setSearchQuery] = useState("")
 
-  // Check daily streak
-  const [streakChecked, setStreakChecked] = useState(false)
-  if (!streakChecked) {
+  // Check daily streak on mount
+  useEffect(() => {
     const newAchs = achievements.checkDailyVisit()
     if (newAchs.length > 0 && import.meta.env.DEV) {
       console.log("[DEV] Novas conquistas desbloqueadas:", newAchs.map((a) => a.title))
     }
-    setStreakChecked(true)
-  }
+  }, [achievements])
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -43,42 +41,43 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD]">
       <div className="flex-1 overflow-y-auto px-5 py-8">
         <div className="mx-auto w-full max-w-[420px]">
-        {/* Header with greeting and notification */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-[#2B5D3A]">Olá, Aluno!</h1>
-            <p className="text-sm text-[#4A5E52]">Bem-vindo ao PromptLabz</p>
+          {/* Header with greeting and notification */}
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-[#2B5D3A]">Olá, Aluno!</h1>
+              <p className="text-sm text-[#4A5E52]">Bem-vindo ao PromptLabz</p>
+            </div>
+            <button className="rounded-full p-2 hover:bg-white/50 transition-colors">
+              <Bell className="h-6 w-6 text-[#2B5D3A]" strokeWidth={2.2} />
+            </button>
           </div>
-          <button className="rounded-full p-2 hover:bg-white/50 transition-colors">
-            <Bell className="h-6 w-6 text-[#2B5D3A]" strokeWidth={2.2} />
-          </button>
-        </div>
 
-        {/* Search bar */}
-        <div className="mb-8 flex items-center gap-2 rounded-full border border-[#BFE3CC] bg-white px-4 py-3 shadow-sm">
-          <Search className="h-5 w-5 text-[#3E8E5E]" strokeWidth={2.2} />
-          <input
-            type="text"
-            placeholder="Explorar Habilidades"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            className="flex-1 bg-transparent text-sm text-[#1F2A24] placeholder:text-[#8A998F] focus:outline-none"
-          />
-        </div>
+          {/* Search bar */}
+          <div className="mb-8 flex items-center gap-2 rounded-full border border-[#BFE3CC] bg-white px-4 py-3 shadow-sm">
+            <Search className="h-5 w-5 text-[#3E8E5E]" strokeWidth={2.2} />
+            <input
+              type="text"
+              placeholder="Explorar Habilidades"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              className="flex-1 bg-transparent text-sm text-[#1F2A24] placeholder:text-[#8A998F] focus:outline-none"
+            />
+          </div>
 
-        {/* Features Grid 2x2 */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          {features.map(({ title, icon: Icon, to }) => (
-            <Link
-              key={title}
-              to={to}
-              className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-[#2E8B57] bg-white/80 px-4 py-6 transition-all hover:bg-[#E1F2E7] hover:shadow-md"
-            >
-              <Icon className="h-8 w-8 text-[#2E8B57]" strokeWidth={2.2} />
-              <span className="text-sm font-semibold text-[#2B5D3A]">{title}</span>
-            </Link>
-          ))}
+          {/* Features Grid 2x2 */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            {features.map(({ title, icon: Icon, to }) => (
+              <Link
+                key={title}
+                to={to}
+                className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-[#2E8B57] bg-white/80 px-4 py-6 transition-all hover:bg-[#E1F2E7] hover:shadow-md"
+              >
+                <Icon className="h-8 w-8 text-[#2E8B57]" strokeWidth={2.2} />
+                <span className="text-sm font-semibold text-[#2B5D3A]">{title}</span>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 

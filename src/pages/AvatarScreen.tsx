@@ -15,16 +15,19 @@ export default function AvatarScreen() {
 
   useEffect(() => {
     if (!user?.id) return
-    getUserProfile(user.id).then(({ data, error }) => {
-      if (!error && data?.avatar_url) setCurrentAvatarId(data.avatar_url)
-    })
+    getUserProfile(user.id)
+      .then(({ data, error }) => {
+        if (!error && data?.avatar_url) setCurrentAvatarId(data.avatar_url)
+      })
+      .catch((err) => console.error("Failed to load avatar:", err))
   }, [user])
 
   const handleSelect = async (avatarId: string) => {
     const avatar = getAvatarById(avatarId)
     if (!avatar) return
 
-    if (avatar.price > DIAMOND_BALANCE && avatarId !== currentAvatarId) {
+    const isAlreadyOwned = avatar.price === 0 || avatarId === currentAvatarId
+    if (avatar.price > DIAMOND_BALANCE && !isAlreadyOwned) {
       sileo.error({
         title: "Diamantes insuficientes",
         description: `Faltam ${avatar.price - DIAMOND_BALANCE} diamantes.`,
