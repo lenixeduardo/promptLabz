@@ -13,6 +13,7 @@ import {
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
+import { StreakWidget } from "@/components/StreakWidget"
 import { sileo } from "sileo"
 
 const features = [
@@ -24,16 +25,20 @@ const features = [
 
 export default function Home() {
   const { user, logout } = useAuth()
-  const { checkDailyVisit } = useAchievements()
+  const { checkDailyVisit, data } = useAchievements()
   const [searchQuery, setSearchQuery] = useState("")
+  const [streakLoading, setStreakLoading] = useState(true)
 
-  // Check daily streak on mount
+  // Check daily streak on mount and sync with Supabase
   useEffect(() => {
-    const newAchs = checkDailyVisit()
-    if (newAchs.length > 0 && import.meta.env.DEV) {
-      console.log("[DEV] Novas conquistas desbloqueadas:", newAchs.map((a) => a.title))
-    }
-  }, [checkDailyVisit])
+    setStreakLoading(true)
+    checkDailyVisit(user?.id).then((newAchs) => {
+      setStreakLoading(false)
+      if (newAchs.length > 0 && import.meta.env.DEV) {
+        console.log("[DEV] Novas conquistas desbloqueadas:", newAchs.map((a) => a.title))
+      }
+    })
+  }, [checkDailyVisit, user?.id])
 
   const handleLogout = async () => {
     const result = await logout()
@@ -62,6 +67,15 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 px-4 py-6">
+        {/* Streak Widget */}
+        <div className="mb-6">
+          <StreakWidget
+            streak={data.consecutiveDays}
+            longestStreak={data.longestStreak}
+            loading={streakLoading}
+          />
+        </div>
+
         {/* Search Bar */}
         <div className="mb-8">
           <div className="relative flex items-center gap-3 rounded-2xl border-2 border-[#BFE3CC] bg-[#F0FAF3] px-4 py-3">

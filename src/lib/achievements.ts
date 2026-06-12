@@ -17,6 +17,7 @@ export interface AchievementsData {
   perfectCount: number
   lastVisitDate: string | null            // "YYYY-MM-DD"
   consecutiveDays: number
+  longestStreak: number
   visitedCategories: string[]             // category IDs visited
   completedCategoryIds: string[]          // category IDs fully completed
 }
@@ -130,6 +131,7 @@ function getDefaultData(): AchievementsData {
     perfectCount: 0,
     lastVisitDate: null,
     consecutiveDays: 0,
+    longestStreak: 0,
     visitedCategories: [],
     completedCategoryIds: [],
   }

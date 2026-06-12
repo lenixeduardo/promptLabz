@@ -6,7 +6,7 @@ export interface AchievementsCtx {
   unlocked: string[]
   data: AchievementsData
   checkLessonComplete: (wasPerfect: boolean) => Achievement[]
-  checkDailyVisit: (favoritesCount?: number) => Achievement[]
+  checkDailyVisit: (userId?: string, favoritesCount?: number) => Promise<Achievement[]>
   visitCategory: (categoryId: string) => void
   checkFavorites: (count: number) => Achievement[]
   getAchievement: (id: string) => Achievement | undefined

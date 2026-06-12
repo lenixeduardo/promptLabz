@@ -6,6 +6,7 @@ import {
   saveAchievements,
   updateStreak,
 } from "@/lib/achievements"
+import { loadStreak, saveStreak } from "@/lib/db"
 import { AchievementsContext } from "./achievementsContextDef"
 
 export type { AchievementsCtx } from "./achievementsContextDef"
@@ -39,18 +40,52 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
   )
 
   const checkDailyVisit = useCallback(
-    (favoritesCount?: number): Achievement[] => {
+    async (userId?: string, favoritesCount?: number): Promise<Achievement[]> => {
       const existing = dataRef.current
+
+      // Calculate new streak locally first (optimistic)
       const { newLastVisit, newConsecutive } = updateStreak(existing.lastVisitDate, existing.consecutiveDays)
-      const streakData = { ...existing, lastVisitDate: newLastVisit, consecutiveDays: newConsecutive }
+
+      let finalConsecutive = newConsecutive
+      let finalLongest = Math.max(existing.longestStreak, newConsecutive)
+
+      // Sync with Supabase if authenticated
+      if (userId) {
+        const { data: remote } = await loadStreak(userId)
+        if (remote) {
+          // Use the highest value between local and remote to avoid data loss
+          finalConsecutive = Math.max(finalConsecutive, remote.currentStreak)
+          // If remote last_visit_date is today, trust remote streak
+          if (remote.lastVisitDate === newLastVisit) {
+            finalConsecutive = remote.currentStreak
+          }
+          finalLongest = Math.max(finalLongest, remote.longestStreak, finalConsecutive)
+        }
+
+        // Persist updated streak to Supabase (fire-and-forget)
+        saveStreak(userId, {
+          currentStreak: finalConsecutive,
+          longestStreak: finalLongest,
+          lastVisitDate: newLastVisit,
+        }).catch(() => {/* silent — localStorage is the fallback */})
+      }
+
+      const streakData: AchievementsData = {
+        ...existing,
+        lastVisitDate: newLastVisit,
+        consecutiveDays: finalConsecutive,
+        longestStreak: finalLongest,
+      }
 
       const { newUnlocks, data: next } = checkAchievements(streakData, {
-        consecutiveDays: newConsecutive,
+        consecutiveDays: finalConsecutive,
         favoritesCount,
       })
-      if (newLastVisit !== existing.lastVisitDate || newUnlocks.length > 0) {
-        setData(next)
+
+      if (newLastVisit !== existing.lastVisitDate || newUnlocks.length > 0 || finalConsecutive !== existing.consecutiveDays) {
+        setData({ ...next, longestStreak: finalLongest })
       }
+
       return newUnlocks
     },
     [],
