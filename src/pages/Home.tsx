@@ -1,11 +1,11 @@
-﻿import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
 import {
   Search,
-  Home,
+  Home as HomeIcon,
   User,
   Users,
-  SquaresFour,
+  Grid2x2,
   Cpu,
   MessageCircle,
   Brush,
@@ -16,7 +16,7 @@ import { useAchievements } from "@/hooks/useAchievements"
 import { sileo } from "sileo"
 
 const features = [
-  { title: "Skills", icon: SquaresFour, to: "/skills" },
+  { title: "Skills", icon: Grid2x2, to: "/skills" },
   { title: "Agentes", icon: Cpu, to: "/learn?category=agentes-workflows" },
   { title: "Comunicação", icon: MessageCircle, to: "/learn?category=desenvolvimento" },
   { title: "Design", icon: Brush, to: "/learn?category=design-ui" },
@@ -24,25 +24,21 @@ const features = [
 
 export default function Home() {
   const { user, logout } = useAuth()
-  const navigate = useNavigate()
   const achievements = useAchievements()
   const [searchQuery, setSearchQuery] = useState("")
 
   // Check daily streak on mount
-  const [streakChecked, setStreakChecked] = useState(false)
-  if (!streakChecked) {
+  useEffect(() => {
     const newAchs = achievements.checkDailyVisit()
     if (newAchs.length > 0 && import.meta.env.DEV) {
       console.log("[DEV] Novas conquistas desbloqueadas:", newAchs.map((a) => a.title))
     }
-    setStreakChecked(true)
-  }
+  }, [])
 
   const handleLogout = async () => {
     const result = await logout()
     if (result.success) {
       sileo.success({ title: "Até logo!" })
-      navigate("/login")
     } else {
       sileo.error({ title: result.error || "Erro ao sair" })
     }
@@ -58,7 +54,7 @@ export default function Home() {
         <button
           onClick={handleLogout}
           className="text-[#2B5D3A] hover:text-[#1F2A24]"
-          title="Notificações"
+          aria-label="Sair da aplicação"
         >
           <Bell className="h-6 w-6" />
         </button>
@@ -75,7 +71,7 @@ export default function Home() {
               placeholder="Explore habilidades"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent text-sm placeholder:text-[#8A998F] focus:outline-none font-medium"
+              className="flex-1 bg-transparent text-sm placeholder:text-[#6B7A70] focus:outline-none font-medium"
             />
           </div>
         </div>
@@ -100,14 +96,16 @@ export default function Home() {
         <Link
           to="/home"
           className="flex flex-col items-center gap-1 text-[#2B5D3A] hover:text-[#1F2A24]"
+          aria-label="Ir para Home"
         >
-          <Home className="h-6 w-6" strokeWidth={2.5} />
+          <HomeIcon className="h-6 w-6" strokeWidth={2.5} />
           <span className="text-xs font-semibold">Home</span>
         </Link>
 
         <Link
           to="/avatars"
           className="flex flex-col items-center gap-1 text-[#8A998F] hover:text-[#2B5D3A]"
+          aria-label="Ir para Perfil"
         >
           <User className="h-6 w-6" strokeWidth={2.5} />
           <span className="text-xs font-semibold">Perfil</span>
@@ -116,6 +114,7 @@ export default function Home() {
         <Link
           to="/achievements"
           className="flex flex-col items-center gap-1 text-[#8A998F] hover:text-[#2B5D3A]"
+          aria-label="Ir para Comunidade"
         >
           <Users className="h-6 w-6" strokeWidth={2.5} />
           <span className="text-xs font-semibold">Comunidade</span>
@@ -124,4 +123,3 @@ export default function Home() {
     </div>
   )
 }
-
