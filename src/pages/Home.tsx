@@ -294,18 +294,7 @@ export default function Home() {
               className="flex flex-col items-center gap-5 rounded-3xl border border-[#BFE3CC] bg-white/70 px-6 py-8 text-center shadow-sm backdrop-blur transition-all hover:-translate-y-1 hover:shadow-md relative"
             >
               <span className="text-xl font-bold text-[#1F2A24]">{title}</span>
-              <div className="relative h-16 w-16">
-                <Icon className="absolute inset-0 h-12 w-12 text-[#3E8E5E] m-auto" strokeWidth={2} />
-                <img
-                  src={
-                    title === "Habilidades" ? "/assets/mascot-icons/mascot_chart.svg" :
-                    title === "Biblioteca de Prompts" ? "/assets/mascot-icons/mascot_lightbulb.svg" :
-                    "/assets/mascot-icons/mascot_graduation.svg"
-                  }
-                  alt={`${title} mascote`}
-                  className="absolute inset-0 h-12 w-12 m-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
-                />
-              </div>
+              <Icon className="h-12 w-12 text-[#3E8E5E]" strokeWidth={2} />
             </Link>
           ))}
         </div>
