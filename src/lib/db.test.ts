@@ -23,6 +23,7 @@ function buildQuery(overrides: Record<string, unknown> = {}) {
     select: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
     single: vi.fn().mockReturnThis(),
+    maybeSingle: vi.fn().mockReturnThis(),
     update: vi.fn().mockReturnThis(),
     upsert: vi.fn().mockReturnThis(),
     ...overrides,
@@ -76,7 +77,7 @@ describe("getUserProfile", () => {
 describe("updateUserProfile", () => {
   it("atualiza nome e retorna perfil atualizado", async () => {
     const updated = { id: "u1", email: "a@a.com", full_name: "Ana Silva", avatar_url: null }
-    buildQuery({ single: vi.fn().mockResolvedValue({ data: updated, error: null }) })
+    buildQuery({ maybeSingle: vi.fn().mockResolvedValue({ data: updated, error: null }) })
 
     const result = await updateUserProfile("u1", "Ana Silva")
 
@@ -85,7 +86,7 @@ describe("updateUserProfile", () => {
   })
 
   it("retorna erro quando update falha", async () => {
-    buildQuery({ single: vi.fn().mockResolvedValue({ data: null, error: { message: "Update failed" } }) })
+    buildQuery({ maybeSingle: vi.fn().mockResolvedValue({ data: null, error: { message: "Update failed" } }) })
 
     const result = await updateUserProfile("u1", "Ana Silva")
 
