@@ -26,6 +26,11 @@ module.exports = {
 					'Arial',
 					'sans-serif',
 				],
+				display: [
+					'Playfair Display',
+					'Georgia',
+					'serif',
+				],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
