@@ -1,4 +1,6 @@
-﻿@tailwind base;
+﻿@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap');
+
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -45,9 +47,9 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* SF Pro Display for large headings (≥ 20px), SF Pro Text for body — same family name, different optical sizes */
   h1, h2, h3 {
-    letter-spacing: -0.025em;
+    font-family: 'Playfair Display', Georgia, serif;
+    letter-spacing: -0.02em;
   }
   h4, h5, h6 {
     letter-spacing: -0.015em;
