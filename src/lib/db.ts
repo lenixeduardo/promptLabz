@@ -60,10 +60,9 @@ export async function updateUserProfile(userId: string, fullName: string): Promi
   try {
     const { data, error } = await supabase
       .from("users")
-      .update({ full_name: fullName })
-      .eq("id", userId)
+      .upsert({ id: userId, full_name: fullName }, { onConflict: "id" })
       .select(profileColumns)
-      .single()
+      .maybeSingle()
 
     if (error) throw error
     return { data: data as Profile, error: null }
