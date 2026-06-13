@@ -8,7 +8,7 @@ import {
   Grid2x2,
   Cpu,
   MessageCircle,
-  Brush,
+  Wand2,
   Bell,
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
@@ -20,7 +20,7 @@ const features = [
   { title: "Skills", icon: Grid2x2, to: "/skills" },
   { title: "Agentes", icon: Cpu, to: "/learn?category=agentes-workflows" },
   { title: "Comunicação", icon: MessageCircle, to: "/learn?category=desenvolvimento" },
-  { title: "Design", icon: Brush, to: "/learn?category=design-ui" },
+  { title: "Lab de Prompts", icon: Wand2, to: "/prompts" },
 ]
 
 export default function Home() {
@@ -125,14 +125,14 @@ export default function Home() {
           <span className="text-xs font-semibold">Perfil</span>
         </Link>
 
-        <Link
-          to="/achievements"
-          className="flex flex-col items-center gap-1 text-[#8A998F] hover:text-[#2B5D3A]"
-          aria-label="Ir para Comunidade"
+        <span
+          className="flex flex-col items-center gap-1 text-[#C4CFC8] cursor-not-allowed select-none"
+          aria-label="Comunidade (em breve)"
+          aria-disabled="true"
         >
           <Users className="h-6 w-6" strokeWidth={2.5} />
           <span className="text-xs font-semibold">Comunidade</span>
-        </Link>
+        </span>
       </nav>
     </div>
   )

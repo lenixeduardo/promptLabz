@@ -108,11 +108,7 @@ function SkillsGridView({
   if (skills.length === 0) {
     return (
       <div className="col-span-full flex flex-col items-center gap-3 py-16 text-[#6B9E7E]">
-        <img
-          src="/assets/mascot-icons/mascot_puzzle.svg"
-          alt="sem resultados"
-          className="h-20 w-20 opacity-60"
-        />
+        <Icons.Search className="h-16 w-16 text-[#CDEAD8]" />
         <p className="text-base font-semibold">Nenhuma skill encontrada</p>
         <p className="text-sm opacity-70">Tente ajustar o filtro ou a busca.</p>
       </div>
@@ -275,26 +271,8 @@ export default function Skills() {
         </div>
 
         {/* Hero banner */}
-        <div className="relative mb-8 w-full overflow-hidden rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0] pb-6 pt-5 shadow-sm">
-          <div className="flex justify-center gap-4 items-end h-32">
-            <img
-              src="/assets/mascot-icons/mascot_growth.svg"
-              alt="Crescimento"
-              className="h-24 w-24 object-contain"
-            />
-            <img
-              src="/assets/mascot-teacher.png"
-              alt="Professor cat"
-              className="h-28 w-auto object-contain"
-              style={{ mixBlendMode: "multiply" }}
-            />
-            <img
-              src="/assets/mascot-icons/mascot_team.svg"
-              alt="Trabalho em equipe"
-              className="h-24 w-24 object-contain"
-            />
-          </div>
-          <h1 className="mt-1 text-center text-xl font-extrabold text-[#1F2A24]">
+        <div className="relative mb-8 w-full overflow-hidden rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0] px-6 py-8 shadow-sm">
+          <h1 className="text-center text-xl font-extrabold text-[#1F2A24]">
             Central de Skills
           </h1>
           <p className="mt-0.5 text-center text-sm font-medium text-[#2F6B45]">
