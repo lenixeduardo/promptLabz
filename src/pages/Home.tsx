@@ -1,151 +1,177 @@
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import {
-  Search,
   Home as HomeIcon,
   User,
   Trophy,
-  Grid2x2,
-  Cpu,
-  GraduationCap,
-  Wand2,
+  BarChart2,
+  Map,
   Bell,
+  Flame,
+  Brain,
+  ArrowRight,
+  Clock,
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
-import { StreakWidget } from "@/components/StreakWidget"
+import { ProgressCard } from "@/components/ProgressCard"
+import { LearningPathTrail, DEFAULT_TRAIL_MODULES } from "@/components/LearningPathTrail"
 import { getUserProfile } from "@/lib/db"
-import { sileo } from "sileo"
+import { getLevelProgress, getLocalXP, getLocalGems } from "@/lib/xp"
 
-const features = [
-  { title: "Skills", icon: Grid2x2, to: "/skills" },
-  { title: "Agentes", icon: Cpu, to: "/learn?category=agentes-workflows" },
-  { title: "Cursos", icon: GraduationCap, to: "/learn" },
-  { title: "Lab de Prompts", icon: Wand2, to: "/prompts" },
+const NAV_ITEMS = [
+  { label: "Início", icon: HomeIcon, to: "/home" },
+  { label: "Trilha", icon: Map, to: "/learn" },
+  { label: "Desafios", icon: Trophy, to: "/achievements" },
+  { label: "Leaderboard", icon: BarChart2, to: "/leaderboard" },
+  { label: "Perfil", icon: User, to: "/profile" },
 ]
 
 export default function Home() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const { checkDailyVisit, data } = useAchievements()
-  const [searchQuery, setSearchQuery] = useState("")
-  const [streakLoading, setStreakLoading] = useState(true)
-  const [profileName, setProfileName] = useState<string>(
-    user?.user_metadata?.full_name?.trim() || ""
-  )
+  const location = useLocation()
 
-  // Check daily streak on mount and sync with Supabase
+  const [streakLoading, setStreakLoading] = useState(true)
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+  const [xp, setXp] = useState(0)
+  const [gems, setGems] = useState(0)
+
   useEffect(() => {
     setStreakLoading(true)
-    checkDailyVisit(user?.id).then((newAchs) => {
-      setStreakLoading(false)
-      if (newAchs.length > 0 && import.meta.env.DEV) {
-        console.log("[DEV] Novas conquistas desbloqueadas:", newAchs.map((a) => a.title))
-      }
-    })
+    checkDailyVisit(user?.id).then(() => setStreakLoading(false))
   }, [checkDailyVisit, user?.id])
 
-  // Load profile name from DB
   useEffect(() => {
     if (!user?.id) return
+
+    // Load avatar + xp/gems from profile, fallback to localStorage
     getUserProfile(user.id).then(({ data: profile }) => {
-      const name = profile?.full_name?.trim()
-      if (name) setProfileName(name)
+      if (profile?.avatar_url) setAvatarUrl(profile.avatar_url)
+      setXp(profile?.xp ?? getLocalXP(user.id!))
+      setGems(profile?.gems ?? getLocalGems(user.id!))
     })
   }, [user?.id])
 
-  const handleLogout = async () => {
-    const result = await logout()
-    if (result.success) {
-      sileo.success({ title: "Até logo!" })
-    } else {
-      sileo.error({ title: result.error || "Erro ao sair" })
-    }
-  }
-
-  const userName = profileName || "Aluno(a)"
+  const { level, currentXP, targetXP } = getLevelProgress(xp)
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white pb-28">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white pb-24">
+
       {/* Header */}
       <div className="bg-white border-b border-[#CDEAD8] px-4 py-3 flex items-center justify-between sticky top-0 z-10">
-        <h1 className="text-lg font-bold text-[#2B5D3A]">Olá, {userName}!</h1>
-        <button
-          onClick={handleLogout}
-          className="text-[#2B5D3A] hover:text-[#1F2A24]"
-          aria-label="Sair da aplicação"
-        >
-          <Bell className="h-6 w-6" />
-        </button>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 px-4 py-6">
-        {/* Streak Widget */}
-        <div className="mb-6">
-          <StreakWidget
-            streak={data.consecutiveDays}
-            longestStreak={data.longestStreak}
-            loading={streakLoading}
+        <div>
+          <h1 className="text-lg font-bold text-[#2B5D3A]">Olá, Explorador! 👋</h1>
+          <p className="text-xs text-[#6B7A70]">Pronto para mais um desafio?</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <Bell className="h-6 w-6 text-[#2B5D3A]" strokeWidth={2} />
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-500" />
+          </div>
+          <img
+            src={avatarUrl || "/assets/mascot-login-new.png"}
+            alt="Avatar"
+            className="w-9 h-9 rounded-full object-cover border-2 border-[#BFE3CC]"
           />
         </div>
+      </div>
 
-        {/* Search Bar */}
-        <div className="mb-8">
-          <div className="relative flex items-center gap-3 rounded-2xl border-2 border-[#BFE3CC] bg-[#F0FAF3] px-4 py-3">
-            <Search className="h-5 w-5 text-[#3E8E5E]" strokeWidth={2.5} />
-            <input
-              type="text"
-              placeholder="Explore habilidades"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent text-sm placeholder:text-[#6B7A70] focus:outline-none font-medium"
-            />
+      {/* Main content */}
+      <div className="flex-1 px-4 py-5 flex flex-col gap-5">
+
+        {/* Progress card */}
+        <ProgressCard level={level} currentXP={currentXP} targetXP={targetXP} />
+
+        {/* Stats row: streak + gems */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* Streak card */}
+          <div className="rounded-2xl border-2 border-[#BFE3CC] bg-white px-4 py-3">
+            <p className="text-[11px] font-semibold text-[#6B7A70] mb-1">Sequência diária</p>
+            {streakLoading ? (
+              <div className="h-7 w-16 rounded bg-[#D4EFE0] animate-pulse" />
+            ) : (
+              <>
+                <div className="flex items-center gap-1.5">
+                  <Flame className="h-6 w-6 text-orange-500 flex-shrink-0" strokeWidth={2.5} />
+                  <span className="text-xl font-extrabold text-[#1F2A24]">
+                    {data.consecutiveDays} dias
+                  </span>
+                </div>
+                <p className="text-[11px] text-[#8A998F] mt-0.5">
+                  Recorde: {data.longestStreak} dias
+                </p>
+              </>
+            )}
+          </div>
+
+          {/* Gems card */}
+          <div className="rounded-2xl border-2 border-[#BFE3CC] bg-white px-4 py-3">
+            <p className="text-[11px] font-semibold text-[#6B7A70] mb-1">Gemas</p>
+            <div className="flex items-center gap-1.5">
+              <span className="text-2xl">💎</span>
+              <span className="text-xl font-extrabold text-[#1F2A24]">{gems}</span>
+            </div>
+            <p className="text-[11px] text-[#8A998F] mt-0.5">Use para desbloquear</p>
           </div>
         </div>
 
-        {/* Feature Grid - 2x2 */}
-        <div className="grid grid-cols-2 gap-4">
-          {features.map(({ title, icon: Icon, to }) => (
+        {/* Learning path trail */}
+        <LearningPathTrail
+          modules={DEFAULT_TRAIL_MODULES}
+          completedCount={1}
+          totalCount={12}
+        />
+
+        {/* Featured lesson */}
+        <div>
+          <h2 className="text-base font-bold text-[#1F2A24] mb-3">Aula em destaque</h2>
+          <div className="rounded-2xl border-2 border-[#BFE3CC] bg-white p-4">
+            <div className="flex gap-4 mb-4">
+              <div className="w-20 h-20 flex-shrink-0 rounded-xl bg-[#EAF7EF] flex items-center justify-center">
+                <Brain className="h-9 w-9 text-[#2B5D3A]" strokeWidth={1.5} />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-bold text-[#1F2A24] leading-snug">
+                  Como dar contexto para a IA entender o que você quer
+                </p>
+                <div className="flex items-center gap-1 mt-2 text-[#6B7A70]">
+                  <Clock className="h-3.5 w-3.5" strokeWidth={2} />
+                  <span className="text-xs">10 min</span>
+                </div>
+              </div>
+            </div>
             <Link
-              key={title}
-              to={to}
-              className="flex flex-col items-center justify-center gap-3 rounded-3xl border-2 border-[#2B5D3A] bg-white p-6 aspect-square hover:bg-[#F0FAF3] transition-colors"
+              to="/learn"
+              className="flex items-center justify-center gap-2 w-full rounded-xl bg-[#2B5D3A] text-white text-sm font-semibold py-3 hover:bg-[#1F4A2D] transition-colors"
             >
-              <Icon className="h-10 w-10 text-[#2B5D3A]" strokeWidth={2.5} />
-              <span className="text-sm font-semibold text-[#1F2A24] text-center">{title}</span>
+              Continuar aula
+              <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
             </Link>
-          ))}
+          </div>
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#CDEAD8] px-4 py-3 flex items-center justify-around">
-        <Link
-          to="/home"
-          className="flex flex-col items-center gap-1 text-[#2B5D3A] hover:text-[#1F2A24]"
-          aria-label="Ir para Home"
-        >
-          <HomeIcon className="h-6 w-6" strokeWidth={2.5} />
-          <span className="text-xs font-semibold">Home</span>
-        </Link>
-
-        <Link
-          to="/profile"
-          className="flex flex-col items-center gap-1 text-[#8A998F] hover:text-[#2B5D3A]"
-          aria-label="Ir para Perfil"
-        >
-          <User className="h-6 w-6" strokeWidth={2.5} />
-          <span className="text-xs font-semibold">Perfil</span>
-        </Link>
-
-        <Link
-          to="/achievements"
-          className="flex flex-col items-center gap-1 text-[#8A998F] hover:text-[#2B5D3A]"
-          aria-label="Ir para Conquistas"
-        >
-          <Trophy className="h-6 w-6" strokeWidth={2.5} />
-          <span className="text-xs font-semibold">Conquistas</span>
-        </Link>
+      {/* Bottom navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#CDEAD8] px-2 py-2 flex items-center justify-around">
+        {NAV_ITEMS.map(({ label, icon: Icon, to }) => {
+          const isActive = location.pathname === to
+          return (
+            <Link
+              key={to}
+              to={to}
+              className={`flex flex-col items-center gap-0.5 px-2 py-1 ${
+                isActive ? "text-[#2B5D3A]" : "text-[#8A998F]"
+              }`}
+              aria-label={label}
+            >
+              <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 2} />
+              <span className={`text-[10px] ${isActive ? "font-bold" : "font-medium"}`}>
+                {label}
+              </span>
+            </Link>
+          )
+        })}
       </nav>
     </div>
   )

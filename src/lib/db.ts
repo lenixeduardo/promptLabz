@@ -13,6 +13,8 @@ export interface Profile {
   avatar_url: string | null
   premium_status?: "free" | "trial" | "active" | "cancelled"
   trial_ends_at?: string | null
+  xp?: number
+  gems?: number
 }
 
 export interface DbResult<T> {
@@ -20,7 +22,7 @@ export interface DbResult<T> {
   error: string | null
 }
 
-const profileColumns = "id,email,full_name,avatar_url,premium_status,trial_ends_at"
+const profileColumns = "id,email,full_name,avatar_url,premium_status,trial_ends_at,xp,gems"
 const LEGACY_PROGRESS_KEYS = ["promptlabz_progress", "promptlab_progress"] as const
 
 const isSupabaseConfigured = (): boolean => {
