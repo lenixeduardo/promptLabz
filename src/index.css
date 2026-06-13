@@ -1,6 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -42,6 +40,17 @@
   body {
     @apply bg-background text-foreground font-sans;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* SF Pro Display for large headings (≥ 20px), SF Pro Text for body — same family name, different optical sizes */
+  h1, h2, h3 {
+    letter-spacing: -0.025em;
+  }
+  h4, h5, h6 {
+    letter-spacing: -0.015em;
   }
 }
 
