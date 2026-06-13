@@ -21,6 +21,7 @@ const Lesson = lazy(() => import("@/pages/Lesson"))
 const Skills = lazy(() => import("@/pages/Skills"))
 const SkillDetail = lazy(() => import("@/pages/SkillDetail"))
 const MissionComplete = lazy(() => import("@/pages/MissionComplete"))
+const Prompts = lazy(() => import("@/pages/Prompts"))
 const Achievements = import.meta.env.DEV
   ? lazy(() => import("@/pages/Achievements"))
   : () => null
@@ -115,6 +116,14 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <MissionComplete />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/prompts"
+                element={
+                  <PrivateRoute>
+                    <Prompts />
                   </PrivateRoute>
                 }
               />
