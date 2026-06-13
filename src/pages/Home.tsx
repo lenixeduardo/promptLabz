@@ -4,22 +4,23 @@ import {
   Search,
   Home as HomeIcon,
   User,
-  Users,
+  Trophy,
   Grid2x2,
   Cpu,
-  MessageCircle,
+  GraduationCap,
   Wand2,
   Bell,
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
 import { StreakWidget } from "@/components/StreakWidget"
+import { getUserProfile } from "@/lib/db"
 import { sileo } from "sileo"
 
 const features = [
   { title: "Skills", icon: Grid2x2, to: "/skills" },
   { title: "Agentes", icon: Cpu, to: "/learn?category=agentes-workflows" },
-  { title: "Comunicação", icon: MessageCircle, to: "/learn?category=desenvolvimento" },
+  { title: "Cursos", icon: GraduationCap, to: "/learn" },
   { title: "Lab de Prompts", icon: Wand2, to: "/prompts" },
 ]
 
@@ -28,6 +29,9 @@ export default function Home() {
   const { checkDailyVisit, data } = useAchievements()
   const [searchQuery, setSearchQuery] = useState("")
   const [streakLoading, setStreakLoading] = useState(true)
+  const [profileName, setProfileName] = useState<string>(
+    user?.user_metadata?.full_name?.trim() || ""
+  )
 
   // Check daily streak on mount and sync with Supabase
   useEffect(() => {
@@ -40,6 +44,15 @@ export default function Home() {
     })
   }, [checkDailyVisit, user?.id])
 
+  // Load profile name from DB
+  useEffect(() => {
+    if (!user?.id) return
+    getUserProfile(user.id).then(({ data: profile }) => {
+      const name = profile?.full_name?.trim()
+      if (name) setProfileName(name)
+    })
+  }, [user?.id])
+
   const handleLogout = async () => {
     const result = await logout()
     if (result.success) {
@@ -49,7 +62,7 @@ export default function Home() {
     }
   }
 
-  const userName = user?.email?.split("@")[0] || "Aluno"
+  const userName = profileName || "Aluno(a)"
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white pb-28">
@@ -125,14 +138,14 @@ export default function Home() {
           <span className="text-xs font-semibold">Perfil</span>
         </Link>
 
-        <span
-          className="flex flex-col items-center gap-1 text-[#C4CFC8] cursor-not-allowed select-none"
-          aria-label="Comunidade (em breve)"
-          aria-disabled="true"
+        <Link
+          to="/achievements"
+          className="flex flex-col items-center gap-1 text-[#8A998F] hover:text-[#2B5D3A]"
+          aria-label="Ir para Conquistas"
         >
-          <Users className="h-6 w-6" strokeWidth={2.5} />
-          <span className="text-xs font-semibold">Comunidade</span>
-        </span>
+          <Trophy className="h-6 w-6" strokeWidth={2.5} />
+          <span className="text-xs font-semibold">Conquistas</span>
+        </Link>
       </nav>
     </div>
   )

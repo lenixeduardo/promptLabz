@@ -303,10 +303,10 @@ export default function Skills() {
         </div>
 
         {/* View mode tabs */}
-        <div className="mb-5 flex gap-2">
+        <div className="no-scrollbar mb-3 flex gap-2 overflow-x-auto pb-1">
           <button
             onClick={() => { setViewMode("all"); setActiveSkillCat("Todas") }}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "all"
                 ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
                 : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
@@ -318,7 +318,7 @@ export default function Skills() {
           </button>
           <button
             onClick={() => setViewMode("favorites")}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "favorites"
                 ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
                 : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
@@ -332,7 +332,7 @@ export default function Skills() {
           </button>
           <button
             onClick={() => setViewMode("ranking")}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "ranking"
                 ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
                 : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
@@ -341,6 +341,18 @@ export default function Skills() {
             <Icons.Trophy className="h-4 w-4" />
             Mais Instaladas
           </button>
+        </div>
+
+        {/* Step indicator bar */}
+        <div className="mb-5 flex items-center gap-2">
+          {(["all", "favorites", "ranking"] as ViewMode[]).map((mode) => (
+            <div
+              key={mode}
+              className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                viewMode === mode ? "bg-[#2B5D3A]" : "bg-[#CDEAD8] opacity-50"
+              }`}
+            />
+          ))}
         </div>
 
         {/* Category filter — only show in "all" mode */}

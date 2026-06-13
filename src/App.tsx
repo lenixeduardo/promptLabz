@@ -22,9 +22,7 @@ const Skills = lazy(() => import("@/pages/Skills"))
 const SkillDetail = lazy(() => import("@/pages/SkillDetail"))
 const MissionComplete = lazy(() => import("@/pages/MissionComplete"))
 const Prompts = lazy(() => import("@/pages/Prompts"))
-const Achievements = import.meta.env.DEV
-  ? lazy(() => import("@/pages/Achievements"))
-  : () => null
+const Achievements = lazy(() => import("@/pages/Achievements"))
 
 function PageLoading() {
   return (
@@ -127,17 +125,14 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
-              {/* Achievements page — only in dev mode */}
-              {import.meta.env.DEV && (
-                <Route
-                  path="/achievements"
-                  element={
-                    <PrivateRoute>
-                      <Achievements />
-                    </PrivateRoute>
-                  }
-                />
-              )}
+              <Route
+                path="/achievements"
+                element={
+                  <PrivateRoute>
+                    <Achievements />
+                  </PrivateRoute>
+                }
+              />
             </Routes>
           </Suspense>
         </AchievementsProvider>

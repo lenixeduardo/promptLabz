@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import * as Icons from "@/lib/icons"
 import { Card } from "@/components/ui/card"
@@ -100,6 +100,90 @@ function NoLivesModal({ onClose }: { onClose: () => void }) {
   )
 }
 
+// ─── Courses List View ─────────────────────────────────────────────────────
+function CoursesListView({
+  getProgressForCategory,
+  onSelect,
+}: {
+  getProgressForCategory: (catId: string) => CategoryProgress
+  onSelect: (key: string) => void
+}) {
+  const navigate = useNavigate()
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-[#D2EEDD] px-5 py-6">
+      <div className="mx-auto w-full max-w-[460px]">
+        <div className="mb-6 flex items-center justify-between">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/home")}
+            className="flex items-center gap-1.5 text-[#2E8B57] hover:text-[#1F2A24]"
+          >
+            <Icons.ArrowLeft className="h-4 w-4" /> Home
+          </Button>
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#3E8E5E]">
+            Cursos
+          </span>
+        </div>
+
+        <h1 className="mb-1 text-2xl font-extrabold text-[#1F2A24]">Todos os Cursos</h1>
+        <p className="mb-6 text-sm text-[#6B9E7E]">Escolha um curso para começar</p>
+
+        <div className="flex flex-col gap-3 pb-6">
+          {Object.entries(lessonsData).map(([key, cat]) => {
+            const catProgress = getProgressForCategory(cat.id)
+            let totalLessons = 0
+            let completedLessons = 0
+            cat.modules.forEach((mod) => {
+              mod.lessons.forEach((lesson) => {
+                totalLessons++
+                if (catProgress.completedLessonIds.includes(lesson.id)) completedLessons++
+              })
+            })
+            const pct =
+              totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
+            const isCompleted = completedLessons === totalLessons && totalLessons > 0
+
+            return (
+              <button
+                key={key}
+                onClick={() => onSelect(key)}
+                className="flex items-center gap-4 rounded-2xl border border-[#CDEAD8] bg-white p-4 text-left shadow-sm transition-all hover:bg-[#F0FAF3] active:scale-[0.99]"
+              >
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+                  {isCompleted ? (
+                    <Icons.CheckCircle2 className="h-6 w-6 text-[#3E9A63]" />
+                  ) : (
+                    <Icons.GraduationCap className="h-6 w-6 text-[#3E8E5E]" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold text-[#1F2A24]">{cat.title}</p>
+                  <p className="text-xs text-[#6B9E7E]">
+                    {cat.modules.length} módulo{cat.modules.length !== 1 ? "s" : ""} ·{" "}
+                    {totalLessons} lições
+                  </p>
+                  <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[#EAF7EF]">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-[#3E8E5E] to-[#2E7048] transition-all"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <p className="mt-0.5 text-[10px] text-[#6B9E7E]">
+                    {completedLessons}/{totalLessons} concluídas
+                  </p>
+                </div>
+                <Icons.ChevronRight className="h-5 w-5 shrink-0 text-[#BFE3CC]" />
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Main Component ────────────────────────────────────────────────────────
 export default function LearningLab() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -109,14 +193,16 @@ export default function LearningLab() {
   const [showNoLives, setShowNoLives] = useState(false)
   const countdown = useCountdown(msUntilNextLife)
 
-  const activeCategoryKey = searchParams.get("category") || "trending-skills"
+  const categoryParam = searchParams.get("category")
+  const activeCategoryKey = categoryParam || "trending-skills"
   const activeCategory = lessonsData[activeCategoryKey] || lessonsData["trending-skills"]
 
-  // Track visited categories for achievements
   useEffect(() => {
-    achievements.visitCategory(activeCategoryKey)
+    if (categoryParam) {
+      achievements.visitCategory(activeCategoryKey)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeCategoryKey])
+  }, [activeCategoryKey, categoryParam])
 
   const [progress, setProgress] = useState<Record<string, CategoryProgress>>({})
 
@@ -129,11 +215,17 @@ export default function LearningLab() {
   }, [user])
 
   const getProgressForCategory = (catId: string): CategoryProgress => {
-    return progress[catId] || {
-      currentModuleIndex: 0,
-      currentLessonIndex: 0,
-      completedLessonIds: [],
-    }
+    return (
+      progress[catId] || {
+        currentModuleIndex: 0,
+        currentLessonIndex: 0,
+        completedLessonIds: [],
+      }
+    )
+  }
+
+  const handleCategoryChange = (key: string) => {
+    setSearchParams({ category: key })
   }
 
   const currentCatProgress = getProgressForCategory(activeCategory.id)
@@ -143,25 +235,18 @@ export default function LearningLab() {
   activeCategory.modules.forEach((mod) => {
     mod.lessons.forEach((lesson) => {
       totalLessonsCount++
-      if (currentCatProgress.completedLessonIds.includes(lesson.id)) {
-        completedCount++
-      }
+      if (currentCatProgress.completedLessonIds.includes(lesson.id)) completedCount++
     })
   })
 
-  const progressPercent = totalLessonsCount > 0 ? Math.round((completedCount / totalLessonsCount) * 100) : 0
-
-  const handleCategoryChange = (key: string) => {
-    setSearchParams({ category: key })
-  }
+  const progressPercent =
+    totalLessonsCount > 0 ? Math.round((completedCount / totalLessonsCount) * 100) : 0
 
   const getNextLessonToPlay = () => {
     const currentMod = activeCategory.modules[currentCatProgress.currentModuleIndex]
     if (!currentMod) return null
-
     const currentLesson = currentMod.lessons[currentCatProgress.currentLessonIndex]
     if (!currentLesson) return null
-
     return {
       moduleIndex: currentCatProgress.currentModuleIndex,
       lessonIndex: currentCatProgress.currentLessonIndex,
@@ -175,9 +260,20 @@ export default function LearningLab() {
       setShowNoLives(true)
       return
     }
-
     consumeLife()
-    navigate(`/lesson?category=${activeCategory.id}&moduleIndex=${modIndex}&lessonIndex=${lessonIndex}`)
+    navigate(
+      `/lesson?category=${activeCategory.id}&moduleIndex=${modIndex}&lessonIndex=${lessonIndex}`
+    )
+  }
+
+  // If no category param, show courses list
+  if (!categoryParam) {
+    return (
+      <CoursesListView
+        getProgressForCategory={getProgressForCategory}
+        onSelect={handleCategoryChange}
+      />
+    )
   }
 
   return (
@@ -186,10 +282,10 @@ export default function LearningLab() {
         <div className="mb-2 flex items-center justify-between">
           <Button
             variant="ghost"
-            onClick={() => navigate("/home")}
+            onClick={() => setSearchParams({})}
             className="flex items-center gap-1.5 text-[#2E8B57] hover:text-[#1F2A24]"
           >
-            <Icons.ArrowLeft className="h-4 w-4" /> Home
+            <Icons.ArrowLeft className="h-4 w-4" /> Cursos
           </Button>
           <span className="text-xs font-semibold uppercase tracking-wider text-[#3E8E5E]">
             Learning Lab
@@ -230,7 +326,9 @@ export default function LearningLab() {
             />
           </div>
           <div className="mt-2 flex items-center justify-between text-xs text-[#3A4B40]">
-            <span>{completedCount} de {totalLessonsCount} lições concluídas ({progressPercent}%)</span>
+            <span>
+              {completedCount} de {totalLessonsCount} lições concluídas ({progressPercent}%)
+            </span>
             <span className="font-semibold">
               {nextLessonInfo
                 ? `Atual: Mod. ${nextLessonInfo.moduleIndex + 1}, Lição ${nextLessonInfo.lessonIndex + 1}`
@@ -244,7 +342,9 @@ export default function LearningLab() {
             const isActive = key === activeCategoryKey
             const catProgress = getProgressForCategory(cat.id)
             const isCompleted = cat.modules.every((mod) =>
-              mod.lessons.every((lesson) => catProgress.completedLessonIds.includes(lesson.id))
+              mod.lessons.every((lesson) =>
+                catProgress.completedLessonIds.includes(lesson.id)
+              )
             )
 
             return (
@@ -287,11 +387,12 @@ export default function LearningLab() {
                   const isCurrent =
                     currentCatProgress.currentModuleIndex === modIndex &&
                     currentCatProgress.currentLessonIndex === lessonIndex
-                  const isLocked = !isDone && !isCurrent && (
-                    modIndex > currentCatProgress.currentModuleIndex ||
-                    (modIndex === currentCatProgress.currentModuleIndex &&
-                      lessonIndex > currentCatProgress.currentLessonIndex)
-                  )
+                  const isLocked =
+                    !isDone &&
+                    !isCurrent &&
+                    (modIndex > currentCatProgress.currentModuleIndex ||
+                      (modIndex === currentCatProgress.currentModuleIndex &&
+                        lessonIndex > currentCatProgress.currentLessonIndex))
                   const Icon = getIcon(lesson.icon)
 
                   return (
@@ -299,17 +400,23 @@ export default function LearningLab() {
                       key={lesson.id}
                       className={cn(
                         "flex items-center gap-3 rounded-2xl border bg-white px-4 py-3.5 shadow-sm transition-all",
-                        isCurrent ? "border-2 border-[#3E9A63] ring-2 ring-[#DCF1E4]" : "border-[#CDEAD8]",
+                        isCurrent
+                          ? "border-2 border-[#3E9A63] ring-2 ring-[#DCF1E4]"
+                          : "border-[#CDEAD8]",
                         isLocked && "opacity-60"
                       )}
                     >
                       <span
                         className={cn(
                           "flex h-6 w-6 shrink-0 items-center justify-center rounded-md border",
-                          isDone ? "border-[#3E9A63] bg-[#3E9A63]" : "border-[#BFE3CC] bg-white"
+                          isDone
+                            ? "border-[#3E9A63] bg-[#3E9A63]"
+                            : "border-[#BFE3CC] bg-white"
                         )}
                       >
-                        {isDone && <Icons.Check className="h-4 w-4 text-white" strokeWidth={3} />}
+                        {isDone && (
+                          <Icons.Check className="h-4 w-4 text-white" strokeWidth={3} />
+                        )}
                       </span>
 
                       <Icon className="h-5 w-5 shrink-0 text-[#3E8E5E]" strokeWidth={2} />
@@ -318,9 +425,7 @@ export default function LearningLab() {
                         <p className="truncate text-sm font-semibold leading-snug text-[#1F2A24]">
                           {lesson.title}
                         </p>
-                        <p className="text-xs text-[#6B7A70]">
-                          Duração: {lesson.duration}
-                        </p>
+                        <p className="text-xs text-[#6B7A70]">Duração: {lesson.duration}</p>
                       </div>
 
                       {isCurrent ? (
@@ -362,13 +467,22 @@ export default function LearningLab() {
           {nextLessonInfo ? (
             <Button
               size="lg"
-              className={cn("w-full shadow-md transition-transform hover:scale-[1.01]", !canPlay && "opacity-60")}
-              onClick={() => handleStartLesson(nextLessonInfo.moduleIndex, nextLessonInfo.lessonIndex)}
+              className={cn(
+                "w-full shadow-md transition-transform hover:scale-[1.01]",
+                !canPlay && "opacity-60"
+              )}
+              onClick={() =>
+                handleStartLesson(nextLessonInfo.moduleIndex, nextLessonInfo.lessonIndex)
+              }
             >
               {canPlay ? (
-                <><Icons.Play className="h-5 w-5 fill-current" /> Continuar Aprendizado</>
+                <>
+                  <Icons.Play className="h-5 w-5 fill-current" /> Continuar Aprendizado
+                </>
               ) : (
-                <><Icons.Heart className="h-5 w-5" /> Sem vidas</>
+                <>
+                  <Icons.Heart className="h-5 w-5" /> Sem vidas
+                </>
               )}
             </Button>
           ) : (
@@ -376,7 +490,7 @@ export default function LearningLab() {
               size="lg"
               variant="outline"
               className="w-full border-[#3E9A63] bg-white text-[#3E8E5E] hover:bg-[#F0FAF3]"
-              onClick={() => handleCategoryChange("trending-skills")}
+              onClick={() => setSearchParams({})}
             >
               <Icons.Sparkles className="h-5 w-5" /> Explorar Outros
             </Button>
@@ -396,4 +510,3 @@ export default function LearningLab() {
     </div>
   )
 }
-
