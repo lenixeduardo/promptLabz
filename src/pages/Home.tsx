@@ -15,9 +15,14 @@ import {
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
 import { ProgressCard } from "@/components/ProgressCard"
-import { LearningPathTrail, DEFAULT_TRAIL_MODULES } from "@/components/LearningPathTrail"
-import { getUserProfile } from "@/lib/db"
+import { LearningPathTrail, DEFAULT_TRAIL_MODULES, type TrailModule } from "@/components/LearningPathTrail"
+import { getUserProfile, loadProgress } from "@/lib/db"
 import { getLevelProgress, getLocalXP, getLocalGems } from "@/lib/xp"
+import { lessonsData } from "@/data/lessonsData"
+import { computeTrailModules } from "@/lib/trail"
+
+const CATEGORIES = Object.values(lessonsData)
+const TOTAL_COUNT = CATEGORIES.length
 
 const NAV_ITEMS = [
   { label: "Início", icon: HomeIcon, to: "/home" },
@@ -36,6 +41,7 @@ export default function Home() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [xp, setXp] = useState(0)
   const [gems, setGems] = useState(0)
+  const [trailModules, setTrailModules] = useState<TrailModule[]>(DEFAULT_TRAIL_MODULES)
 
   useEffect(() => {
     setStreakLoading(true)
@@ -50,6 +56,11 @@ export default function Home() {
       if (profile?.avatar_url) setAvatarUrl(profile.avatar_url)
       setXp(profile?.xp ?? getLocalXP(user.id!))
       setGems(profile?.gems ?? getLocalGems(user.id!))
+    })
+
+    // Load progress and compute trail modules dynamically
+    loadProgress(user.id).then((progress) => {
+      setTrailModules(computeTrailModules(progress, CATEGORIES))
     })
   }, [user?.id])
 
@@ -118,9 +129,9 @@ export default function Home() {
 
         {/* Learning path trail */}
         <LearningPathTrail
-          modules={DEFAULT_TRAIL_MODULES}
-          completedCount={1}
-          totalCount={12}
+          modules={trailModules}
+          completedCount={trailModules.filter((m) => m.status === "completed").length}
+          totalCount={TOTAL_COUNT}
         />
 
         {/* Featured lesson */}
