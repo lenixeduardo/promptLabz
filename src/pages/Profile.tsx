@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
 import { updateUserProfile, getUserProfile } from "@/lib/db"
+import { supabase } from "@/lib/supabase"
 import { getAvatarById } from "@/data/avatarsData"
 import { getProgressCount } from "@/lib/achievements"
 import * as Icons from "@/lib/icons"
@@ -70,8 +71,12 @@ export default function Profile() {
     }
 
     try {
-      const { error } = await updateUserProfile(user.id, fullName)
-      if (error) throw new Error(error)
+      const [dbResult, authResult] = await Promise.all([
+        updateUserProfile(user.id, fullName),
+        supabase.auth.updateUser({ data: { full_name: fullName } }),
+      ])
+      if (dbResult.error) throw new Error(dbResult.error)
+      if (authResult.error) throw authResult.error
       sileo.success({ title: "Perfil atualizado com sucesso!" })
     } catch (err: any) {
       sileo.error({ title: err?.message || "Erro ao atualizar perfil" })

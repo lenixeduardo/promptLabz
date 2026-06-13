@@ -1,0 +1,1 @@
+{"nodes": [{"id": "functions_shared_cors_corsheaders", "label": "CORS Headers Shared Config", "file_type": "code", "source_file": "supabase/functions/_shared/cors.ts", "source_location": "line 3", "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

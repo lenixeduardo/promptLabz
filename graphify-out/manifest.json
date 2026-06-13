@@ -1,0 +1,1277 @@
+{
+  "/home/user/promptLab/.claude/hooks/git-guardrails.sh": {
+    "mtime": 1781318662.2032278,
+    "ast_hash": "99e13a66f91a5a74e1856da16b29192f",
+    "semantic_hash": "99e13a66f91a5a74e1856da16b29192f"
+  },
+  "/home/user/promptLab/.claude/hooks/session-start.sh": {
+    "mtime": 1781318662.2037423,
+    "ast_hash": "a130c2ed324e7d685d3d99ce11b76d7d",
+    "semantic_hash": "a130c2ed324e7d685d3d99ce11b76d7d"
+  },
+  "/home/user/promptLab/.claude/settings.json": {
+    "mtime": 1781318662.2037423,
+    "ast_hash": "245e9e11779d0b107f897cae548c12ed",
+    "semantic_hash": "245e9e11779d0b107f897cae548c12ed"
+  },
+  "/home/user/promptLab/components.json": {
+    "mtime": 1781077192.650127,
+    "ast_hash": "cfabeae351377d8d9cea703314afdaf5",
+    "semantic_hash": "cfabeae351377d8d9cea703314afdaf5"
+  },
+  "/home/user/promptLab/eslint.config.js": {
+    "mtime": 1781077192.650127,
+    "ast_hash": "909e19016d102884b341a132957d18c9",
+    "semantic_hash": "909e19016d102884b341a132957d18c9"
+  },
+  "/home/user/promptLab/package.json": {
+    "mtime": 1781318662.2403762,
+    "ast_hash": "6d84f98844e9bb26d2cb1d53c9b26653",
+    "semantic_hash": "6d84f98844e9bb26d2cb1d53c9b26653"
+  },
+  "/home/user/promptLab/postcss.config.js": {
+    "mtime": 1781077192.650127,
+    "ast_hash": "ef3ba2a81ba19f8ea5ddf625521e96f0",
+    "semantic_hash": "ef3ba2a81ba19f8ea5ddf625521e96f0"
+  },
+  "/home/user/promptLab/remove_bg.py": {
+    "mtime": 1781318662.3163762,
+    "ast_hash": "b3288bffdb64a5b43bb623e1e6b51586",
+    "semantic_hash": "b3288bffdb64a5b43bb623e1e6b51586"
+  },
+  "/home/user/promptLab/schema.sql": {
+    "mtime": 1781318662.3163762,
+    "ast_hash": "391c229635adc54a9127cf5fbe0424d2",
+    "semantic_hash": "391c229635adc54a9127cf5fbe0424d2"
+  },
+  "/home/user/promptLab/scripts/smoke-supabase.mjs": {
+    "mtime": 1781318662.3163762,
+    "ast_hash": "7b806be58c5e9be560ebc29f24efdec2",
+    "semantic_hash": "7b806be58c5e9be560ebc29f24efdec2"
+  },
+  "/home/user/promptLab/skills-lock.json": {
+    "mtime": 1781318662.3163762,
+    "ast_hash": "39d31649a75baba9e5acfa891dd291ff",
+    "semantic_hash": "39d31649a75baba9e5acfa891dd291ff"
+  },
+  "/home/user/promptLab/src/App.tsx": {
+    "mtime": 1781318662.3563762,
+    "ast_hash": "261e5abb1fe874ffd214a04e7806749c",
+    "semantic_hash": "261e5abb1fe874ffd214a04e7806749c"
+  },
+  "/home/user/promptLab/src/components/BrandLogo.tsx": {
+    "mtime": 1781318662.3609538,
+    "ast_hash": "dd67280d5a853ffffbee4322ff835eed",
+    "semantic_hash": "dd67280d5a853ffffbee4322ff835eed"
+  },
+  "/home/user/promptLab/src/components/CircleTransition.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "9106fe29d601f9a22053e393429d6ad0",
+    "semantic_hash": "9106fe29d601f9a22053e393429d6ad0"
+  },
+  "/home/user/promptLab/src/components/CroppedImage.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "56effc9b661c3074306852c92efa6701",
+    "semantic_hash": "56effc9b661c3074306852c92efa6701"
+  },
+  "/home/user/promptLab/src/components/ErrorBoundary.test.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "e66b39651bedf8c8c4772ae5cee40394",
+    "semantic_hash": "e66b39651bedf8c8c4772ae5cee40394"
+  },
+  "/home/user/promptLab/src/components/ErrorBoundary.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "81a1b26805201459707d609e0eb3c733",
+    "semantic_hash": "81a1b26805201459707d609e0eb3c733"
+  },
+  "/home/user/promptLab/src/components/HelpButton.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "9184c33b8bdcee10bd43227b27abf3d8",
+    "semantic_hash": "9184c33b8bdcee10bd43227b27abf3d8"
+  },
+  "/home/user/promptLab/src/components/LivesBar.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "1a7b2eaeee8f98656cc1421c91aa327b",
+    "semantic_hash": "1a7b2eaeee8f98656cc1421c91aa327b"
+  },
+  "/home/user/promptLab/src/components/MascotGlow.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "b74ab32eb61b4625e884072aeac69ce7",
+    "semantic_hash": "b74ab32eb61b4625e884072aeac69ce7"
+  },
+  "/home/user/promptLab/src/components/MascotIconShowcase.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "cab7451cf61a45e8ef3dac1973eea71f",
+    "semantic_hash": "cab7451cf61a45e8ef3dac1973eea71f"
+  },
+  "/home/user/promptLab/src/components/PrivateRoute.test.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "908101083453bf52d513cdd129e941e8",
+    "semantic_hash": "908101083453bf52d513cdd129e941e8"
+  },
+  "/home/user/promptLab/src/components/PrivateRoute.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "eacb94afedaf4c8085025c8cca8a1ffb",
+    "semantic_hash": "eacb94afedaf4c8085025c8cca8a1ffb"
+  },
+  "/home/user/promptLab/src/components/StreakWidget.tsx": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "27b4533829c1bdbae4323230b7d7d229",
+    "semantic_hash": "27b4533829c1bdbae4323230b7d7d229"
+  },
+  "/home/user/promptLab/src/components/ui/button-variants.ts": {
+    "mtime": 1781318662.3613894,
+    "ast_hash": "dd39886c955b6c508216ebd89d1d0827",
+    "semantic_hash": "dd39886c955b6c508216ebd89d1d0827"
+  },
+  "/home/user/promptLab/src/components/ui/button.tsx": {
+    "mtime": 1781318662.3637075,
+    "ast_hash": "eb2508e320a25b24064dc896de1648d6",
+    "semantic_hash": "eb2508e320a25b24064dc896de1648d6"
+  },
+  "/home/user/promptLab/src/components/ui/card.tsx": {
+    "mtime": 1781318662.3637075,
+    "ast_hash": "2dbf05425de033ac30e2ad8e6c31bb48",
+    "semantic_hash": "2dbf05425de033ac30e2ad8e6c31bb48"
+  },
+  "/home/user/promptLab/src/components/ui/input.tsx": {
+    "mtime": 1781318662.3637075,
+    "ast_hash": "f42017ad44b161019d9bd62acb29a15d",
+    "semantic_hash": "f42017ad44b161019d9bd62acb29a15d"
+  },
+  "/home/user/promptLab/src/contexts/AchievementsContext.tsx": {
+    "mtime": 1781318662.3637075,
+    "ast_hash": "2833432e1b8c207aadaad1651ad33813",
+    "semantic_hash": "2833432e1b8c207aadaad1651ad33813"
+  },
+  "/home/user/promptLab/src/contexts/AuthContext.test.tsx": {
+    "mtime": 1781318662.365075,
+    "ast_hash": "3f274b8ef8b560412395112cdb41bf9a",
+    "semantic_hash": "3f274b8ef8b560412395112cdb41bf9a"
+  },
+  "/home/user/promptLab/src/contexts/AuthContext.tsx": {
+    "mtime": 1781318662.365075,
+    "ast_hash": "274397c92581f365cf7f075c8736f96f",
+    "semantic_hash": "274397c92581f365cf7f075c8736f96f"
+  },
+  "/home/user/promptLab/src/contexts/LivesContext.tsx": {
+    "mtime": 1781318662.365075,
+    "ast_hash": "998a6903589d8dcd611af4fa0ab6106d",
+    "semantic_hash": "998a6903589d8dcd611af4fa0ab6106d"
+  },
+  "/home/user/promptLab/src/contexts/LivesState.ts": {
+    "mtime": 1781318662.365075,
+    "ast_hash": "c3f204d7ad0a209976060a05566b5f46",
+    "semantic_hash": "c3f204d7ad0a209976060a05566b5f46"
+  },
+  "/home/user/promptLab/src/contexts/achievementsContextDef.ts": {
+    "mtime": 1781318662.365075,
+    "ast_hash": "d705af90098879494a8919a77d12d41e",
+    "semantic_hash": "d705af90098879494a8919a77d12d41e"
+  },
+  "/home/user/promptLab/src/contexts/lives-config.ts": {
+    "mtime": 1781318662.365075,
+    "ast_hash": "59d554daf97e1f9cb19994c4503a9bea",
+    "semantic_hash": "59d554daf97e1f9cb19994c4503a9bea"
+  },
+  "/home/user/promptLab/src/contexts/useLives.ts": {
+    "mtime": 1781318662.365075,
+    "ast_hash": "a5aba26cf35db63868044c8bfe757e4d",
+    "semantic_hash": "a5aba26cf35db63868044c8bfe757e4d"
+  },
+  "/home/user/promptLab/src/data/avatarsData.ts": {
+    "mtime": 1781318662.365075,
+    "ast_hash": "15c2efec39c105fe6d34b5c16f529a25",
+    "semantic_hash": "15c2efec39c105fe6d34b5c16f529a25"
+  },
+  "/home/user/promptLab/src/data/lessonsData.ts": {
+    "mtime": 1781318662.3678143,
+    "ast_hash": "bd923043c0832aaf3336d0017a3c17e7",
+    "semantic_hash": "bd923043c0832aaf3336d0017a3c17e7"
+  },
+  "/home/user/promptLab/src/data/promptsData.ts": {
+    "mtime": 1781318662.3678143,
+    "ast_hash": "1f5160c91e8601167d1edc15454f291d",
+    "semantic_hash": "1f5160c91e8601167d1edc15454f291d"
+  },
+  "/home/user/promptLab/src/data/trendingSkillsData.ts": {
+    "mtime": 1781318662.3678143,
+    "ast_hash": "57b13b5f6c795153a2f96d9fa6ab62a9",
+    "semantic_hash": "57b13b5f6c795153a2f96d9fa6ab62a9"
+  },
+  "/home/user/promptLab/src/hooks/useAchievements.ts": {
+    "mtime": 1781318662.3683763,
+    "ast_hash": "69cf35605160d614ee7623ee74dbc071",
+    "semantic_hash": "69cf35605160d614ee7623ee74dbc071"
+  },
+  "/home/user/promptLab/src/hooks/useAuth.test.ts": {
+    "mtime": 1781318662.3714168,
+    "ast_hash": "5e76a3608357faaefc548c146ebe3ec7",
+    "semantic_hash": "5e76a3608357faaefc548c146ebe3ec7"
+  },
+  "/home/user/promptLab/src/hooks/useAuth.ts": {
+    "mtime": 1781318662.3714168,
+    "ast_hash": "998fdf8cfdd081a5525559cc0f74d336",
+    "semantic_hash": "998fdf8cfdd081a5525559cc0f74d336"
+  },
+  "/home/user/promptLab/src/hooks/useFavorites.test.ts": {
+    "mtime": 1781318662.3714168,
+    "ast_hash": "0b12d85d49bb80e75db8f968545e5345",
+    "semantic_hash": "0b12d85d49bb80e75db8f968545e5345"
+  },
+  "/home/user/promptLab/src/hooks/useFavorites.ts": {
+    "mtime": 1781318662.3714168,
+    "ast_hash": "9aeda4aa3398a1cf8312f4d0b00ca521",
+    "semantic_hash": "9aeda4aa3398a1cf8312f4d0b00ca521"
+  },
+  "/home/user/promptLab/src/lib/achievements.ts": {
+    "mtime": 1781318662.3714168,
+    "ast_hash": "8c1b30d2c3fba71f4a7e53e6b7456da0",
+    "semantic_hash": "8c1b30d2c3fba71f4a7e53e6b7456da0"
+  },
+  "/home/user/promptLab/src/lib/db.test.ts": {
+    "mtime": 1781318662.3730857,
+    "ast_hash": "5cccbf0921718c8ffca7fa02d8e6458f",
+    "semantic_hash": "5cccbf0921718c8ffca7fa02d8e6458f"
+  },
+  "/home/user/promptLab/src/lib/db.ts": {
+    "mtime": 1781318826.4123724,
+    "ast_hash": "4cc8d001b888a04a1a128d55825621a7",
+    "semantic_hash": "4cc8d001b888a04a1a128d55825621a7"
+  },
+  "/home/user/promptLab/src/lib/icons.ts": {
+    "mtime": 1781318662.3730857,
+    "ast_hash": "0b28c5d49ccb1c1000ed142b265ce0d7",
+    "semantic_hash": "0b28c5d49ccb1c1000ed142b265ce0d7"
+  },
+  "/home/user/promptLab/src/lib/supabase.ts": {
+    "mtime": 1781318662.3730857,
+    "ast_hash": "0373f10b543f8d610a71ee68eca1cd54",
+    "semantic_hash": "0373f10b543f8d610a71ee68eca1cd54"
+  },
+  "/home/user/promptLab/src/lib/utils.ts": {
+    "mtime": 1781318662.3730857,
+    "ast_hash": "5a6fd53fdcf2be529e9cc0b718fde352",
+    "semantic_hash": "5a6fd53fdcf2be529e9cc0b718fde352"
+  },
+  "/home/user/promptLab/src/main.tsx": {
+    "mtime": 1781318662.3730857,
+    "ast_hash": "64aeb936ba09fd8876d397857516819d",
+    "semantic_hash": "64aeb936ba09fd8876d397857516819d"
+  },
+  "/home/user/promptLab/src/pages/Achievements.test.tsx": {
+    "mtime": 1781318662.3730857,
+    "ast_hash": "9517ca401ea4910261bd6673094e69c9",
+    "semantic_hash": "9517ca401ea4910261bd6673094e69c9"
+  },
+  "/home/user/promptLab/src/pages/Achievements.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "24be5963e0a9eed9f4243b2f00d1e2fb",
+    "semantic_hash": "24be5963e0a9eed9f4243b2f00d1e2fb"
+  },
+  "/home/user/promptLab/src/pages/AuthCallback.test.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "79c49fff75d4115e1f0e90d0cbcb3f9f",
+    "semantic_hash": "79c49fff75d4115e1f0e90d0cbcb3f9f"
+  },
+  "/home/user/promptLab/src/pages/AuthCallback.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "0bf276af998617f1dc7f4d014c3749db",
+    "semantic_hash": "0bf276af998617f1dc7f4d014c3749db"
+  },
+  "/home/user/promptLab/src/pages/AvatarScreen.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "af3c1651076b84a5590d7ae66d2c9130",
+    "semantic_hash": "af3c1651076b84a5590d7ae66d2c9130"
+  },
+  "/home/user/promptLab/src/pages/ForgotPassword.test.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "358cd86652ba527b03ce0b5c90bbc537",
+    "semantic_hash": "358cd86652ba527b03ce0b5c90bbc537"
+  },
+  "/home/user/promptLab/src/pages/ForgotPassword.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "8800786617cc64879414d7c456134472",
+    "semantic_hash": "8800786617cc64879414d7c456134472"
+  },
+  "/home/user/promptLab/src/pages/Hero.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "02d877223e8bd762b6dee39553d95f52",
+    "semantic_hash": "02d877223e8bd762b6dee39553d95f52"
+  },
+  "/home/user/promptLab/src/pages/Home.tsx": {
+    "mtime": 1781318818.6643727,
+    "ast_hash": "50d5d3fd699ffa89ece20440eafd5ed4",
+    "semantic_hash": "50d5d3fd699ffa89ece20440eafd5ed4"
+  },
+  "/home/user/promptLab/src/pages/LearningLab.test.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "133d2763660dba433220724f8294b1b4",
+    "semantic_hash": "133d2763660dba433220724f8294b1b4"
+  },
+  "/home/user/promptLab/src/pages/LearningLab.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "d1e5d3603d4a5d056dced41311a89674",
+    "semantic_hash": "d1e5d3603d4a5d056dced41311a89674"
+  },
+  "/home/user/promptLab/src/pages/Lesson.test.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "76bd71739074dceecae65cb37a5c8d51",
+    "semantic_hash": "76bd71739074dceecae65cb37a5c8d51"
+  },
+  "/home/user/promptLab/src/pages/Lesson.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "de09e16975ef45f7fa6dc855dc674454",
+    "semantic_hash": "de09e16975ef45f7fa6dc855dc674454"
+  },
+  "/home/user/promptLab/src/pages/Login.test.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "e8c79217d6ebf23e99394b8f646de665",
+    "semantic_hash": "e8c79217d6ebf23e99394b8f646de665"
+  },
+  "/home/user/promptLab/src/pages/Login.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "94fc91046d46ae05f92b6f2f96d5c9ce",
+    "semantic_hash": "94fc91046d46ae05f92b6f2f96d5c9ce"
+  },
+  "/home/user/promptLab/src/pages/MissionComplete.test.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "cac2c7fd567b615d8ebd3eb07727d22a",
+    "semantic_hash": "cac2c7fd567b615d8ebd3eb07727d22a"
+  },
+  "/home/user/promptLab/src/pages/MissionComplete.tsx": {
+    "mtime": 1781318662.3747904,
+    "ast_hash": "00f88dbc1bf0421731f4fe9ef564f496",
+    "semantic_hash": "00f88dbc1bf0421731f4fe9ef564f496"
+  },
+  "/home/user/promptLab/src/pages/Profile.tsx": {
+    "mtime": 1781318834.8923724,
+    "ast_hash": "1543f18d009b205ebff011b48ef45d1c",
+    "semantic_hash": "1543f18d009b205ebff011b48ef45d1c"
+  },
+  "/home/user/promptLab/src/pages/ResetPassword.tsx": {
+    "mtime": 1781318662.3763762,
+    "ast_hash": "1a291d7fbc0752acd70d113cf79fd5d3",
+    "semantic_hash": "1a291d7fbc0752acd70d113cf79fd5d3"
+  },
+  "/home/user/promptLab/src/pages/Signup.test.tsx": {
+    "mtime": 1781318662.3763762,
+    "ast_hash": "d282414dc16d477c519c322829b5378c",
+    "semantic_hash": "d282414dc16d477c519c322829b5378c"
+  },
+  "/home/user/promptLab/src/pages/Signup.tsx": {
+    "mtime": 1781318662.3763762,
+    "ast_hash": "79e4a3c86408d9355b88829696cfc8d2",
+    "semantic_hash": "79e4a3c86408d9355b88829696cfc8d2"
+  },
+  "/home/user/promptLab/src/pages/SkillDetail.tsx": {
+    "mtime": 1781318662.3763762,
+    "ast_hash": "7f1a2af9eddaf1616ec168073d9d01fc",
+    "semantic_hash": "7f1a2af9eddaf1616ec168073d9d01fc"
+  },
+  "/home/user/promptLab/src/pages/Skills.test.tsx": {
+    "mtime": 1781318662.3763762,
+    "ast_hash": "68c094525685baec33836d651b7eacd2",
+    "semantic_hash": "68c094525685baec33836d651b7eacd2"
+  },
+  "/home/user/promptLab/src/pages/Skills.tsx": {
+    "mtime": 1781318662.3763762,
+    "ast_hash": "dd4d1e8cc67e9ac59bae9c90cc714bd6",
+    "semantic_hash": "dd4d1e8cc67e9ac59bae9c90cc714bd6"
+  },
+  "/home/user/promptLab/src/test/setup.ts": {
+    "mtime": 1781318662.3763762,
+    "ast_hash": "68ba935884d6542fcf401db37bfb3880",
+    "semantic_hash": "68ba935884d6542fcf401db37bfb3880"
+  },
+  "/home/user/promptLab/supabase/functions/_shared/cors.ts": {
+    "mtime": 1781318662.3813155,
+    "ast_hash": "0c95582e558205b1ac2320b4b9e9b9f9",
+    "semantic_hash": "0c95582e558205b1ac2320b4b9e9b9f9"
+  },
+  "/home/user/promptLab/supabase/functions/send-auth-email/index.ts": {
+    "mtime": 1781318662.3813155,
+    "ast_hash": "67d81c5d011c60ceda40e6b0cb45b3a7",
+    "semantic_hash": "67d81c5d011c60ceda40e6b0cb45b3a7"
+  },
+  "/home/user/promptLab/supabase/functions/stripe-checkout/index.ts": {
+    "mtime": 1781318662.3813155,
+    "ast_hash": "e71a19b9d7b8aaa67c453b7263996c96",
+    "semantic_hash": "e71a19b9d7b8aaa67c453b7263996c96"
+  },
+  "/home/user/promptLab/supabase/migrations/20260610_000_initial_schema.sql": {
+    "mtime": 1781318662.3813155,
+    "ast_hash": "8e30962e93e510548e7a5e6f0cd814dc",
+    "semantic_hash": "8e30962e93e510548e7a5e6f0cd814dc"
+  },
+  "/home/user/promptLab/supabase/migrations/20260610_001_users_premium.sql": {
+    "mtime": 1781318662.3836586,
+    "ast_hash": "e711f80e7e4d4ed9976d104f2b167102",
+    "semantic_hash": "e711f80e7e4d4ed9976d104f2b167102"
+  },
+  "/home/user/promptLab/supabase/migrations/20260610_002_community_tables.sql": {
+    "mtime": 1781318662.3836586,
+    "ast_hash": "756069e93737cf7ebf0999ef7d7b7642",
+    "semantic_hash": "756069e93737cf7ebf0999ef7d7b7642"
+  },
+  "/home/user/promptLab/supabase/migrations/20260612_003_user_streaks.sql": {
+    "mtime": 1781318662.3836586,
+    "ast_hash": "6caeef51e57c06437de697656b12a23d",
+    "semantic_hash": "6caeef51e57c06437de697656b12a23d"
+  },
+  "/home/user/promptLab/supabase/seed.sql": {
+    "mtime": 1781318662.3836586,
+    "ast_hash": "07caa77cc7c6a8373ea71ea03a33a5ad",
+    "semantic_hash": "07caa77cc7c6a8373ea71ea03a33a5ad"
+  },
+  "/home/user/promptLab/tailwind.config.js": {
+    "mtime": 1781318662.3836586,
+    "ast_hash": "9c3f6a79dd98f5768bc8bd6c27087fd7",
+    "semantic_hash": "9c3f6a79dd98f5768bc8bd6c27087fd7"
+  },
+  "/home/user/promptLab/tsconfig.app.json": {
+    "mtime": 1781318662.3836586,
+    "ast_hash": "8b8722666f5c4e022abb3600bb719a80",
+    "semantic_hash": "8b8722666f5c4e022abb3600bb719a80"
+  },
+  "/home/user/promptLab/tsconfig.json": {
+    "mtime": 1781077192.650127,
+    "ast_hash": "8fd5e82a1d248b770b9fe9c9359f0468",
+    "semantic_hash": "8fd5e82a1d248b770b9fe9c9359f0468"
+  },
+  "/home/user/promptLab/tsconfig.node.json": {
+    "mtime": 1781077192.650127,
+    "ast_hash": "b39b0c04c8b06a94fa53e598a344f2b4",
+    "semantic_hash": "b39b0c04c8b06a94fa53e598a344f2b4"
+  },
+  "/home/user/promptLab/vite.config.ts": {
+    "mtime": 1781318662.3836586,
+    "ast_hash": "075a6aa3d0470aa031b7cc00f798f7f4",
+    "semantic_hash": "075a6aa3d0470aa031b7cc00f798f7f4"
+  },
+  "/home/user/promptLab/.agents/skills/grill-me/SKILL.md": {
+    "mtime": 1781318662.201987,
+    "ast_hash": "8cb45c74133150e6a00f18b2059aae8c",
+    "semantic_hash": "8cb45c74133150e6a00f18b2059aae8c"
+  },
+  "/home/user/promptLab/.claude/skills/grill-me/SKILL.md": {
+    "mtime": 1781318662.204408,
+    "ast_hash": "8cb45c74133150e6a00f18b2059aae8c",
+    "semantic_hash": "8cb45c74133150e6a00f18b2059aae8c"
+  },
+  "/home/user/promptLab/.cortex/skills/grill-me/SKILL.md": {
+    "mtime": 1781318662.2049453,
+    "ast_hash": "8cb45c74133150e6a00f18b2059aae8c",
+    "semantic_hash": "8cb45c74133150e6a00f18b2059aae8c"
+  },
+  "/home/user/promptLab/.github/workflows/ci.yml": {
+    "mtime": 1781318662.2058308,
+    "ast_hash": "1fe450f7813bc92164e043fe7431a928",
+    "semantic_hash": "1fe450f7813bc92164e043fe7431a928"
+  },
+  "/home/user/promptLab/.superpowers/brainstorm/2959-1781212630/content/prompita-chat-v2.html": {
+    "mtime": 1781318662.210344,
+    "ast_hash": "022ef2d83042d4d8ea885899c7ffee77",
+    "semantic_hash": "022ef2d83042d4d8ea885899c7ffee77"
+  },
+  "/home/user/promptLab/.superpowers/brainstorm/2959-1781212630/content/prompita-chat-v3.html": {
+    "mtime": 1781318662.210344,
+    "ast_hash": "35cc0c22bb31124814bd8bc246ffc148",
+    "semantic_hash": "35cc0c22bb31124814bd8bc246ffc148"
+  },
+  "/home/user/promptLab/.superpowers/brainstorm/2959-1781212630/content/prompita-chat-v4.html": {
+    "mtime": 1781318662.2163763,
+    "ast_hash": "00ac080880ca5cae43f88b26001689dc",
+    "semantic_hash": "00ac080880ca5cae43f88b26001689dc"
+  },
+  "/home/user/promptLab/.superpowers/brainstorm/2959-1781212630/content/prompita-chat-v5.html": {
+    "mtime": 1781318662.2203763,
+    "ast_hash": "4a8795bb61aa65a0991ca7cab2a8ab9b",
+    "semantic_hash": "4a8795bb61aa65a0991ca7cab2a8ab9b"
+  },
+  "/home/user/promptLab/.superpowers/brainstorm/2959-1781212630/content/prompita-chat-v6.html": {
+    "mtime": 1781318662.2203763,
+    "ast_hash": "fe2eac8097cf3663d41f968e054bf05b",
+    "semantic_hash": "fe2eac8097cf3663d41f968e054bf05b"
+  },
+  "/home/user/promptLab/.superpowers/brainstorm/2959-1781212630/content/prompita-placement.html": {
+    "mtime": 1781318662.2203763,
+    "ast_hash": "c09e1aa2a34d5333d06360ec58ff8400",
+    "semantic_hash": "c09e1aa2a34d5333d06360ec58ff8400"
+  },
+  "/home/user/promptLab/.superpowers/brainstorm/2959-1781212630/content/scroll-approach.html": {
+    "mtime": 1781318662.2243762,
+    "ast_hash": "e80b62c8d3a566dfd0b1711041b180a2",
+    "semantic_hash": "e80b62c8d3a566dfd0b1711041b180a2"
+  },
+  "/home/user/promptLab/.superpowers/brainstorm/2959-1781212630/state/mascot-b64.txt": {
+    "mtime": 1781318662.227755,
+    "ast_hash": "a07a58d3a17ce0a1067fee7410fa021b",
+    "semantic_hash": "a07a58d3a17ce0a1067fee7410fa021b"
+  },
+  "/home/user/promptLab/AGENTS.md": {
+    "mtime": 1781318662.227755,
+    "ast_hash": "8aeeb047063a087b9ae44bbc7aeba0bb",
+    "semantic_hash": "8aeeb047063a087b9ae44bbc7aeba0bb"
+  },
+  "/home/user/promptLab/AGENTS_CODE_REVIEW_REPORT.md": {
+    "mtime": 1781318662.227755,
+    "ast_hash": "fb7fd4ad82b05f992c7553a9b30180bb",
+    "semantic_hash": "fb7fd4ad82b05f992c7553a9b30180bb"
+  },
+  "/home/user/promptLab/ARCHITECTURE.md": {
+    "mtime": 1781318662.227755,
+    "ast_hash": "2c3449ab74c32b22b1c7451d132fe38e",
+    "semantic_hash": "2c3449ab74c32b22b1c7451d132fe38e"
+  },
+  "/home/user/promptLab/AUTH_TODO.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "f8cd24bfd14668c750ba7614b5d5b8b8",
+    "semantic_hash": "f8cd24bfd14668c750ba7614b5d5b8b8"
+  },
+  "/home/user/promptLab/BACKEND_TODO.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "7433484d56c83aa31726cc3719e32aab",
+    "semantic_hash": "7433484d56c83aa31726cc3719e32aab"
+  },
+  "/home/user/promptLab/CLAUDE.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "416c46bfcb3a67079bebabf7bed176ec",
+    "semantic_hash": "416c46bfcb3a67079bebabf7bed176ec"
+  },
+  "/home/user/promptLab/CODE_REVIEW_GUIDELINES.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "5d1c8b67b083e70021f0aca2506c3e92",
+    "semantic_hash": "5d1c8b67b083e70021f0aca2506c3e92"
+  },
+  "/home/user/promptLab/CONTRIBUTING.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "38106730af876934569c9e6598ff2c8b",
+    "semantic_hash": "38106730af876934569c9e6598ff2c8b"
+  },
+  "/home/user/promptLab/DEPLOYMENT.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "da95652112c0b9f68998c1c50867f255",
+    "semantic_hash": "da95652112c0b9f68998c1c50867f255"
+  },
+  "/home/user/promptLab/FONT_CHANGE_SUMMARY.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "15f3a8f9eb79794250e850316f82f61d",
+    "semantic_hash": "15f3a8f9eb79794250e850316f82f61d"
+  },
+  "/home/user/promptLab/IMPLEMENTATION_SUMMARY.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "16c488d8f57af7eae288cde9073d93fe",
+    "semantic_hash": "16c488d8f57af7eae288cde9073d93fe"
+  },
+  "/home/user/promptLab/MASCOT_ICONS_GUIDE.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "9b5c7a6238fc9bef8298267f09c27b48",
+    "semantic_hash": "9b5c7a6238fc9bef8298267f09c27b48"
+  },
+  "/home/user/promptLab/PERSONAS.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "2ad99f2cf02e0ab2264fd918d898b1ee",
+    "semantic_hash": "2ad99f2cf02e0ab2264fd918d898b1ee"
+  },
+  "/home/user/promptLab/PRODUCT.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "54074d287a6a9c138b2753c863cee248",
+    "semantic_hash": "54074d287a6a9c138b2753c863cee248"
+  },
+  "/home/user/promptLab/README.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "8348819ba6225e71f98792a9524d1385",
+    "semantic_hash": "8348819ba6225e71f98792a9524d1385"
+  },
+  "/home/user/promptLab/REDESIGN_SUMMARY.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "ea8954e0224f29440baf18951642658c",
+    "semantic_hash": "ea8954e0224f29440baf18951642658c"
+  },
+  "/home/user/promptLab/ROADMAP.md": {
+    "mtime": 1781318662.2283762,
+    "ast_hash": "846817b2ca060d963567f7f56dfe7f74",
+    "semantic_hash": "846817b2ca060d963567f7f56dfe7f74"
+  },
+  "/home/user/promptLab/docs/PromptLabz.md": {
+    "mtime": 1781318662.232376,
+    "ast_hash": "9188c9bff9476f1527a4af3e9a633132",
+    "semantic_hash": "9188c9bff9476f1527a4af3e9a633132"
+  },
+  "/home/user/promptLab/docs/email-confirmation-preview.html": {
+    "mtime": 1781318662.2354853,
+    "ast_hash": "adfa90efd2ce361306f52e94905d6887",
+    "semantic_hash": "adfa90efd2ce361306f52e94905d6887"
+  },
+  "/home/user/promptLab/docs/superpowers/plans/2026-06-10-community-premium.md": {
+    "mtime": 1781318662.238314,
+    "ast_hash": "a23689acc2929d53cc11aa2b5a7eb482",
+    "semantic_hash": "a23689acc2929d53cc11aa2b5a7eb482"
+  },
+  "/home/user/promptLab/docs/superpowers/specs/2026-06-10-community-premium-design.md": {
+    "mtime": 1781318662.238314,
+    "ast_hash": "71d1fad1b724b20b2c682ff30c14bee9",
+    "semantic_hash": "71d1fad1b724b20b2c682ff30c14bee9"
+  },
+  "/home/user/promptLab/home-validation.html": {
+    "mtime": 1781318662.238314,
+    "ast_hash": "c0f9b9eea30cd036ee6533643b91153b",
+    "semantic_hash": "c0f9b9eea30cd036ee6533643b91153b"
+  },
+  "/home/user/promptLab/homepage-with-inter.html": {
+    "mtime": 1781318662.238314,
+    "ast_hash": "9fe9e7b15cc0c722e23d9d8132bf103c",
+    "semantic_hash": "9fe9e7b15cc0c722e23d9d8132bf103c"
+  },
+  "/home/user/promptLab/index.html": {
+    "mtime": 1781318662.2403762,
+    "ast_hash": "7f221eed9082a7dba9074544b8b05c1c",
+    "semantic_hash": "7f221eed9082a7dba9074544b8b05c1c"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/README.md": {
+    "mtime": 1781318662.2843761,
+    "ast_hash": "ac078431095bc712514596909f8a9952",
+    "semantic_hash": "ac078431095bc712514596909f8a9952"
+  },
+  "/home/user/promptLab/skills/agent-workflows/browsing/SKILL.md": {
+    "mtime": 1781318662.3210783,
+    "ast_hash": "efbaffea9cb00262cc2ebfeee6064e84",
+    "semantic_hash": "efbaffea9cb00262cc2ebfeee6064e84"
+  },
+  "/home/user/promptLab/skills/agent-workflows/dispatching-parallel-agents/SKILL.md": {
+    "mtime": 1781318662.3210783,
+    "ast_hash": "5f90acc478b0224978c92bb0db4a76fc",
+    "semantic_hash": "5f90acc478b0224978c92bb0db4a76fc"
+  },
+  "/home/user/promptLab/skills/agent-workflows/mcp-cli/SKILL.md": {
+    "mtime": 1781318662.3210783,
+    "ast_hash": "431572adbf4b77a84fbdf77594742cc8",
+    "semantic_hash": "431572adbf4b77a84fbdf77594742cc8"
+  },
+  "/home/user/promptLab/skills/agent-workflows/receiving-code-review/SKILL.md": {
+    "mtime": 1781318662.3210783,
+    "ast_hash": "fdf4d19b5baebe28ef5889d13086c2ec",
+    "semantic_hash": "fdf4d19b5baebe28ef5889d13086c2ec"
+  },
+  "/home/user/promptLab/skills/agent-workflows/requesting-code-review/SKILL.md": {
+    "mtime": 1781318662.3210783,
+    "ast_hash": "806d4411a42c0f6069f7e5c58210d8e0",
+    "semantic_hash": "806d4411a42c0f6069f7e5c58210d8e0"
+  },
+  "/home/user/promptLab/skills/agent-workflows/subagent-driven-development/SKILL.md": {
+    "mtime": 1781318662.3210783,
+    "ast_hash": "fcfd79e6fca31c7a293f610fd179b0fb",
+    "semantic_hash": "fcfd79e6fca31c7a293f610fd179b0fb"
+  },
+  "/home/user/promptLab/skills/agent-workflows/verification-before-completion/SKILL.md": {
+    "mtime": 1781318662.3210783,
+    "ast_hash": "da739f7462d61fb91df31e247a295fab",
+    "semantic_hash": "da739f7462d61fb91df31e247a295fab"
+  },
+  "/home/user/promptLab/skills/agent-workflows/writing-clearly-and-concisely/SKILL.md": {
+    "mtime": 1781318662.3210783,
+    "ast_hash": "d8d48da47829b49e8eeb0bb7d36fadc3",
+    "semantic_hash": "d8d48da47829b49e8eeb0bb7d36fadc3"
+  },
+  "/home/user/promptLab/skills/ai-media/ai-avatar-video/SKILL.md": {
+    "mtime": 1781318662.3253636,
+    "ast_hash": "8ea477cdb0313ac1fa5c883054dee43d",
+    "semantic_hash": "8ea477cdb0313ac1fa5c883054dee43d"
+  },
+  "/home/user/promptLab/skills/ai-media/ai-image-generation/SKILL.md": {
+    "mtime": 1781318662.3253636,
+    "ast_hash": "423d168e60f730b0450b01725caeda21",
+    "semantic_hash": "423d168e60f730b0450b01725caeda21"
+  },
+  "/home/user/promptLab/skills/ai-media/ai-music-generation/SKILL.md": {
+    "mtime": 1781318662.3253636,
+    "ast_hash": "2064e7e393e38b8c421c359541e5a3a8",
+    "semantic_hash": "2064e7e393e38b8c421c359541e5a3a8"
+  },
+  "/home/user/promptLab/skills/ai-media/ai-video-generation/SKILL.md": {
+    "mtime": 1781318662.3253636,
+    "ast_hash": "4d2f6285a64d9e765f754379ea599bd6",
+    "semantic_hash": "4d2f6285a64d9e765f754379ea599bd6"
+  },
+  "/home/user/promptLab/skills/ai-media/controlnet-pose/SKILL.md": {
+    "mtime": 1781318662.3253636,
+    "ast_hash": "47b43fe1e05983834e94cf4f5c5efe88",
+    "semantic_hash": "47b43fe1e05983834e94cf4f5c5efe88"
+  },
+  "/home/user/promptLab/skills/ai-media/flux-2-klein/SKILL.md": {
+    "mtime": 1781318662.3253636,
+    "ast_hash": "2fdf255b3683b19a4a4fe2c95180a55c",
+    "semantic_hash": "2fdf255b3683b19a4a4fe2c95180a55c"
+  },
+  "/home/user/promptLab/skills/ai-media/image-edit/SKILL.md": {
+    "mtime": 1781318662.3253636,
+    "ast_hash": "4551b35789d307e9e4e410c3ae37c543",
+    "semantic_hash": "4551b35789d307e9e4e410c3ae37c543"
+  },
+  "/home/user/promptLab/skills/ai-media/lipsync/SKILL.md": {
+    "mtime": 1781318662.3253636,
+    "ast_hash": "f409e1a0d2e72d27121643d8ffd40c3e",
+    "semantic_hash": "f409e1a0d2e72d27121643d8ffd40c3e"
+  },
+  "/home/user/promptLab/skills/cloud/azure-cloud-migrate/SKILL.md": {
+    "mtime": 1781318662.3300767,
+    "ast_hash": "28067d205f03ad9e4d693e5564ec301c",
+    "semantic_hash": "28067d205f03ad9e4d693e5564ec301c"
+  },
+  "/home/user/promptLab/skills/cloud/azure-compute/SKILL.md": {
+    "mtime": 1781318662.3300767,
+    "ast_hash": "1ee6adb4cb039e52c2311e02adc59255",
+    "semantic_hash": "1ee6adb4cb039e52c2311e02adc59255"
+  },
+  "/home/user/promptLab/skills/cloud/azure-cost-optimization/SKILL.md": {
+    "mtime": 1781318662.3300767,
+    "ast_hash": "89fc1421ce4bca56b1c071aa031ef08b",
+    "semantic_hash": "89fc1421ce4bca56b1c071aa031ef08b"
+  },
+  "/home/user/promptLab/skills/cloud/azure-kubernetes/SKILL.md": {
+    "mtime": 1781318662.3300767,
+    "ast_hash": "20441e5e322073cb8e3847d37641618b",
+    "semantic_hash": "20441e5e322073cb8e3847d37641618b"
+  },
+  "/home/user/promptLab/skills/cloud/azure-security/SKILL.md": {
+    "mtime": 1781318662.3300767,
+    "ast_hash": "7ff7e72f1470416087f668905483df0d",
+    "semantic_hash": "7ff7e72f1470416087f668905483df0d"
+  },
+  "/home/user/promptLab/skills/cloud/openclaw-secure-linux-cloud/SKILL.md": {
+    "mtime": 1781318662.3300767,
+    "ast_hash": "c0c1b1debd7c4050fe4ce70184593a25",
+    "semantic_hash": "c0c1b1debd7c4050fe4ce70184593a25"
+  },
+  "/home/user/promptLab/skills/design/brand-guidelines/SKILL.md": {
+    "mtime": 1781318662.3331347,
+    "ast_hash": "cd7baabab3f2e29322cdd5b43746c68d",
+    "semantic_hash": "cd7baabab3f2e29322cdd5b43746c68d"
+  },
+  "/home/user/promptLab/skills/design/brandkit/SKILL.md": {
+    "mtime": 1781318662.3331347,
+    "ast_hash": "1fb199d7fdd33d8a62bf98afd180d5d8",
+    "semantic_hash": "1fb199d7fdd33d8a62bf98afd180d5d8"
+  },
+  "/home/user/promptLab/skills/design/design-taste-frontend/SKILL.md": {
+    "mtime": 1781318662.3331347,
+    "ast_hash": "58c38fbb48646507015e326d5ec5ec6b",
+    "semantic_hash": "58c38fbb48646507015e326d5ec5ec6b"
+  },
+  "/home/user/promptLab/skills/design/frontend-design/SKILL.md": {
+    "mtime": 1781318662.3331347,
+    "ast_hash": "cdf6eceee07c1ae039cafe7c4aa5f8e0",
+    "semantic_hash": "cdf6eceee07c1ae039cafe7c4aa5f8e0"
+  },
+  "/home/user/promptLab/skills/design/high-end-visual-design/SKILL.md": {
+    "mtime": 1781318662.3331347,
+    "ast_hash": "a05cc3fdc6c2bcc51555617787fdb56c",
+    "semantic_hash": "a05cc3fdc6c2bcc51555617787fdb56c"
+  },
+  "/home/user/promptLab/skills/design/image-to-code/SKILL.md": {
+    "mtime": 1781318662.3331347,
+    "ast_hash": "4831b8f752a19b56bdf39fc5841d0a16",
+    "semantic_hash": "4831b8f752a19b56bdf39fc5841d0a16"
+  },
+  "/home/user/promptLab/skills/design/industrial-brutalist-ui/SKILL.md": {
+    "mtime": 1781318662.3331347,
+    "ast_hash": "51c1a961e39be58a28cffde9a922b9c8",
+    "semantic_hash": "51c1a961e39be58a28cffde9a922b9c8"
+  },
+  "/home/user/promptLab/skills/design/redesign-skill/SKILL.md": {
+    "mtime": 1781318662.3331347,
+    "ast_hash": "8de4359c13f1a63969990026f2685d0e",
+    "semantic_hash": "8de4359c13f1a63969990026f2685d0e"
+  },
+  "/home/user/promptLab/skills/design/taste-skill/SKILL.md": {
+    "mtime": 1781318662.3331347,
+    "ast_hash": "b1f8b5d519b0af4e0f2a7f452a57b24d",
+    "semantic_hash": "b1f8b5d519b0af4e0f2a7f452a57b24d"
+  },
+  "/home/user/promptLab/skills/design/ui-ux-pro-max/SKILL.md": {
+    "mtime": 1781318662.3331347,
+    "ast_hash": "94ddac4d45f7f62da6187dfe650538ae",
+    "semantic_hash": "94ddac4d45f7f62da6187dfe650538ae"
+  },
+  "/home/user/promptLab/skills/development/deploy-to-vercel/SKILL.md": {
+    "mtime": 1781318662.3383768,
+    "ast_hash": "4219210773cbeefa88204ff71f24c524",
+    "semantic_hash": "4219210773cbeefa88204ff71f24c524"
+  },
+  "/home/user/promptLab/skills/development/diagnose/SKILL.md": {
+    "mtime": 1781318662.3383768,
+    "ast_hash": "1fbe1d5acb122e860e93ba971e4d12b4",
+    "semantic_hash": "1fbe1d5acb122e860e93ba971e4d12b4"
+  },
+  "/home/user/promptLab/skills/development/docx/SKILL.md": {
+    "mtime": 1781318662.3383768,
+    "ast_hash": "2d723f964234cf29fe102dcf6e5d7b3e",
+    "semantic_hash": "2d723f964234cf29fe102dcf6e5d7b3e"
+  },
+  "/home/user/promptLab/skills/development/find-skills/SKILL.md": {
+    "mtime": 1781318662.3383768,
+    "ast_hash": "c9a557ce8fb6a90e94bd2cecfd46be37",
+    "semantic_hash": "c9a557ce8fb6a90e94bd2cecfd46be37"
+  },
+  "/home/user/promptLab/skills/development/firebase-basics/SKILL.md": {
+    "mtime": 1781318662.3383768,
+    "ast_hash": "3a8aa942d23c967e78b2b40dbb499529",
+    "semantic_hash": "3a8aa942d23c967e78b2b40dbb499529"
+  },
+  "/home/user/promptLab/skills/development/git-guardrails-claude-code/SKILL.md": {
+    "mtime": 1781318662.3383768,
+    "ast_hash": "bc984f20c95bdeefdf875344fd43014f",
+    "semantic_hash": "bc984f20c95bdeefdf875344fd43014f"
+  },
+  "/home/user/promptLab/skills/development/github-actions-docs/SKILL.md": {
+    "mtime": 1781318662.3383768,
+    "ast_hash": "81e102c14bd8e9e064c2099cac8c71c5",
+    "semantic_hash": "81e102c14bd8e9e064c2099cac8c71c5"
+  },
+  "/home/user/promptLab/skills/development/improve-codebase-architecture/SKILL.md": {
+    "mtime": 1781318662.3383768,
+    "ast_hash": "822d07a6b5faac075058d4d87f994789",
+    "semantic_hash": "822d07a6b5faac075058d4d87f994789"
+  },
+  "/home/user/promptLab/skills/development/mcp-builder/SKILL.md": {
+    "mtime": 1781318662.3383768,
+    "ast_hash": "8d63688f38bf8cc8d0ea7a9b2e06c2c6",
+    "semantic_hash": "8d63688f38bf8cc8d0ea7a9b2e06c2c6"
+  },
+  "/home/user/promptLab/skills/development/next-best-practice/SKILL.md": {
+    "mtime": 1781318662.3403761,
+    "ast_hash": "0b6c3eeae9353882a5ea9f2a2b23dd59",
+    "semantic_hash": "0b6c3eeae9353882a5ea9f2a2b23dd59"
+  },
+  "/home/user/promptLab/skills/development/next-upgrade/SKILL.md": {
+    "mtime": 1781318662.3403761,
+    "ast_hash": "c63103ff1463f4a04422097b3361df04",
+    "semantic_hash": "c63103ff1463f4a04422097b3361df04"
+  },
+  "/home/user/promptLab/skills/development/pdf/SKILL.md": {
+    "mtime": 1781318662.3403761,
+    "ast_hash": "12351bc3414232c76ed04bf5571c1d5e",
+    "semantic_hash": "12351bc3414232c76ed04bf5571c1d5e"
+  },
+  "/home/user/promptLab/skills/development/pptx/SKILL.md": {
+    "mtime": 1781318662.3403761,
+    "ast_hash": "ac3404fe730202d75c34637de6593153",
+    "semantic_hash": "ac3404fe730202d75c34637de6593153"
+  },
+  "/home/user/promptLab/skills/development/prototype/SKILL.md": {
+    "mtime": 1781318662.3403761,
+    "ast_hash": "aa81da80b394382b8d225fbd2f630f2b",
+    "semantic_hash": "aa81da80b394382b8d225fbd2f630f2b"
+  },
+  "/home/user/promptLab/skills/development/skill-creator/SKILL.md": {
+    "mtime": 1781318662.3403761,
+    "ast_hash": "724480d7cc651183024135f486857510",
+    "semantic_hash": "724480d7cc651183024135f486857510"
+  },
+  "/home/user/promptLab/skills/development/supabase-postgres-best-practices/SKILL.md": {
+    "mtime": 1781318662.3403761,
+    "ast_hash": "5631b64bf7405cfab3bd482a7f1e0b98",
+    "semantic_hash": "5631b64bf7405cfab3bd482a7f1e0b98"
+  },
+  "/home/user/promptLab/skills/development/tdd/SKILL.md": {
+    "mtime": 1781318662.3403761,
+    "ast_hash": "9ad6a70b21496a2f6fa78dd1e35e8c11",
+    "semantic_hash": "9ad6a70b21496a2f6fa78dd1e35e8c11"
+  },
+  "/home/user/promptLab/skills/development/to-issues/SKILL.md": {
+    "mtime": 1781318662.3403761,
+    "ast_hash": "010f27762872e3b581b4da7faec82d83",
+    "semantic_hash": "010f27762872e3b581b4da7faec82d83"
+  },
+  "/home/user/promptLab/skills/development/to-prd/SKILL.md": {
+    "mtime": 1781318662.3403761,
+    "ast_hash": "40456e2cbd7aec803d02852de5e3969e",
+    "semantic_hash": "40456e2cbd7aec803d02852de5e3969e"
+  },
+  "/home/user/promptLab/skills/development/triage/SKILL.md": {
+    "mtime": 1781318662.344376,
+    "ast_hash": "0060a08078233a7242a3b775de81015e",
+    "semantic_hash": "0060a08078233a7242a3b775de81015e"
+  },
+  "/home/user/promptLab/skills/development/vercel-react-best-practices/SKILL.md": {
+    "mtime": 1781318662.344376,
+    "ast_hash": "9deb2f338e2114f9c2deeda182da3379",
+    "semantic_hash": "9deb2f338e2114f9c2deeda182da3379"
+  },
+  "/home/user/promptLab/skills/development/vercel-sdk-patterns/SKILL.md": {
+    "mtime": 1781318662.344376,
+    "ast_hash": "043f563768d784c0537993591772ebf6",
+    "semantic_hash": "043f563768d784c0537993591772ebf6"
+  },
+  "/home/user/promptLab/skills/development/webapp-testing/SKILL.md": {
+    "mtime": 1781318662.344376,
+    "ast_hash": "b5134ab5f50be400bf038e231081a1c1",
+    "semantic_hash": "b5134ab5f50be400bf038e231081a1c1"
+  },
+  "/home/user/promptLab/skills/development/xlsx/SKILL.md": {
+    "mtime": 1781318662.344376,
+    "ast_hash": "3ecef5252e09cf3b992125037e94cf0f",
+    "semantic_hash": "3ecef5252e09cf3b992125037e94cf0f"
+  },
+  "/home/user/promptLab/skills/development/zoom-out/SKILL.md": {
+    "mtime": 1781318662.344376,
+    "ast_hash": "e1c55235d5d48cbe9730cb6ad859dffc",
+    "semantic_hash": "e1c55235d5d48cbe9730cb6ad859dffc"
+  },
+  "/home/user/promptLab/skills/marketing/ab-testing/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "8cf02f06dfa593135c7a2eed2e53877f",
+    "semantic_hash": "8cf02f06dfa593135c7a2eed2e53877f"
+  },
+  "/home/user/promptLab/skills/marketing/ai-seo/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "7666853f75c0586245961cf0beacaebb",
+    "semantic_hash": "7666853f75c0586245961cf0beacaebb"
+  },
+  "/home/user/promptLab/skills/marketing/community-marketing/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "518e6fd0ddea63d5beadf0e93640e002",
+    "semantic_hash": "518e6fd0ddea63d5beadf0e93640e002"
+  },
+  "/home/user/promptLab/skills/marketing/content-strategy/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "dce9151ff6cc16161965495b5d527136",
+    "semantic_hash": "dce9151ff6cc16161965495b5d527136"
+  },
+  "/home/user/promptLab/skills/marketing/copywriting/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "c671085da5ba591a3fa952b076504366",
+    "semantic_hash": "c671085da5ba591a3fa952b076504366"
+  },
+  "/home/user/promptLab/skills/marketing/cro/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "ade67d0f864ebd4e8f416750577c729a",
+    "semantic_hash": "ade67d0f864ebd4e8f416750577c729a"
+  },
+  "/home/user/promptLab/skills/marketing/launch/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "803b91343e6c5146f4b4eec7b6df51be",
+    "semantic_hash": "803b91343e6c5146f4b4eec7b6df51be"
+  },
+  "/home/user/promptLab/skills/marketing/marketing-psychology/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "187591c609af87c9895500cf9dd75d6f",
+    "semantic_hash": "187591c609af87c9895500cf9dd75d6f"
+  },
+  "/home/user/promptLab/skills/marketing/pricing/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "9e5c8ed5dafd72aed8ffd919ae0ef18a",
+    "semantic_hash": "9e5c8ed5dafd72aed8ffd919ae0ef18a"
+  },
+  "/home/user/promptLab/skills/marketing/product-marketing/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "56ad761bb06742832a7d3e7331d3e6b5",
+    "semantic_hash": "56ad761bb06742832a7d3e7331d3e6b5"
+  },
+  "/home/user/promptLab/skills/marketing/programmatic-seo/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "7f22213512bf7851172f24bd8a289b93",
+    "semantic_hash": "7f22213512bf7851172f24bd8a289b93"
+  },
+  "/home/user/promptLab/skills/marketing/referrals/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "c86ec9d0cd93297f845f55bac8f248ab",
+    "semantic_hash": "c86ec9d0cd93297f845f55bac8f248ab"
+  },
+  "/home/user/promptLab/skills/marketing/seo-audit/SKILL.md": {
+    "mtime": 1781318662.3501856,
+    "ast_hash": "384c13244a8f0aae5427f908ee0c7ab1",
+    "semantic_hash": "384c13244a8f0aae5427f908ee0c7ab1"
+  },
+  "/home/user/promptLab/skills/marketing/social/SKILL.md": {
+    "mtime": 1781318662.3523762,
+    "ast_hash": "2f5b1a02e33d92754b7860b963c94f46",
+    "semantic_hash": "2f5b1a02e33d92754b7860b963c94f46"
+  },
+  "/home/user/promptLab/skills/productivity/brainstorming/SKILL.md": {
+    "mtime": 1781318662.355546,
+    "ast_hash": "6004266a55b69b10d1e533d50418b9ec",
+    "semantic_hash": "6004266a55b69b10d1e533d50418b9ec"
+  },
+  "/home/user/promptLab/skills/productivity/executing-plans/SKILL.md": {
+    "mtime": 1781318662.355546,
+    "ast_hash": "b1a52d23c54d57aefbc37ac50b585a4a",
+    "semantic_hash": "b1a52d23c54d57aefbc37ac50b585a4a"
+  },
+  "/home/user/promptLab/skills/productivity/handoff/SKILL.md": {
+    "mtime": 1781318662.355546,
+    "ast_hash": "ba78200f66a3196d51455a31463445dc",
+    "semantic_hash": "ba78200f66a3196d51455a31463445dc"
+  },
+  "/home/user/promptLab/skills/productivity/lark-approval/SKILL.md": {
+    "mtime": 1781318662.355546,
+    "ast_hash": "78900df48342eb30aae85239457d5ddd",
+    "semantic_hash": "78900df48342eb30aae85239457d5ddd"
+  },
+  "/home/user/promptLab/skills/productivity/lark-attendance/SKILL.md": {
+    "mtime": 1781318662.355546,
+    "ast_hash": "743422556f58f094b28f98b7fe43fad0",
+    "semantic_hash": "743422556f58f094b28f98b7fe43fad0"
+  },
+  "/home/user/promptLab/skills/productivity/lark-base/SKILL.md": {
+    "mtime": 1781318662.355546,
+    "ast_hash": "3235351d2765c7103c5decdbd5867d35",
+    "semantic_hash": "3235351d2765c7103c5decdbd5867d35"
+  },
+  "/home/user/promptLab/skills/productivity/lark-doc/SKILL.md": {
+    "mtime": 1781318662.355546,
+    "ast_hash": "fc4c01a6351b40788097b1cd6a69354e",
+    "semantic_hash": "fc4c01a6351b40788097b1cd6a69354e"
+  },
+  "/home/user/promptLab/skills/productivity/lark-okr/SKILL.md": {
+    "mtime": 1781318662.355546,
+    "ast_hash": "76751228726d744a76ffdbff19c4125a",
+    "semantic_hash": "76751228726d744a76ffdbff19c4125a"
+  },
+  "/home/user/promptLab/skills/productivity/lark-slides/SKILL.md": {
+    "mtime": 1781318662.355546,
+    "ast_hash": "71f94b180481afa27cbf38a66fe33aa2",
+    "semantic_hash": "71f94b180481afa27cbf38a66fe33aa2"
+  },
+  "/home/user/promptLab/skills/productivity/remembering-conversations/SKILL.md": {
+    "mtime": 1781318662.3563762,
+    "ast_hash": "0053c37e41426e8e9cb4635cfabd8830",
+    "semantic_hash": "0053c37e41426e8e9cb4635cfabd8830"
+  },
+  "/home/user/promptLab/skills/productivity/teach/SKILL.md": {
+    "mtime": 1781318662.3563762,
+    "ast_hash": "aae484cb8d0c0fd971b36400d670aec1",
+    "semantic_hash": "aae484cb8d0c0fd971b36400d670aec1"
+  },
+  "/home/user/promptLab/skills/productivity/write-a-skill/SKILL.md": {
+    "mtime": 1781318662.3563762,
+    "ast_hash": "be2a17b240624aaa544b5f2db0e801f2",
+    "semantic_hash": "be2a17b240624aaa544b5f2db0e801f2"
+  },
+  "/home/user/promptLab/skills/productivity/writing-plans/SKILL.md": {
+    "mtime": 1781318662.3563762,
+    "ast_hash": "f17c848af3e3e2c9467293573a91cf52",
+    "semantic_hash": "f17c848af3e3e2c9467293573a91cf52"
+  },
+  "/home/user/promptLab/.superpowers/brainstorm/2959-1781212630/content/mascot-home.png": {
+    "mtime": 1781318662.2077315,
+    "ast_hash": "8351b5d0de360aff60a5bfe888a1b428",
+    "semantic_hash": "8351b5d0de360aff60a5bfe888a1b428"
+  },
+  "/home/user/promptLab/docs/email-confirmation-preview.png": {
+    "mtime": 1781318662.2354853,
+    "ast_hash": "7f63f10023e80311b05093b2370f3807",
+    "semantic_hash": "7f63f10023e80311b05093b2370f3807"
+  },
+  "/home/user/promptLab/homepage-mobile-screenshot.png": {
+    "mtime": 1781318662.238314,
+    "ast_hash": "35157800ac862a3b180e996cf2570328",
+    "semantic_hash": "35157800ac862a3b180e996cf2570328"
+  },
+  "/home/user/promptLab/homepage-redesigned-mobile.png": {
+    "mtime": 1781318662.238314,
+    "ast_hash": "33cd66bd385fd77456a2d91208283fb4",
+    "semantic_hash": "33cd66bd385fd77456a2d91208283fb4"
+  },
+  "/home/user/promptLab/homepage-screenshot.png": {
+    "mtime": 1781318662.238314,
+    "ast_hash": "24e5d2470847fa1daa3a5b33b91770e8",
+    "semantic_hash": "24e5d2470847fa1daa3a5b33b91770e8"
+  },
+  "/home/user/promptLab/inter-font-demo.svg": {
+    "mtime": 1781318662.2403762,
+    "ast_hash": "e9020db21059cdfa24dcb06f8b993225",
+    "semantic_hash": "e9020db21059cdfa24dcb06f8b993225"
+  },
+  "/home/user/promptLab/public/assets/avatar-cat.png": {
+    "mtime": 1781318662.2479708,
+    "ast_hash": "00aabc1ac871cc3054234eb149829f9c",
+    "semantic_hash": "00aabc1ac871cc3054234eb149829f9c"
+  },
+  "/home/user/promptLab/public/assets/help-cat.png": {
+    "mtime": 1781318662.2486494,
+    "ast_hash": "b3f5451c78317e438cde914d5f1adc85",
+    "semantic_hash": "b3f5451c78317e438cde914d5f1adc85"
+  },
+  "/home/user/promptLab/public/assets/home-wireframe.jpeg": {
+    "mtime": 1781318662.2486494,
+    "ast_hash": "923ae045235b0160cceac708351c46e8",
+    "semantic_hash": "923ae045235b0160cceac708351c46e8"
+  },
+  "/home/user/promptLab/public/assets/learn-wireframe.png": {
+    "mtime": 1781318662.2643762,
+    "ast_hash": "6ca4ab4ad45588cb737f1ca0a6a6525b",
+    "semantic_hash": "6ca4ab4ad45588cb737f1ca0a6a6525b"
+  },
+  "/home/user/promptLab/public/assets/login-wireframe.jpeg": {
+    "mtime": 1781318662.268376,
+    "ast_hash": "10b294198ba06e76ee79da1568ed0428",
+    "semantic_hash": "10b294198ba06e76ee79da1568ed0428"
+  },
+  "/home/user/promptLab/public/assets/mascot-coding.png": {
+    "mtime": 1781318662.2763762,
+    "ast_hash": "abeeb83b40046efa5e64537cc12c3d26",
+    "semantic_hash": "abeeb83b40046efa5e64537cc12c3d26"
+  },
+  "/home/user/promptLab/public/assets/mascot-creativity.png": {
+    "mtime": 1781318662.2843761,
+    "ast_hash": "66737e45d8ce634b2a2cf37a5487cad5",
+    "semantic_hash": "66737e45d8ce634b2a2cf37a5487cad5"
+  },
+  "/home/user/promptLab/public/assets/mascot-home.png": {
+    "mtime": 1781318662.2843761,
+    "ast_hash": "8351b5d0de360aff60a5bfe888a1b428",
+    "semantic_hash": "8351b5d0de360aff60a5bfe888a1b428"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_book.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "ba64a827e70023a491b6c41815e8e74d",
+    "semantic_hash": "ba64a827e70023a491b6c41815e8e74d"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_brain.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "555256ff96b8f7bcdb58edd9c53fc33e",
+    "semantic_hash": "555256ff96b8f7bcdb58edd9c53fc33e"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_celebrate.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "eabfc7cdde253e5bae8739eacffc7604",
+    "semantic_hash": "eabfc7cdde253e5bae8739eacffc7604"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_chart.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "5c2818895705f4267534b10dc1e41ce9",
+    "semantic_hash": "5c2818895705f4267534b10dc1e41ce9"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_code.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "8e3f13c5e3d946a79e3ba1cc53829603",
+    "semantic_hash": "8e3f13c5e3d946a79e3ba1cc53829603"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_crown.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "bb91db4fec3b40afc42961d732ee89bd",
+    "semantic_hash": "bb91db4fec3b40afc42961d732ee89bd"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_focus.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "311468933221c2e15a1e876a4e7b919f",
+    "semantic_hash": "311468933221c2e15a1e876a4e7b919f"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_graduation.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "0bde0cde1456e8d8004497f263b87748",
+    "semantic_hash": "0bde0cde1456e8d8004497f263b87748"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_growth.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "d536d5c10f4efe713e0ae6c7c1eb5272",
+    "semantic_hash": "d536d5c10f4efe713e0ae6c7c1eb5272"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_heart.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "8f64b3b735cfcf8846425ed432ccbb19",
+    "semantic_hash": "8f64b3b735cfcf8846425ed432ccbb19"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_lightbulb.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "f6601b2e410e1e3e5e2b4d3b87ea3e64",
+    "semantic_hash": "f6601b2e410e1e3e5e2b4d3b87ea3e64"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_medal.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "9e8474f42b40435b51eb914ecc2eccaa",
+    "semantic_hash": "9e8474f42b40435b51eb914ecc2eccaa"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_network.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "d608f26bf1bbf540a2f53fc75e59019c",
+    "semantic_hash": "d608f26bf1bbf540a2f53fc75e59019c"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_palette.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "350947a85afdf282769045cf3cff8a16",
+    "semantic_hash": "350947a85afdf282769045cf3cff8a16"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_puzzle.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "51a0ea4c1812edb44a1fe86be35e4232",
+    "semantic_hash": "51a0ea4c1812edb44a1fe86be35e4232"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_quest.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "6375cae5c1ddcba2523d586d79a33f25",
+    "semantic_hash": "6375cae5c1ddcba2523d586d79a33f25"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_rocket.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "1d4c2db1f440ac5574903678557a3937",
+    "semantic_hash": "1d4c2db1f440ac5574903678557a3937"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_star.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "a891caba29f36f3badaacd0559dcb8e3",
+    "semantic_hash": "a891caba29f36f3badaacd0559dcb8e3"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_target.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "e0b8c86c3900f92679e7e6ad9c55ec49",
+    "semantic_hash": "e0b8c86c3900f92679e7e6ad9c55ec49"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_team.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "813b9682fd40730799741ed8e16d2cb6",
+    "semantic_hash": "813b9682fd40730799741ed8e16d2cb6"
+  },
+  "/home/user/promptLab/public/assets/mascot-icons/mascot_trophy.svg": {
+    "mtime": 1781318662.2892787,
+    "ast_hash": "7e59a4d64b2dd42614401bc8c769b4b6",
+    "semantic_hash": "7e59a4d64b2dd42614401bc8c769b4b6"
+  },
+  "/home/user/promptLab/public/assets/mascot-learn-new.png": {
+    "mtime": 1781318662.2963762,
+    "ast_hash": "54aaab8cfabefd31da24051163b6ceef",
+    "semantic_hash": "54aaab8cfabefd31da24051163b6ceef"
+  },
+  "/home/user/promptLab/public/assets/mascot-learn.png": {
+    "mtime": 1781318662.2963762,
+    "ast_hash": "0ef99b85bb31be50d3ee6358e359eb75",
+    "semantic_hash": "0ef99b85bb31be50d3ee6358e359eb75"
+  },
+  "/home/user/promptLab/public/assets/mascot-login-new.png": {
+    "mtime": 1781318662.3003762,
+    "ast_hash": "15e3528672c528dd8033dee4f1263244",
+    "semantic_hash": "15e3528672c528dd8033dee4f1263244"
+  },
+  "/home/user/promptLab/public/assets/mascot-login.png": {
+    "mtime": 1781318662.3003762,
+    "ast_hash": "86bd1171f0615a4d210681e560ebb904",
+    "semantic_hash": "86bd1171f0615a4d210681e560ebb904"
+  },
+  "/home/user/promptLab/public/assets/mascot-promo.png": {
+    "mtime": 1781318662.3083763,
+    "ast_hash": "1c956622119bb481e638cbe15ba31622",
+    "semantic_hash": "1c956622119bb481e638cbe15ba31622"
+  },
+  "/home/user/promptLab/public/assets/mascot-teacher-source.jpeg": {
+    "mtime": 1781318662.3083763,
+    "ast_hash": "88b2fafc31fcca08b7380bbd71540f1f",
+    "semantic_hash": "88b2fafc31fcca08b7380bbd71540f1f"
+  },
+  "/home/user/promptLab/public/assets/mascot-teacher.png": {
+    "mtime": 1781318662.3083763,
+    "ast_hash": "bcd835ded6f0e0da5af2f45ebafe84d3",
+    "semantic_hash": "bcd835ded6f0e0da5af2f45ebafe84d3"
+  },
+  "/home/user/promptLab/public/assets/promo-free-month.jpeg": {
+    "mtime": 1781318662.3123763,
+    "ast_hash": "59f814df70d671a52aeb92ec4d729055",
+    "semantic_hash": "59f814df70d671a52aeb92ec4d729055"
+  },
+  "/home/user/promptLab/public/assets/skills-wireframe.jpeg": {
+    "mtime": 1781318662.3163762,
+    "ast_hash": "06c322bec1694ea6e3e77f21299945cc",
+    "semantic_hash": "06c322bec1694ea6e3e77f21299945cc"
+  }
+}

@@ -117,7 +117,7 @@ export default function Home() {
         </Link>
 
         <Link
-          to="/avatars"
+          to="/profile"
           className="flex flex-col items-center gap-1 text-[#8A998F] hover:text-[#2B5D3A]"
           aria-label="Ir para Perfil"
         >
