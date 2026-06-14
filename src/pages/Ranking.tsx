@@ -129,6 +129,7 @@ export default function Ranking() {
     }
 
     buildRanking()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id])
 
   const top3 = [rankedUsers[0], rankedUsers[1], rankedUsers[2]]
