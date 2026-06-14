@@ -17,6 +17,7 @@ export interface AchievementsData {
   perfectCount: number
   lastVisitDate: string | null            // "YYYY-MM-DD"
   consecutiveDays: number
+  longestStreak: number
   visitedCategories: string[]             // category IDs visited
   completedCategoryIds: string[]          // category IDs fully completed
 }
@@ -130,6 +131,7 @@ function getDefaultData(): AchievementsData {
     perfectCount: 0,
     lastVisitDate: null,
     consecutiveDays: 0,
+    longestStreak: 0,
     visitedCategories: [],
     completedCategoryIds: [],
   }
@@ -251,4 +253,23 @@ export function updateStreak(lastVisitDate: string | null, consecutiveDays: numb
 
   // Streak broken or first visit
   return { newLastVisit: today, newConsecutive: 1 }
+}
+
+export function getProgressCount(
+  achId: string,
+  data: Pick<AchievementsData, "totalLessonsCompleted" | "perfectCount" | "consecutiveDays" | "visitedCategories">,
+): { current: number; max: number } | null {
+  switch (achId) {
+    case "first-lesson":   return { current: Math.min(data.totalLessonsCompleted, 1),  max: 1  }
+    case "ten-lessons":    return { current: Math.min(data.totalLessonsCompleted, 10), max: 10 }
+    case "fifty-lessons":  return { current: Math.min(data.totalLessonsCompleted, 50), max: 50 }
+    case "first-perfect":  return { current: Math.min(data.perfectCount, 1),  max: 1  }
+    case "three-perfect":  return { current: Math.min(data.perfectCount, 3),  max: 3  }
+    case "ten-perfect":    return { current: Math.min(data.perfectCount, 10), max: 10 }
+    case "streak-3":       return { current: Math.min(data.consecutiveDays, 3),  max: 3  }
+    case "streak-7":       return { current: Math.min(data.consecutiveDays, 7),  max: 7  }
+    case "streak-30":      return { current: Math.min(data.consecutiveDays, 30), max: 30 }
+    case "first-category": return { current: Math.min(data.visitedCategories.length, 1), max: 1 }
+    default:               return null
+  }
 }

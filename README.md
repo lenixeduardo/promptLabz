@@ -1,117 +1,188 @@
-﻿# PromptLabz
+# PromptLabz
 
-PromptLabz ajuda estudantes e criadores iniciantes a praticar prompts e habilidades de IA sem depender de aulas soltas ou progresso manual.
+**Plataforma de aprendizado de prompt engineering para estudantes e criadores que querem dominar IA sem depender de aulas soltas ou progresso manual.**
+
+→ **[promptlabz.vercel.app](https://promptlabz.vercel.app)** · [Issues](https://github.com/lenixeduardo/promptLab/issues) · [Roadmap](./ROADMAP.md)
+
+---
+
+## O que é
+
+PromptLabz ajuda estudantes em transição de carreira, criadores de conteúdo e devs iniciantes a praticar prompt engineering de forma gamificada: trilhas de lições, sistema de vidas, conquistas e uma biblioteca de 80+ skills reais do [skills.sh](https://www.skills.sh/).
+
+---
 
 ## Funcionalidades
 
-- Autenticacao com Supabase: email/senha, reset de senha, Google OAuth e Apple OAuth.
-- Rotas protegidas para home, trilhas, licoes, skills, missao e perfil.
-- Progresso por categoria salvo em `localStorage` e sincronizado em Supabase.
-- Perfil do usuario em `public.users`, criado automaticamente por trigger.
-- Base preparada para premium com status e IDs Stripe protegidos contra update pelo cliente.
+- **Autenticação completa** — email/senha, Google OAuth, Apple OAuth, reset de senha via email personalizado com mascote
+- **Trilhas de Aprendizado** — módulos sequenciais com lições interativas, feedback imediato e progresso persistido
+- **Central de Skills** — 80+ skills catalogadas com busca full-text, filtro por categoria (7 categorias), ranking por instalações e favoritos
+- **Sistema de Vidas** — 5 vidas que se regeneram com o tempo; perde ao errar, incentiva foco
+- **Conquistas (Achievements)** — badges desbloqueados por consistência, exploração e volume de prática
+- **Perfil com Avatar** — customização de avatar, nome e acompanhamento de progresso por categoria
+- **Progresso offline-first** — salvo imediatamente em `localStorage`, sincronizado com Supabase ao reconectar
+
+---
 
 ## Stack
 
-- React + Vite: UI SPA rapida e simples de hospedar.
-- TypeScript: contratos claros entre telas, hooks e camada de dados.
-- Supabase Auth + Postgres: backend gerenciado com RLS.
-- Vitest + Testing Library: testes unitarios e de fluxo de UI.
-- ESLint + GitHub Actions: validacao automatica em PR/push.
+| Tecnologia | Por quê |
+|------------|---------|
+| React 18 + Vite | SPA rápida; Vite oferece HMR instantâneo e build otimizado |
+| TypeScript | Contratos claros entre componentes, hooks e camada de dados |
+| Tailwind CSS | Estilo utilitário sem CSS separado; consistência visual fácil |
+| Radix UI | Componentes acessíveis (ARIA, foco, keyboard nav) sem overhead de estilo |
+| Supabase | Auth + Postgres + RLS gerenciado — sem servidor próprio |
+| Resend | Emails transacionais com template HTML próprio (mascote da marca) |
+| Vitest + Testing Library | Testes unitários e de UI rápidos, compatível com Vite |
+| GitHub Actions | CI com typecheck → lint → test → build em todo PR |
+
+---
 
 ## Arquitetura
 
-```mermaid
-flowchart LR
-  UI[React pages] --> Hooks[useAuth + db helpers]
-  Hooks --> Supabase[Supabase JS client]
-  Supabase --> Auth[Supabase Auth]
-  Supabase --> DB[(Postgres + RLS)]
-  Auth --> Trigger[handle_new_user trigger]
-  Trigger --> Users[public.users]
-  DB --> Progress[public.user_progress]
+```
+Browser (React SPA)
+  └── Pages → Hooks → lib/db → Supabase JS SDK
+                                      │
+                              ┌───────▼───────┐
+                              │   Supabase     │
+                              │  Auth (JWT)    │
+                              │  Postgres+RLS  │
+                              │  Edge Fns      │
+                              └───────────────┘
 ```
 
-## Backend
+**Padrões principais:**
+- **Offline-first**: progresso salvo em `localStorage` antes de sincronizar com o banco
+- **Lazy loading**: todas as páginas carregadas sob demanda com `React.lazy()`
+- **Context API**: 3 contextos (Auth, Lives, Achievements) com escopo bem definido
+- **RLS**: usuário só acessa seus próprios dados; campos premium bloqueados no cliente
 
-- `supabase/migrations/20260610_000_initial_schema.sql`: tabelas `users` e `user_progress`, RLS, triggers e checks.
-- `supabase/migrations/20260610_001_users_premium.sql`: campos premium, constraint idempotente e indexes Stripe.
-- `supabase/seed.sql`: placeholder documentando que cursos ainda ficam em `src/data`.
-- `src/lib/supabase.ts`: cliente Supabase, falha explicita sem env fora de teste.
-- `src/lib/db.ts`: camada de perfil/progresso com colunas explicitas.
-- `supabase/functions/send-auth-email/index.ts`: hook de email do Supabase Auth com template HTML proprio, mascote e remetente do app via Resend.
+→ Detalhes completos em [ARCHITECTURE.md](./ARCHITECTURE.md)
 
-## Como Rodar
+---
+
+## Como Rodar Localmente
+
+### Pré-requisitos
+- Node.js 22+
+- pnpm 9+
+
+### Setup
 
 ```bash
+# 1. Clone e instale
+git clone https://github.com/lenixeduardo/promptLab.git
+cd promptLab
 pnpm install
+
+# 2. Configure as variáveis de ambiente
 cp .env.example .env.local
+# Edite .env.local com suas credenciais do Supabase
+```
+
+### Com Supabase Local (recomendado para desenvolver)
+
+```bash
+# Inicie o Supabase local (requer Docker)
+supabase start
+supabase db reset
+
+# Copie a URL e anon key exibidas para .env.local
 pnpm dev
 ```
 
-Preencha `.env.local`:
+### Sem Supabase (modo degradado)
 
 ```bash
-VITE_SUPABASE_URL=...
-VITE_SUPABASE_ANON_KEY=...
-APP_URL=...
-APP_NAME=PromptLabz
-RESEND_FROM_EMAIL=no-reply@seudominio.com
-RESEND_API_KEY=...
-SEND_EMAIL_HOOK_SECRET=...
+# O app funciona sem env configurado — progresso salvo apenas em localStorage
+pnpm dev
 ```
 
-Para Supabase local:
+Acesse `http://localhost:5173`
+
+---
+
+## Validação e Testes
 
 ```bash
-supabase start
-supabase db reset
+pnpm typecheck        # TypeScript sem erros
+pnpm lint             # ESLint sem warnings
+pnpm test             # Vitest (unit + integração + UI)
+pnpm test:coverage    # Relatório de cobertura
+pnpm build            # Build de produção
+pnpm smoke:supabase   # Valida conectividade com Supabase (pula se sem env)
 ```
 
-Depois copie URL e anon key exibidas pelo CLI para `.env.local`.
+**Cobertura atual:** hooks, components, pages, contexts — 12+ arquivos de teste.
 
-## Validacao
-
-```bash
-pnpm typecheck
-pnpm lint
-pnpm test
-pnpm build
-pnpm smoke:supabase
-```
-
-`pnpm smoke:supabase` valida envs e conectividade quando credenciais reais existem. Sem envs, pula sem falhar para permitir CI de PR sem segredos.
+---
 
 ## Deploy
 
-1. Configure `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`.
-2. Rode migrations no Supabase antes do deploy.
-3. Cadastre URLs de redirect no Supabase Auth: `/login`, `/reset-password` e `/home`.
-4. Ative providers Google e Apple no Supabase Auth. Apple exige Service ID, Team ID, Key ID e private key configurados no painel da Apple Developer.
-5. Configure envio de email com remetente do app:
-   - Verifique dominio no Resend.
-   - Defina `RESEND_FROM_EMAIL` com email do seu dominio.
-   - Deploy: `supabase functions deploy send-auth-email --no-verify-jwt`
-   - Secrets: `supabase secrets set --env-file .env.local`
-   - Dashboard Supabase > Auth > Hooks > Send Email Hook > HTTPS > URL da function > Generate Secret.
-6. Rode `pnpm build`.
+Veja o guia completo em [DEPLOYMENT.md](./DEPLOYMENT.md).
 
-## Email de confirmacao personalizado
+**Resumo:**
+1. Configure projeto no Supabase e rode as migrations (`supabase db push`)
+2. Configure Google/Apple OAuth no painel do Supabase
+3. Deploy da Edge Function `send-auth-email` com Resend configurado
+4. Conecte o repo no Vercel com `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`
 
-- Template usa `public/assets/mascot-login-new.png` servido por `APP_URL`.
-- Remetente sai como `${APP_NAME} <${RESEND_FROM_EMAIL}>`, nao como endereco padrao do Supabase.
-- Hook cobre `signup`, `recovery`, `magiclink` e `email_change`, com foco principal em confirmacao de cadastro.
+---
 
-## Decisoes
+## Credenciais Demo
 
-- Supabase foi escolhido para entregar Auth + Postgres + RLS sem manter servidor proprio.
-- Cursos continuam em `src/data` por enquanto para manter MVP rapido; se virarem conteudo editavel, devem migrar para tabelas com seeds.
-- Campos premium ficam em `public.users` por compatibilidade, mas update do cliente foi restringido por grants. Proximo passo ideal: tabela privada `billing_profiles`.
+> Em breve — aguardando ambiente de demonstração configurado. Ver ROADMAP v0.2.
+
+---
+
+## Estrutura de Pastas
+
+```
+src/
+├── components/   # UI reutilizável (ErrorBoundary, PrivateRoute, BrandLogo...)
+├── contexts/     # Estado global (Auth, Lives, Achievements)
+├── hooks/        # Lógica de negócio (useAuth, useFavorites, useAchievements)
+├── pages/        # Uma página por rota
+├── lib/          # Supabase client, db helpers, achievements logic, icons
+└── data/         # Conteúdo estático (lições, skills, avatars, prompts)
+supabase/
+├── functions/    # Edge Functions (send-auth-email, stripe-checkout)
+└── migrations/   # SQL versionado
+```
+
+---
 
 ## Roadmap
 
-- Criar testes de integracao com Supabase local para RLS e migrations.
-- Adicionar demo user/seed quando conteudo sair do front.
-- Integrar Sentry ou Logtail para erros de producao.
-- Implementar webhook Stripe via Edge Function.
-- Publicar URL demo com screenshots/GIF curto.
+| Versão | Foco | Status |
+|--------|------|--------|
+| **v0.1** | MVP: auth, trilhas, skills, gamificação | ✅ Publicado |
+| **v0.2** | Notificações in-app, streak, Sentry, strict TypeScript | 🔨 Em andamento |
+| **v0.3** | Comunidade, conteúdo no DB, Prompt Optimizer | 📋 Planejado |
+| **v1.0** | Premium, Stripe, certificados, PWA offline, mobile | 🔮 Futuro |
 
+→ Detalhes e estimativas em [ROADMAP.md](./ROADMAP.md)
+
+---
+
+## Documentação
+
+| Arquivo | Descrição |
+|---------|-----------|
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | Design do sistema, fluxo de dados, banco, decisões |
+| [PRODUCT.md](./PRODUCT.md) | Requisitos, regras de negócio, casos de borda |
+| [PERSONAS.md](./PERSONAS.md) | Perfis dos usuários-alvo |
+| [ROADMAP.md](./ROADMAP.md) | Versões, features planejadas, trade-offs |
+| [DEPLOYMENT.md](./DEPLOYMENT.md) | Guia de deploy Vercel + Supabase |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Como contribuir, convenções, testes |
+
+---
+
+## Decisões Técnicas
+
+- **Supabase** em vez de Firebase: SQL + RLS nativo permite segurança declarativa e queries complexas para analytics futuro
+- **Conteúdo em `src/data`** em vez de CMS: acelera o MVP — migração para DB planejada na v0.3
+- **React SPA** em vez de Next.js: produto não é SEO-crítico; SSR traria complexidade sem benefício real
+- **Campos premium no banco desde o v0.1**: evita migração futura quando o plano pago for implementado; update protegido por RLS

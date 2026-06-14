@@ -29,10 +29,7 @@ vi.mock("@/lib/db", () => ({
 }))
 
 vi.mock("sileo", () => ({
-  sileo: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
+  sileo: { success: vi.fn(), error: vi.fn() },
 }))
 
 vi.mock("@/components/HelpButton", () => ({
@@ -44,58 +41,92 @@ function renderLearningLab(initialUrl = "/learn") {
     <MemoryRouter initialEntries={[initialUrl]}>
       <LivesProvider>
         <AchievementsProvider>
-        <Routes>
-          <Route path="/learn" element={<LearningLab />} />
-          <Route path="/home" element={<div>Home Page</div>} />
-          <Route path="/lesson" element={<div>Lesson Page</div>} />
-        </Routes>
+          <Routes>
+            <Route path="/learn" element={<LearningLab />} />
+            <Route path="/home" element={<div>Home Page</div>} />
+            <Route path="/lesson" element={<div>Lesson Page</div>} />
+          </Routes>
         </AchievementsProvider>
       </LivesProvider>
     </MemoryRouter>
   )
 }
 
-describe("LearningLab - renderizacao e progresso", () => {
+// ─── Tela de lista de cursos (/learn) ───────────────────────────────────────
+
+describe("LearningLab - lista de cursos (Trilha de Aprendizado)", () => {
   beforeEach(() => {
     localStorage.clear()
     vi.clearAllMocks()
   })
 
-  it("renderiza o titulo da categoria ativa padrao", () => {
+  it("renderiza o titulo 'Trilha de Aprendizado'", () => {
     renderLearningLab()
-    expect(screen.getByRole("heading", { name: "Trending Skills", level: 1 })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: /Trilha de Aprendizado/i, level: 1 })).toBeInTheDocument()
   })
 
-  it("renderiza os modulos e as licoes correspondentes", () => {
+  it("exibe o subtítulo correto", () => {
     renderLearningLab()
-    expect(screen.getByText(/IA Generativa no Cotidiano/i)).toBeInTheDocument()
-    expect(screen.getByText(/Modelos de Linguagem/i)).toBeInTheDocument()
-    expect(screen.getByText(/Anatomia de um Prompt Eficiente/i)).toBeInTheDocument()
+    expect(screen.getByText(/Aprenda do básico ao avançado/i)).toBeInTheDocument()
   })
 
-  it("exibe o progresso de conclusao inicial como 0%", () => {
+  it("exibe o primeiro curso como acessível", () => {
     renderLearningLab()
-    expect(screen.getByText((text) => text.includes("0 de") && text.includes("0%"))).toBeInTheDocument()
+    expect(screen.getByText("Trending Skills")).toBeInTheDocument()
   })
 
   it("lista trilhas profissionais novas no seletor do lab", () => {
     renderLearningLab()
     expect(screen.getByText("Orquestracao de Agentes")).toBeInTheDocument()
     expect(screen.getByText("IA para Financeiro")).toBeInTheDocument()
-    expect(screen.getByText("IA para Marketing")).toBeInTheDocument()
-    expect(screen.getByText("IA para Projetos")).toBeInTheDocument()
   })
 
-  it("muda a categoria ativa quando selecionado outro chip de categoria", async () => {
+  it("exibe ícones de cadeado nos cursos bloqueados", () => {
     renderLearningLab()
-    fireEvent.click(screen.getByText("Design"))
+    const lockIcons = document.querySelectorAll("button[disabled]")
+    expect(lockIcons.length).toBeGreaterThan(0)
+  })
 
+  it("navega para a trilha ao clicar no primeiro curso", async () => {
+    renderLearningLab()
+    fireEvent.click(screen.getByText("Trending Skills"))
     await waitFor(() => {
-      expect(screen.getByText(/Engenharia de Prompts para Geração de Imagens/i)).toBeInTheDocument()
+      expect(screen.getByText(/Seu progresso na trilha/i)).toBeInTheDocument()
     })
   })
+})
 
-  it("exibe licao como concluida se salva no localStorage", async () => {
+// ─── Tela de trilha de ensino (/learn?category=...) ─────────────────────────
+
+describe("LearningLab - trilha de ensino (trail view)", () => {
+  beforeEach(() => {
+    localStorage.clear()
+    vi.clearAllMocks()
+  })
+
+  it("renderiza o titulo da categoria ativa", () => {
+    renderLearningLab("/learn?category=trending-skills")
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Trending Skills")
+  })
+
+  it("exibe o card de progresso com 0% inicial", () => {
+    renderLearningLab("/learn?category=trending-skills")
+    expect(screen.getByText("0%")).toBeInTheDocument()
+    expect(screen.getByText(/Seu progresso na trilha/i)).toBeInTheDocument()
+  })
+
+  it("renderiza os títulos das lições na trilha", () => {
+    renderLearningLab("/learn?category=trending-skills")
+    expect(screen.getByText(/Modelos de Linguagem/i)).toBeInTheDocument()
+    expect(screen.getByText(/Anatomia de um Prompt Eficiente/i)).toBeInTheDocument()
+  })
+
+  it("exibe o botão de continuar com número da lição atual", () => {
+    renderLearningLab("/learn?category=trending-skills")
+    expect(screen.getByRole("button", { name: /Continuar aula 1/i })).toBeInTheDocument()
+  })
+
+  it("exibe lições como concluídas quando há progresso salvo", async () => {
     const fakeProgress = {
       "trending-skills": {
         currentModuleIndex: 0,
@@ -105,9 +136,17 @@ describe("LearningLab - renderizacao e progresso", () => {
     }
     localStorage.setItem(`promptlabz_progress:${mockUser.id}`, JSON.stringify(fakeProgress))
 
-    renderLearningLab()
+    renderLearningLab("/learn?category=trending-skills")
 
-    await waitFor(() => expect(screen.getByText("Rever")).toBeInTheDocument())
-    expect(screen.getByRole("button", { name: /come/i })).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText("25%")).toBeInTheDocument()
+    })
+    expect(screen.getByRole("button", { name: /Continuar aula 2/i })).toBeInTheDocument()
+  })
+
+  it("exibe botão para voltar para a lista de cursos", () => {
+    renderLearningLab("/learn?category=trending-skills")
+    const backButton = screen.getByRole("button", { name: "" })
+    expect(backButton).toBeInTheDocument()
   })
 })

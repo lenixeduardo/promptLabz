@@ -1,0 +1,243 @@
+import { describe, it, expect, vi, beforeEach } from "vitest"
+import {
+  getUserProfile,
+  updateUserProfile,
+  updateUserAvatar,
+  saveProgress,
+  loadProgress,
+  syncLocalProgressToSupabase,
+} from "./db"
+
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    from: vi.fn(),
+  },
+}))
+
+import { supabase } from "@/lib/supabase"
+
+const mockFrom = supabase.from as ReturnType<typeof vi.fn>
+
+function buildQuery(overrides: Record<string, unknown> = {}) {
+  const q = {
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    single: vi.fn().mockReturnThis(),
+    maybeSingle: vi.fn().mockReturnThis(),
+    update: vi.fn().mockReturnThis(),
+    upsert: vi.fn().mockReturnThis(),
+    ...overrides,
+  }
+  mockFrom.mockReturnValue(q)
+  return q
+}
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  localStorage.clear()
+  import.meta.env.VITE_SUPABASE_URL = "https://test.supabase.co"
+  import.meta.env.VITE_SUPABASE_ANON_KEY = "test-anon-key"
+})
+
+// ── getUserProfile ─────────────────────────────────────────────────────────
+
+describe("getUserProfile", () => {
+  it("retorna perfil quando Supabase responde com sucesso", async () => {
+    const mockProfile = { id: "u1", email: "a@a.com", full_name: "Ana", avatar_url: null }
+    const q = buildQuery({ single: vi.fn().mockResolvedValue({ data: mockProfile, error: null }) })
+
+    const result = await getUserProfile("u1")
+
+    expect(result.data).toEqual(mockProfile)
+    expect(result.error).toBeNull()
+    expect(q.eq).toHaveBeenCalledWith("id", "u1")
+  })
+
+  it("retorna erro quando Supabase retorna erro", async () => {
+    buildQuery({ single: vi.fn().mockResolvedValue({ data: null, error: { message: "Not found" } }) })
+
+    const result = await getUserProfile("u1")
+
+    expect(result.data).toBeNull()
+    expect(result.error).toBe("Not found")
+  })
+
+  it("retorna erro de configuração quando env não está definido", async () => {
+    import.meta.env.VITE_SUPABASE_URL = ""
+
+    const result = await getUserProfile("u1")
+
+    expect(result.error).toBe("Supabase não configurado")
+    expect(mockFrom).not.toHaveBeenCalled()
+  })
+})
+
+// ── updateUserProfile ──────────────────────────────────────────────────────
+
+describe("updateUserProfile", () => {
+  it("atualiza nome e retorna perfil atualizado", async () => {
+    const updated = { id: "u1", email: "a@a.com", full_name: "Ana Silva", avatar_url: null }
+    buildQuery({ maybeSingle: vi.fn().mockResolvedValue({ data: updated, error: null }) })
+
+    const result = await updateUserProfile("u1", "Ana Silva")
+
+    expect(result.data?.full_name).toBe("Ana Silva")
+    expect(result.error).toBeNull()
+  })
+
+  it("retorna erro quando update falha", async () => {
+    buildQuery({ maybeSingle: vi.fn().mockResolvedValue({ data: null, error: { message: "Update failed" } }) })
+
+    const result = await updateUserProfile("u1", "Ana Silva")
+
+    expect(result.data).toBeNull()
+    expect(result.error).toBe("Update failed")
+  })
+})
+
+// ── updateUserAvatar ───────────────────────────────────────────────────────
+
+describe("updateUserAvatar", () => {
+  it("atualiza avatar_url e retorna perfil atualizado", async () => {
+    const updated = { id: "u1", email: "a@a.com", full_name: "Ana", avatar_url: "cat.png" }
+    buildQuery({ single: vi.fn().mockResolvedValue({ data: updated, error: null }) })
+
+    const result = await updateUserAvatar("u1", "cat.png")
+
+    expect(result.data?.avatar_url).toBe("cat.png")
+    expect(result.error).toBeNull()
+  })
+})
+
+// ── saveProgress ───────────────────────────────────────────────────────────
+
+describe("saveProgress", () => {
+  const userId = "u1"
+  const categoryId = "prompts-basicos"
+  const progress = { currentModuleIndex: 1, currentLessonIndex: 2, completedLessonIds: ["l1", "l2"] }
+
+  it("salva no localStorage mesmo sem Supabase configurado", async () => {
+    import.meta.env.VITE_SUPABASE_URL = ""
+
+    await saveProgress(userId, categoryId, progress)
+
+    const stored = JSON.parse(localStorage.getItem(`promptlabz_progress:${userId}`) || "{}")
+    expect(stored[categoryId]).toEqual(progress)
+  })
+
+  it("faz upsert no Supabase quando configurado", async () => {
+    const q = buildQuery({ upsert: vi.fn().mockResolvedValue({ error: null }) })
+
+    await saveProgress(userId, categoryId, progress)
+
+    expect(q.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user_id: userId,
+        category_id: categoryId,
+        completed_lessons: progress.completedLessonIds,
+      }),
+      expect.anything()
+    )
+  })
+
+  it("retorna erro quando upsert falha mas localStorage foi salvo", async () => {
+    buildQuery({ upsert: vi.fn().mockResolvedValue({ error: { message: "DB error" } }) })
+
+    const result = await saveProgress(userId, categoryId, progress)
+
+    expect(result.error).toBe("DB error")
+    // localStorage ainda deve ter os dados
+    const stored = JSON.parse(localStorage.getItem(`promptlabz_progress:${userId}`) || "{}")
+    expect(stored[categoryId]).toEqual(progress)
+  })
+})
+
+// ── loadProgress ───────────────────────────────────────────────────────────
+
+describe("loadProgress", () => {
+  const userId = "u1"
+
+  it("retorna dados do localStorage quando Supabase não está configurado", async () => {
+    import.meta.env.VITE_SUPABASE_URL = ""
+    const localData = { cat1: { currentModuleIndex: 0, currentLessonIndex: 1, completedLessonIds: [] } }
+    localStorage.setItem(`promptlabz_progress:${userId}`, JSON.stringify(localData))
+
+    const result = await loadProgress(userId)
+
+    expect(result).toEqual(localData)
+  })
+
+  it("mescla dados do DB com localStorage quando Supabase está configurado", async () => {
+    const dbRows = [
+      { category_id: "cat1", completed_lessons: ["l1"], current_module_index: 0, current_lesson_index: 1 },
+    ]
+    buildQuery({ eq: vi.fn().mockResolvedValue({ data: dbRows, error: null }) })
+
+    const result = await loadProgress(userId)
+
+    expect(result["cat1"]).toEqual({
+      currentModuleIndex: 0,
+      currentLessonIndex: 1,
+      completedLessonIds: ["l1"],
+    })
+  })
+
+  it("migra chave legada promptlab_progress automaticamente", async () => {
+    import.meta.env.VITE_SUPABASE_URL = ""
+    const legacyData = { cat1: { currentModuleIndex: 1, currentLessonIndex: 0, completedLessonIds: ["l1"] } }
+    localStorage.setItem("promptlab_progress", JSON.stringify(legacyData))
+
+    const result = await loadProgress(userId)
+
+    expect(result).toEqual(legacyData)
+    // Deve ter migrado para a nova chave
+    expect(localStorage.getItem(`promptlabz_progress:${userId}`)).toBeTruthy()
+    // E removido a legada
+    expect(localStorage.getItem("promptlab_progress")).toBeNull()
+  })
+
+  it("retorna objeto vazio quando não há dados locais nem no DB", async () => {
+    import.meta.env.VITE_SUPABASE_URL = ""
+
+    const result = await loadProgress(userId)
+
+    expect(result).toEqual({})
+  })
+})
+
+// ── syncLocalProgressToSupabase ────────────────────────────────────────────
+
+describe("syncLocalProgressToSupabase", () => {
+  it("retorna erro quando Supabase não está configurado", async () => {
+    import.meta.env.VITE_SUPABASE_URL = ""
+
+    const result = await syncLocalProgressToSupabase("u1")
+
+    expect(result.error).toBe("Supabase não configurado")
+  })
+
+  it("sincroniza todos os dados locais para o Supabase", async () => {
+    const localData = {
+      cat1: { currentModuleIndex: 0, currentLessonIndex: 1, completedLessonIds: ["l1"] },
+      cat2: { currentModuleIndex: 1, currentLessonIndex: 0, completedLessonIds: [] },
+    }
+    localStorage.setItem("promptlabz_progress:u1", JSON.stringify(localData))
+
+    const q = buildQuery({ upsert: vi.fn().mockResolvedValue({ error: null }) })
+
+    const result = await syncLocalProgressToSupabase("u1")
+
+    expect(result.error).toBeNull()
+    expect(q.upsert).toHaveBeenCalledTimes(2)
+  })
+
+  it("retorna erro quando algum upsert falha", async () => {
+    const localData = { cat1: { currentModuleIndex: 0, currentLessonIndex: 0, completedLessonIds: [] } }
+    localStorage.setItem("promptlabz_progress:u1", JSON.stringify(localData))
+    buildQuery({ upsert: vi.fn().mockResolvedValue({ error: { message: "Sync failed" } }) })
+
+    const result = await syncLocalProgressToSupabase("u1")
+
+    expect(result.error).toBe("Sync failed")
+  })
+})

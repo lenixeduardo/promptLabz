@@ -10,6 +10,7 @@ export function BrandLogo({ className }: BrandLogoProps) {
     <span className={cn("font-extrabold tracking-tight", className)}>
       <span className="text-[#2F6B45]">Prompt</span>
       <span className="text-[#7CC79A]">Lab</span>
+      <span className="text-[#2F6B45]">z</span>
     </span>
   )
 }

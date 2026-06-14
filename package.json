@@ -82,5 +82,10 @@
     "vite": "^6.0.1",
     "vite-plugin-source-identifier": "1.1.2",
     "vitest": "^4.1.8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }
