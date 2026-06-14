@@ -63,19 +63,18 @@ describe("LearningLab - renderizacao e progresso", () => {
 
   it("renderiza o titulo da categoria ativa padrao", () => {
     renderLearningLab()
-    expect(screen.getByRole("heading", { name: "Trending Skills", level: 1 })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Todos os Cursos", level: 1 })).toBeInTheDocument()
   })
 
   it("renderiza os modulos e as licoes correspondentes", () => {
     renderLearningLab()
-    expect(screen.getByText(/IA Generativa no Cotidiano/i)).toBeInTheDocument()
-    expect(screen.getByText(/Modelos de Linguagem/i)).toBeInTheDocument()
-    expect(screen.getByText(/Anatomia de um Prompt Eficiente/i)).toBeInTheDocument()
+    expect(screen.getByText("Trending Skills")).toBeInTheDocument()
+    expect(screen.getAllByText(/módulo/).length).toBeGreaterThan(0)
   })
 
   it("exibe o progresso de conclusao inicial como 0%", () => {
     renderLearningLab()
-    expect(screen.getByText((text) => text.includes("0 de") && text.includes("0%"))).toBeInTheDocument()
+    expect(screen.getAllByText(/^0\/\d+ concluídas$/).length).toBeGreaterThan(0)
   })
 
   it("lista trilhas profissionais novas no seletor do lab", () => {
@@ -105,7 +104,7 @@ describe("LearningLab - renderizacao e progresso", () => {
     }
     localStorage.setItem(`promptlabz_progress:${mockUser.id}`, JSON.stringify(fakeProgress))
 
-    renderLearningLab()
+    renderLearningLab("/learn?category=trending-skills")
 
     await waitFor(() => expect(screen.getByText("Rever")).toBeInTheDocument())
     expect(screen.getByRole("button", { name: /come/i })).toBeInTheDocument()
