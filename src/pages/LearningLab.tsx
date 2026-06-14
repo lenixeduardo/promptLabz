@@ -1,24 +1,49 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import * as Icons from "@/lib/icons"
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { HelpButton } from "@/components/HelpButton"
+import { BottomNav } from "@/components/BottomNav"
 import { LivesBar } from "@/components/LivesBar"
 import { MAX_LIVES } from "@/contexts/lives-config"
 import { useLives } from "@/contexts/useLives"
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
 import { cn } from "@/lib/utils"
-import { lessonsData } from "@/data/lessonsData"
+import { lessonsData, type Category, type Lesson } from "@/data/lessonsData"
 import { loadProgress, type CategoryProgress } from "@/lib/db"
 
-function getIcon(name: string) {
-  const iconMap = Icons as unknown as Record<string, Icons.LucideIcon>
-  const IconComponent = iconMap[name]
-  return IconComponent || Icons.BookOpen
+// ─── Trail SVG constants ────────────────────────────────────────────────────
+const TRAIL_W = 340
+const STEP_H = 140
+const FIRST_Y = 90
+const LEFT_X = 90
+const RIGHT_X = 250
+const CIRCLE_R = 22
+const CARD_GAP = 10
+const EDGE_PAD = 14
+
+// ─── Types ──────────────────────────────────────────────────────────────────
+type FlatLesson = Lesson & { moduleIndex: number; lessonIndex: number }
+
+// ─── Category icon/meta map ─────────────────────────────────────────────────
+const CATEGORY_META: Record<string, { icon: Icons.LucideIcon }> = {
+  "trending-skills":     { icon: Icons.MessageSquare },
+  "community-hub":       { icon: Icons.Users },
+  "design":              { icon: Icons.Palette },
+  "prompt-science":      { icon: Icons.Sparkles },
+  "prompt-engineering":  { icon: Icons.BookOpen },
+  "advanced-science":    { icon: Icons.Zap },
+  "hour-of-focus":       { icon: Icons.Clock },
+  "agent-orchestration": { icon: Icons.Workflow },
+  "ai-finance":          { icon: Icons.TrendingUp },
+  "ai-marketing":        { icon: Icons.Megaphone },
 }
 
+function getCatIcon(key: string): Icons.LucideIcon {
+  return CATEGORY_META[key]?.icon ?? Icons.BookOpen
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
 function useCountdown(getMsLeft: () => number) {
   const [msLeft, setMsLeft] = useState(getMsLeft)
 
@@ -38,6 +63,46 @@ function useCountdown(getMsLeft: () => number) {
     : `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
 }
 
+function flattenLessons(cat: Category): FlatLesson[] {
+  return cat.modules.flatMap((mod, mi) =>
+    mod.lessons.map((lesson, li) => ({ ...lesson, moduleIndex: mi, lessonIndex: li }))
+  )
+}
+
+function getNodeX(index: number): number {
+  return index % 2 === 0 ? RIGHT_X : LEFT_X
+}
+
+function getNodeY(index: number): number {
+  return FIRST_Y + index * STEP_H
+}
+
+function buildTrailPath(count: number): string {
+  if (count === 0) return ""
+  const coords = Array.from({ length: count }, (_, i) => ({ x: getNodeX(i), y: getNodeY(i) }))
+  let d = `M ${TRAIL_W / 2} 24 L ${coords[0].x} ${coords[0].y}`
+  for (let i = 1; i < coords.length; i++) {
+    const prev = coords[i - 1]
+    const curr = coords[i]
+    const midY = (prev.y + curr.y) / 2
+    d += ` C ${prev.x} ${midY} ${curr.x} ${midY} ${curr.x} ${curr.y}`
+  }
+  return d
+}
+
+function getCoursePct(cat: Category, progress: CategoryProgress): number {
+  let total = 0
+  let done = 0
+  cat.modules.forEach((mod) =>
+    mod.lessons.forEach((l) => {
+      total++
+      if (progress.completedLessonIds.includes(l.id)) done++
+    })
+  )
+  return total > 0 ? Math.round((done / total) * 100) : 0
+}
+
+// ─── NoLivesModal ───────────────────────────────────────────────────────────
 function NoLivesModal({ onClose }: { onClose: () => void }) {
   const { msUntilNextLife } = useLives()
   const countdown = useCountdown(msUntilNextLife)
@@ -49,20 +114,20 @@ function NoLivesModal({ onClose }: { onClose: () => void }) {
     >
       <div
         className="w-full max-w-md animate-slide-up rounded-t-3xl bg-white px-6 pb-10 pt-6 shadow-xl"
-        onClick={(event) => event.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="mx-auto mb-5 h-1 w-10 rounded-full bg-[#CDEAD8]" />
 
         <div className="mb-4 flex justify-center gap-1.5">
-          {Array.from({ length: MAX_LIVES }).map((_, index) => (
-            <Icons.Heart key={index} className="h-7 w-7 fill-none text-[#D1D5D3]" />
+          {Array.from({ length: MAX_LIVES }).map((_, i) => (
+            <Icons.Heart key={i} className="h-7 w-7 fill-none text-[#D1D5D3]" />
           ))}
         </div>
 
         <div className="flex justify-center">
           <img
             src="/assets/mascot-home.png"
-            alt="Mascot esperando"
+            alt="Mascot"
             className="h-28 w-auto object-contain opacity-80"
             style={{ mixBlendMode: "multiply" }}
           />
@@ -100,7 +165,34 @@ function NoLivesModal({ onClose }: { onClose: () => void }) {
   )
 }
 
-// ─── Courses List View ─────────────────────────────────────────────────────
+// ─── CircularProgress ───────────────────────────────────────────────────────
+function CircularProgress({ pct }: { pct: number }) {
+  const r = 16
+  const circ = 2 * Math.PI * r
+  const filled = (pct / 100) * circ
+
+  return (
+    <div className="relative flex items-center justify-center">
+      <svg width="46" height="46" viewBox="0 0 46 46">
+        <circle cx="23" cy="23" r={r} fill="none" stroke="#DCF1E4" strokeWidth="4" />
+        <circle
+          cx="23"
+          cy="23"
+          r={r}
+          fill="none"
+          stroke="#2B5D3A"
+          strokeWidth="4"
+          strokeDasharray={`${filled} ${circ}`}
+          strokeLinecap="round"
+          transform="rotate(-90 23 23)"
+        />
+      </svg>
+      <span className="absolute text-[9px] font-extrabold text-[#2B5D3A]">{pct}%</span>
+    </div>
+  )
+}
+
+// ─── CoursesListView ("Trilha de Aprendizado") ─────────────────────────────
 function CoursesListView({
   getProgressForCategory,
   onSelect,
@@ -109,81 +201,289 @@ function CoursesListView({
   onSelect: (key: string) => void
 }) {
   const navigate = useNavigate()
+  const allEntries = Object.entries(lessonsData)
+
+  function isCourseComplete(cat: Category): boolean {
+    return getCoursePct(cat, getProgressForCategory(cat.id)) === 100
+  }
+
+  function isCourseAccessible(index: number): boolean {
+    if (index === 0) return true
+    const [, prevCat] = allEntries[index - 1]
+    return isCourseComplete(prevCat)
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-[#D2EEDD] px-5 py-6">
-      <div className="mx-auto w-full max-w-[460px]">
-        <div className="mb-6 flex items-center justify-between">
-          <Button
-            variant="ghost"
+    <div className="min-h-screen bg-[#FAFCFA] pb-32">
+      {/* Header */}
+      <div className="bg-white px-5 pb-5 pt-14 shadow-sm">
+        <div className="mx-auto flex max-w-[460px] items-center gap-3">
+          <button
             onClick={() => navigate("/home")}
-            className="flex items-center gap-1.5 text-[#2E8B57] hover:text-[#1F2A24]"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F0FAF3] text-[#2B5D3A] transition-colors hover:bg-[#DCF1E4]"
           >
-            <Icons.ArrowLeft className="h-4 w-4" /> Home
-          </Button>
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#3E8E5E]">
-            Cursos
-          </span>
-        </div>
-
-        <h1 className="mb-1 text-2xl font-extrabold text-[#1F2A24]">Todos os Cursos</h1>
-        <p className="mb-6 text-sm text-[#6B9E7E]">Escolha um curso para começar</p>
-
-        <div className="flex flex-col gap-3 pb-6">
-          {Object.entries(lessonsData).map(([key, cat]) => {
-            const catProgress = getProgressForCategory(cat.id)
-            let totalLessons = 0
-            let completedLessons = 0
-            cat.modules.forEach((mod) => {
-              mod.lessons.forEach((lesson) => {
-                totalLessons++
-                if (catProgress.completedLessonIds.includes(lesson.id)) completedLessons++
-              })
-            })
-            const pct =
-              totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
-            const isCompleted = completedLessons === totalLessons && totalLessons > 0
-
-            return (
-              <button
-                key={key}
-                onClick={() => onSelect(key)}
-                className="flex items-center gap-4 rounded-2xl border border-[#CDEAD8] bg-white p-4 text-left shadow-sm transition-all hover:bg-[#F0FAF3] active:scale-[0.99]"
-              >
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
-                  {isCompleted ? (
-                    <Icons.CheckCircle2 className="h-6 w-6 text-[#3E9A63]" />
-                  ) : (
-                    <Icons.GraduationCap className="h-6 w-6 text-[#3E8E5E]" />
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-bold text-[#1F2A24]">{cat.title}</p>
-                  <p className="text-xs text-[#6B9E7E]">
-                    {cat.modules.length} módulo{cat.modules.length !== 1 ? "s" : ""} ·{" "}
-                    {totalLessons} lições
-                  </p>
-                  <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[#EAF7EF]">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#3E8E5E] to-[#2E7048] transition-all"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                  <p className="mt-0.5 text-[10px] text-[#6B9E7E]">
-                    {completedLessons}/{totalLessons} concluídas
-                  </p>
-                </div>
-                <Icons.ChevronRight className="h-5 w-5 shrink-0 text-[#BFE3CC]" />
-              </button>
-            )
-          })}
+            <Icons.ArrowLeft className="h-5 w-5" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-extrabold text-[#1A2E22]">Trilha de Aprendizado</h1>
+            <p className="text-sm text-[#6B9E7E]">Aprenda do básico ao avançado</p>
+          </div>
         </div>
       </div>
+
+      {/* Course cards */}
+      <div className="mx-auto flex max-w-[460px] flex-col gap-3 px-5 pt-5">
+        {allEntries.map(([key, cat], index) => {
+          const progress = getProgressForCategory(cat.id)
+          const pct = getCoursePct(cat, progress)
+          const accessible = isCourseAccessible(index)
+          const inProgress = progress.completedLessonIds.length > 0 && pct < 100
+          const complete = pct === 100
+          const CatIcon = getCatIcon(key)
+          const totalModules = cat.modules.length
+
+          return (
+            <button
+              key={key}
+              onClick={() => accessible && onSelect(key)}
+              disabled={!accessible}
+              className={cn(
+                "flex items-center gap-4 rounded-2xl border bg-white p-4 text-left shadow-sm transition-all",
+                accessible && "hover:bg-[#F8FBF8] active:scale-[0.99]",
+                inProgress ? "border-2 border-[#2B5D3A]" : "border-[#EAF7EF]"
+              )}
+            >
+              {/* Icon box */}
+              <div
+                className={cn(
+                  "flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl",
+                  complete
+                    ? "bg-[#2B5D3A]"
+                    : inProgress
+                      ? "bg-[#EAF7EF]"
+                      : accessible
+                        ? "bg-[#EAF7EF]"
+                        : "bg-[#F3F5F3]"
+                )}
+              >
+                <CatIcon
+                  className={cn(
+                    "h-7 w-7",
+                    complete
+                      ? "text-white"
+                      : inProgress
+                        ? "text-[#2B5D3A]"
+                        : accessible
+                          ? "text-[#2B5D3A]"
+                          : "text-[#B0C8B8]"
+                  )}
+                />
+              </div>
+
+              {/* Info */}
+              <div className="min-w-0 flex-1">
+                <p
+                  className={cn(
+                    "font-bold leading-tight",
+                    accessible ? "text-[#1A2E22]" : "text-[#9AB0A4]"
+                  )}
+                >
+                  {cat.title}
+                </p>
+                <p className="mt-0.5 text-xs text-[#6B9E7E]">
+                  {totalModules} módulo{totalModules !== 1 ? "s" : ""}
+                </p>
+              </div>
+
+              {/* Right status */}
+              {!accessible ? (
+                <Icons.Lock className="h-5 w-5 shrink-0 text-[#B0C8B8]" />
+              ) : complete ? (
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#2B5D3A]">
+                  <Icons.Check className="h-4 w-4 text-white" strokeWidth={2.5} />
+                </div>
+              ) : inProgress ? (
+                <div className="flex shrink-0 items-center gap-1">
+                  <CircularProgress pct={pct} />
+                  <Icons.ChevronRight className="h-5 w-5 text-[#BFE3CC]" />
+                </div>
+              ) : (
+                <Icons.ChevronRight className="h-5 w-5 shrink-0 text-[#BFE3CC]" />
+              )}
+            </button>
+          )
+        })}
+      </div>
+
+      <BottomNav active="trilha" />
     </div>
   )
 }
 
-// ─── Main Component ────────────────────────────────────────────────────────
+// ─── TrailView (winding path) ───────────────────────────────────────────────
+function TrailView({
+  flatLessons,
+  catProgress,
+  effectiveCurrentIdx,
+}: {
+  flatLessons: FlatLesson[]
+  catProgress: CategoryProgress
+  effectiveCurrentIdx: number
+}) {
+  const count = flatLessons.length
+  const containerH = count > 0 ? FIRST_Y + (count - 1) * STEP_H + 80 : 200
+  const pathD = buildTrailPath(count)
+
+  // Decorative tree positions (only if they fit in the container)
+  const treePositions = [
+    { x: 14, y: 50 },
+    { x: TRAIL_W - 38, y: 200 },
+    { x: 18, y: 360 },
+    { x: TRAIL_W - 40, y: 500 },
+  ]
+
+  return (
+    <div className="relative mx-auto" style={{ width: TRAIL_W, height: containerH }}>
+      {/* SVG winding path */}
+      <svg
+        className="absolute inset-0"
+        width={TRAIL_W}
+        height={containerH}
+        viewBox={`0 0 ${TRAIL_W} ${containerH}`}
+        aria-hidden="true"
+      >
+        {/* Shadow layer */}
+        <path
+          d={pathD}
+          stroke="#3A7050"
+          strokeWidth="22"
+          fill="none"
+          strokeLinecap="round"
+          strokeOpacity="0.15"
+        />
+        {/* Main path */}
+        <path
+          d={pathD}
+          stroke="#5CBB7A"
+          strokeWidth="17"
+          fill="none"
+          strokeLinecap="round"
+        />
+        {/* Inner highlight */}
+        <path
+          d={pathD}
+          stroke="#A8DFB8"
+          strokeWidth="6"
+          fill="none"
+          strokeLinecap="round"
+          strokeOpacity="0.55"
+        />
+      </svg>
+
+      {/* Flag at top */}
+      <div
+        className="absolute select-none text-2xl"
+        style={{ left: TRAIL_W / 2 - 10, top: -8 }}
+        aria-hidden="true"
+      >
+        🚩
+      </div>
+
+      {/* Decorative trees */}
+      {treePositions
+        .filter((t) => t.y < containerH - 50)
+        .map((pos, i) => (
+          <div
+            key={i}
+            className="pointer-events-none absolute select-none text-xl opacity-80"
+            style={{ left: pos.x, top: pos.y }}
+            aria-hidden="true"
+          >
+            🌲
+          </div>
+        ))}
+
+      {/* Lesson nodes */}
+      {flatLessons.map((lesson, i) => {
+        const nodeX = getNodeX(i)
+        const nodeY = getNodeY(i)
+        const isCompleted = catProgress.completedLessonIds.includes(lesson.id)
+        const isCurrent = i === effectiveCurrentIdx
+        const isLocked = !isCompleted && !isCurrent
+
+        const isRightNode = i % 2 === 0
+        const cardLeft = isRightNode ? EDGE_PAD : nodeX + CIRCLE_R + CARD_GAP
+        const cardRight = isRightNode ? nodeX - CIRCLE_R - CARD_GAP : TRAIL_W - EDGE_PAD
+        const cardWidth = cardRight - cardLeft
+
+        return (
+          <div key={lesson.id}>
+            {/* Node circle */}
+            <div
+              className={cn(
+                "absolute z-10 flex items-center justify-center rounded-full text-sm font-bold shadow-md",
+                isCompleted
+                  ? "bg-[#2B5D3A] text-white"
+                  : isCurrent
+                    ? "border-4 border-[#2B5D3A] bg-white text-[#2B5D3A]"
+                    : "bg-[#B0C8B8] text-white"
+              )}
+              style={{
+                left: nodeX - CIRCLE_R,
+                top: nodeY - CIRCLE_R,
+                width: CIRCLE_R * 2,
+                height: CIRCLE_R * 2,
+              }}
+            >
+              {i + 1}
+            </div>
+
+            {/* Lesson card */}
+            <div
+              className={cn(
+                "absolute z-[5] flex items-center rounded-2xl bg-white px-3 py-3",
+                isCurrent
+                  ? "border-2 border-[#2B5D3A] shadow-lg"
+                  : "border border-[#E4F0E8] shadow-sm",
+                isLocked && "opacity-75"
+              )}
+              style={{
+                left: cardLeft,
+                width: cardWidth,
+                top: nodeY - 26,
+                minHeight: 52,
+              }}
+            >
+              <div className="min-w-0 flex-1">
+                <p
+                  className={cn(
+                    "line-clamp-2 text-xs font-bold leading-snug",
+                    isLocked ? "text-[#9AB0A4]" : "text-[#1A2E22]"
+                  )}
+                >
+                  {lesson.title}
+                </p>
+              </div>
+              <div className="ml-2 shrink-0">
+                {isCompleted ? (
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B5D3A]">
+                    <Icons.Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
+                  </div>
+                ) : isLocked ? (
+                  <Icons.Lock className="h-4 w-4 text-[#B0C8B8]" />
+                ) : (
+                  <div className="h-6 w-6 rounded-full border-2 border-[#2B5D3A]" />
+                )}
+              </div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ─── Main Component ──────────────────────────────────────────────────────────
 export default function LearningLab() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -198,9 +498,7 @@ export default function LearningLab() {
   const activeCategory = lessonsData[activeCategoryKey] || lessonsData["trending-skills"]
 
   useEffect(() => {
-    if (categoryParam) {
-      achievements.visitCategory(activeCategoryKey)
-    }
+    if (categoryParam) achievements.visitCategory(activeCategoryKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategoryKey, categoryParam])
 
@@ -214,46 +512,32 @@ export default function LearningLab() {
     initProgress()
   }, [user])
 
-  const getProgressForCategory = (catId: string): CategoryProgress => {
-    return (
-      progress[catId] || {
-        currentModuleIndex: 0,
-        currentLessonIndex: 0,
-        completedLessonIds: [],
-      }
-    )
-  }
+  const getProgressForCategory = (catId: string): CategoryProgress =>
+    progress[catId] || { currentModuleIndex: 0, currentLessonIndex: 0, completedLessonIds: [] }
 
-  const handleCategoryChange = (key: string) => {
-    setSearchParams({ category: key })
-  }
+  const handleCategoryChange = (key: string) => setSearchParams({ category: key })
 
   const currentCatProgress = getProgressForCategory(activeCategory.id)
+  const flatLessons = flattenLessons(activeCategory)
 
-  let totalLessonsCount = 0
-  let completedCount = 0
-  activeCategory.modules.forEach((mod) => {
-    mod.lessons.forEach((lesson) => {
-      totalLessonsCount++
-      if (currentCatProgress.completedLessonIds.includes(lesson.id)) completedCount++
-    })
-  })
+  // Determine current flat lesson index
+  const currentFlatIdx = flatLessons.findIndex(
+    (l) =>
+      l.moduleIndex === currentCatProgress.currentModuleIndex &&
+      l.lessonIndex === currentCatProgress.currentLessonIndex
+  )
+  const effectiveCurrentIdx = currentFlatIdx === -1 ? flatLessons.length : currentFlatIdx
 
+  // Progress stats
+  const totalLessonsCount = flatLessons.length
+  const completedCount = flatLessons.filter((l) =>
+    currentCatProgress.completedLessonIds.includes(l.id)
+  ).length
   const progressPercent =
     totalLessonsCount > 0 ? Math.round((completedCount / totalLessonsCount) * 100) : 0
 
-  const getNextLessonToPlay = () => {
-    const currentMod = activeCategory.modules[currentCatProgress.currentModuleIndex]
-    if (!currentMod) return null
-    const currentLesson = currentMod.lessons[currentCatProgress.currentLessonIndex]
-    if (!currentLesson) return null
-    return {
-      moduleIndex: currentCatProgress.currentModuleIndex,
-      lessonIndex: currentCatProgress.currentLessonIndex,
-    }
-  }
-
-  const nextLessonInfo = getNextLessonToPlay()
+  const nextLesson =
+    effectiveCurrentIdx < flatLessons.length ? flatLessons[effectiveCurrentIdx] : null
 
   const handleStartLesson = (modIndex: number, lessonIndex: number) => {
     if (!canPlay) {
@@ -266,7 +550,7 @@ export default function LearningLab() {
     )
   }
 
-  // If no category param, show courses list
+  // ── Courses list (no category selected) ──
   if (!categoryParam) {
     return (
       <CoursesListView
@@ -276,212 +560,103 @@ export default function LearningLab() {
     )
   }
 
+  // ── Teaching track detail ──
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] to-[#D2EEDD] px-5 py-6">
-      <div className="mx-auto w-full max-w-[460px]">
-        <div className="mb-2 flex items-center justify-between">
-          <Button
-            variant="ghost"
-            onClick={() => setSearchParams({})}
-            className="flex items-center gap-1.5 text-[#2E8B57] hover:text-[#1F2A24]"
-          >
-            <Icons.ArrowLeft className="h-4 w-4" /> Cursos
-          </Button>
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#3E8E5E]">
-            Learning Lab
-          </span>
+    <div className="min-h-screen bg-gradient-to-b from-[#F2FAF5] via-[#EAF7EE] to-[#DCF1E4]">
+      {/* Header */}
+      <div className="mx-auto max-w-[460px] px-5 pb-3 pt-12">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSearchParams({})}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/80 text-[#2B5D3A] shadow-sm transition-colors hover:bg-white"
+            >
+              <Icons.ArrowLeft className="h-5 w-5" />
+            </button>
+            <div>
+              <h1 className="max-w-[200px] text-lg font-extrabold leading-tight text-[#1A2E22]">
+                {activeCategory.title}
+              </h1>
+              <p className="text-xs text-[#6B9E7E]">
+                {totalLessonsCount} lições · {activeCategory.modules.length} módulo
+                {activeCategory.modules.length !== 1 ? "s" : ""}
+              </p>
+            </div>
+          </div>
+
+          {/* Mascot */}
+          <img
+            src="/assets/mascot-learn-new.png"
+            alt="Mascot"
+            className="h-24 w-auto -translate-y-2 object-contain drop-shadow-lg"
+          />
         </div>
+      </div>
 
-        <Card className="relative mt-8 overflow-visible border-[#C6E7D2] bg-gradient-to-b from-[#D9F0E1] to-[#C2E8D0] p-5 pt-14 shadow-md">
-          <div className="absolute -top-[55px] left-1/2 -translate-x-1/2">
-            <img
-              src="/assets/mascot-learn-new.png"
-              alt="PromptLabz mascot"
-              className="h-24 w-auto object-contain drop-shadow-md"
-            />
+      {/* Progress card */}
+      <div className="mx-auto max-w-[460px] px-5 pb-5">
+        <div className="rounded-2xl border border-[#DCF1E4] bg-white p-4 shadow-sm">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-sm font-semibold text-[#1A2E22]">Seu progresso na trilha</p>
+            <div className="flex items-center gap-1.5">
+              <LivesBar />
+              {!canPlay && (
+                <span className="flex items-center gap-1 text-[11px] font-semibold text-[#9A7B22]">
+                  <Icons.Clock className="h-3.5 w-3.5" />
+                  {countdown}
+                </span>
+              )}
+            </div>
           </div>
-
-          <h1 className="text-center text-xl font-extrabold text-[#1F2A24]">
-            {activeCategory.title}
-          </h1>
-
-          <div className="mt-4 flex items-center justify-between">
-            <LivesBar />
-            {!canPlay ? (
-              <span className="flex items-center gap-1 text-xs font-medium text-[#9A7B22]">
-                <Icons.Clock className="h-3.5 w-3.5" />
-                {countdown}
-              </span>
-            ) : (
-              <span className="text-xs font-medium text-[#3E8E5E]">
-                {lives}/{MAX_LIVES} vidas
-              </span>
-            )}
-          </div>
-
-          <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-white/70">
+          <div className="h-3 w-full overflow-hidden rounded-full bg-[#EAF7EF]">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#3E8E5E] to-[#2E7048] transition-all duration-500"
+              className="h-full rounded-full bg-gradient-to-r from-[#4EA86B] to-[#2B5D3A] transition-all duration-700"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <div className="mt-2 flex items-center justify-between text-xs text-[#3A4B40]">
-            <span>
-              {completedCount} de {totalLessonsCount} lições concluídas ({progressPercent}%)
+          <div className="mt-1.5 flex items-center justify-between">
+            <span className="text-[11px] text-[#6B9E7E]">
+              {completedCount}/{totalLessonsCount} concluídas
             </span>
-            <span className="font-semibold">
-              {nextLessonInfo
-                ? `Atual: Mod. ${nextLessonInfo.moduleIndex + 1}, Lição ${nextLessonInfo.lessonIndex + 1}`
-                : "Concluído!"}
-            </span>
+            <span className="text-sm font-extrabold text-[#2B5D3A]">{progressPercent}%</span>
           </div>
-        </Card>
-
-        <div className="no-scrollbar mt-6 flex gap-2 overflow-x-auto pb-1">
-          {Object.entries(lessonsData).map(([key, cat]) => {
-            const isActive = key === activeCategoryKey
-            const catProgress = getProgressForCategory(cat.id)
-            const isCompleted = cat.modules.every((mod) =>
-              mod.lessons.every((lesson) =>
-                catProgress.completedLessonIds.includes(lesson.id)
-              )
-            )
-
-            return (
-              <button
-                key={key}
-                onClick={() => handleCategoryChange(key)}
-                className={cn(
-                  "flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold shadow-sm transition-all",
-                  isActive
-                    ? "border-[#3E9A63] bg-[#3E8E5E] text-white"
-                    : "border-[#CDEAD8] bg-white text-[#2A3B30] hover:bg-[#F0FAF3]"
-                )}
-              >
-                {isCompleted ? (
-                  <Icons.Check className="h-3 w-3 text-emerald-400" />
-                ) : (
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#3E9A63]" />
-                )}
-                {cat.title}
-              </button>
-            )
-          })}
         </div>
+      </div>
 
-        <div className="mt-6 flex flex-col gap-6">
-          {activeCategory.modules.map((mod, modIndex) => (
-            <div key={mod.id} className="flex flex-col gap-3">
-              <div className="flex items-center justify-between px-1">
-                <h2 className="text-sm font-extrabold uppercase tracking-wider text-[#2B5D3A]">
-                  {mod.title}
-                </h2>
-                <span className="text-xs font-medium text-[#6B7A70]">
-                  Módulo {modIndex + 1}
-                </span>
-              </div>
+      {/* Winding trail */}
+      <div className="flex justify-center px-4 pb-44">
+        <TrailView
+          flatLessons={flatLessons}
+          catProgress={currentCatProgress}
+          effectiveCurrentIdx={effectiveCurrentIdx}
+        />
+      </div>
 
-              <div className="flex flex-col gap-3">
-                {mod.lessons.map((lesson, lessonIndex) => {
-                  const isDone = currentCatProgress.completedLessonIds.includes(lesson.id)
-                  const isCurrent =
-                    currentCatProgress.currentModuleIndex === modIndex &&
-                    currentCatProgress.currentLessonIndex === lessonIndex
-                  const isLocked =
-                    !isDone &&
-                    !isCurrent &&
-                    (modIndex > currentCatProgress.currentModuleIndex ||
-                      (modIndex === currentCatProgress.currentModuleIndex &&
-                        lessonIndex > currentCatProgress.currentLessonIndex))
-                  const Icon = getIcon(lesson.icon)
-
-                  return (
-                    <div
-                      key={lesson.id}
-                      className={cn(
-                        "flex items-center gap-3 rounded-2xl border bg-white px-4 py-3.5 shadow-sm transition-all",
-                        isCurrent
-                          ? "border-2 border-[#3E9A63] ring-2 ring-[#DCF1E4]"
-                          : "border-[#CDEAD8]",
-                        isLocked && "opacity-60"
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "flex h-6 w-6 shrink-0 items-center justify-center rounded-md border",
-                          isDone
-                            ? "border-[#3E9A63] bg-[#3E9A63]"
-                            : "border-[#BFE3CC] bg-white"
-                        )}
-                      >
-                        {isDone && (
-                          <Icons.Check className="h-4 w-4 text-white" strokeWidth={3} />
-                        )}
-                      </span>
-
-                      <Icon className="h-5 w-5 shrink-0 text-[#3E8E5E]" strokeWidth={2} />
-
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold leading-snug text-[#1F2A24]">
-                          {lesson.title}
-                        </p>
-                        <p className="text-xs text-[#6B7A70]">Duração: {lesson.duration}</p>
-                      </div>
-
-                      {isCurrent ? (
-                        <button
-                          onClick={() => handleStartLesson(modIndex, lessonIndex)}
-                          className={cn(
-                            "flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold transition-all",
-                            canPlay
-                              ? "bg-[#DCF1E4] text-[#1E6B3A] hover:bg-[#cbeed7]"
-                              : "bg-[#EEF1EF] text-[#8A998F]"
-                          )}
-                        >
-                          <Icons.Play className="h-3.5 w-3.5 fill-current" /> Começar
-                        </button>
-                      ) : isDone ? (
-                        <button
-                          onClick={() => handleStartLesson(modIndex, lessonIndex)}
-                          className={cn(
-                            "flex items-center gap-1 text-xs font-bold",
-                            canPlay ? "text-[#3E8E5E] hover:underline" : "text-[#8A998F]"
-                          )}
-                        >
-                          Rever
-                        </button>
-                      ) : (
-                        <span className="flex items-center gap-1 text-xs font-semibold text-[#8A998F]">
-                          <Icons.Lock className="h-3.5 w-3.5" /> Bloqueado
-                        </span>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 flex justify-center">
-          {nextLessonInfo ? (
+      {/* Fixed bottom: CTA + BottomNav */}
+      <div className="fixed bottom-0 left-0 right-0 z-30">
+        <div className="mx-auto max-w-[460px] px-5 pb-1 pt-3">
+          {nextLesson ? (
             <Button
               size="lg"
               className={cn(
-                "w-full shadow-md transition-transform hover:scale-[1.01]",
-                !canPlay && "opacity-60"
+                "w-full shadow-lg transition-transform active:scale-[0.98]",
+                canPlay
+                  ? "bg-[#2B5D3A] text-white hover:bg-[#234D30]"
+                  : "bg-[#9AB0A4] text-white"
               )}
               onClick={() =>
-                handleStartLesson(nextLessonInfo.moduleIndex, nextLessonInfo.lessonIndex)
+                handleStartLesson(nextLesson.moduleIndex, nextLesson.lessonIndex)
               }
             >
               {canPlay ? (
                 <>
-                  <Icons.Play className="h-5 w-5 fill-current" /> Continuar Aprendizado
+                  Continuar aula {effectiveCurrentIdx + 1}
+                  <Icons.ArrowRight className="ml-2 h-5 w-5" />
                 </>
               ) : (
                 <>
-                  <Icons.Heart className="h-5 w-5" /> Sem vidas
+                  <Icons.Clock className="mr-2 h-5 w-5" />
+                  Próxima vida em {countdown}
                 </>
               )}
             </Button>
@@ -489,22 +664,16 @@ export default function LearningLab() {
             <Button
               size="lg"
               variant="outline"
-              className="w-full border-[#3E9A63] bg-white text-[#3E8E5E] hover:bg-[#F0FAF3]"
+              className="w-full border-[#2B5D3A] bg-white text-[#2B5D3A] hover:bg-[#F0FAF3]"
               onClick={() => setSearchParams({})}
             >
-              <Icons.Sparkles className="h-5 w-5" /> Explorar Outros
+              <Icons.Sparkles className="mr-2 h-5 w-5" />
+              Explorar outros cursos
             </Button>
           )}
         </div>
-
-        {!canPlay && (
-          <p className="mt-3 text-center text-xs text-[#9AB0A4]">
-            Próxima vida em {countdown}. 1 vida/hora
-          </p>
-        )}
+        <BottomNav active="trilha" />
       </div>
-
-      <HelpButton />
 
       {showNoLives && <NoLivesModal onClose={() => setShowNoLives(false)} />}
     </div>
