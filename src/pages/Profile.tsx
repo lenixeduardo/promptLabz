@@ -49,6 +49,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [avatarImage, setAvatarImage] = useState("/assets/avatar-cat.png")
+  const [premiumStatus, setPremiumStatus] = useState<string>("free")
 
   useEffect(() => {
     if (!user?.id) return
@@ -57,6 +58,7 @@ export default function Profile() {
         const found = getAvatarById(profile.avatar_url)
         if (found) setAvatarImage(found.image)
       }
+      if (profile?.premium_status) setPremiumStatus(profile.premium_status)
     })
   }, [user?.id])
 
@@ -142,6 +144,27 @@ export default function Profile() {
             {data.consecutiveDays} dias 🔥
           </span>
         </div>
+
+        {/* Subscription management */}
+        <button
+          onClick={() => navigate("/subscription")}
+          className="mb-4 flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white px-5 py-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+            <Icons.CreditCard className="h-5 w-5 text-[#3E8E5E]" />
+          </div>
+          <div className="min-w-0 flex-1 text-left">
+            <p className="text-sm font-bold text-[#1F2A24]">Gerenciar assinaturas</p>
+            <p className="text-xs text-[#6B9E7E]">
+              {premiumStatus === "active"
+                ? "PRO ativo ✓"
+                : premiumStatus === "trial"
+                  ? "Período de teste"
+                  : "Plano gratuito"}
+            </p>
+          </div>
+          <Icons.ChevronRight className="h-4 w-4 shrink-0 text-[#BFE3CC]" />
+        </button>
 
         {/* Achievement preview cards */}
         <div className="mb-4 flex flex-col gap-3">
