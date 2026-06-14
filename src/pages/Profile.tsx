@@ -1,17 +1,27 @@
 import { useState, useEffect } from "react"
-import { useNavigate, Link } from "react-router-dom"
-import { ArrowLeft, User, Mail, Calendar } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Settings, ChevronRight, Zap, BookOpen, Edit2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { BottomNav } from "@/components/BottomNav"
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
+import { useFavorites } from "@/hooks/useFavorites"
 import { updateUserProfile, getUserProfile } from "@/lib/db"
 import { supabase } from "@/lib/supabase"
 import { getAvatarById } from "@/data/avatarsData"
 import { getProgressCount } from "@/lib/achievements"
+import { getLocalXP, getLocalGems, getLevel, getLevelProgress } from "@/lib/xp"
+import { getLevelTitle } from "@/lib/levelTitles"
 import * as Icons from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { sileo } from "sileo"
+import { User, Mail } from "lucide-react"
+
+const SAMPLE_CERTIFICATE = {
+  courseName: "Engenharia de Prompts para Iniciantes",
+  hours: 4,
+}
 
 function HexBadge({
   icon: IconComp,
@@ -23,7 +33,7 @@ function HexBadge({
   return (
     <div
       className={cn(
-        "flex h-14 w-14 shrink-0 items-center justify-center",
+        "flex h-12 w-12 shrink-0 items-center justify-center",
         isUnlocked
           ? "bg-gradient-to-br from-[#3E8E5E] to-[#2E7048]"
           : "bg-gradient-to-br from-[#E8EEE9] to-[#DCEAE3]",
@@ -32,9 +42,39 @@ function HexBadge({
       aria-hidden="true"
     >
       {isUnlocked && IconComp ? (
-        <IconComp className="h-6 w-6 text-white" />
+        <IconComp className="h-5 w-5 text-white" />
       ) : (
-        <Icons.Lock className="h-5 w-5 text-[#9AB0A4]" />
+        <Icons.Lock className="h-4 w-4 text-[#9AB0A4]" />
+      )}
+    </div>
+  )
+}
+
+function StatCard({ value, label, icon: Icon }: {
+  value: number | string
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+}) {
+  return (
+    <div className="flex flex-1 flex-col items-center gap-1 rounded-2xl border border-[#CDEAD8] bg-white px-2 py-3 shadow-sm">
+      <Icon className="h-4 w-4 text-[#3E8E5E]" />
+      <span className="text-lg font-extrabold leading-none text-[#2B5D3A]">{value}</span>
+      <span className="text-[10px] font-medium text-[#9AB0A4]">{label}</span>
+    </div>
+  )
+}
+
+function SectionHeader({ title, onSeeAll }: { title: string; onSeeAll?: () => void }) {
+  return (
+    <div className="mb-3 flex items-center justify-between">
+      <h2 className="text-sm font-extrabold uppercase tracking-wider text-[#2B5D3A]">{title}</h2>
+      {onSeeAll && (
+        <button
+          onClick={onSeeAll}
+          className="flex items-center gap-0.5 text-xs font-semibold text-[#3E8E5E] hover:text-[#2B5D3A]"
+        >
+          Ver tudo <ChevronRight className="h-3 w-3" />
+        </button>
       )}
     </div>
   )
@@ -44,12 +84,18 @@ export default function Profile() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { allAchievements, unlocked, data } = useAchievements()
+  const { favorites } = useFavorites()
 
   const [fullName, setFullName] = useState(user?.user_metadata?.full_name || "")
   const [loading, setLoading] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [avatarImage, setAvatarImage] = useState("/assets/avatar-cat.png")
-  const [premiumStatus, setPremiumStatus] = useState<string>("free")
+
+  const xp = user?.id ? getLocalXP(user.id) : 0
+  const gems = user?.id ? getLocalGems(user.id) : 0
+  const level = getLevel(xp)
+  const { currentXP, targetXP } = getLevelProgress(xp)
+  const levelTitle = getLevelTitle(level)
 
   useEffect(() => {
     if (!user?.id) return
@@ -58,20 +104,17 @@ export default function Profile() {
         const found = getAvatarById(profile.avatar_url)
         if (found) setAvatarImage(found.image)
       }
-      if (profile?.premium_status) setPremiumStatus(profile.premium_status)
     })
   }, [user?.id])
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-
     if (!user?.id) {
       sileo.error({ title: "Usuário não encontrado" })
       setLoading(false)
       return
     }
-
     try {
       const [dbResult, authResult] = await Promise.all([
         updateUserProfile(user.id, fullName),
@@ -80,6 +123,7 @@ export default function Profile() {
       if (dbResult.error) throw new Error(dbResult.error)
       if (authResult.error) throw authResult.error
       sileo.success({ title: "Perfil atualizado com sucesso!" })
+      setEditOpen(false)
     } catch (err: any) {
       sileo.error({ title: err?.message || "Erro ao atualizar perfil" })
     } finally {
@@ -87,191 +131,68 @@ export default function Profile() {
     }
   }
 
-  const registrationDate = user?.created_at
-    ? new Date(user.created_at).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })
-    : ""
+  const recentAchievements = allAchievements
+    .filter((a) => unlocked.includes(a.id))
+    .slice(-4)
+    .concat(
+      allAchievements.filter((a) => !unlocked.includes(a.id)).slice(0, Math.max(0, 4 - unlocked.length)),
+    )
+    .slice(0, 4)
 
-  const previewAchievements = allAchievements.slice(0, 3)
+  const lessonsPct = Math.min(100, Math.round((data.totalLessonsCompleted / 50) * 100))
+  const streakPct = Math.min(100, Math.round((data.consecutiveDays / 30) * 100))
+  const xpPct = Math.round((currentXP / targetXP) * 100)
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
-      <div className="mx-auto flex w-full max-w-[420px] flex-col">
-        {/* Back */}
-        <Link
-          to="/home"
-          className="mb-2 flex w-fit items-center text-[#2E8B57] hover:text-primary"
-        >
-          <ArrowLeft className="h-6 w-6" strokeWidth={2.2} />
-        </Link>
-
-        {/* Title */}
-        <h1 className="mb-6 text-center text-3xl font-extrabold text-[#2B5D3A]">
-          Perfil &amp; Conquistas
-        </h1>
-
-        {/* Avatar + name */}
-        <div className="mb-5 flex flex-col items-center gap-3">
-          <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-[#BFE3CC] shadow-md">
-            <img
-              src={avatarImage}
-              alt="Avatar"
-              className="h-full w-full object-cover"
-            />
+    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-white pb-28">
+      {/* Header */}
+      <div className="sticky top-0 z-10 border-b border-[#E5F5EB] bg-[#EAF7EF]/95 px-5 pb-3 pt-5 backdrop-blur-sm">
+        <div className="mx-auto flex w-full max-w-[420px] items-center justify-between">
+          <div>
+            <h1 className="text-xl font-extrabold text-[#2B5D3A]">{levelTitle}</h1>
+            <p className="text-xs text-[#6B9E7E]">{user?.email}</p>
           </div>
-          <div className="text-center">
-            <p className="text-base font-bold text-[#2B5D3A]">
-              {user?.user_metadata?.full_name || "Seu Perfil"}
-            </p>
-            <Link
-              to="/avatars"
-              className="text-xs font-medium text-[#3E8E5E] underline-offset-2 hover:underline"
+          <button
+            onClick={() => setEditOpen((v) => !v)}
+            className="rounded-full p-2 text-[#3E8E5E] hover:bg-[#DCF1E4]"
+            aria-label="Editar perfil"
+          >
+            <Settings className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      <div className="mx-auto w-full max-w-[420px] px-5 pt-5">
+        {/* Avatar */}
+        <div className="mb-5 flex flex-col items-center gap-2">
+          <div className="relative">
+            <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-[#3E8E5E] shadow-md">
+              <img src={avatarImage} alt="Avatar" className="h-full w-full object-cover" />
+            </div>
+            <button
+              onClick={() => navigate("/avatars")}
+              className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-[#3E8E5E] shadow-sm"
+              aria-label="Trocar avatar"
             >
-              Trocar avatar
-            </Link>
+              <Edit2 className="h-3 w-3 text-white" />
+            </button>
           </div>
+          <p className="text-base font-bold text-[#2B5D3A]">
+            {user?.user_metadata?.full_name || levelTitle}
+          </p>
         </div>
 
-        {/* Streak card */}
-        <div className="mb-4 flex items-center justify-between rounded-2xl border border-[#CDEAD8] bg-white px-5 py-4 shadow-sm">
-          <span className="text-sm font-bold uppercase tracking-wider text-[#6B7A70]">
-            Streak
-          </span>
-          <span className="text-2xl font-extrabold text-[#2B5D3A]">
-            {data.consecutiveDays} dias 🔥
-          </span>
+        {/* Stats row */}
+        <div className="mb-5 flex gap-2">
+          <StatCard value={level} label="Nível" icon={Icons.Star} />
+          <StatCard value={xp.toLocaleString("pt-BR")} label="XP" icon={Zap} />
+          <StatCard value={gems} label="Gemas" icon={Icons.Diamond} />
+          <StatCard value={data.totalLessonsCompleted} label="Lições" icon={BookOpen} />
         </div>
 
-        {/* Inventory */}
-        <button
-          onClick={() => navigate("/inventory")}
-          className="mb-4 flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white px-5 py-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
-            <Icons.Box className="h-5 w-5 text-[#3E8E5E]" />
-          </div>
-          <div className="min-w-0 flex-1 text-left">
-            <p className="text-sm font-bold text-[#1F2A24]">Meu Inventário</p>
-            <p className="text-xs text-[#6B9E7E]">Power-ups e avatares</p>
-          </div>
-          <Icons.ChevronRight className="h-4 w-4 shrink-0 text-[#BFE3CC]" />
-        </button>
-
-        {/* Store */}
-        <button
-          onClick={() => navigate("/store")}
-          className="mb-4 flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white px-5 py-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
-            <Icons.ShoppingBag className="h-5 w-5 text-[#3E8E5E]" />
-          </div>
-          <div className="min-w-0 flex-1 text-left">
-            <p className="text-sm font-bold text-[#1F2A24]">Loja</p>
-            <p className="text-xs text-[#6B9E7E]">Comprar com gemas</p>
-          </div>
-          <Icons.ChevronRight className="h-4 w-4 shrink-0 text-[#BFE3CC]" />
-        </button>
-
-        {/* Subscription management */}
-        <button
-          onClick={() => navigate("/subscription")}
-          className="mb-4 flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white px-5 py-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
-            <Icons.CreditCard className="h-5 w-5 text-[#3E8E5E]" />
-          </div>
-          <div className="min-w-0 flex-1 text-left">
-            <p className="text-sm font-bold text-[#1F2A24]">Gerenciar assinaturas</p>
-            <p className="text-xs text-[#6B9E7E]">
-              {premiumStatus === "active"
-                ? "PRO ativo ✓"
-                : premiumStatus === "trial"
-                  ? "Período de teste"
-                  : "Plano gratuito"}
-            </p>
-          </div>
-          <Icons.ChevronRight className="h-4 w-4 shrink-0 text-[#BFE3CC]" />
-        </button>
-
-        {/* Achievement preview cards */}
-        <div className="mb-4 flex flex-col gap-3">
-          {previewAchievements.map((ach) => {
-            const isUnlocked = unlocked.includes(ach.id)
-            const IconComp = Icons[ach.icon as keyof typeof Icons] as
-              | React.ComponentType<{ className?: string }>
-              | undefined
-            const progress = getProgressCount(ach.id, data)
-            const pct = progress
-              ? Math.round((progress.current / progress.max) * 100)
-              : 0
-
-            return (
-              <button
-                key={ach.id}
-                onClick={() => {
-                  if (import.meta.env.DEV) navigate("/achievements")
-                }}
-                className="flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white p-4 text-left shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
-              >
-                <HexBadge icon={IconComp} isUnlocked={isUnlocked} />
-
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold leading-snug text-[#1F2A24]">
-                    {ach.title}
-                  </p>
-                  {progress && (
-                    <div className="mt-1.5">
-                      <div
-                        className="h-1.5 w-full overflow-hidden rounded-full bg-[#EAF7EF]"
-                        role="progressbar"
-                        aria-valuenow={progress.current}
-                        aria-valuemin={0}
-                        aria-valuemax={progress.max}
-                        aria-label={`Progresso: ${progress.current} de ${progress.max}`}
-                      >
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-[#3E8E5E] to-[#2E7048] transition-all duration-500"
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
-                      <p className="mt-0.5 text-xs text-[#6B9E7E]">
-                        {progress.current}/{progress.max}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                <Icons.ChevronRight className="h-4 w-4 shrink-0 text-[#BFE3CC]" />
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Share button */}
-        <button className="mb-3 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#BFE3CC] bg-white px-5 py-3 font-semibold text-[#2B5D3A] transition-all hover:bg-[#F0FAF3] hover:shadow-sm">
-          <Icons.Share2 className="h-5 w-5" />
-          Compartilhar
-        </button>
-
-        {/* Edit profile toggle */}
-        <button
-          onClick={() => setEditOpen((v) => !v)}
-          className="mb-3 flex w-full items-center justify-center gap-1 text-sm text-[#3E8E5E] hover:text-[#2B5D3A]"
-        >
-          {editOpen ? (
-            <Icons.ChevronUp className="h-4 w-4" />
-          ) : (
-            <Icons.ChevronDown className="h-4 w-4" />
-          )}
-          {editOpen ? "Fechar edição" : "Editar Perfil"}
-        </button>
-
-        {/* Collapsible edit form */}
+        {/* Edit form */}
         {editOpen && (
-          <div className="rounded-2xl border border-[#BFE3CC] bg-[#E1F2E7] p-6 shadow-md">
+          <div className="mb-5 rounded-2xl border border-[#BFE3CC] bg-white p-5 shadow-sm">
             <form className="flex flex-col gap-4" onSubmit={handleUpdate}>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-[#3E8E5E]">
@@ -286,7 +207,6 @@ export default function Profile() {
                   disabled={loading}
                 />
               </div>
-
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-[#3E8E5E]">
                   E-mail
@@ -298,19 +218,165 @@ export default function Profile() {
                   disabled
                 />
               </div>
-
-              <div className="flex items-center gap-2 px-2 py-1 text-sm text-[#4A5E52]">
-                <Calendar className="h-4 w-4" />
-                <span>Cadastrado em: {registrationDate}</span>
-              </div>
-
-              <Button type="submit" size="lg" className="mt-2 w-full" disabled={loading}>
+              <Button type="submit" size="lg" className="w-full" disabled={loading}>
                 {loading ? "Salvando..." : "Salvar Alterações"}
               </Button>
             </form>
           </div>
         )}
+
+        {/* Progress summary */}
+        <div className="mb-5 rounded-2xl border border-[#CDEAD8] bg-white p-5 shadow-sm">
+          <SectionHeader title="Resumo de progresso" />
+          <div className="flex flex-col gap-3.5">
+            {[
+              { label: "Lições concluídas", value: data.totalLessonsCompleted, max: 50, pct: lessonsPct },
+              { label: "Sequência", value: `${data.consecutiveDays} dias`, max: 30, pct: streakPct },
+              { label: "XP do nível", value: `${currentXP}/${targetXP}`, max: targetXP, pct: xpPct },
+            ].map((item) => (
+              <div key={item.label}>
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[#4A5E52]">{item.label}</span>
+                  <span className="text-xs font-bold text-[#2B5D3A]">{item.value}</span>
+                </div>
+                <div
+                  className="h-2 w-full overflow-hidden rounded-full bg-[#EAF7EF]"
+                  role="progressbar"
+                  aria-valuenow={item.pct}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                >
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-[#3E8E5E] to-[#7CC79A] transition-all duration-500"
+                    style={{ width: `${item.pct}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent achievements */}
+        <div className="mb-5">
+          <SectionHeader title="Conquistas recentes" onSeeAll={() => navigate("/achievements")} />
+          <div className="flex gap-3">
+            {recentAchievements.map((ach) => {
+              const isUnlocked = unlocked.includes(ach.id)
+              const IconComp = Icons[ach.icon as keyof typeof Icons] as
+                | React.ComponentType<{ className?: string }>
+                | undefined
+              return (
+                <div key={ach.id} className="flex flex-col items-center gap-1">
+                  <HexBadge icon={IconComp} isUnlocked={isUnlocked} />
+                  <span className="max-w-[56px] text-center text-[9px] font-medium leading-tight text-[#6B9E7E]">
+                    {ach.title}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Certificates */}
+        <div className="mb-5">
+          <SectionHeader title="Certificados" />
+          <button
+            onClick={() =>
+              navigate("/certificate", {
+                state: {
+                  courseName: SAMPLE_CERTIFICATE.courseName,
+                  hours: SAMPLE_CERTIFICATE.hours,
+                  completionDate: new Date().toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  }),
+                },
+              })
+            }
+            className="flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+              <Icons.Award className="h-5 w-5 text-[#3E8E5E]" />
+            </div>
+            <div className="min-w-0 flex-1 text-left">
+              <p className="truncate text-sm font-bold text-[#1F2A24]">
+                {SAMPLE_CERTIFICATE.courseName}
+              </p>
+              <p className="text-xs text-[#6B9E7E]">{SAMPLE_CERTIFICATE.hours}h • Ver certificado</p>
+            </div>
+            <ChevronRight className="h-4 w-4 shrink-0 text-[#BFE3CC]" />
+          </button>
+        </div>
+
+        {/* Skills unlocked */}
+        <div className="mb-5">
+          <SectionHeader title="Skills desbloqueadas" onSeeAll={() => navigate("/achievements")} />
+          {unlocked.length === 0 ? (
+            <p className="text-sm text-[#9AB0A4]">Complete lições para desbloquear skills.</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {allAchievements
+                .filter((a) => unlocked.includes(a.id))
+                .slice(0, 8)
+                .map((ach) => (
+                  <span
+                    key={ach.id}
+                    className="rounded-full border border-[#BFE3CC] bg-[#EAF7EF] px-3 py-1 text-xs font-semibold text-[#2B5D3A]"
+                  >
+                    {ach.title}
+                  </span>
+                ))}
+              {unlocked.length > 8 && (
+                <span className="rounded-full border border-[#BFE3CC] bg-[#EAF7EF] px-3 py-1 text-xs font-semibold text-[#6B9E7E]">
+                  +{unlocked.length - 8}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Favorite prompts */}
+        <button
+          onClick={() => navigate("/prompts")}
+          className="mb-5 flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+            <Icons.Heart className="h-5 w-5 text-[#3E8E5E]" />
+          </div>
+          <div className="min-w-0 flex-1 text-left">
+            <p className="text-sm font-bold text-[#1F2A24]">Prompts favoritos</p>
+            <p className="text-xs text-[#6B9E7E]">
+              {favorites.length > 0 ? `${favorites.length} salvos` : "Nenhum favorito ainda"}
+            </p>
+          </div>
+          <ChevronRight className="h-4 w-4 shrink-0 text-[#BFE3CC]" />
+        </button>
+
+        {/* Quick nav cards */}
+        {[
+          { label: "Meu Inventário", sub: "Power-ups e avatares", icon: Icons.Box, path: "/inventory" },
+          { label: "Loja", sub: "Comprar com gemas", icon: Icons.ShoppingBag, path: "/store" },
+          { label: "Gerenciar assinaturas", sub: "Plano atual", icon: Icons.CreditCard, path: "/subscription" },
+        ].map(({ label, sub, icon: Icon, path }) => (
+          <button
+            key={path}
+            onClick={() => navigate(path)}
+            className="mb-3 flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white px-5 py-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+              <Icon className="h-5 w-5 text-[#3E8E5E]" />
+            </div>
+            <div className="min-w-0 flex-1 text-left">
+              <p className="text-sm font-bold text-[#1F2A24]">{label}</p>
+              <p className="text-xs text-[#6B9E7E]">{sub}</p>
+            </div>
+            <ChevronRight className="h-4 w-4 shrink-0 text-[#BFE3CC]" />
+          </button>
+        ))}
       </div>
+
+      <BottomNav active="perfil" />
     </div>
   )
 }

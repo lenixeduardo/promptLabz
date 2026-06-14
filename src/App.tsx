@@ -33,6 +33,8 @@ const QuickQuiz = lazy(() => import("@/pages/QuickQuiz"))
 const Inventory = lazy(() => import("@/pages/Inventory"))
 const Store = lazy(() => import("@/pages/Store"))
 const Ranking = lazy(() => import("@/pages/Ranking"))
+const QuizResult = lazy(() => import("@/pages/QuizResult"))
+const Certificate = lazy(() => import("@/pages/Certificate"))
 
 function PageLoading() {
   return (
@@ -220,6 +222,22 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <Ranking />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/quiz-result"
+                element={
+                  <PrivateRoute>
+                    <QuizResult />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/certificate"
+                element={
+                  <PrivateRoute>
+                    <Certificate />
                   </PrivateRoute>
                 }
               />

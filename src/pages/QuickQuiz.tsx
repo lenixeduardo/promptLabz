@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { X, Zap, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -128,6 +128,7 @@ export default function QuickQuiz() {
   const [selected, setSelected] = useState<string | null>(null)
   const [confirmed, setConfirmed] = useState(false)
   const [score, setScore] = useState(0)
+  const startTime = useRef(Date.now())
 
   const currentQuestion = questions[currentIndex]
   const isLast = currentIndex === total - 1
@@ -153,7 +154,10 @@ export default function QuickQuiz() {
   function advance() {
     if (isLast) {
       const finalScore = score + (confirmed && selected === currentQuestion.correct ? 1 : 0)
-      navigate("/home", { state: { quizScore: finalScore, quizTotal: total } })
+      const timeElapsed = Math.round((Date.now() - startTime.current) / 1000)
+      navigate("/quiz-result", {
+        state: { score: finalScore, total, timeElapsed, xpEarned: finalScore * 50 },
+      })
       return
     }
     setCurrentIndex((i) => i + 1)
