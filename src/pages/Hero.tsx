@@ -1,79 +1,95 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
-import { Lightbulb, MessageSquarePlus, Pencil, Plus, Check, ArrowRight } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Lightbulb, Pencil, Sparkles, Plus, Type, ArrowRight, MessageSquarePlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { BrandLogo } from "@/components/BrandLogo"
 import { CircleTransition } from "@/components/CircleTransition"
 
 export default function Hero() {
   const [transitioning, setTransitioning] = useState(false)
+  const navigate = useNavigate()
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center gap-6 bg-[#EFF9F4] px-6 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center bg-gradient-to-b from-[#EAF7F0] to-[#D6EEE3] px-6 pb-10 pt-12 overflow-hidden">
+      <CircleTransition to="/signup" active={transitioning} />
 
-      {/* Growing-circle overlay */}
-      <CircleTransition to="/login" active={transitioning} />
+      {/* Background sparkles */}
+      <Sparkles className="animate-twinkle absolute top-16 right-8 h-4 w-4 text-[#7CC79A]/60" style={{ animationDelay: "0s" }} />
+      <Sparkles className="animate-twinkle absolute top-32 left-4 h-3 w-3 text-[#7CC79A]/50" style={{ animationDelay: "1.2s" }} />
+      <Sparkles className="animate-twinkle absolute bottom-48 right-6 h-3.5 w-3.5 text-[#5BA877]/50" style={{ animationDelay: "0.6s" }} />
+      <Sparkles className="animate-twinkle absolute bottom-32 left-8 h-3 w-3 text-[#7CC79A]/40" style={{ animationDelay: "1.8s" }} />
 
-      {/* Floating icon chips */}
-      <div className="absolute top-16 left-8 flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-sm">
-        <Lightbulb className="h-6 w-6 text-[#F5A623]" strokeWidth={2} />
-      </div>
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-sm">
-        <MessageSquarePlus className="h-6 w-6 text-[#2B5D3A]" strokeWidth={2} />
-      </div>
-      <div className="absolute top-16 right-8 flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-sm">
-        <Pencil className="h-6 w-6 text-[#2B5D3A]" strokeWidth={2} />
-      </div>
-
-      {/* Decorative scattered elements */}
-      <div className="absolute top-1/3 left-6 text-[#A8D5B8] opacity-40">
-        <Plus className="h-8 w-8" strokeWidth={3} />
-      </div>
-      <div className="absolute top-1/2 right-5 text-[#A8D5B8] opacity-30">
-        <Check className="h-6 w-6" strokeWidth={3} />
-      </div>
-      <div className="absolute bottom-1/3 left-10 text-[#A8D5B8] opacity-20">
-        <Plus className="h-5 w-5" strokeWidth={3} />
+      {/* Top floating icon circles */}
+      <div className="flex items-end justify-center gap-6 mb-6 w-full max-w-xs">
+        <div className="mt-4 bg-white rounded-full p-3.5 shadow-md shadow-green-100">
+          <Lightbulb className="h-6 w-6 text-[#F5A623]" />
+        </div>
+        <div className="bg-white rounded-full p-3.5 shadow-md shadow-green-100">
+          <MessageSquarePlus className="h-6 w-6 text-[#2F6B45]" />
+        </div>
+        <div className="mt-3 bg-white rounded-full p-3.5 shadow-md shadow-green-100">
+          <Pencil className="h-6 w-6 text-[#2F6B45]" />
+        </div>
       </div>
 
-      {/* Brand logo */}
-      <BrandLogo className="text-5xl" />
+      {/* A1 badge + brand name */}
+      <div className="flex flex-col items-center gap-2 mb-2">
+        <div className="bg-[#2F6B45] text-white rounded-2xl px-4 py-1.5 text-sm font-bold tracking-wide">
+          A1
+        </div>
+        <BrandLogo className="text-5xl" />
+      </div>
 
-      {/* Mascot — asset pendente: substituir por mascote com capelo + tablet */}
-      <img
-        src="/assets/mascot-login-new.png"
-        alt="PromptLabz mascot"
-        className="h-52 w-auto object-contain drop-shadow-md"
-      />
+      {/* Mascot area with floating decorations */}
+      <div className="relative flex items-center justify-center w-full max-w-xs my-2">
+        <div className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#2F6B45] text-white rounded-2xl p-2.5 shadow-lg">
+          <Plus className="h-5 w-5" />
+        </div>
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#2F6B45] text-white rounded-2xl p-2.5 shadow-lg">
+          <Type className="h-5 w-5" />
+        </div>
+        <Sparkles className="animate-twinkle absolute top-2 left-16 h-4 w-4 text-[#5BA877]" style={{ animationDelay: "0.3s" }} />
+        <Sparkles className="animate-twinkle absolute top-2 right-14 h-3.5 w-3.5 text-[#7CC79A]" style={{ animationDelay: "1.0s" }} />
+        <Sparkles className="animate-twinkle absolute bottom-4 left-20 h-3 w-3 text-[#5BA877]" style={{ animationDelay: "1.6s" }} />
+        <img
+          src="/assets/mascot-login-new.png"
+          alt="PromptLabz mascot"
+          className="h-56 w-auto object-contain drop-shadow-md"
+        />
+      </div>
 
-      {/* Headline + subtitle */}
-      <div className="flex flex-col items-center gap-3 text-center">
-        <h1 className="text-4xl font-extrabold text-[#1F3D2A] leading-tight">
+      {/* Headline */}
+      <div className="flex flex-col items-center gap-3 mt-2 mb-6">
+        <h1 className="text-4xl font-extrabold text-[#1E4D2F] text-center leading-tight">
           Aprenda IA<br />brincando
         </h1>
-        <p className="text-sm text-[#4A7A5C] max-w-xs leading-relaxed">
+        <p className="text-base text-[#4A7A5C] text-center max-w-xs leading-relaxed">
           Domine a arte de escrever prompts e transforme suas ideias em resultados incríveis.
         </p>
       </div>
 
-      {/* CTA button */}
-      <Button
-        size="lg"
-        className="w-full max-w-xs flex items-center justify-center gap-2 rounded-full"
-        disabled={transitioning}
-        onClick={() => setTransitioning(true)}
-      >
-        Vamos começar!
-        <ArrowRight className="h-5 w-5" strokeWidth={2.5} />
-      </Button>
+      {/* CTA */}
+      <div className="flex flex-col items-center gap-4 w-full max-w-xs mt-auto">
+        <Button
+          size="lg"
+          className="w-full flex items-center justify-between px-6"
+          disabled={transitioning}
+          onClick={() => setTransitioning(true)}
+        >
+          <span>Vamos começar!</span>
+          <ArrowRight className="h-5 w-5" />
+        </Button>
 
-      {/* Secondary login link */}
-      <p className="text-sm text-[#4A7A5C]">
-        Já tem uma conta?{" "}
-        <Link to="/login" className="font-bold text-[#2B5D3A] hover:underline">
-          Entrar
-        </Link>
-      </p>
+        <p className="text-sm text-[#4A7A5C]">
+          Já tem uma conta?{" "}
+          <button
+            className="font-bold text-[#2F6B45] underline-offset-2 hover:underline"
+            onClick={() => navigate("/login")}
+          >
+            Entrar
+          </button>
+        </p>
+      </div>
     </div>
   )
 }

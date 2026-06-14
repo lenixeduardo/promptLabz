@@ -29,11 +29,11 @@ export default function Achievements() {
           </button>
 
           <div className="flex flex-1 flex-col items-center">
-            <MascotGlow size={120}>
+            <MascotGlow size={140}>
               <img
-                src="/assets/mascot-icons/mascot_celebrate.svg"
-                alt="Mascote comemorando"
-                className="h-16 w-16 object-contain"
+                src="/assets/mascot-promo.png"
+                alt="Mascote comemorando conquistas"
+                className="h-24 w-24 object-contain drop-shadow-md"
               />
             </MascotGlow>
             <div className="mt-2 text-center">
