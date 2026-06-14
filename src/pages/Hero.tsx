@@ -42,21 +42,15 @@ export default function Hero() {
 
       {/* Mascot area with floating decorations */}
       <div className="relative flex items-center justify-center w-full max-w-xs my-2">
-        {/* Left floating pill */}
         <div className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#2F6B45] text-white rounded-2xl p-2.5 shadow-lg">
           <Plus className="h-5 w-5" />
         </div>
-
-        {/* Right floating pill */}
         <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#2F6B45] text-white rounded-2xl p-2.5 shadow-lg">
           <Type className="h-5 w-5" />
         </div>
-
-        {/* Sparkles around mascot */}
         <Sparkles className="animate-twinkle absolute top-2 left-16 h-4 w-4 text-[#5BA877]" style={{ animationDelay: "0.3s" }} />
         <Sparkles className="animate-twinkle absolute top-2 right-14 h-3.5 w-3.5 text-[#7CC79A]" style={{ animationDelay: "1.0s" }} />
         <Sparkles className="animate-twinkle absolute bottom-4 left-20 h-3 w-3 text-[#5BA877]" style={{ animationDelay: "1.6s" }} />
-
         <img
           src="/assets/mascot-login-new.png"
           alt="PromptLabz mascot"
