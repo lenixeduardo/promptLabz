@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { ChevronLeft, Search, X, Copy, Check, Wand2 } from "lucide-react"
 import { PROMPTS, type PromptCard } from "@/data/promptsData"
 import { sileo } from "sileo"
+import { BottomNav } from "@/components/BottomNav"
 
 type PromptCategory = PromptCard["category"] | "Todas"
 
@@ -90,7 +91,7 @@ export default function Prompts() {
   }, [activeCategory, searchQuery])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white px-4 py-6">
+    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white px-4 py-6 pb-24">
       <div className="mx-auto w-full max-w-[1200px]">
         {/* Back button */}
         <div className="mb-4 flex items-center">
@@ -188,6 +189,8 @@ export default function Prompts() {
           {PROMPTS.length} prompts catalogados
         </div>
       </div>
+
+      <BottomNav active="lab" />
     </div>
   )
 }
