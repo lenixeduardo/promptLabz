@@ -325,10 +325,12 @@ function TrailView({
   flatLessons,
   catProgress,
   effectiveCurrentIdx,
+  onLessonClick,
 }: {
   flatLessons: FlatLesson[]
   catProgress: CategoryProgress
   effectiveCurrentIdx: number
+  onLessonClick: (modIndex: number, lessonIndex: number) => void
 }) {
   const count = flatLessons.length
   const containerH = count > 0 ? FIRST_Y + (count - 1) * STEP_H + 80 : 200
@@ -420,13 +422,18 @@ function TrailView({
           <div key={lesson.id}>
             {/* Node circle */}
             <div
+              role={!isLocked ? "button" : undefined}
+              tabIndex={!isLocked ? 0 : undefined}
+              onClick={!isLocked ? () => onLessonClick(lesson.moduleIndex, lesson.lessonIndex) : undefined}
+              onKeyDown={!isLocked ? (e) => e.key === "Enter" && onLessonClick(lesson.moduleIndex, lesson.lessonIndex) : undefined}
               className={cn(
                 "absolute z-10 flex items-center justify-center rounded-full text-sm font-bold shadow-md",
                 isCompleted
                   ? "bg-[#2B5D3A] text-white"
                   : isCurrent
                     ? "border-4 border-[#2B5D3A] bg-white text-[#2B5D3A]"
-                    : "bg-[#B0C8B8] text-white"
+                    : "bg-[#B0C8B8] text-white",
+                !isLocked && "cursor-pointer"
               )}
               style={{
                 left: nodeX - CIRCLE_R,
@@ -440,12 +447,16 @@ function TrailView({
 
             {/* Lesson card */}
             <div
+              role={!isLocked ? "button" : undefined}
+              tabIndex={!isLocked ? 0 : undefined}
+              onClick={!isLocked ? () => onLessonClick(lesson.moduleIndex, lesson.lessonIndex) : undefined}
+              onKeyDown={!isLocked ? (e) => e.key === "Enter" && onLessonClick(lesson.moduleIndex, lesson.lessonIndex) : undefined}
               className={cn(
                 "absolute z-[5] flex items-center rounded-2xl bg-white px-3 py-3",
                 isCurrent
                   ? "border-2 border-[#2B5D3A] shadow-lg"
                   : "border border-[#E4F0E8] shadow-sm",
-                isLocked && "opacity-75"
+                isLocked ? "opacity-75" : "cursor-pointer transition-shadow hover:shadow-md active:scale-[0.98]"
               )}
               style={{
                 left: cardLeft,
@@ -629,6 +640,7 @@ export default function LearningLab() {
           flatLessons={flatLessons}
           catProgress={currentCatProgress}
           effectiveCurrentIdx={effectiveCurrentIdx}
+          onLessonClick={handleStartLesson}
         />
       </div>
 
