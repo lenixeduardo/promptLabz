@@ -18,8 +18,9 @@ block() {
   exit 0
 }
 
-# Block force push
-if echo "$COMMAND" | grep -qE 'git\s+push\s+.*(-f\b|--force)'; then
+# Block force push (--force/-f), but allow the safer --force-with-lease
+if echo "$COMMAND" | grep -qE 'git\s+push\s+.*(-f\b|--force\b)' && \
+   ! echo "$COMMAND" | grep -q '\-\-force-with-lease'; then
   block "Force push blocked by git guardrails. Confirm explicitly with the user before force-pushing."
 fi
 
