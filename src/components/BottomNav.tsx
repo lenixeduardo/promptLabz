@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom"
 import * as Icons from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
-export type NavTab = "home" | "trilha" | "lab" | "desafios" | "perfil"
+export type NavTab = "home" | "trilha" | "lab" | "ranking" | "perfil"
 
 const NAV_ITEMS = [
   { key: "home" as const,    label: "Início",      icon: Icons.Home,         path: "/home" },
   { key: "trilha" as const,  label: "Trilha",      icon: Icons.Scissors,     path: "/learn" },
   { key: "lab" as const,     label: "Laboratório", icon: Icons.FlaskConical, path: "/prompts" },
-  { key: "desafios" as const,label: "Desafios",    icon: Icons.Trophy,       path: "/achievements" },
+  { key: "ranking" as const, label: "Ranking",     icon: Icons.Trophy,       path: "/ranking" },
   { key: "perfil" as const,  label: "Perfil",      icon: Icons.UserCircle,   path: "/profile" },
 ]
 

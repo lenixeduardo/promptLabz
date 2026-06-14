@@ -1,0 +1,220 @@
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "@/hooks/useAuth"
+import { loadInventory, addPowerUp, addAvatar } from "@/lib/inventory"
+import { getLocalGems, saveLocalGems } from "@/lib/xp"
+import { updateUserAvatar, updateUserGems } from "@/lib/db"
+import { AVATARS } from "@/data/avatarsData"
+import { POWER_UPS } from "@/data/powerUpsData"
+import { GEM_PACKAGES } from "@/data/storeItemsData"
+import type { PowerUpId } from "@/data/powerUpsData"
+import * as Icons from "@/lib/icons"
+import { cn } from "@/lib/utils"
+import { sileo } from "sileo"
+
+export default function Store() {
+  const navigate = useNavigate()
+  const { user } = useAuth()
+  const [gems, setGems] = useState(0)
+  const [ownedAvatarIds, setOwnedAvatarIds] = useState<string[]>(["cat-green"])
+
+  useEffect(() => {
+    if (!user?.id) return
+    setGems(getLocalGems(user.id))
+    const inv = loadInventory(user.id)
+    setOwnedAvatarIds(inv.ownedAvatarIds)
+  }, [user?.id])
+
+  function deductGems(price: number): number | null {
+    if (!user?.id) return null
+    if (gems < price) {
+      sileo.error({ title: "Gemas insuficientes", description: `Você precisa de ${price} 💎` })
+      return null
+    }
+    const newGems = gems - price
+    saveLocalGems(user.id, newGems)
+    updateUserGems(user.id, newGems)
+    setGems(newGems)
+    return newGems
+  }
+
+  function handleBuyAvatar(avatarId: string, price: number) {
+    if (!user?.id) return
+    if (ownedAvatarIds.includes(avatarId)) return
+    if (deductGems(price) === null) return
+    const inv = addAvatar(user.id, avatarId)
+    setOwnedAvatarIds([...inv.ownedAvatarIds])
+    updateUserAvatar(user.id, avatarId)
+    sileo.success({ title: "Avatar desbloqueado! 🎉" })
+  }
+
+  function handleBuyPowerUp(id: PowerUpId, price: number) {
+    if (!user?.id) return
+    if (deductGems(price) === null) return
+    addPowerUp(user.id, id)
+    sileo.success({ title: "Power-up adicionado! ⚡" })
+  }
+
+  function handleBuyGemPackage() {
+    sileo.success({
+      title: "Em breve!",
+      description: "Integração de pagamento em construção.",
+    })
+  }
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD]">
+      <div className="mx-auto flex w-full max-w-[420px] flex-col px-5 pb-10 pt-8">
+        {/* Header */}
+        <div className="mb-6 flex items-center justify-between">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/60 text-[#2B5D3A] shadow-sm hover:bg-white"
+            aria-label="Voltar"
+          >
+            <Icons.ArrowLeft className="h-5 w-5" strokeWidth={2.2} />
+          </button>
+          <h1 className="text-xl font-extrabold text-[#2B5D3A]">Loja</h1>
+          <div className="flex items-center gap-1 rounded-full bg-[#2B5D3A] px-3 py-1 shadow">
+            <Icons.Diamond className="h-3.5 w-3.5 text-cyan-300" />
+            <span className="text-xs font-bold text-white">{gems.toLocaleString("pt-BR")}</span>
+          </div>
+        </div>
+
+        <p className="mb-6 text-center text-sm text-[#4A7A5A]">
+          Veja aqui o que você pode desbloquear para criar power-ups!
+        </p>
+
+        {/* Hero animado */}
+        <div className="mb-6 flex flex-col items-center rounded-2xl border border-[#CDEAD8] bg-white py-6 shadow-sm">
+          <div className="animate-bounce">
+            <img
+              src="/assets/mascot-promo.png"
+              alt="Loja"
+              className="h-28 w-auto object-contain"
+              onError={(e) => {
+                ;(e.target as HTMLImageElement).src = "/assets/mascot-home.png"
+              }}
+            />
+          </div>
+          <p className="mt-3 text-center text-sm font-semibold text-[#2B5D3A]">
+            Desbloqueie novos avatares e power-ups
+          </p>
+        </div>
+
+        {/* Avatares */}
+        <section className="mb-6">
+          <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-[#2B5D3A]">
+            Avatares
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            {AVATARS.filter((a) => a.price > 0).map((avatar) => {
+              const owned = ownedAvatarIds.includes(avatar.id)
+              return (
+                <button
+                  key={avatar.id}
+                  onClick={() => handleBuyAvatar(avatar.id, avatar.price)}
+                  disabled={owned}
+                  className={cn(
+                    "relative flex flex-col items-center gap-2 rounded-2xl border p-3 shadow-sm transition-all active:scale-[0.97]",
+                    owned
+                      ? "border-[#2B5D3A] bg-[#EAF7EF] opacity-80"
+                      : "border-[#CDEAD8] bg-white hover:shadow-md"
+                  )}
+                >
+                  {owned && (
+                    <span className="absolute right-2 top-2 rounded-full bg-[#2B5D3A] px-2 py-0.5 text-[9px] font-bold text-white">
+                      Meu
+                    </span>
+                  )}
+                  <div className="h-16 w-16 overflow-hidden rounded-xl">
+                    <img
+                      src={avatar.image}
+                      alt={avatar.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <p className="text-center text-xs font-bold text-[#1F2A24]">{avatar.name}</p>
+                  {!owned && (
+                    <div className="flex items-center gap-1">
+                      <Icons.Diamond className="h-3 w-3 text-cyan-500" />
+                      <span className="text-xs font-semibold text-[#2B5D3A]">{avatar.price}</span>
+                    </div>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        </section>
+
+        {/* Power-ups */}
+        <section className="mb-6">
+          <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-[#2B5D3A]">
+            Power-ups
+          </h2>
+          <div className="flex flex-col gap-3">
+            {POWER_UPS.map((pu) => {
+              const Icon = Icons[pu.icon as keyof typeof Icons] as React.ComponentType<{
+                className?: string
+              }>
+              return (
+                <button
+                  key={pu.id}
+                  onClick={() => handleBuyPowerUp(pu.id, pu.storePrice)}
+                  className="flex items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+                >
+                  <div
+                    className={cn(
+                      "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl",
+                      pu.color
+                    )}
+                  >
+                    {Icon && <Icon className="h-6 w-6 text-[#2B5D3A]" />}
+                  </div>
+                  <div className="flex-1 text-left">
+                    <p className="text-sm font-bold text-[#1F2A24]">{pu.name}</p>
+                    <p className="text-xs text-[#6B9E7E]">{pu.description}</p>
+                  </div>
+                  <div className="flex items-center gap-1 rounded-full bg-[#EAF7EF] px-3 py-1">
+                    <Icons.Diamond className="h-3 w-3 text-cyan-500" />
+                    <span className="text-xs font-bold text-[#2B5D3A]">{pu.storePrice}</span>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+        </section>
+
+        {/* Pacotes especiais */}
+        <section>
+          <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-[#2B5D3A]">
+            Pacotes especiais
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            {GEM_PACKAGES.map((pkg) => (
+              <button
+                key={pkg.id}
+                onClick={handleBuyGemPackage}
+                className="relative flex flex-col items-center gap-2 rounded-2xl border border-[#CDEAD8] bg-gradient-to-b from-white to-[#EAF7EF] p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.97]"
+              >
+                {pkg.badge && (
+                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-[#2B5D3A] px-3 py-0.5 text-[9px] font-bold text-white whitespace-nowrap">
+                    {pkg.badge}
+                  </span>
+                )}
+                <div className="flex items-center gap-1.5 pt-1">
+                  <Icons.Diamond className="h-5 w-5 text-cyan-500" />
+                  <span className="text-2xl font-extrabold text-[#2B5D3A]">{pkg.gemAmount}</span>
+                </div>
+                <p className="text-xs text-[#4A7A5A]">{pkg.name}</p>
+                <div className="w-full rounded-xl bg-[#2B5D3A] py-2 text-center text-xs font-bold text-white">
+                  {pkg.price}
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  )
+}

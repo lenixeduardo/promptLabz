@@ -280,6 +280,47 @@ export async function saveStreak(
   }
 }
 
+// ── Leaderboard ───────────────────────────────────────────────────────────────
+
+export interface LeaderboardEntry {
+  id: string
+  full_name: string | null
+  avatar_url: string | null
+  xp: number
+}
+
+export async function getLeaderboard(limit = 20): Promise<DbResult<LeaderboardEntry[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("id,full_name,avatar_url,xp")
+      .not("xp", "is", null)
+      .order("xp", { ascending: false })
+      .limit(limit)
+    if (error) throw error
+    return { data: data as LeaderboardEntry[], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao carregar ranking") }
+  }
+}
+
+// ── Gems Sync ─────────────────────────────────────────────────────────────────
+
+export async function updateUserGems(userId: string, gems: number): Promise<DbResult<void>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { error } = await supabase
+      .from("users")
+      .update({ gems })
+      .eq("id", userId)
+    if (error) throw error
+    return { data: null, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao atualizar gemas") }
+  }
+}
+
 function getErrorMessage(err: unknown, fallback: string) {
   if (err instanceof Error) return err.message
   if (typeof err === "object" && err && "message" in err) {

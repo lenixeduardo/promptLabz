@@ -145,6 +145,36 @@ export default function Profile() {
           </span>
         </div>
 
+        {/* Inventory */}
+        <button
+          onClick={() => navigate("/inventory")}
+          className="mb-4 flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white px-5 py-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+            <Icons.Box className="h-5 w-5 text-[#3E8E5E]" />
+          </div>
+          <div className="min-w-0 flex-1 text-left">
+            <p className="text-sm font-bold text-[#1F2A24]">Meu Inventário</p>
+            <p className="text-xs text-[#6B9E7E]">Power-ups e avatares</p>
+          </div>
+          <Icons.ChevronRight className="h-4 w-4 shrink-0 text-[#BFE3CC]" />
+        </button>
+
+        {/* Store */}
+        <button
+          onClick={() => navigate("/store")}
+          className="mb-4 flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white px-5 py-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+            <Icons.ShoppingBag className="h-5 w-5 text-[#3E8E5E]" />
+          </div>
+          <div className="min-w-0 flex-1 text-left">
+            <p className="text-sm font-bold text-[#1F2A24]">Loja</p>
+            <p className="text-xs text-[#6B9E7E]">Comprar com gemas</p>
+          </div>
+          <Icons.ChevronRight className="h-4 w-4 shrink-0 text-[#BFE3CC]" />
+        </button>
+
         {/* Subscription management */}
         <button
           onClick={() => navigate("/subscription")}
