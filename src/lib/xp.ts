@@ -25,3 +25,11 @@ export const getLocalGems = (userId: string): number => {
     return 0
   }
 }
+
+export const saveLocalXP = (userId: string, xp: number): void => {
+  try {
+    localStorage.setItem(`pl:xp:${userId}`, String(xp))
+  } catch {
+    // ignore write errors (storage quota, private mode)
+  }
+}
