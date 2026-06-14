@@ -25,6 +25,8 @@ const Prompts = lazy(() => import("@/pages/Prompts"))
 const Achievements = lazy(() => import("@/pages/Achievements"))
 const PromptChallenge = lazy(() => import("@/pages/PromptChallenge"))
 const Subscription = lazy(() => import("@/pages/Subscription"))
+const SkillCategoryPage = lazy(() => import("@/pages/SkillCategoryPage"))
+const PromptCategoryPage = lazy(() => import("@/pages/PromptCategoryPage"))
 
 function PageLoading() {
   return (
@@ -148,6 +150,22 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <Subscription />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/learn/category/:categoryId"
+                element={
+                  <PrivateRoute>
+                    <SkillCategoryPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/prompts/category/:categoryId"
+                element={
+                  <PrivateRoute>
+                    <PromptCategoryPage />
                   </PrivateRoute>
                 }
               />
