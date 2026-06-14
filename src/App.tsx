@@ -23,6 +23,8 @@ const SkillDetail = lazy(() => import("@/pages/SkillDetail"))
 const MissionComplete = lazy(() => import("@/pages/MissionComplete"))
 const Prompts = lazy(() => import("@/pages/Prompts"))
 const Achievements = lazy(() => import("@/pages/Achievements"))
+const PromptChallenge = lazy(() => import("@/pages/PromptChallenge"))
+const Subscription = lazy(() => import("@/pages/Subscription"))
 
 function PageLoading() {
   return (
@@ -130,6 +132,22 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <Achievements />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/challenge"
+                element={
+                  <PrivateRoute>
+                    <PromptChallenge />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/subscription"
+                element={
+                  <PrivateRoute>
+                    <Subscription />
                   </PrivateRoute>
                 }
               />
