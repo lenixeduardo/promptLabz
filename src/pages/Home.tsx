@@ -11,6 +11,8 @@ import {
   Brain,
   ArrowRight,
   Clock,
+  Zap,
+  Newspaper,
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
@@ -76,10 +78,10 @@ export default function Home() {
           <p className="text-xs text-[#6B7A70]">Pronto para mais um desafio?</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="relative">
+          <Link to="/news" className="relative">
             <Bell className="h-6 w-6 text-[#2B5D3A]" strokeWidth={2} />
             <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-500" />
-          </div>
+          </Link>
           <img
             src={avatarUrl || "/assets/mascot-login-new.png"}
             alt="Avatar"
@@ -158,6 +160,31 @@ export default function Home() {
             >
               Continuar aula
               <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
+            </Link>
+          </div>
+        </div>
+
+        {/* Quick access */}
+        <div>
+          <h2 className="text-base font-bold text-[#1F2A24] mb-3">Acesso rápido</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <Link
+              to="/news"
+              className="flex flex-col items-center gap-2 rounded-2xl border-2 border-[#BFE3CC] bg-white px-3 py-4 transition-colors hover:border-[#3E8E5E]"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EAF7EF]">
+                <Newspaper className="h-5 w-5 text-[#2B5D3A]" strokeWidth={1.8} />
+              </div>
+              <span className="text-center text-xs font-bold text-[#1F2A24]">Notícias de IA</span>
+            </Link>
+            <Link
+              to="/quiz"
+              className="flex flex-col items-center gap-2 rounded-2xl border-2 border-[#BFE3CC] bg-white px-3 py-4 transition-colors hover:border-[#3E8E5E]"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EAF7EF]">
+                <Zap className="h-5 w-5 text-[#2B5D3A]" strokeWidth={1.8} />
+              </div>
+              <span className="text-center text-xs font-bold text-[#1F2A24]">Prova Rápida</span>
             </Link>
           </div>
         </div>
