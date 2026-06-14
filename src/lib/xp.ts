@@ -33,3 +33,11 @@ export const saveLocalXP = (userId: string, xp: number): void => {
     // ignore write errors (storage quota, private mode)
   }
 }
+
+export const saveLocalGems = (userId: string, gems: number): void => {
+  try {
+    localStorage.setItem(`pl:gems:${userId}`, String(gems))
+  } catch {
+    // ignore write errors
+  }
+}

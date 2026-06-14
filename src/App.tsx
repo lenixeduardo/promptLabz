@@ -30,6 +30,9 @@ const PromptCategoryPage = lazy(() => import("@/pages/PromptCategoryPage"))
 const LevelUp = lazy(() => import("@/pages/LevelUp"))
 const News = lazy(() => import("@/pages/News"))
 const QuickQuiz = lazy(() => import("@/pages/QuickQuiz"))
+const Inventory = lazy(() => import("@/pages/Inventory"))
+const Store = lazy(() => import("@/pages/Store"))
+const Ranking = lazy(() => import("@/pages/Ranking"))
 
 function PageLoading() {
   return (
@@ -193,6 +196,30 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <QuickQuiz />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/inventory"
+                element={
+                  <PrivateRoute>
+                    <Inventory />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/store"
+                element={
+                  <PrivateRoute>
+                    <Store />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/ranking"
+                element={
+                  <PrivateRoute>
+                    <Ranking />
                   </PrivateRoute>
                 }
               />
