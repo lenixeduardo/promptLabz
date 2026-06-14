@@ -91,6 +91,7 @@ export function LearningPathTrail({ modules, completedCount, totalCount }: Learn
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const DEFAULT_TRAIL_MODULES: TrailModule[] = [
   { id: "fundamentos", title: "Fundamentos de Prompts", status: "completed", icon: Check },
   { id: "estrutura", title: "Estrutura de Prompts", status: "current", icon: PenLine },
