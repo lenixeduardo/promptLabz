@@ -1,6 +1,11 @@
 import { useMemo, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { ChevronLeft, ChevronRight, Search, SlidersHorizontal, X, Bookmark } from "lucide-react"
+import {
+  ChevronLeft, ChevronRight, Search, SlidersHorizontal, X, Bookmark,
+  Lightbulb, Megaphone, Code2, Apple, ClipboardList, BarChart3,
+  MessageSquare, Settings, Briefcase, Palette, Headphones, Users,
+  type LucideIcon,
+} from "lucide-react"
 import { PROMPTS, type PromptCard } from "@/data/promptsData"
 import { LAB_CATEGORIES } from "@/data/labCategoriesData"
 import { BottomNav } from "@/components/BottomNav"
@@ -21,42 +26,24 @@ const DIFF_BADGE: Record<PromptCard["difficulty"], { dot: string; label: string;
   Avancado:     { dot: "bg-[#DC2626]", label: "Avançado",       bg: "bg-[#FEF2F2]", text: "text-[#991B1B]" },
 }
 
-const MASCOT_ICONS = [
-  "/assets/mascot-icons/mascot_lightbulb.svg",
-  "/assets/mascot-icons/mascot_star.svg",
-  "/assets/mascot-icons/mascot_rocket.svg",
-  "/assets/mascot-icons/mascot_code.svg",
-  "/assets/mascot-icons/mascot_brain.svg",
-  "/assets/mascot-icons/mascot_book.svg",
-  "/assets/mascot-icons/mascot_target.svg",
-  "/assets/mascot-icons/mascot_chart.svg",
-  "/assets/mascot-icons/mascot_palette.svg",
-  "/assets/mascot-icons/mascot_network.svg",
-  "/assets/mascot-icons/mascot_growth.svg",
-  "/assets/mascot-icons/mascot_puzzle.svg",
-]
+const ICON_MAP: Record<string, LucideIcon> = {
+  Lightbulb, Megaphone, Code2, Apple, ClipboardList, BarChart3,
+  MessageSquare, Settings, Briefcase, Palette, Headphones, Users,
+}
 
 function PromptListCard({
   prompt,
-  index,
   saved,
   onToggleSave,
 }: {
   prompt: PromptCard
-  index: number
   saved: boolean
   onToggleSave: () => void
 }) {
   const badge = DIFF_BADGE[prompt.difficulty]
-  const mascot = MASCOT_ICONS[index % MASCOT_ICONS.length]
 
   return (
     <div className="flex items-start gap-3 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-      <img
-        src={mascot}
-        alt=""
-        className="h-16 w-16 shrink-0 rounded-xl object-contain"
-      />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
@@ -99,6 +86,7 @@ export default function PromptCategoryPage() {
 
   const catMeta = LAB_CATEGORIES.find((c) => c.id === categoryId)
   const label = catMeta?.label.replace("\n", " ") ?? categoryId ?? "Categoria"
+  const CategoryIcon = ICON_MAP[catMeta?.icon ?? ""] ?? Lightbulb
 
   const basePrompts = useMemo(
     () => PROMPTS.filter((p) => p.category === categoryId),
@@ -145,12 +133,8 @@ export default function PromptCategoryPage() {
             </div>
           </div>
           {catMeta && (
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EAF7EF]">
-              <img
-                src={catMeta.mascotIcon}
-                alt=""
-                className="h-8 w-8 object-contain"
-              />
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#EAF7EF]">
+              <CategoryIcon className="h-6 w-6 text-[#2B5D3A]" strokeWidth={1.8} />
             </div>
           )}
         </div>
@@ -210,7 +194,6 @@ export default function PromptCategoryPage() {
               <PromptListCard
                 key={`${prompt.title}-${idx}`}
                 prompt={prompt}
-                index={idx}
                 saved={savedIds.has(prompt.title)}
                 onToggleSave={() => toggleSave(prompt.title)}
               />

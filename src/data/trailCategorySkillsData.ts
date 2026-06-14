@@ -14,7 +14,6 @@ export interface TrailCategorySkills {
   categoryId: string
   label: string
   icon: string
-  mascotIcon: string
   skills: TrailSkill[]
 }
 
@@ -23,7 +22,6 @@ export const TRAIL_CATEGORY_SKILLS: TrailCategorySkills[] = [
     categoryId: "criatividade",
     label: "Criatividade",
     icon: "Lightbulb",
-    mascotIcon: "/assets/mascot-icons/mascot_lightbulb.svg",
     skills: [
       { id: "geracao-ideias",      name: "Geração de Ideias",       description: "Gere muitas ideias relevantes para qualquer tema.",          icon: "Lightbulb", level: 1, xp: 100, difficulty: "Iniciante"    },
       { id: "variacoes-criativas", name: "Variações Criativas",      description: "Transforme uma ideia em diferentes abordagens únicas.",       icon: "Lightbulb", level: 2, xp: 150, difficulty: "Iniciante"    },
@@ -37,7 +35,6 @@ export const TRAIL_CATEGORY_SKILLS: TrailCategorySkills[] = [
     categoryId: "prompt-engineering",
     label: "Engenharia de Prompts",
     icon: "Sparkles",
-    mascotIcon: "/assets/mascot-icons/mascot_star.svg",
     skills: [
       { id: "estrutura-basica",    name: "Estrutura Básica",         description: "Monte prompts claros com contexto, tarefa e formato.",        icon: "ListChecks",level: 1, xp: 100, difficulty: "Iniciante"    },
       { id: "contexto-papel",      name: "Contexto e Papel",         description: "Defina personas e contextos para respostas mais precisas.",    icon: "User",      level: 2, xp: 150, difficulty: "Iniciante"    },
@@ -51,7 +48,6 @@ export const TRAIL_CATEGORY_SKILLS: TrailCategorySkills[] = [
     categoryId: "marketing",
     label: "Marketing",
     icon: "Megaphone",
-    mascotIcon: "/assets/mascot-icons/mascot_rocket.svg",
     skills: [
       { id: "copy-basico",         name: "Copywriting Básico",       description: "Escreva textos persuasivos para produtos e serviços.",         icon: "PenLine",   level: 1, xp: 100, difficulty: "Iniciante"    },
       { id: "headlines",           name: "Headlines de Impacto",     description: "Crie títulos que capturam atenção imediatamente.",             icon: "Target",    level: 2, xp: 150, difficulty: "Iniciante"    },
@@ -63,7 +59,6 @@ export const TRAIL_CATEGORY_SKILLS: TrailCategorySkills[] = [
     categoryId: "analise-dados",
     label: "Análise de Dados",
     icon: "BarChart3",
-    mascotIcon: "/assets/mascot-icons/mascot_chart.svg",
     skills: [
       { id: "descricao-dados",     name: "Descrição de Dados",       description: "Resuma conjuntos de dados em linguagem natural.",             icon: "BarChart3", level: 1, xp: 100, difficulty: "Iniciante"    },
       { id: "visualizacao",        name: "Visualizações",            description: "Escolha e descreva gráficos adequados para cada dado.",        icon: "LineChart", level: 2, xp: 150, difficulty: "Iniciante"    },

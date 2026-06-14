@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { ArrowRight } from "lucide-react"
 import {
+  ArrowRight, Briefcase,
   Lightbulb, Megaphone, Code2, Apple, ClipboardList, BarChart3,
-  MessageSquare, Settings, Briefcase, Palette, Headphones, Users,
+  MessageSquare, Settings, Palette, Headphones, Users,
   type LucideIcon,
 } from "lucide-react"
 import { LAB_CATEGORIES, PROMPT_OF_THE_DAY, type LabCategory } from "@/data/labCategoriesData"
@@ -111,11 +111,9 @@ export default function Prompts() {
             Prompt do Dia
           </div>
           <div className="flex items-start gap-3">
-            <img
-              src={PROMPT_OF_THE_DAY.mascotIcon}
-              alt="Mascote"
-              className="h-16 w-16 shrink-0 object-contain"
-            />
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+              <Briefcase className="h-8 w-8 text-[#2B5D3A]" strokeWidth={1.8} />
+            </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-[#1F2A24]">{PROMPT_OF_THE_DAY.title}</p>
               <p className="mt-0.5 text-xs leading-relaxed text-[#4A5E52]">
