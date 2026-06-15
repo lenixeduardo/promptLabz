@@ -11,6 +11,8 @@ import { useAchievements } from "@/hooks/useAchievements"
 import { cn } from "@/lib/utils"
 import { lessonsData, type Category, type Lesson } from "@/data/lessonsData"
 import { loadProgress, type CategoryProgress } from "@/lib/db"
+import PromptsSection from "@/components/learning-lab/PromptsSection"
+import SkillsSection from "@/components/learning-lab/SkillsSection"
 
 // ─── Trail SVG constants ────────────────────────────────────────────────────
 const TRAIL_W = 340
@@ -116,7 +118,7 @@ function NoLivesModal({ onClose }: { onClose: () => void }) {
         className="w-full max-w-md animate-slide-up rounded-t-3xl bg-white px-6 pb-10 pt-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mx-auto mb-5 h-1 w-10 rounded-full bg-[#CDEAD8]" />
+        <div className="mx-auto mb-5 h-1 w-10 rounded-full bg-stroke-muted" />
 
         <div className="mb-4 flex justify-center gap-1.5">
           {Array.from({ length: MAX_LIVES }).map((_, i) => (
@@ -133,29 +135,29 @@ function NoLivesModal({ onClose }: { onClose: () => void }) {
           />
         </div>
 
-        <h2 className="mt-3 text-center text-2xl font-extrabold text-[#1F2A24]">
+        <h2 className="mt-3 text-center text-2xl font-extrabold text-foregroundDark">
           Suas vidas acabaram!
         </h2>
-        <p className="mt-1 text-center text-sm text-[#6B9E7E]">
+        <p className="mt-1 text-center text-sm text-foregroundMuted">
           Você precisa de pelo menos 1 vida para começar uma lição.
         </p>
 
-        <div className="mt-5 flex items-center justify-between rounded-2xl bg-[#EAF7EF] px-4 py-3.5">
-          <div className="flex items-center gap-2 text-sm text-[#2F6B45]">
+        <div className="mt-5 flex items-center justify-between rounded-2xl bg-pageBgLight px-4 py-3.5">
+          <div className="flex items-center gap-2 text-sm text-forest">
             <Icons.Clock className="h-4 w-4 shrink-0" />
             <span>Próxima vida em</span>
           </div>
-          <span className="text-lg font-bold text-[#2F6B45]">{countdown}</span>
+          <span className="text-lg font-bold text-forest">{countdown}</span>
         </div>
 
-        <p className="mt-3 text-center text-xs text-[#9AB0A4]">
+        <p className="mt-3 text-center text-xs text-neutral">
           Vidas recarregam 1 por hora. Acerte 100% para ganhar 1 extra por dia.
         </p>
 
         <Button
           size="lg"
           variant="outline"
-          className="mt-5 w-full border-[#CDEAD8] text-[#2F6B45]"
+          className="mt-5 w-full border-stroke-muted text-forest"
           onClick={onClose}
         >
           Entendi
@@ -187,7 +189,7 @@ function CircularProgress({ pct }: { pct: number }) {
           transform="rotate(-90 23 23)"
         />
       </svg>
-      <span className="absolute text-[9px] font-extrabold text-[#2B5D3A]">{pct}%</span>
+      <span className="absolute text-[9px] font-extrabold text-primary-dark">{pct}%</span>
     </div>
   )
 }
@@ -220,13 +222,13 @@ function CoursesListView({
         <div className="mx-auto flex max-w-[460px] items-center gap-3">
           <button
             onClick={() => navigate("/home")}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F0FAF3] text-[#2B5D3A] transition-colors hover:bg-[#DCF1E4]"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-soft text-primary-dark transition-colors hover:bg-surface-success"
           >
             <Icons.ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-extrabold text-[#1A2E22]">Trilha de Aprendizado</h1>
-            <p className="text-sm text-[#6B9E7E]">Aprenda do básico ao avançado</p>
+            <h1 className="text-2xl font-extrabold text-foregroundDark">Trilha de Aprendizado</h1>
+            <p className="text-sm text-foregroundMuted">Aprenda do básico ao avançado</p>
           </div>
         </div>
       </div>
@@ -250,7 +252,7 @@ function CoursesListView({
               className={cn(
                 "flex items-center gap-4 rounded-2xl border bg-white p-4 text-left shadow-sm transition-all",
                 accessible && "hover:bg-[#F8FBF8] active:scale-[0.99]",
-                inProgress ? "border-2 border-[#2B5D3A]" : "border-[#EAF7EF]"
+                inProgress ? "border-2 border-primary-dark" : "border-pageBgLight"
               )}
             >
               {/* Icon box */}
@@ -258,11 +260,11 @@ function CoursesListView({
                 className={cn(
                   "flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl",
                   complete
-                    ? "bg-[#2B5D3A]"
+                    ? "bg-primary-dark"
                     : inProgress
-                      ? "bg-[#EAF7EF]"
+                      ? "bg-pageBgLight"
                       : accessible
-                        ? "bg-[#EAF7EF]"
+                        ? "bg-pageBgLight"
                         : "bg-[#F3F5F3]"
                 )}
               >
@@ -272,10 +274,10 @@ function CoursesListView({
                     complete
                       ? "text-white"
                       : inProgress
-                        ? "text-[#2B5D3A]"
+                        ? "text-primary-dark"
                         : accessible
-                          ? "text-[#2B5D3A]"
-                          : "text-[#B0C8B8]"
+                          ? "text-primary-dark"
+                          : "text-neutral"
                   )}
                 />
               </div>
@@ -285,30 +287,30 @@ function CoursesListView({
                 <p
                   className={cn(
                     "font-bold leading-tight",
-                    accessible ? "text-[#1A2E22]" : "text-[#9AB0A4]"
+                    accessible ? "text-foregroundDark" : "text-neutral"
                   )}
                 >
                   {cat.title}
                 </p>
-                <p className="mt-0.5 text-xs text-[#6B9E7E]">
+                <p className="mt-0.5 text-xs text-foregroundMuted">
                   {totalModules} módulo{totalModules !== 1 ? "s" : ""}
                 </p>
               </div>
 
               {/* Right status */}
               {!accessible ? (
-                <Icons.Lock className="h-5 w-5 shrink-0 text-[#B0C8B8]" />
+                <Icons.Lock className="h-5 w-5 shrink-0 text-neutral" />
               ) : complete ? (
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#2B5D3A]">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-dark">
                   <Icons.Check className="h-4 w-4 text-white" strokeWidth={2.5} />
                 </div>
               ) : inProgress ? (
                 <div className="flex shrink-0 items-center gap-1">
                   <CircularProgress pct={pct} />
-                  <Icons.ChevronRight className="h-5 w-5 text-[#BFE3CC]" />
+                  <Icons.ChevronRight className="h-5 w-5 text-stroke-light" />
                 </div>
               ) : (
-                <Icons.ChevronRight className="h-5 w-5 shrink-0 text-[#BFE3CC]" />
+                <Icons.ChevronRight className="h-5 w-5 shrink-0 text-stroke-light" />
               )}
             </button>
           )
@@ -429,10 +431,10 @@ function TrailView({
               className={cn(
                 "absolute z-10 flex items-center justify-center rounded-full text-sm font-bold shadow-md",
                 isCompleted
-                  ? "bg-[#2B5D3A] text-white"
+                  ? "bg-primary-dark text-white"
                   : isCurrent
-                    ? "border-4 border-[#2B5D3A] bg-white text-[#2B5D3A]"
-                    : "bg-[#B0C8B8] text-white",
+                    ? "border-4 border-primary-dark bg-white text-primary-dark"
+                    : "bg-neutral text-white",
                 !isLocked && "cursor-pointer"
               )}
               style={{
@@ -454,7 +456,7 @@ function TrailView({
               className={cn(
                 "absolute z-[5] flex items-center rounded-2xl bg-white px-3 py-3",
                 isCurrent
-                  ? "border-2 border-[#2B5D3A] shadow-lg"
+                  ? "border-2 border-primary-dark shadow-lg"
                   : "border border-[#E4F0E8] shadow-sm",
                 isLocked ? "opacity-75" : "cursor-pointer transition-shadow hover:shadow-md active:scale-[0.98]"
               )}
@@ -469,7 +471,7 @@ function TrailView({
                 <p
                   className={cn(
                     "line-clamp-2 text-xs font-bold leading-snug",
-                    isLocked ? "text-[#9AB0A4]" : "text-[#1A2E22]"
+                    isLocked ? "text-neutral" : "text-foregroundDark"
                   )}
                 >
                   {lesson.title}
@@ -477,13 +479,13 @@ function TrailView({
               </div>
               <div className="ml-2 shrink-0">
                 {isCompleted ? (
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B5D3A]">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-dark">
                     <Icons.Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                   </div>
                 ) : isLocked ? (
-                  <Icons.Lock className="h-4 w-4 text-[#B0C8B8]" />
+                  <Icons.Lock className="h-4 w-4 text-neutral" />
                 ) : (
-                  <div className="h-6 w-6 rounded-full border-2 border-[#2B5D3A]" />
+                  <div className="h-6 w-6 rounded-full border-2 border-primary-dark" />
                 )}
               </div>
             </div>
@@ -564,31 +566,35 @@ export default function LearningLab() {
   // ── Courses list (no category selected) ──
   if (!categoryParam) {
     return (
-      <CoursesListView
-        getProgressForCategory={getProgressForCategory}
-        onSelect={handleCategoryChange}
-      />
+      <>
+        <CoursesListView
+          getProgressForCategory={getProgressForCategory}
+          onSelect={handleCategoryChange}
+        />
+        <PromptsSection />
+        <SkillsSection />
+      </>
     )
   }
 
   // ── Teaching track detail ──
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F2FAF5] via-[#EAF7EE] to-[#DCF1E4]">
+    <div className="min-h-screen bg-gradient-to-b from-[#F2FAF5] via-[#EAF7EE] to-surface-success">
       {/* Header */}
       <div className="mx-auto max-w-[460px] px-5 pb-3 pt-12">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSearchParams({})}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/80 text-[#2B5D3A] shadow-sm transition-colors hover:bg-white"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/80 text-primary-dark shadow-sm transition-colors hover:bg-white"
             >
               <Icons.ArrowLeft className="h-5 w-5" />
             </button>
             <div>
-              <h1 className="max-w-[200px] text-lg font-extrabold leading-tight text-[#1A2E22]">
+              <h1 className="max-w-[200px] text-lg font-extrabold leading-tight text-foregroundDark">
                 {activeCategory.title}
               </h1>
-              <p className="text-xs text-[#6B9E7E]">
+              <p className="text-xs text-foregroundMuted">
                 {totalLessonsCount} lições · {activeCategory.modules.length} módulo
                 {activeCategory.modules.length !== 1 ? "s" : ""}
               </p>
@@ -606,9 +612,9 @@ export default function LearningLab() {
 
       {/* Progress card */}
       <div className="mx-auto max-w-[460px] px-5 pb-5">
-        <div className="rounded-2xl border border-[#DCF1E4] bg-white p-4 shadow-sm">
+        <div className="rounded-2xl border border-surface-success bg-white p-4 shadow-sm">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-sm font-semibold text-[#1A2E22]">Seu progresso na trilha</p>
+            <p className="text-sm font-semibold text-foregroundDark">Seu progresso na trilha</p>
             <div className="flex items-center gap-1.5">
               <LivesBar />
               {!canPlay && (
@@ -619,17 +625,17 @@ export default function LearningLab() {
               )}
             </div>
           </div>
-          <div className="h-3 w-full overflow-hidden rounded-full bg-[#EAF7EF]">
+          <div className="h-3 w-full overflow-hidden rounded-full bg-pageBgLight">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#4EA86B] to-[#2B5D3A] transition-all duration-700"
+              className="h-full rounded-full bg-gradient-to-r from-[#4EA86B] to-primary-dark transition-all duration-700"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
           <div className="mt-1.5 flex items-center justify-between">
-            <span className="text-[11px] text-[#6B9E7E]">
+            <span className="text-[11px] text-foregroundMuted">
               {completedCount}/{totalLessonsCount} concluídas
             </span>
-            <span className="text-sm font-extrabold text-[#2B5D3A]">{progressPercent}%</span>
+            <span className="text-sm font-extrabold text-primary-dark">{progressPercent}%</span>
           </div>
         </div>
       </div>
@@ -653,8 +659,8 @@ export default function LearningLab() {
               className={cn(
                 "w-full shadow-lg transition-transform active:scale-[0.98]",
                 canPlay
-                  ? "bg-[#2B5D3A] text-white hover:bg-[#234D30]"
-                  : "bg-[#9AB0A4] text-white"
+                  ? "bg-primary-dark text-white hover:bg-[#234D30]"
+                  : "bg-neutral text-white"
               )}
               onClick={() =>
                 handleStartLesson(nextLesson.moduleIndex, nextLesson.lessonIndex)
@@ -676,7 +682,7 @@ export default function LearningLab() {
             <Button
               size="lg"
               variant="outline"
-              className="w-full border-[#2B5D3A] bg-white text-[#2B5D3A] hover:bg-[#F0FAF3]"
+              className="w-full border-primary-dark bg-white text-primary-dark hover:bg-surface-soft"
               onClick={() => setSearchParams({})}
             >
               <Icons.Sparkles className="mr-2 h-5 w-5" />

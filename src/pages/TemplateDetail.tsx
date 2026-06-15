@@ -46,18 +46,18 @@ function TabContent({ tab, template }: { tab: Tab; template: Template }) {
   if (tab === "pagina-web") {
     return (
       <div className="px-4 pt-4">
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#6B9E7E]">
+        <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
             Estrutura da Página
           </p>
           {["Hero Section", "Benefícios", "Como Funciona", "Depoimentos", "Preços", "FAQ", "CTA Final"].map(
             (section) => (
               <div
                 key={section}
-                className="flex items-center gap-3 border-b border-[#E8F5EE] py-2.5 last:border-0"
+                className="flex items-center gap-3 border-b border-stroke-light py-2.5 last:border-0"
               >
-                <div className="h-2 w-2 rounded-full bg-[#2B5D3A]" />
-                <span className="text-sm text-[#1F2A24]">{section}</span>
+                <div className="h-2 w-2 rounded-full bg-primary-dark" />
+                <span className="text-sm text-foregroundDark">{section}</span>
               </div>
             )
           )}
@@ -69,12 +69,12 @@ function TabContent({ tab, template }: { tab: Tab; template: Template }) {
   if (tab === "prompt") {
     return (
       <div className="px-4 pt-4">
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#6B9E7E]">
+        <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
             Prompt do Template
           </p>
           <div className="rounded-xl bg-[#F5FBF7] p-3">
-            <p className="text-xs leading-relaxed text-[#3A4B40]">
+            <p className="text-xs leading-relaxed text-foregroundDark">
               Você é um especialista em copywriting para SaaS. Crie uma landing page completa para
               [PRODUTO], focada em conversão para [PÚBLICO-ALVO]. Inclua headline, benefícios, prova
               social e CTA persuasivo. Tom: [FORMAL/CASUAL].
@@ -88,12 +88,12 @@ function TabContent({ tab, template }: { tab: Tab; template: Template }) {
   if (tab === "resultado") {
     return (
       <div className="px-4 pt-4">
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm text-center">
-          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-[#EAF7EF]">
-            <span className="text-2xl font-extrabold text-[#2B5D3A]">92</span>
+        <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm text-center">
+          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-pageBgLight">
+            <span className="text-2xl font-extrabold text-primary-dark">92</span>
           </div>
-          <p className="text-sm font-bold text-[#1F2A24]">Excelente resultado!</p>
-          <p className="mt-1 text-xs text-[#6B9E7E]">
+          <p className="text-sm font-bold text-foregroundDark">Excelente resultado!</p>
+          <p className="mt-1 text-xs text-foregroundMuted">
             Este template gera copy de alta qualidade consistentemente.
           </p>
         </div>
@@ -104,21 +104,21 @@ function TabContent({ tab, template }: { tab: Tab; template: Template }) {
   // inicio (default)
   return (
     <div className="px-4 pt-4 space-y-4">
-      <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#6B9E7E]">
+      <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
           Sobre o template
         </p>
-        <p className="text-sm leading-relaxed text-[#3A4B40]">{template.about}</p>
+        <p className="text-sm leading-relaxed text-foregroundDark">{template.about}</p>
       </div>
       <div>
-        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#6B9E7E]">
+        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
           Categorias
         </p>
         <div className="flex flex-wrap gap-2">
           {template.tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-[#BFE3CC] bg-[#EAF7EF] px-3 py-1 text-xs font-semibold text-[#2B5D3A]"
+              className="rounded-full border border-stroke-light bg-pageBgLight px-3 py-1 text-xs font-semibold text-primary-dark"
             >
               {tag}
             </span>
@@ -137,32 +137,32 @@ export default function TemplateDetail() {
   const template = TEMPLATES.find((t) => t.id === templateId) ?? TEMPLATES[0]
 
   return (
-    <div className="min-h-screen bg-[#F0FAF3] pb-32">
+    <div className="min-h-screen bg-surface-soft pb-32">
       {/* Top header */}
-      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-[#E5F5EB] bg-white px-4 pt-10 pb-3">
+      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-pageBgLight bg-white px-4 pt-10 pb-3">
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(-1)}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#CDEAD8] bg-[#F0FAF3] transition-all active:scale-95"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-stroke-muted bg-surface-soft transition-all active:scale-95"
             aria-label="Voltar"
           >
-            <ArrowRight className="h-3.5 w-3.5 rotate-180 text-[#2B5D3A]" />
+            <ArrowRight className="h-3.5 w-3.5 rotate-180 text-primary-dark" />
           </button>
-          <span className="text-base font-extrabold text-[#2B5D3A]">Prompt Lab</span>
+          <span className="text-base font-extrabold text-primary-dark">Prompt Lab</span>
         </div>
         <div className="flex items-center gap-2">
           <button
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#CDEAD8] bg-[#F0FAF3]"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-stroke-muted bg-surface-soft"
             aria-label="Notificações"
           >
-            <Bell className="h-4 w-4 text-[#2B5D3A]" strokeWidth={1.8} />
+            <Bell className="h-4 w-4 text-primary-dark" strokeWidth={1.8} />
           </button>
-          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#3E8E5E] to-[#2B5D3A]" />
+          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald to-primary-dark" />
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="no-scrollbar flex gap-1 overflow-x-auto border-b border-[#E5F5EB] bg-white px-4 pb-0">
+      <div className="no-scrollbar flex gap-1 overflow-x-auto border-b border-pageBgLight bg-white px-4 pb-0">
         {TABS.map(({ key, label }) => (
           <button
             key={key}
@@ -170,8 +170,8 @@ export default function TemplateDetail() {
             className={cn(
               "shrink-0 border-b-2 px-4 py-2.5 text-xs font-semibold transition-colors",
               activeTab === key
-                ? "border-[#2B5D3A] text-[#2B5D3A]"
-                : "border-transparent text-[#8AB89A] hover:text-[#2B5D3A]"
+                ? "border-primary-dark text-primary-dark"
+                : "border-transparent text-foregroundMuted hover:text-primary-dark"
             )}
           >
             {label}
@@ -180,7 +180,7 @@ export default function TemplateDetail() {
       </div>
 
       {/* Hero banner */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#2B5D3A] via-[#3E8E5E] to-[#46996a] px-5 py-6">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary-dark via-emerald to-[#46996a] px-5 py-6">
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <h1 className="text-xl font-extrabold leading-tight text-white">
@@ -213,15 +213,15 @@ export default function TemplateDetail() {
       <TabContent tab={activeTab} template={template} />
 
       {/* Fixed bottom actions */}
-      <div className="fixed bottom-[72px] left-0 right-0 z-30 border-t border-[#E5F5EB] bg-white px-4 py-3">
+      <div className="fixed bottom-[72px] left-0 right-0 z-30 border-t border-pageBgLight bg-white px-4 py-3">
         <div className="mx-auto flex max-w-[460px] gap-3">
-          <button className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-[#2B5D3A] py-3 text-sm font-semibold text-[#2B5D3A] transition-all active:scale-95 hover:bg-[#EAF7EF]">
+          <button className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-primary-dark py-3 text-sm font-semibold text-primary-dark transition-all active:scale-95 hover:bg-pageBgLight">
             <ExternalLink className="h-4 w-4" />
             Visualizar ao vivo
           </button>
           <button
             onClick={() => navigate(`/prompt/${template.promptId}`)}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#2B5D3A] py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-[#3E8E5E]"
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
           >
             Usar este template
             <ArrowRight className="h-4 w-4" />

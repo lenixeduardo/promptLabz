@@ -44,7 +44,7 @@ export function MascotGlow({ size = 260, className, children }: MascotGlowProps)
 
       {/* Twinkling sparkles around the circle */}
       <Sparkles
-        className="animate-twinkle absolute right-3 top-6 h-5 w-5 text-[#5BA877]"
+        className="animate-twinkle absolute right-3 top-6 h-5 w-5 text-emerald"
         style={{ animationDelay: "0s" }}
       />
       <Sparkles
@@ -52,7 +52,7 @@ export function MascotGlow({ size = 260, className, children }: MascotGlowProps)
         style={{ animationDelay: "0.9s" }}
       />
       <Sparkles
-        className="animate-twinkle absolute right-8 bottom-4 h-3.5 w-3.5 text-[#5BA877]"
+        className="animate-twinkle absolute right-8 bottom-4 h-3.5 w-3.5 text-emerald"
         style={{ animationDelay: "1.6s" }}
       />
 

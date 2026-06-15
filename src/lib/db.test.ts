@@ -12,6 +12,17 @@ vi.mock("@/lib/supabase", () => ({
   supabase: {
     from: vi.fn(),
   },
+  isSupabaseConfigured: () => {
+    return !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY
+  },
+  getErrorMessage: (err: unknown, fallback: string) => {
+    if (err instanceof Error) return err.message
+    if (typeof err === "object" && err && "message" in err) {
+      const message = (err as { message?: unknown }).message
+      if (typeof message === "string") return message
+    }
+    return fallback
+  },
 }))
 
 import { supabase } from "@/lib/supabase"

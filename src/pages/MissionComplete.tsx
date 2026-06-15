@@ -34,7 +34,7 @@ export default function MissionComplete() {
   const bonusAwarded = state?.bonusAwarded ?? false
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-white via-[#EAF7EF] to-[#D2EEDD] px-6 py-10">
+    <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-white via-pageBgLight to-gradient-end px-6 py-10">
       {CONFETTI.map((confetti, index) => (
         <span
           key={index}
@@ -52,13 +52,13 @@ export default function MissionComplete() {
         />
       ))}
 
-      <Sparkles className="absolute left-6 top-24 h-5 w-5 animate-twinkle text-[#3E8E5E]/60" style={{ animationDelay: "0.3s" }} />
+      <Sparkles className="absolute left-6 top-24 h-5 w-5 animate-twinkle text-emerald/60" style={{ animationDelay: "0.3s" }} />
       <Sparkles className="absolute right-8 top-32 h-4 w-4 animate-twinkle text-[#7CC79A]" style={{ animationDelay: "1s" }} />
       <Sparkles className="absolute left-12 top-60 h-3 w-3 animate-twinkle text-[#FFD166]" style={{ animationDelay: "1.7s" }} />
-      <Sparkles className="absolute right-6 top-72 h-5 w-5 animate-twinkle text-[#3E8E5E]/50" style={{ animationDelay: "0.6s" }} />
+      <Sparkles className="absolute right-6 top-72 h-5 w-5 animate-twinkle text-emerald/50" style={{ animationDelay: "0.6s" }} />
 
       <div className="flex flex-1 flex-col items-center justify-center gap-8 text-center">
-        <h1 className="text-5xl font-extrabold leading-tight text-[#2F6B45]">
+        <h1 className="text-5xl font-extrabold leading-tight text-forest">
           Missao<br />Cumprida!
         </h1>
 
@@ -82,7 +82,7 @@ export default function MissionComplete() {
 
           <Sparkles className="absolute right-4 top-6 h-5 w-5 animate-twinkle text-[#FFD166]" style={{ animationDelay: "0s" }} />
           <Sparkles className="absolute bottom-8 left-3 h-4 w-4 animate-twinkle text-[#7CC79A]" style={{ animationDelay: "0.9s" }} />
-          <Sparkles className="absolute bottom-5 right-8 h-3 w-3 animate-twinkle text-[#3E8E5E]" style={{ animationDelay: "1.6s" }} />
+          <Sparkles className="absolute bottom-5 right-8 h-3 w-3 animate-twinkle text-emerald" style={{ animationDelay: "1.6s" }} />
           <Sparkles className="absolute left-6 top-10 h-4 w-4 animate-twinkle text-[#FFD166]" style={{ animationDelay: "0.5s" }} />
 
           <img
@@ -94,16 +94,16 @@ export default function MissionComplete() {
 
         <div className="flex flex-col items-center gap-2">
           <span className="text-4xl font-extrabold tracking-tight">
-            <span className="text-[#2F6B45]">Prompt</span>
+            <span className="text-forest">Prompt</span>
             <span className="text-[#7CC79A]">Lab</span>
           </span>
 
           {total > 0 && (
-            <div className="mt-1 flex items-center gap-2 rounded-full bg-[#EAF7EF] px-4 py-1.5">
-              <span className="text-2xl font-extrabold text-[#2F6B45]">
+            <div className="mt-1 flex items-center gap-2 rounded-full bg-pageBgLight px-4 py-1.5">
+              <span className="text-2xl font-extrabold text-forest">
                 {score}/{total}
               </span>
-              <span className="text-sm font-medium text-[#3E8E5E]">respostas certas</span>
+              <span className="text-sm font-medium text-emerald">respostas certas</span>
             </div>
           )}
 
@@ -133,12 +133,12 @@ export default function MissionComplete() {
                 <polygon points="12,2 22,9 12,22 2,9" fill="#4ADE80" stroke="#2E7A4E" strokeWidth="1.5" />
                 <polygon points="12,2 22,9 12,13 2,9" fill="#86EFAC" />
               </svg>
-              <span className="text-xl font-bold text-[#2F6B45]">+1 Vida</span>
+              <span className="text-xl font-bold text-forest">+1 Vida</span>
             </div>
           ) : perfect ? (
-            <p className="text-xs text-[#9AB0A4]">Bonus diario ja resgatado hoje</p>
+            <p className="text-xs text-neutral">Bonus diario ja resgatado hoje</p>
           ) : (
-            <p className="text-xs text-[#9AB0A4]">Acerte 100% para ganhar +1 vida</p>
+            <p className="text-xs text-neutral">Acerte 100% para ganhar +1 vida</p>
           )}
         </div>
       </div>

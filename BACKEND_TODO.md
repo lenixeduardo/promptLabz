@@ -93,9 +93,19 @@ Auditoria feita com agentes em 2026-06-10. Status atualizado apos correcoes.
 
 ## Validacao executada
 
-- [x] `npx.cmd tsc -b --pretty false`
-- [x] `npm.cmd run lint`
-- [x] `npm.cmd run test -- --reporter=dot` - 9 arquivos, 59 testes.
-- [x] `npm.cmd run build`
-- [x] `npm.cmd run smoke:supabase` - pula corretamente sem envs reais.
+- [x] `pnpm typecheck` — sem erros
+- [x] `pnpm lint` — sem erros novos
+- [x] `pnpm test` — 15 arquivos, 106 testes.
+- [x] `pnpm build` — build bem-sucedido.
+- [x] `pnpm smoke:supabase` — pula corretamente sem envs reais.
+
+## Novo Front-end (2026-06-14)
+
+- [x] Pagina `/notifications` — filtros (Todas/Nao lidas/Mentions), agrupamento, NotificationItem.
+- [x] Pagina `/favorites` — tabs (Prompts/Templates/Noticias/Trilhas), empty state com CTA, sugestoes.
+- [x] Pagina `/premium` — toggle Mensal/Anual, cards de plano, beneficios, trust badges.
+- [x] Bottom nav (AppBottomNav) — 6 rotas (Inicio, Trilha, Lab, Desafios, Noticias, Perfil).
+- [x] Componentes: AppPageHeader, PillTabs.
+- [x] Dados mock: notifications, favorites, premium.
+- [x] Entry points na Home (bell, heart, banner premium) e Profile (links premium/favorites).
 

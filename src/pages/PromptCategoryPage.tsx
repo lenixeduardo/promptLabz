@@ -21,9 +21,9 @@ const DIFF_LABELS: Record<DiffFilter, string> = {
 }
 
 const DIFF_BADGE: Record<PromptCard["difficulty"], { dot: string; label: string; bg: string; text: string }> = {
-  Iniciante:    { dot: "bg-[#2B5D3A]", label: "Iniciante",     bg: "bg-[#EAF7EF]", text: "text-[#2B5D3A]" },
-  Intermediario:{ dot: "bg-[#D97706]", label: "Intermediário",  bg: "bg-[#FFF7ED]", text: "text-[#92400E]" },
-  Avancado:     { dot: "bg-[#DC2626]", label: "Avançado",       bg: "bg-[#FEF2F2]", text: "text-[#991B1B]" },
+  Iniciante:    { dot: "bg-primary-dark", label: "Iniciante",     bg: "bg-pageBgLight", text: "text-primary-dark" },
+  Intermediario:{ dot: "bg-amber-600", label: "Intermediário",  bg: "bg-[#FFF7ED]", text: "text-amber-800" },
+  Avancado:     { dot: "bg-red-600", label: "Avançado",       bg: "bg-[#FEF2F2]", text: "text-red" },
 }
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -43,26 +43,26 @@ function PromptListCard({
   const badge = DIFF_BADGE[prompt.difficulty]
 
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
+    <div className="flex items-start gap-3 rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold leading-snug text-[#1F2A24]">{prompt.title}</p>
-            <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-[#4A5E52]">
+            <p className="text-sm font-bold leading-snug text-foregroundDark">{prompt.title}</p>
+            <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-foregroundSecondary">
               {prompt.description}
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-1.5">
             <button
               onClick={onToggleSave}
-              className="rounded-full p-1 transition-colors hover:bg-[#EAF7EF]"
+              className="rounded-full p-1 transition-colors hover:bg-pageBgLight"
               aria-label={saved ? "Remover dos salvos" : "Salvar prompt"}
             >
               <Bookmark
-                className={`h-4 w-4 ${saved ? "fill-[#2B5D3A] text-[#2B5D3A]" : "text-[#6B9E7E]"}`}
+                className={`h-4 w-4 ${saved ? "fill-primary-dark text-primary-dark" : "text-foregroundMuted"}`}
               />
             </button>
-            <ChevronRight className="h-4 w-4 text-[#6B9E7E]" />
+            <ChevronRight className="h-4 w-4 text-foregroundMuted" />
           </div>
         </div>
         <span
@@ -119,48 +119,48 @@ export default function PromptCategoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F0FAF3] pb-24">
+    <div className="min-h-screen bg-surface-soft pb-24">
       {/* Header */}
       <div className="bg-white px-4 pb-4 pt-12 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate(-1)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[#2B5D3A] transition-colors hover:bg-[#EAF7EF]"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-primary-dark transition-colors hover:bg-pageBgLight"
               aria-label="Voltar"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <div>
-              <h1 className="text-lg font-extrabold text-[#1F2A24]">{label}</h1>
-              <p className="text-xs text-[#6B9E7E]">{basePrompts.length} prompts disponíveis</p>
+              <h1 className="text-lg font-extrabold text-foregroundDark">{label}</h1>
+              <p className="text-xs text-foregroundMuted">{basePrompts.length} prompts disponíveis</p>
             </div>
           </div>
           {catMeta && (
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#EAF7EF]">
-              <CategoryIcon className="h-6 w-6 text-[#2B5D3A]" strokeWidth={1.8} />
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-pageBgLight">
+              <CategoryIcon className="h-6 w-6 text-primary-dark" strokeWidth={1.8} />
             </div>
           )}
         </div>
 
         {/* Search + Filtros */}
         <div className="flex gap-2">
-          <div className="flex flex-1 items-center gap-2 rounded-full border border-[#BFE3CC] bg-[#F4F9F5] px-4 py-2.5">
-            <Search className="h-4 w-4 shrink-0 text-[#6B9E7E]" />
+          <div className="flex flex-1 items-center gap-2 rounded-full border border-stroke-light bg-[#F4F9F5] px-4 py-2.5">
+            <Search className="h-4 w-4 shrink-0 text-foregroundMuted" />
             <input
               type="text"
               placeholder="Buscar prompts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent text-sm text-[#1F2A24] placeholder:text-[#8A998F] focus:outline-none"
+              className="flex-1 bg-transparent text-sm text-foregroundDark placeholder:text-foregroundPlaceholder focus:outline-none"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery("")} className="rounded-full p-0.5 text-[#6B9E7E]">
+              <button onClick={() => setSearchQuery("")} className="rounded-full p-0.5 text-foregroundMuted">
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
-          <button className="flex items-center gap-1.5 rounded-full border border-[#BFE3CC] bg-white px-3 py-2 text-xs font-semibold text-[#2B5D3A] transition-colors hover:bg-[#EAF7EF]">
+          <button className="flex items-center gap-1.5 rounded-full border border-stroke-light bg-white px-3 py-2 text-xs font-semibold text-primary-dark transition-colors hover:bg-pageBgLight">
             <SlidersHorizontal className="h-3.5 w-3.5" />
             Filtros
           </button>
@@ -176,8 +176,8 @@ export default function PromptCategoryPage() {
               onClick={() => setActiveDiff(d)}
               className={`inline-flex shrink-0 items-center rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors ${
                 activeDiff === d
-                  ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                  : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+                  ? "border-primary-dark bg-primary-dark text-white"
+                  : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
               }`}
             >
               {DIFF_LABELS[d]}
@@ -187,8 +187,8 @@ export default function PromptCategoryPage() {
 
         {/* Prompt list */}
         {filtered.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 py-16 text-[#6B9E7E]">
-            <Search className="h-14 w-14 text-[#CDEAD8]" />
+          <div className="flex flex-col items-center gap-3 py-16 text-foregroundMuted">
+            <Search className="h-14 w-14 text-stroke-muted" />
             <p className="text-base font-semibold">Nenhum prompt encontrado</p>
             <p className="text-sm opacity-70">Tente ajustar o filtro ou a busca.</p>
           </div>

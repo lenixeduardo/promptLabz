@@ -1,11 +1,14 @@
-import { lazy, Suspense } from "react"
-import { Routes, Route, Navigate } from "react-router-dom"
+import { lazy, Suspense, useEffect } from "react"
+import { Routes, Route, Navigate, useLocation } from "react-router-dom"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { LivesProvider } from "@/contexts/LivesContext"
 import { AchievementsProvider } from "@/contexts/AchievementsContext"
+import { ThemeProvider } from "@/contexts/ThemeContext"
 import { PrivateRoute } from "@/components/PrivateRoute"
 import { Toaster } from "sileo"
 import "sileo/styles.css"
+import { initAnalytics, pageView, identify, reset } from "@/lib/analytics"
+import { useAuth } from "@/hooks/useAuth"
 
 const Hero = lazy(() => import("@/pages/Hero"))
 const Login = lazy(() => import("@/pages/Login"))
@@ -21,8 +24,11 @@ const Lesson = lazy(() => import("@/pages/Lesson"))
 const Skills = lazy(() => import("@/pages/Skills"))
 const SkillDetail = lazy(() => import("@/pages/SkillDetail"))
 const MissionComplete = lazy(() => import("@/pages/MissionComplete"))
-const Prompts = lazy(() => import("@/pages/Prompts"))
+const Favorites = lazy(() => import("@/pages/Favorites"))
+const Notifications = lazy(() => import("@/pages/Notifications"))
+const Premium = lazy(() => import("@/pages/Premium"))
 const Achievements = lazy(() => import("@/pages/Achievements"))
+const Prompts = lazy(() => import("@/pages/Prompts"))
 const PromptChallenge = lazy(() => import("@/pages/PromptChallenge"))
 const Subscription = lazy(() => import("@/pages/Subscription"))
 const SkillCategoryPage = lazy(() => import("@/pages/SkillCategoryPage"))
@@ -42,24 +48,53 @@ const Certificate = lazy(() => import("@/pages/Certificate"))
 
 function PageLoading() {
   return (
-    <div className="flex h-screen items-center justify-center bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD]">
+    <div className="flex h-screen items-center justify-center bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end">
       <div className="text-center">
         <img
           src="/assets/mascot-login-new.png"
           alt="Carregando"
           className="mx-auto mb-4 h-32 w-auto"
         />
-        <p className="text-lg font-medium text-[#2B5D3A]">Carregando...</p>
+        <p className="text-lg font-medium text-primary-dark">Carregando...</p>
       </div>
     </div>
   )
 }
 
+// ── Analytics tracker (page views + user identification) ─────────────────
+function AnalyticsTracker() {
+  const location = useLocation()
+  const { user } = useAuth()
+
+  useEffect(() => {
+    initAnalytics()
+  }, [])
+
+  useEffect(() => {
+    pageView(location.pathname)
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (user) {
+      identify(user.id, {
+        email: user.email,
+        name: user.user_metadata?.full_name,
+      })
+    } else {
+      reset()
+    }
+  }, [user?.id])
+
+  return null
+}
+
 export default function App() {
   return (
-    <AuthProvider>
-      <LivesProvider>
-        <AchievementsProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <LivesProvider>
+          <AchievementsProvider>
+          <AnalyticsTracker />
           <Toaster position="top-right" />
           <Suspense fallback={<PageLoading />}>
             <Routes>
@@ -134,10 +169,26 @@ export default function App() {
                 }
               />
               <Route
-                path="/prompts"
+                path="/favorites"
                 element={
                   <PrivateRoute>
-                    <Prompts />
+                    <Favorites />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/notifications"
+                element={
+                  <PrivateRoute>
+                    <Notifications />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/premium"
+                element={
+                  <PrivateRoute>
+                    <Premium />
                   </PrivateRoute>
                 }
               />
@@ -146,6 +197,14 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <Achievements />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/prompts"
+                element={
+                  <PrivateRoute>
+                    <Prompts />
                   </PrivateRoute>
                 }
               />
@@ -280,8 +339,9 @@ export default function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
-        </AchievementsProvider>
-      </LivesProvider>
-    </AuthProvider>
+          </AchievementsProvider>
+        </LivesProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }

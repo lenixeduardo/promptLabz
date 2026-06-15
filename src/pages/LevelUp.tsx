@@ -54,7 +54,7 @@ export default function LevelUp() {
   const levelTitle = getLevelTitle(newLevel)
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-white via-[#EAF7EF] to-[#D2EEDD] px-6 py-10">
+    <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-white via-pageBgLight to-gradient-end px-6 py-10">
       {/* Confetti */}
       {CONFETTI.map((c, i) => (
         <span
@@ -74,14 +74,14 @@ export default function LevelUp() {
       ))}
 
       {/* Decorative sparkles */}
-      <Sparkles className="absolute left-6 top-24 h-5 w-5 animate-twinkle text-[#3E8E5E]/60" style={{ animationDelay: "0.3s" }} />
+      <Sparkles className="absolute left-6 top-24 h-5 w-5 animate-twinkle text-emerald/60" style={{ animationDelay: "0.3s" }} />
       <Sparkles className="absolute right-8 top-32 h-4 w-4 animate-twinkle text-[#7CC79A]"   style={{ animationDelay: "1s" }} />
       <Sparkles className="absolute left-12 top-60 h-3 w-3 animate-twinkle text-[#FFD166]"   style={{ animationDelay: "1.7s" }} />
-      <Sparkles className="absolute right-6 top-72 h-5 w-5 animate-twinkle text-[#3E8E5E]/50" style={{ animationDelay: "0.6s" }} />
+      <Sparkles className="absolute right-6 top-72 h-5 w-5 animate-twinkle text-emerald/50" style={{ animationDelay: "0.6s" }} />
 
       <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
         {/* Header */}
-        <h1 className="text-4xl font-extrabold leading-tight text-[#2B5D3A]">
+        <h1 className="text-4xl font-extrabold leading-tight text-primary-dark">
           Novo Nível!
         </h1>
 
@@ -95,28 +95,28 @@ export default function LevelUp() {
         </MascotGlow>
 
         {/* Congratulations label */}
-        <p className="text-sm font-semibold text-[#6B9E7E]">Parabéns!</p>
+        <p className="text-sm font-semibold text-foregroundMuted">Parabéns!</p>
 
         {/* Level badge */}
         <div className="flex flex-col items-center gap-2">
           <div
-            className="flex h-20 w-20 flex-col items-center justify-center bg-[#2B5D3A] text-white"
+            className="flex h-20 w-20 flex-col items-center justify-center bg-primary-dark text-white"
             style={{ clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)" }}
           >
             <span className="text-[10px] font-semibold uppercase tracking-wide opacity-80">nível</span>
             <span className="text-3xl font-extrabold leading-none">{newLevel}</span>
           </div>
-          <p className="text-xl font-bold text-[#1F2A24]">{levelTitle}</p>
+          <p className="text-xl font-bold text-foregroundDark">{levelTitle}</p>
         </div>
 
         {/* Unlocked items card */}
-        <div className="w-full max-w-sm rounded-2xl border border-[#BFE3CC] bg-white px-5 py-4 text-left shadow-sm">
-          <p className="mb-3 text-sm font-bold text-[#1F2A24]">O que foi desbloqueado:</p>
+        <div className="w-full max-w-sm rounded-2xl border border-stroke-light bg-white px-5 py-4 text-left shadow-sm">
+          <p className="mb-3 text-sm font-bold text-foregroundDark">O que foi desbloqueado:</p>
           <div className="flex flex-col gap-2.5">
             {UNLOCK_ITEMS.map(({ icon: Icon, text }, idx) => (
               <div key={idx} className="flex items-center gap-2.5">
-                <Icon className="h-5 w-5 shrink-0 text-[#3E8E5E]" />
-                <span className="text-sm text-[#3A4B40]">{text(newLevel)}</span>
+                <Icon className="h-5 w-5 shrink-0 text-emerald" />
+                <span className="text-sm text-foregroundDark">{text(newLevel)}</span>
               </div>
             ))}
           </div>

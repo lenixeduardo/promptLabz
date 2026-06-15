@@ -79,9 +79,9 @@ export default function AvatarScreen() {
             alt="logo"
             className="h-10 w-10 object-contain"
           />
-          <h1 className="text-2xl font-extrabold text-[#1A3D2B]">Avatares</h1>
+          <h1 className="text-2xl font-extrabold text-foregroundDark">Avatares</h1>
         </div>
-        <p className="mb-6 text-sm text-[#4A5E52]">
+        <p className="mb-6 text-sm text-foregroundSecondary">
           Escolha seu personagem. O primeiro é grátis!
         </p>
 
@@ -103,8 +103,8 @@ export default function AvatarScreen() {
                 <div
                   className={`relative h-14 w-14 overflow-hidden rounded-xl border-2 transition-all ${
                     isSelected
-                      ? "border-[#3E8E5E] bg-[#D9F0E4]"
-                      : "border-[#E2E8E4] bg-[#F5F5F5]"
+                      ? "border-emerald bg-[#D9F0E4]"
+                      : "border-neutral bg-surface-soft"
                   } ${!canAfford && !isOwned ? "opacity-40" : ""}`}
                 >
                   <img
@@ -114,19 +114,19 @@ export default function AvatarScreen() {
                   />
                   {/* Owned checkmark */}
                   {isOwned && (
-                    <div className="absolute bottom-0.5 right-0.5 rounded-full bg-[#3E8E5E] p-0.5">
+                    <div className="absolute bottom-0.5 right-0.5 rounded-full bg-emerald p-0.5">
                       <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />
                     </div>
                   )}
                 </div>
 
                 {/* Price label */}
-                <span className="text-[10px] font-semibold text-[#2B5D3A]">
+                <span className="text-[10px] font-semibold text-primary-dark">
                   {avatar.price === 0 ? (
                     "Grátis"
                   ) : (
                     <span className="flex items-center gap-0.5">
-                      <Heart className="h-2.5 w-2.5 fill-[#3E8E5E] text-[#3E8E5E]" />
+                      <Heart className="h-2.5 w-2.5 fill-emerald text-emerald" />
                       {avatar.price}
                     </span>
                   )}
@@ -140,31 +140,31 @@ export default function AvatarScreen() {
       {/* Diamond bar + Bottom nav — fixed */}
       <div className="fixed bottom-0 left-0 right-0 bg-white">
         {/* Diamond balance */}
-        <div className="flex items-center justify-center gap-1.5 border-t border-[#E2E8E4] py-2">
-          <span className="text-xs font-medium text-[#4A5E52]">Seus diamantes:</span>
-          <Heart className="h-3.5 w-3.5 fill-[#3E8E5E] text-[#3E8E5E]" />
-          <span className="text-xs font-bold text-[#1A3D2B]">{userBalance}</span>
+        <div className="flex items-center justify-center gap-1.5 border-t border-neutral py-2">
+          <span className="text-xs font-medium text-foregroundSecondary">Seus diamantes:</span>
+          <Heart className="h-3.5 w-3.5 fill-emerald text-emerald" />
+          <span className="text-xs font-bold text-foregroundDark">{userBalance}</span>
         </div>
 
         {/* Bottom nav */}
-        <nav className="flex items-center justify-around border-t border-[#CDEAD8] px-4 py-3">
+        <nav className="flex items-center justify-around border-t border-stroke-muted px-4 py-3">
           <Link
             to="/home"
-            className="flex flex-col items-center gap-0.5 text-[#4A5E52] hover:text-[#2E8B57]"
+            className="flex flex-col items-center gap-0.5 text-foregroundSecondary hover:text-link"
           >
             <Home className="h-5 w-5" />
             <span className="text-[10px] font-medium">Início</span>
           </Link>
           <Link
             to="/avatars"
-            className="flex flex-col items-center gap-0.5 text-[#3E8E5E]"
+            className="flex flex-col items-center gap-0.5 text-emerald"
           >
             <ShoppingBag className="h-5 w-5" />
             <span className="text-[10px] font-medium">Loja</span>
           </Link>
           <Link
             to="/profile"
-            className="flex flex-col items-center gap-0.5 text-[#4A5E52] hover:text-[#2E8B57]"
+            className="flex flex-col items-center gap-0.5 text-foregroundSecondary hover:text-link"
           >
             <User className="h-5 w-5" />
             <span className="text-[10px] font-medium">Perfil</span>

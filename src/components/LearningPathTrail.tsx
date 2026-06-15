@@ -18,8 +18,8 @@ export function LearningPathTrail({ modules, completedCount, totalCount }: Learn
     <div>
       <div className="flex items-baseline justify-between mb-3">
         <div>
-          <h2 className="text-base font-bold text-[#1F2A24]">Sua Trilha de Aprendizado</h2>
-          <p className="text-xs text-[#6B7A70] mt-0.5">
+          <h2 className="text-base font-bold text-foregroundDark">Sua Trilha de Aprendizado</h2>
+          <p className="text-xs text-foregroundTertiary mt-0.5">
             {completedCount}/{totalCount} módulos concluídos
           </p>
         </div>
@@ -37,21 +37,21 @@ export function LearningPathTrail({ modules, completedCount, totalCount }: Learn
 
             const nodeColor =
               mod.status === "completed"
-                ? "bg-[#2B5D3A] border-[#2B5D3A]"
+                ? "bg-primary-dark border-primary-dark"
                 : mod.status === "current"
-                ? "bg-white border-[#2B5D3A]"
+                ? "bg-white border-primary-dark"
                 : "bg-white border-[#C8D5CC]"
 
             const iconColor =
               mod.status === "completed"
                 ? "text-white"
                 : mod.status === "current"
-                ? "text-[#2B5D3A]"
+                ? "text-primary-dark"
                 : "text-[#A0AFA5]"
 
             const lineColor =
               mod.status === "completed" || (idx > 0 && modules[idx - 1]?.status === "completed")
-                ? "bg-[#2B5D3A]"
+                ? "bg-primary-dark"
                 : "bg-[#C8D5CC]"
 
             return (
@@ -66,10 +66,10 @@ export function LearningPathTrail({ modules, completedCount, totalCount }: Learn
                   <span
                     className={`text-[10px] text-center mt-1.5 leading-tight px-1 ${
                       mod.status === "current"
-                        ? "font-bold text-[#1F2A24]"
+                        ? "font-bold text-foregroundDark"
                         : mod.status === "completed"
-                        ? "font-medium text-[#3E8E5E]"
-                        : "font-medium text-[#8A998F]"
+                        ? "font-medium text-emerald"
+                        : "font-medium text-foregroundPlaceholder"
                     }`}
                   >
                     {mod.title}

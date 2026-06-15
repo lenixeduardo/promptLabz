@@ -1,13 +1,11 @@
-# Vite
-dist/
-dist-ssr/
-*.local
-
 # Dependencies
 node_modules/
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
+.pnpm-store/
+
+# Build output
+dist/
+build/
+dist-ssr/
 
 # Environment
 .env
@@ -20,14 +18,27 @@ yarn.lock
 *.swp
 *.swo
 *~
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
 
 # Testing
 coverage/
 .nyc_output/
+test-results/
+playwright-report/
 
 # Build
 *.tsbuildinfo
 
 # Claude Code internal
 .claude/worktrees/
+
+# Temp
+.tmp
+.cache

@@ -5,6 +5,8 @@ export interface AchievementsCtx {
   allAchievements: Achievement[]
   unlocked: string[]
   data: AchievementsData
+  /** Whether we're still loading from DB on first mount */
+  initialLoading: boolean
   checkLessonComplete: (wasPerfect: boolean) => Achievement[]
   checkDailyVisit: (userId?: string, favoritesCount?: number) => Promise<Achievement[]>
   visitCategory: (categoryId: string) => void

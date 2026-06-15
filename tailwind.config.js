@@ -14,8 +14,7 @@ module.exports = {
 			screens: {
 				'2xl': '1400px',
 			},
-		},
-		extend: {
+		},		extend: {
 			fontFamily: {
 				sans: [
 					'-apple-system',
@@ -37,17 +36,21 @@ module.exports = {
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
+			pageBg: 'var(--page-bg)',
+				pageBgLight: 'var(--page-bg-light)',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#2B5D3A',
+					DEFAULT: 'var(--primary)',
+					light: 'var(--primary-light)',
+					dark: 'var(--primary-dark)',
 					foreground: 'hsl(var(--primary-foreground))',
 				},
 				secondary: {
-					DEFAULT: '#4A90E2',
+					DEFAULT: 'var(--secondary)',
 					foreground: 'hsl(var(--secondary-foreground))',
 				},
 				accent: {
-					DEFAULT: '#F5A623',
+					DEFAULT: 'var(--accent)',
 					foreground: 'hsl(var(--accent-foreground))',
 				},
 				destructive: {
@@ -55,7 +58,7 @@ module.exports = {
 					foreground: 'hsl(var(--destructive-foreground))',
 				},
 				muted: {
-					DEFAULT: 'hsl(var(--muted))',
+					DEFAULT: 'var(--muted-default)',
 					foreground: 'hsl(var(--muted-foreground))',
 				},
 				popover: {
@@ -66,6 +69,29 @@ module.exports = {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))',
 				},
+				emerald: 'var(--emerald)',
+				'emerald-dark': 'var(--emerald-dark)',
+				forest: 'var(--forest)',
+				foregroundDark: 'var(--foreground-dark)',
+				foregroundMuted: 'var(--foreground-muted)',
+				foregroundSecondary: 'var(--foreground-secondary)',
+				foregroundTertiary: 'var(--foreground-tertiary)',
+				foregroundPlaceholder: 'var(--foreground-placeholder)',
+				stroke: {
+					light: 'var(--stroke-light)',
+					muted: 'var(--stroke-muted)',
+				},
+				surface: {
+					soft: 'var(--surface-soft)',
+					success: 'var(--surface-success)',
+				},
+				gradient: {
+					mid: 'var(--gradient-mid)',
+					end: 'var(--gradient-end)',
+				},
+				link: 'var(--link)',
+				luxury: 'var(--luxury)',
+				neutral: 'var(--neutral)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

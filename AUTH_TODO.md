@@ -249,3 +249,14 @@ CREATE POLICY "Users can update own data" ON users
 
 Next: Test authentication flow with real Supabase project
 
+---
+
+## Novas Telas (2026-06-14)
+
+- [x] `/favorites` — Favorites com abas e empty state
+- [x] `/notifications` — Notifications com filtros e agrupamento
+- [x] `/premium` — Premium paywall com toggle de planos
+- [x] AppBottomNav — Bottom nav com 6 rotas (Inicio, Trilha, Laboratorio, Desafios, Noticias, Perfil)
+- [x] Componentes: AppPageHeader, PillTabs
+- [x] Testes: 42 novos (106 total)
+

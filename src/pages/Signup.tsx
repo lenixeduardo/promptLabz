@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card"
 import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
 import { z } from "zod"
+import { trackSignUp } from "@/lib/analytics"
 
 function GoogleIcon() {
   return (
@@ -78,6 +79,7 @@ export default function Signup() {
     setLoading(true)
     const result = await signup(email, password, name.trim())
     if (result.success) {
+      trackSignUp("email")
       sileo.success({ title: "Conta criada com sucesso!" })
       if (result.needsConfirmation) {
         setPendingEmail(email)
@@ -94,6 +96,7 @@ export default function Signup() {
     setLoading(true)
     const result = await loginWithGoogle()
     if (result.success) {
+      trackSignUp("google")
       sileo.success({ title: "Conta criada com o Google!" })
       navigate("/home")
     } else {
@@ -104,21 +107,21 @@ export default function Signup() {
 
   if (pendingEmail) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-6 text-center">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-6 text-center">
         <img
           src="/assets/mascot-login-new.png"
           alt="Mascot"
           className="h-36 w-auto drop-shadow-md"
         />
-        <h1 className="text-3xl font-extrabold text-[#2B5D3A]">Confirme seu e-mail</h1>
-        <p className="max-w-sm text-sm text-[#4A5E52]">
+        <h1 className="text-3xl font-extrabold text-primary-dark">Confirme seu e-mail</h1>
+        <p className="max-w-sm text-sm text-foregroundSecondary">
           Enviamos um link de confirmação para{" "}
-          <span className="font-semibold text-[#2B5D3A]">{pendingEmail}</span>.
+          <span className="font-semibold text-primary-dark">{pendingEmail}</span>.
           <br />Clique no link para ativar sua conta.
         </p>
         <Link
           to="/login"
-          className="mt-2 rounded-full bg-[#2B5D3A] px-8 py-3 text-sm font-semibold text-white hover:opacity-90"
+          className="mt-2 rounded-full bg-primary-dark px-8 py-3 text-sm font-semibold text-white hover:opacity-90"
         >
           Ir para o login
         </Link>
@@ -127,18 +130,18 @@ export default function Signup() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
       <div className="mx-auto flex w-full max-w-[420px] flex-col">
         {/* Back */}
         <Link
           to="/login"
-          className="mb-2 flex w-fit items-center text-[#2E8B57] hover:text-primary"
+          className="mb-2 flex w-fit items-center text-link hover:text-primary"
         >
           <ArrowLeft className="h-6 w-6" strokeWidth={2.2} />
         </Link>
 
         {/* Title */}
-        <h1 className="mb-5 text-center text-4xl font-extrabold text-[#2B5D3A]">
+        <h1 className="mb-5 text-center text-4xl font-extrabold text-primary-dark">
           Criar Conta
         </h1>
 
@@ -149,7 +152,7 @@ export default function Signup() {
             alt="Mascot"
             className="h-36 w-auto object-contain drop-shadow-md"
           />
-          <div className="relative rounded-2xl border border-[#BFE3CC] bg-white px-3 py-2 text-sm font-medium leading-snug text-[#1F2A24] shadow-sm">
+          <div className="relative rounded-2xl border border-stroke-light bg-white px-3 py-2 text-sm font-medium leading-snug text-foregroundDark shadow-sm">
             Vamos começar! 🐱
             {/* bubble tail pointing left */}
             <div
@@ -180,7 +183,7 @@ export default function Signup() {
         </div>
 
         {/* Form card */}
-        <Card className="w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
+        <Card className="w-full border-stroke-muted bg-surface-success p-6 shadow-md sm:p-7">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <Input
               type="text"
@@ -222,18 +225,18 @@ export default function Signup() {
               disabled={loading}
             />
 
-            <p className="text-center text-xs text-[#4A5E52]">
+            <p className="text-center text-xs text-foregroundSecondary">
               Ao criar a conta, você concorda com os{" "}
               <Link
                 to="#"
-                className="font-medium text-[#2E8B57] underline underline-offset-2"
+                className="font-medium text-link underline underline-offset-2"
               >
                 Termos de Uso
               </Link>{" "}
               e{" "}
               <Link
                 to="#"
-                className="font-medium text-[#2E8B57] underline underline-offset-2"
+                className="font-medium text-link underline underline-offset-2"
               >
                 Política de Privacidade
               </Link>
@@ -245,9 +248,9 @@ export default function Signup() {
 
             {/* Divider */}
             <div className="my-1 flex items-center gap-3">
-              <span className="h-px flex-1 bg-[#BFD9C8]" />
-              <span className="text-sm text-[#6B7A70]">ou continue com</span>
-              <span className="h-px flex-1 bg-[#BFD9C8]" />
+              <span className="h-px flex-1 bg-stroke-light" />
+              <span className="text-sm text-foregroundTertiary">ou continue com</span>
+              <span className="h-px flex-1 bg-stroke-light" />
             </div>
 
             {/* Social logins */}
@@ -270,11 +273,11 @@ export default function Signup() {
         </Card>
 
         {/* Footer */}
-        <p className="mt-7 text-center text-base text-[#1F2A24]">
+        <p className="mt-7 text-center text-base text-foregroundDark">
           Já tem uma conta?{" "}
           <Link
             to="/login"
-            className="font-semibold text-[#2E8B57] underline underline-offset-2 hover:text-primary"
+            className="font-semibold text-link underline underline-offset-2 hover:text-primary"
           >
             Faça login
           </Link>

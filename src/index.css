@@ -16,7 +16,6 @@
     --popover: 0 0% 100%;
     --popover-foreground: 150 30% 15%;
 
-    /* primary green is set as a literal hex in tailwind.config (#2B5D3A) */
     --primary-foreground: 0 0% 100%;
     --secondary-foreground: 0 0% 100%;
     --accent-foreground: 0 0% 100%;
@@ -32,6 +31,85 @@
     --ring: 145 45% 35%;
 
     --radius: 1rem;
+
+    /* Custom palette (light mode — defaults) */
+    --page-bg: #F5FBF5;
+    --page-bg-light: #EAF7EF;
+    --emerald: #3E8E5E;
+    --emerald-dark: #2E7048;
+    --forest: #2F6B45;
+    --foreground-dark: #1F2A24;
+    --foreground-muted: #6B9E7E;
+    --foreground-secondary: #4A5E52;
+    --foreground-tertiary: #6B7A70;
+    --foreground-placeholder: #8A998F;
+    --stroke-light: #BFE3CC;
+    --stroke-muted: #CDEAD8;
+    --surface-soft: #F0FAF3;
+    --surface-success: #DCF1E4;
+    --gradient-mid: #E0F3E7;
+    --gradient-end: #D2EEDD;
+    --link: #2E8B57;
+    --luxury: #FFD700;
+    --neutral: #8E9C8E;
+    --primary: #4B8C6D;
+    --primary-light: #A3E4A1;
+    --primary-dark: #2B5D3A;
+    --secondary: #4A90E2;
+    --accent: #F5A623;
+    --muted-default: #D3EAD3;
+  }
+
+  .dark {
+    --background: 150 30% 8%;
+    --foreground: 145 20% 90%;
+
+    --card: 150 25% 12%;
+    --card-foreground: 145 20% 90%;
+
+    --popover: 150 25% 12%;
+    --popover-foreground: 145 20% 90%;
+
+    --primary-foreground: 0 0% 100%;
+    --secondary-foreground: 0 0% 100%;
+    --accent-foreground: 0 0% 10%;
+
+    --muted: 150 20% 18%;
+    --muted-foreground: 145 15% 60%;
+
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 150 20% 22%;
+    --input: 150 20% 22%;
+    --ring: 145 45% 50%;
+
+    /* Custom palette (dark mode) */
+    --page-bg: #0D1A12;
+    --page-bg-light: #15261C;
+    --emerald: #4CAF6E;
+    --emerald-dark: #3D8B58;
+    --forest: #3D8055;
+    --foreground-dark: #E8EDEA;
+    --foreground-muted: #8FAF9A;
+    --foreground-secondary: #B0C5B5;
+    --foreground-tertiary: #7A9E84;
+    --foreground-placeholder: #5C7A64;
+    --stroke-light: #2A4A34;
+    --stroke-muted: #1E3A28;
+    --surface-soft: #1A2E20;
+    --surface-success: #1A3A24;
+    --gradient-mid: #1A2E22;
+    --gradient-end: #15261C;
+    --link: #66BB8A;
+    --luxury: #FFD700;
+    --neutral: #6A8A70;
+    --primary: #5CA87A;
+    --primary-light: #5CA87A;
+    --primary-dark: #3D8B58;
+    --secondary: #5DA8E8;
+    --accent: #F5A623;
+    --muted-default: #1E3A28;
   }
 }
 
@@ -53,6 +131,44 @@
   }
   h4, h5, h6 {
     letter-spacing: -0.015em;
+  }
+
+  /* ── Dark mode overrides for Tailwind built-in utilities ── */
+  .dark .bg-white {
+    background-color: hsl(var(--card));
+  }
+  .dark .bg-white\/95 {
+    background-color: hsl(var(--card) / 0.95);
+  }
+  .dark .bg-white\/80 {
+    background-color: hsl(var(--card) / 0.8);
+  }
+  .dark .bg-white\/70 {
+    background-color: hsl(var(--card) / 0.7);
+  }
+  .dark .bg-white\/60 {
+    background-color: hsl(var(--card) / 0.6);
+  }
+  .dark .bg-white\/30 {
+    background-color: hsl(var(--card) / 0.3);
+  }
+  .dark .ring-pageBgLight {
+    --tw-ring-color: hsl(var(--card));
+  }
+  .dark .shadow-sm {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  }
+  .dark .shadow-md {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+  }
+  .dark .shadow-lg {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+  }
+  .dark .shadow-xl {
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+  }
+  .dark .shadow-\[0_-4px_20px_rgba\(0\2c 0\2c 0\2c 0\.06\)\] {
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
   }
 }
 

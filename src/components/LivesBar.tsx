@@ -21,7 +21,7 @@ export function LivesBar({ className, size = "md" }: LivesBarProps) {
             dim,
             "transition-all duration-300",
             i < lives
-              ? "fill-[#E05252] text-[#E05252] drop-shadow-sm"
+              ? "fill-red text-red drop-shadow-sm"
               : "fill-none text-[#D1D5D3]"
           )}
         />

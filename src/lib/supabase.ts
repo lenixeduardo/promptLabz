@@ -14,3 +14,22 @@ export const supabase = createClient(
   supabaseUrl || "https://test-only.supabase.co",
   supabaseAnonKey || "test-only-anon-key"
 )
+
+// ── Shared Helpers ───────────────────────────────────────────────────────
+
+/** Check whether Supabase env vars are actually filled in. */
+export function isSupabaseConfigured(): boolean {
+  const url = import.meta.env.VITE_SUPABASE_URL
+  const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+  return !!url && !!key && url !== "your_supabase_url_here"
+}
+
+/** Normalise error objects into a readable string. */
+export function getErrorMessage(err: unknown, fallback: string): string {
+  if (err instanceof Error) return err.message
+  if (typeof err === "object" && err && "message" in err) {
+    const message = (err as { message?: unknown }).message
+    if (typeof message === "string") return message
+  }
+  return fallback
+}
