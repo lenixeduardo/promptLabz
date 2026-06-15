@@ -20,6 +20,7 @@ export function getDefaultAchievementsData(): AchievementsData {
     perfectCount: 0,
     lastVisitDate: null,
     consecutiveDays: 0,
+    longestStreak: 0,
     visitedCategories: [],
     completedCategoryIds: [],
   }
@@ -79,6 +80,7 @@ export async function loadAchievementsFromDb(userId: string): Promise<DbResult<A
       perfectCount: data.perfect_count ?? 0,
       lastVisitDate: data.last_visit_date ?? null,
       consecutiveDays: data.consecutive_days ?? 0,
+      longestStreak: data.longest_streak ?? 0,
       visitedCategories: data.visited_categories ?? [],
       completedCategoryIds: data.completed_category_ids ?? [],
     }
@@ -111,6 +113,7 @@ export async function saveAchievementsToDb(
           perfect_count: data.perfectCount,
           last_visit_date: data.lastVisitDate,
           consecutive_days: data.consecutiveDays,
+          longest_streak: data.longestStreak,
           visited_categories: data.visitedCategories,
           completed_category_ids: data.completedCategoryIds,
         },

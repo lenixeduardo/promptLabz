@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
-import { Settings, ChevronRight, Zap, BookOpen, Edit2, Heart, Crown, Sparkles } from "lucide-react"
+import { Settings, ChevronRight, Zap, BookOpen, Edit2, Heart, Crown, Sparkles, User, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { BottomNav } from "@/components/BottomNav"
@@ -17,7 +17,6 @@ import { getLevelTitle } from "@/lib/levelTitles"
 import * as Icons from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { sileo } from "sileo"
-import { User, Mail } from "lucide-react"
 
 const SAMPLE_CERTIFICATE = {
   courseName: "Engenharia de Prompts para Iniciantes",
