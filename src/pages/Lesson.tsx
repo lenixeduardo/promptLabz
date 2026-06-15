@@ -10,6 +10,7 @@ import { lessonsData, type ContentBlock, type Question } from "@/data/lessonsDat
 import { useAuth } from "@/hooks/useAuth"
 import { saveProgress as saveProgressDb } from "@/lib/db"
 import { getLocalXP, saveLocalXP, getLevel } from "@/lib/xp"
+import { trackLessonStarted, trackLessonCompleted } from "@/lib/analytics"
 
 function getProgressStorageKey(userId?: string) {
   return userId ? `promptlabz_progress:${userId}` : "promptlabz_progress"
@@ -268,8 +269,12 @@ export default function Lesson() {
     }
   }
 
-  async function handleNext() {
+  async  function handleNext() {
     if (step < totalSteps - 1) {
+      // Track lesson started when moving from content to first question
+      if (step === 0) {
+        trackLessonStarted(lessonObj.id)
+      }
       setStep((value) => value + 1)
       setSelected(null)
       setConfirmed(false)
@@ -294,6 +299,8 @@ export default function Lesson() {
     setIsSaving(true)
     await saveProgress()
     setIsSaving(false)
+
+    trackLessonCompleted(lessonObj.id, score)
 
     // Check achievements — increment internal counters
     const newAchievements = achievements.checkLessonComplete(perfect)

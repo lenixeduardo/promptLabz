@@ -9,6 +9,7 @@ import { MascotGlow } from "@/components/MascotGlow"
 import { CircleRevealEntry } from "@/components/CircleTransition"
 import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
+import { trackLogin } from "@/lib/analytics"
 
 function GoogleIcon() {
   return (
@@ -52,6 +53,7 @@ export default function Login() {
 
     const result = await login(email, password)
     if (result.success) {
+      trackLogin("email")
       sileo.success({ title: "Login realizado com sucesso!" })
       navigate("/home")
     } else {
@@ -64,6 +66,7 @@ export default function Login() {
     setLoading(true)
     const result = await loginWithGoogle()
     if (result.success) {
+      trackLogin("google")
       sileo.success({ title: "Login com Google realizado!" })
       navigate("/home")
     } else {

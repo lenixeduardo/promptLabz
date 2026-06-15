@@ -13,10 +13,16 @@ import {
 } from "@/data/premiumData"
 import { cn } from "@/lib/utils"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { useEffect } from "react"
 import { sileo } from "sileo"
+import { trackPremiumViewed } from "@/lib/analytics"
 
 export default function Premium() {
   const navigate = useNavigate()
+
+  useEffect(() => {
+    trackPremiumViewed()
+  }, [])
   const [billingCycle, setBillingCycle] = useState<BillingCycle>("yearly")
 
   const handleStartPremium = () => {

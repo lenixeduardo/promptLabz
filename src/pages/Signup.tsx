@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card"
 import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
 import { z } from "zod"
+import { trackSignUp } from "@/lib/analytics"
 
 function GoogleIcon() {
   return (
@@ -78,6 +79,7 @@ export default function Signup() {
     setLoading(true)
     const result = await signup(email, password, name.trim())
     if (result.success) {
+      trackSignUp("email")
       sileo.success({ title: "Conta criada com sucesso!" })
       if (result.needsConfirmation) {
         setPendingEmail(email)
@@ -94,6 +96,7 @@ export default function Signup() {
     setLoading(true)
     const result = await loginWithGoogle()
     if (result.success) {
+      trackSignUp("google")
       sileo.success({ title: "Conta criada com o Google!" })
       navigate("/home")
     } else {

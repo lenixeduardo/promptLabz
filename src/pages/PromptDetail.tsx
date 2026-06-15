@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { ChevronDown, ChevronUp, Copy, ArrowRight } from "lucide-react"
 import { BottomNav } from "@/components/BottomNav"
 import { cn } from "@/lib/utils"
+import { trackPromptUsed } from "@/lib/analytics"
 
 const PROMPT_DATA = {
   id: "1",
@@ -199,7 +200,10 @@ export default function PromptDetail() {
             {copied ? "Copiado!" : "Copiar Prompt"}
           </button>
           <button
-            onClick={() => navigate("/lab-result")}
+            onClick={() => {
+              trackPromptUsed(PROMPT_DATA.category, PROMPT_DATA.title)
+              navigate("/lab-result")
+            }}
             className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
           >
             Usar no calculador

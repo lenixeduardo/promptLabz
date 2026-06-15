@@ -8,6 +8,7 @@ import {
 } from "@/data/trendingSkillsData"
 import { useFavorites } from "@/hooks/useFavorites"
 import { useAchievements } from "@/hooks/useAchievements"
+import { trackSkillFavorited } from "@/lib/analytics"
 
 type ViewMode = "all" | "favorites" | "ranking"
 
@@ -243,8 +244,8 @@ export default function Skills() {
   const handleToggleFav = (skillName: string) => {
     const wasFav = isFavorite(skillName)
     toggleFavorite(skillName)
-    // If we just added a favorite, check achievements
     if (!wasFav) {
+      trackSkillFavorited(skillName)
       const newAchs = achievements.checkFavorites(favorites.length + 1)
       if (newAchs.length > 0 && import.meta.env.DEV) {
         console.log("[DEV] Novas conquistas desbloqueadas:", newAchs.map((a) => a.title))

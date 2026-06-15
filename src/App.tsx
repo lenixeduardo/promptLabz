@@ -1,11 +1,13 @@
-import { lazy, Suspense } from "react"
-import { Routes, Route, Navigate } from "react-router-dom"
+import { lazy, Suspense, useEffect } from "react"
+import { Routes, Route, Navigate, useLocation } from "react-router-dom"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { LivesProvider } from "@/contexts/LivesContext"
 import { AchievementsProvider } from "@/contexts/AchievementsContext"
 import { PrivateRoute } from "@/components/PrivateRoute"
 import { Toaster } from "sileo"
 import "sileo/styles.css"
+import { initAnalytics, pageView, identify, reset } from "@/lib/analytics"
+import { useAuth } from "@/hooks/useAuth"
 
 const Hero = lazy(() => import("@/pages/Hero"))
 const Login = lazy(() => import("@/pages/Login"))
@@ -57,11 +59,39 @@ function PageLoading() {
   )
 }
 
+// ── Analytics tracker (page views + user identification) ─────────────────
+function AnalyticsTracker() {
+  const location = useLocation()
+  const { user } = useAuth()
+
+  useEffect(() => {
+    initAnalytics()
+  }, [])
+
+  useEffect(() => {
+    pageView(location.pathname)
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (user) {
+      identify(user.id, {
+        email: user.email,
+        name: user.user_metadata?.full_name,
+      })
+    } else {
+      reset()
+    }
+  }, [user?.id])
+
+  return null
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <LivesProvider>
         <AchievementsProvider>
+          <AnalyticsTracker />
           <Toaster position="top-right" />
           <Suspense fallback={<PageLoading />}>
             <Routes>

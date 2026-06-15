@@ -11,6 +11,8 @@ import { useAchievements } from "@/hooks/useAchievements"
 import { cn } from "@/lib/utils"
 import { lessonsData, type Category, type Lesson } from "@/data/lessonsData"
 import { loadProgress, type CategoryProgress } from "@/lib/db"
+import PromptsSection from "@/components/learning-lab/PromptsSection"
+import SkillsSection from "@/components/learning-lab/SkillsSection"
 
 // ─── Trail SVG constants ────────────────────────────────────────────────────
 const TRAIL_W = 340
@@ -564,10 +566,14 @@ export default function LearningLab() {
   // ── Courses list (no category selected) ──
   if (!categoryParam) {
     return (
-      <CoursesListView
-        getProgressForCategory={getProgressForCategory}
-        onSelect={handleCategoryChange}
-      />
+      <>
+        <CoursesListView
+          getProgressForCategory={getProgressForCategory}
+          onSelect={handleCategoryChange}
+        />
+        <PromptsSection />
+        <SkillsSection />
+      </>
     )
   }
 

@@ -1,8 +1,10 @@
+import { useEffect } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import * as Icons from "@/lib/icons"
 import { Button } from "@/components/ui/button"
 import { TRENDING_SKILLS, type TrendingSkill } from "@/data/trendingSkillsData"
 import { useFavorites } from "@/hooks/useFavorites"
+import { trackSkillViewed } from "@/lib/analytics"
 
 function SkillIcon({ iconName, className }: { iconName: string; className?: string }) {
   const Icon = (Icons as unknown as Record<string, Icons.LucideIcon>)[iconName] || Icons.BookOpen
@@ -19,6 +21,12 @@ export default function SkillDetail() {
     (location.state as { skill?: TrendingSkill })?.skill ??
     TRENDING_SKILLS.find((s) => s.name === skillName) ??
     null
+
+  useEffect(() => {
+    if (skill) {
+      trackSkillViewed(skill.name, skill.category)
+    }
+  }, [skill?.name])
 
   if (!skill) {
     return (
