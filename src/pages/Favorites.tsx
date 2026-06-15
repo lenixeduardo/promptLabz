@@ -22,7 +22,7 @@ export default function Favorites() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white px-4 py-6 pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6 pb-24">
       <div className="mx-auto w-full max-w-md">
         {/* Header */}
         <AppPageHeader
@@ -31,7 +31,7 @@ export default function Favorites() {
           rightSlot={
             <button
               onClick={handleMenuClick}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-[#2F6B45] transition-colors hover:bg-[#DCF1E4]"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-forest transition-colors hover:bg-surface-success"
               aria-label="Menu"
             >
               <MoreHorizontal className="h-6 w-6" strokeWidth={2.2} />
@@ -56,7 +56,7 @@ export default function Favorites() {
 
         {/* Dicas para você */}
         <section className="mt-8">
-          <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-[#3E8E5E]">
+          <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-emerald">
             Dicas para você
           </h2>
           <div className="flex flex-col gap-2">

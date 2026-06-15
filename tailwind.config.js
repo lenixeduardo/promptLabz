@@ -14,8 +14,7 @@ module.exports = {
 			screens: {
 				'2xl': '1400px',
 			},
-		},
-		extend: {
+		},		extend: {
 			fontFamily: {
 				sans: [
 					'-apple-system',
@@ -37,9 +36,13 @@ module.exports = {
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
+				pageBg: '#F5FBF5',
+				pageBgLight: '#EAF7EF',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#2B5D3A',
+					DEFAULT: '#4B8C6D',
+					light: '#A3E4A1',
+					dark: '#2B5D3A',
 					foreground: 'hsl(var(--primary-foreground))',
 				},
 				secondary: {
@@ -55,7 +58,7 @@ module.exports = {
 					foreground: 'hsl(var(--destructive-foreground))',
 				},
 				muted: {
-					DEFAULT: 'hsl(var(--muted))',
+					DEFAULT: '#D3EAD3',
 					foreground: 'hsl(var(--muted-foreground))',
 				},
 				popover: {
@@ -66,6 +69,29 @@ module.exports = {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))',
 				},
+				emerald: '#3E8E5E',
+				'emerald-dark': '#2E7048',
+				forest: '#2F6B45',
+				foregroundDark: '#1F2A24',
+				foregroundMuted: '#6B9E7E',
+				foregroundSecondary: '#4A5E52',
+				foregroundTertiary: '#6B7A70',
+				foregroundPlaceholder: '#8A998F',
+				stroke: {
+					light: '#BFE3CC',
+					muted: '#CDEAD8',
+				},
+				surface: {
+					soft: '#F0FAF3',
+					success: '#DCF1E4',
+				},
+				gradient: {
+					mid: '#E0F3E7',
+					end: '#D2EEDD',
+				},
+				link: '#2E8B57',
+				luxury: '#FFD700',
+				neutral: '#8E9C8E',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

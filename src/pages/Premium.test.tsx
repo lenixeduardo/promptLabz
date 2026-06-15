@@ -100,7 +100,7 @@ describe("Premium — interação", () => {
     // Plan card titles also have "Anual" and "Mensal"
     const buttons = screen.getAllByRole("button")
     const anualToggle = buttons.find(
-      (b) => b.textContent?.includes("Anual") && b.classList.contains("bg-[#2B5D3A]")
+      (b) => b.textContent?.includes("Anual") && b.classList.contains("bg-primary-dark")
     )
     expect(anualToggle).toBeTruthy()
   })
@@ -114,7 +114,7 @@ describe("Premium — interação", () => {
     expect(mensalToggle).toBeTruthy()
     if (mensalToggle) {
       await userEvent.click(mensalToggle)
-      expect(mensalToggle).toHaveClass("bg-[#2B5D3A]")
+      expect(mensalToggle).toHaveClass("bg-primary-dark")
     }
   })
 

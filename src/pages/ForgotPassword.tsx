@@ -28,18 +28,18 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
       <div className="mx-auto flex w-full max-w-[420px] flex-col">
         {/* Back */}
         <Link
           to="/login"
-          className="mb-2 flex w-fit items-center text-[#2E8B57] hover:text-primary"
+          className="mb-2 flex w-fit items-center text-link hover:text-primary"
         >
           <ArrowLeft className="h-6 w-6" strokeWidth={2.2} />
         </Link>
 
         {/* Title */}
-        <h1 className="mb-5 text-center text-4xl font-extrabold text-[#2B5D3A]">
+        <h1 className="mb-5 text-center text-4xl font-extrabold text-primary-dark">
           Esqueci minha senha
         </h1>
 
@@ -50,7 +50,7 @@ export default function ForgotPassword() {
             alt="Mascot"
             className="h-36 w-auto object-contain drop-shadow-md"
           />
-          <div className="relative rounded-2xl border border-[#BFE3CC] bg-white px-3 py-2 text-sm font-medium leading-snug text-[#1F2A24] shadow-sm">
+          <div className="relative rounded-2xl border border-stroke-light bg-white px-3 py-2 text-sm font-medium leading-snug text-foregroundDark shadow-sm">
             Não se preocupe! Vamos resolver isso 😊
             {/* bubble tail pointing left */}
             <div
@@ -81,12 +81,12 @@ export default function ForgotPassword() {
         </div>
 
         {/* Card */}
-        <Card className="w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
+        <Card className="w-full border-stroke-muted bg-surface-success p-6 shadow-md sm:p-7">
           {sent ? (
             <div className="flex flex-col items-center gap-3 py-2 text-center">
-              <Mail className="h-10 w-10 text-[#2E8B57]" strokeWidth={1.8} />
-              <p className="text-base font-semibold text-[#2B5D3A]">E-mail enviado!</p>
-              <p className="text-sm text-[#4A5E52]">
+              <Mail className="h-10 w-10 text-link" strokeWidth={1.8} />
+              <p className="text-base font-semibold text-primary-dark">E-mail enviado!</p>
+              <p className="text-sm text-foregroundSecondary">
                 Verifique sua caixa de entrada e siga o link para redefinir sua senha.
               </p>
             </div>
@@ -102,7 +102,7 @@ export default function ForgotPassword() {
                 required
                 disabled={loading}
               />
-              <p className="text-center text-sm text-[#4A5E52]">
+              <p className="text-center text-sm text-foregroundSecondary">
                 Enviaremos um link de redefinição de senha para o seu e-mail.
               </p>
               <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
@@ -114,7 +114,7 @@ export default function ForgotPassword() {
 
         <Link
           to="/login"
-          className="mt-7 text-center text-sm font-medium text-[#2E8B57] underline underline-offset-2 hover:text-primary"
+          className="mt-7 text-center text-sm font-medium text-link underline underline-offset-2 hover:text-primary"
         >
           Voltar para o login
         </Link>

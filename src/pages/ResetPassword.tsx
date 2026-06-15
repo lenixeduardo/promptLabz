@@ -48,18 +48,18 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
       <div className="mx-auto flex w-full max-w-[420px] flex-col">
         {/* Back */}
         <Link
           to="/login"
-          className="mb-2 flex w-fit items-center text-[#2E8B57] hover:text-primary"
+          className="mb-2 flex w-fit items-center text-link hover:text-primary"
         >
           <ArrowLeft className="h-6 w-6" strokeWidth={2.2} />
         </Link>
 
         {/* Title */}
-        <h1 className="mb-5 text-center text-4xl font-extrabold text-[#2B5D3A]">
+        <h1 className="mb-5 text-center text-4xl font-extrabold text-primary-dark">
           Nova Senha
         </h1>
 
@@ -70,7 +70,7 @@ export default function ResetPassword() {
             alt="Mascot"
             className="h-36 w-auto object-contain drop-shadow-md"
           />
-          <div className="relative rounded-2xl border border-[#BFE3CC] bg-white px-3 py-2 text-sm font-medium leading-snug text-[#1F2A24] shadow-sm">
+          <div className="relative rounded-2xl border border-stroke-light bg-white px-3 py-2 text-sm font-medium leading-snug text-foregroundDark shadow-sm">
             Escolha uma senha bem forte, ok? 🔒
             {/* bubble tail pointing left */}
             <div
@@ -101,7 +101,7 @@ export default function ResetPassword() {
         </div>
 
         {/* Card */}
-        <Card className="w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
+        <Card className="w-full border-stroke-muted bg-surface-success p-6 shadow-md sm:p-7">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <Input
               type="password"
@@ -124,7 +124,7 @@ export default function ResetPassword() {
               disabled={loading}
             />
 
-            <p className="text-center text-xs text-[#4A5E52]">
+            <p className="text-center text-xs text-foregroundSecondary">
               A senha deve ter pelo menos 8 caracteres, uma letra maiúscula e um número.
             </p>
 

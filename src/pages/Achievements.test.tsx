@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import Achievements from "./Achievements"
 import { AchievementsProvider } from "@/contexts/AchievementsContext"
+import { AuthProvider } from "@/contexts/AuthContext"
 
 // Mock useNavigate
 const mockNavigate = vi.fn()
@@ -17,12 +18,14 @@ vi.mock("react-router-dom", async () => {
 function renderAchievements() {
   return render(
     <MemoryRouter initialEntries={["/achievements"]}>
-      <AchievementsProvider>
-        <Routes>
-          <Route path="/achievements" element={<Achievements />} />
-          <Route path="/home" element={<div>Home Page</div>} />
-        </Routes>
-      </AchievementsProvider>
+      <AuthProvider>
+        <AchievementsProvider>
+          <Routes>
+            <Route path="/achievements" element={<Achievements />} />
+            <Route path="/home" element={<div>Home Page</div>} />
+          </Routes>
+        </AchievementsProvider>
+      </AuthProvider>
     </MemoryRouter>
   )
 }

@@ -6,12 +6,12 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "rounded-full text-white shadow-lg shadow-primary/30 bg-gradient-to-b from-[#3E8E5E] to-[#2E7048] hover:from-[#46996a] hover:to-[#327a52] active:translate-y-px",
+          "rounded-full text-white shadow-lg shadow-primary/30 bg-gradient-to-b from-emerald to-emerald-dark hover:from-[#46996a] hover:to-[#327a52] active:translate-y-px",
         outline:
-          "rounded-full border border-[#BFE3CC] bg-white text-primary hover:bg-[#F0FAF3]",
+          "rounded-full border border-stroke-light bg-white text-primary hover:bg-surface-soft",
         ghost: "rounded-full text-primary hover:bg-[#E3F3E9]",
         social:
-          "rounded-full border border-[#BFE3CC] bg-white shadow-sm hover:bg-[#F0FAF3]",
+          "rounded-full border border-stroke-light bg-white shadow-sm hover:bg-surface-soft",
       },
       size: {
         default: "h-12 px-6 text-base",

@@ -68,7 +68,7 @@ describe("Favorites — interação", () => {
     await userEvent.click(templatesTab)
 
     // Active tab should be Templates (check it has the green active style)
-    expect(templatesTab.closest("button")).toHaveClass("bg-[#2B5D3A]")
+    expect(templatesTab.closest("button")).toHaveClass("bg-primary-dark")
   })
 
   it("troca de aba ao clicar em 'Trilhas'", async () => {

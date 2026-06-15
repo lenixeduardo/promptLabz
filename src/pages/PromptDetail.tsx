@@ -64,20 +64,20 @@ function AccordionItem({
   onToggle: () => void
 }) {
   return (
-    <div className="border-b border-[#E8F5EE] last:border-0">
+    <div className="border-b border-stroke-light last:border-0">
       <button
         onClick={onToggle}
         className="flex w-full items-center justify-between py-3 text-left"
       >
-        <span className="text-sm font-semibold text-[#1F2A24]">{item.title}</span>
+        <span className="text-sm font-semibold text-foregroundDark">{item.title}</span>
         {isOpen ? (
-          <ChevronUp className="h-4 w-4 shrink-0 text-[#6B9E7E]" />
+          <ChevronUp className="h-4 w-4 shrink-0 text-foregroundMuted" />
         ) : (
-          <ChevronDown className="h-4 w-4 shrink-0 text-[#6B9E7E]" />
+          <ChevronDown className="h-4 w-4 shrink-0 text-foregroundMuted" />
         )}
       </button>
       {isOpen && (
-        <p className="pb-3 text-xs leading-relaxed text-[#4A5E52]">{item.description}</p>
+        <p className="pb-3 text-xs leading-relaxed text-foregroundSecondary">{item.description}</p>
       )}
     </div>
   )
@@ -96,22 +96,22 @@ export default function PromptDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F0FAF3] pb-32">
+    <div className="min-h-screen bg-surface-soft pb-32">
       {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#C8EDD8] via-[#D5F0E2] to-[#EAF7EF] px-5 pb-6 pt-12">
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#C8EDD8] via-[#D5F0E2] to-pageBgLight px-5 pb-6 pt-12">
         <div className="mb-3 flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#CDEAD8] bg-white shadow-sm transition-all active:scale-95"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-stroke-muted bg-white shadow-sm transition-all active:scale-95"
             aria-label="Voltar"
           >
-            <ArrowRight className="h-4 w-4 rotate-180 text-[#2B5D3A]" />
+            <ArrowRight className="h-4 w-4 rotate-180 text-primary-dark" />
           </button>
           <span className="text-xs font-semibold text-[#3E6B50]">{PROMPT_DATA.category}</span>
         </div>
         <div className="flex items-start justify-between">
           <div className="flex-1 pr-2">
-            <h1 className="text-xl font-extrabold leading-tight text-[#1F2A24]">
+            <h1 className="text-xl font-extrabold leading-tight text-foregroundDark">
               {PROMPT_DATA.title}
             </h1>
           </div>
@@ -125,20 +125,20 @@ export default function PromptDetail() {
 
       <div className="px-4 pt-5 space-y-4">
         {/* Prompt completo */}
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#6B9E7E]">
+        <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
             Prompt completo:
           </p>
           <div className="max-h-40 overflow-y-auto rounded-xl bg-[#F5FBF7] p-3">
-            <p className="whitespace-pre-wrap text-xs leading-relaxed text-[#3A4B40]">
+            <p className="whitespace-pre-wrap text-xs leading-relaxed text-foregroundDark">
               {PROMPT_DATA.text}
             </p>
           </div>
         </div>
 
         {/* Como funciona */}
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-          <p className="mb-1 text-sm font-bold text-[#1F2A24]">Como funciona?</p>
+        <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+          <p className="mb-1 text-sm font-bold text-foregroundDark">Como funciona?</p>
           {PROMPT_DATA.howItWorks.map((item) => (
             <AccordionItem
               key={item.id}
@@ -150,20 +150,20 @@ export default function PromptDetail() {
         </div>
 
         {/* Processo de resultado */}
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-          <p className="mb-4 text-sm font-bold text-[#1F2A24]">Processo de resultado:</p>
+        <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+          <p className="mb-4 text-sm font-bold text-foregroundDark">Processo de resultado:</p>
           <div className="flex items-center justify-between">
             {PROMPT_DATA.steps.map((step, i) => (
               <div key={step.label} className="flex flex-1 items-center">
                 <div className="flex flex-col items-center gap-1">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2B5D3A] text-sm font-bold text-white shadow-md">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-dark text-sm font-bold text-white shadow-md">
                     {i + 1}
                   </div>
-                  <span className="text-[11px] font-semibold text-[#1F2A24]">{step.label}</span>
-                  <span className="text-[9px] text-center text-[#6B9E7E]">{step.description}</span>
+                  <span className="text-[11px] font-semibold text-foregroundDark">{step.label}</span>
+                  <span className="text-[9px] text-center text-foregroundMuted">{step.description}</span>
                 </div>
                 {i < PROMPT_DATA.steps.length - 1 && (
-                  <div className="mx-1 mb-6 h-0.5 flex-1 bg-gradient-to-r from-[#2B5D3A] to-[#BFE3CC]" />
+                  <div className="mx-1 mb-6 h-0.5 flex-1 bg-gradient-to-r from-primary-dark to-stroke-light" />
                 )}
               </div>
             ))}
@@ -175,7 +175,7 @@ export default function PromptDetail() {
           {PROMPT_DATA.tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-[#BFE3CC] bg-[#EAF7EF] px-3 py-1 text-xs font-semibold text-[#2B5D3A]"
+              className="rounded-full border border-stroke-light bg-pageBgLight px-3 py-1 text-xs font-semibold text-primary-dark"
             >
               {tag}
             </span>
@@ -184,15 +184,15 @@ export default function PromptDetail() {
       </div>
 
       {/* Fixed bottom actions */}
-      <div className="fixed bottom-[72px] left-0 right-0 z-30 border-t border-[#E5F5EB] bg-white px-4 py-3">
+      <div className="fixed bottom-[72px] left-0 right-0 z-30 border-t border-pageBgLight bg-white px-4 py-3">
         <div className="mx-auto flex max-w-[460px] gap-3">
           <button
             onClick={handleCopy}
             className={cn(
               "flex flex-1 items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold transition-all active:scale-95",
               copied
-                ? "border-[#3E8E5E] bg-[#EAF7EF] text-[#3E8E5E]"
-                : "border-[#2B5D3A] text-[#2B5D3A] hover:bg-[#EAF7EF]"
+                ? "border-emerald bg-pageBgLight text-emerald"
+                : "border-primary-dark text-primary-dark hover:bg-pageBgLight"
             )}
           >
             <Copy className="h-4 w-4" />
@@ -200,7 +200,7 @@ export default function PromptDetail() {
           </button>
           <button
             onClick={() => navigate("/lab-result")}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#2B5D3A] py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-[#3E8E5E]"
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
           >
             Usar no calculador
             <ArrowRight className="h-4 w-4" />

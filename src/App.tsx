@@ -44,14 +44,14 @@ const Certificate = lazy(() => import("@/pages/Certificate"))
 
 function PageLoading() {
   return (
-    <div className="flex h-screen items-center justify-center bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD]">
+    <div className="flex h-screen items-center justify-center bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end">
       <div className="text-center">
         <img
           src="/assets/mascot-login-new.png"
           alt="Carregando"
           className="mx-auto mb-4 h-32 w-auto"
         />
-        <p className="text-lg font-medium text-[#2B5D3A]">Carregando...</p>
+        <p className="text-lg font-medium text-primary-dark">Carregando...</p>
       </div>
     </div>
   )

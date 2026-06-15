@@ -16,13 +16,13 @@ export default function Achievements() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white px-4 py-6">
+    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6">
       <div className="mx-auto w-full max-w-lg">
         {/* Header com Mascote */}
         <div className="mb-8 flex items-start justify-between gap-4">
           <button
             onClick={() => navigate("/home")}
-            className="rounded-full p-1.5 text-[#2F6B45] transition-colors hover:bg-[#DCF1E4]"
+            className="rounded-full p-1.5 text-forest transition-colors hover:bg-surface-success"
             aria-label="Voltar para home"
           >
             <Icons.ArrowLeft className="h-5 w-5" />
@@ -37,9 +37,9 @@ export default function Achievements() {
               />
             </MascotGlow>
             <div className="mt-2 text-center">
-              <p className="text-xs font-medium text-[#6B9E7E]">Parabéns!</p>
-              <h1 className="text-2xl font-extrabold text-[#1F2A24]">Conquistas</h1>
-              <p className="mt-1 text-sm font-semibold text-[#3E8E5E]">
+              <p className="text-xs font-medium text-foregroundMuted">Parabéns!</p>
+              <h1 className="text-2xl font-extrabold text-foregroundDark">Conquistas</h1>
+              <p className="mt-1 text-sm font-semibold text-emerald">
                 {unlocked.length} de {allAchievements.length}
               </p>
             </div>
@@ -57,10 +57,10 @@ export default function Achievements() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="rounded-2xl border border-[#CDEAD8] bg-white p-3 text-center shadow-sm"
+              className="rounded-2xl border border-stroke-muted bg-white p-3 text-center shadow-sm"
             >
-              <p className="text-2xl font-extrabold text-[#2B5D3A]">{stat.value}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#6B9E7E]">
+              <p className="text-2xl font-extrabold text-primary-dark">{stat.value}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-foregroundMuted">
                 {stat.label}
               </p>
             </div>
@@ -68,17 +68,17 @@ export default function Achievements() {
         </div>
 
         {/* Progress to 50 lessons */}
-        <div className="mb-6 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
+        <div className="mb-6 rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#2B5D3A]">
+            <span className="text-xs font-bold uppercase tracking-wider text-primary-dark">
               Progresso Total
             </span>
-            <span className="text-xs font-semibold text-[#6B9E7E]">
+            <span className="text-xs font-semibold text-foregroundMuted">
               {data.totalLessonsCompleted} / 50 lições
             </span>
           </div>
           <div
-            className="h-2.5 w-full overflow-hidden rounded-full bg-[#EAF7EF]"
+            className="h-2.5 w-full overflow-hidden rounded-full bg-pageBgLight"
             role="progressbar"
             aria-valuenow={Math.min(progressPct, 100)}
             aria-valuemin={0}
@@ -86,7 +86,7 @@ export default function Achievements() {
             aria-label="Progresso de lições completadas"
           >
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#3E8E5E] to-[#2E7048] transition-all duration-500"
+              className="h-full rounded-full bg-gradient-to-r from-emerald to-emerald transition-all duration-500"
               style={{ width: `${Math.min(progressPct, 100)}%` }}
             />
           </div>
@@ -105,8 +105,8 @@ export default function Achievements() {
                 className={cn(
                   "flex items-center gap-3 rounded-2xl border bg-white p-4 shadow-sm transition-all duration-300",
                   isUnlocked
-                    ? "border-[#CDEAD8] scale-100"
-                    : "border-[#EAF2ED] opacity-65 scale-98",
+                    ? "border-stroke-muted scale-100"
+                    : "border-pageBgLight opacity-65 scale-98",
                 )}
               >
                 {/* Icon Circle */}
@@ -114,7 +114,7 @@ export default function Achievements() {
                   className={cn(
                     "relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full transition-all duration-300",
                     isUnlocked
-                      ? "bg-gradient-to-br from-[#3E8E5E] to-[#2E7048] shadow-md"
+                      ? "bg-gradient-to-br from-emerald to-emerald shadow-md"
                       : "bg-gradient-to-br from-[#E8EEE9] to-[#DCEAE3]",
                   )}
                   aria-hidden="true"
@@ -125,11 +125,11 @@ export default function Achievements() {
                         <IconComp className="h-6 w-6 text-white transition-transform duration-300" />
                       )}
                       <div className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white shadow-md">
-                        <Icons.Check className="h-3 w-3 text-[#3E8E5E]" />
+                        <Icons.Check className="h-3 w-3 text-emerald" />
                       </div>
                     </>
                   ) : (
-                    <Icons.Lock className="h-5 w-5 text-[#9AB0A4]" />
+                    <Icons.Lock className="h-5 w-5 text-neutral" />
                   )}
                 </div>
 
@@ -138,16 +138,16 @@ export default function Achievements() {
                   <h2
                     className={cn(
                       "text-sm font-bold leading-snug",
-                      isUnlocked ? "text-[#1F2A24]" : "text-[#6B7A70]",
+                      isUnlocked ? "text-foregroundDark" : "text-foregroundTertiary",
                     )}
                   >
                     {ach.title}
                   </h2>
-                  <p className="text-xs text-[#6B7A70]">{ach.description}</p>
+                  <p className="text-xs text-foregroundTertiary">{ach.description}</p>
                   {progress && (
                     <div className="mt-1.5 flex items-center gap-2">
                       <div
-                        className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#EAF7EF]"
+                        className="h-1.5 flex-1 overflow-hidden rounded-full bg-pageBgLight"
                         role="progressbar"
                         aria-valuenow={progress.current}
                         aria-valuemin={0}
@@ -155,11 +155,11 @@ export default function Achievements() {
                         aria-label={`Progresso: ${progress.current} de ${progress.max}`}
                       >
                         <div
-                          className="h-full bg-gradient-to-r from-[#3E8E5E] to-[#2E7048] transition-all duration-500"
+                          className="h-full bg-gradient-to-r from-emerald to-emerald transition-all duration-500"
                           style={{ width: `${(progress.current / progress.max) * 100}%` }}
                         />
                       </div>
-                      <span className="whitespace-nowrap text-xs font-semibold text-[#3E8E5E]">
+                      <span className="whitespace-nowrap text-xs font-semibold text-emerald">
                         {progress.current}/{progress.max}
                       </span>
                     </div>
@@ -171,8 +171,8 @@ export default function Achievements() {
                   className={cn(
                     "shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors duration-300",
                     isUnlocked
-                      ? "bg-[#DCF1E4] text-[#1E6B3A]"
-                      : "bg-[#EEF1EF] text-[#8A998F]",
+                      ? "bg-surface-success text-primary-dark"
+                      : "bg-[#EEF1EF] text-foregroundPlaceholder",
                   )}
                 >
                   {isUnlocked ? "✔" : ach.category}

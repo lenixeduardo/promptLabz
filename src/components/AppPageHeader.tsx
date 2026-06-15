@@ -34,13 +34,13 @@ export function AppPageHeader({
     >
       <button
         onClick={handleBack}
-        className="flex h-10 w-10 items-center justify-center rounded-full text-[#2F6B45] transition-colors hover:bg-[#DCF1E4]"
+        className="flex h-10 w-10 items-center justify-center rounded-full text-forest transition-colors hover:bg-surface-success"
         aria-label="Voltar"
       >
         <ChevronLeft className="h-6 w-6" strokeWidth={2.2} />
       </button>
 
-      <h1 className="text-lg font-extrabold text-[#1F2A24]">
+      <h1 className="text-lg font-extrabold text-foregroundDark">
         {title}
       </h1>
 

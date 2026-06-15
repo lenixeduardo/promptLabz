@@ -80,7 +80,7 @@ describe("Notifications — filtros", () => {
   it("aba 'Todas' está ativa por padrão", () => {
     renderNotifications()
     const allTab = screen.getByText("Todas")
-    expect(allTab.closest("button")).toHaveClass("bg-[#2B5D3A]")
+    expect(allTab.closest("button")).toHaveClass("bg-primary-dark")
   })
 })
 

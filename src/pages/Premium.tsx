@@ -28,12 +28,12 @@ export default function Premium() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white px-4 py-6 pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6 pb-24">
       <div className="mx-auto w-full max-w-lg">
         {/* Back button */}
         <button
           onClick={() => navigate("/home")}
-          className="mb-6 flex h-10 w-10 items-center justify-center rounded-full text-[#2F6B45] transition-colors hover:bg-[#DCF1E4]"
+          className="mb-6 flex h-10 w-10 items-center justify-center rounded-full text-forest transition-colors hover:bg-surface-success"
           aria-label="Voltar"
         >
           <ChevronLeft className="h-6 w-6" strokeWidth={2.2} />
@@ -50,16 +50,16 @@ export default function Premium() {
                 style={{ mixBlendMode: "multiply" }}
               />
               {/* Crown badge */}
-              <div className="absolute -right-1 top-0 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5A623] to-[#E09000] shadow-md">
+              <div className="absolute -right-1 top-0 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-accent to-[#E09000] shadow-md">
                 <Sparkles className="h-4 w-4 text-white" fill="white" />
               </div>
             </div>
           </div>
 
-          <h1 className="text-2xl font-extrabold text-[#1F2A24]">
+          <h1 className="text-2xl font-extrabold text-foregroundDark">
             PromptLabz Premium
           </h1>
-          <p className="mx-auto mt-1.5 max-w-xs text-sm leading-relaxed text-[#6B9E7E]">
+          <p className="mx-auto mt-1.5 max-w-xs text-sm leading-relaxed text-foregroundMuted">
             Desbloqueie todo o potencial da plataforma e acelere seus resultados.
           </p>
         </div>
@@ -73,13 +73,13 @@ export default function Premium() {
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-full border px-5 py-2 text-sm font-semibold transition-colors",
                 billingCycle === plan.id
-                  ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                  : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]",
+                  ? "border-primary-dark bg-primary-dark text-white"
+                  : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight",
               )}
             >
               {plan.title}
               {plan.badge && (
-                <span className="rounded-full bg-[#F5A623] px-2 py-0.5 text-[10px] font-bold text-white">
+                <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-white">
                   -40%
                 </span>
               )}
@@ -101,7 +101,7 @@ export default function Premium() {
 
         {/* Features grid */}
         <section className="mb-6">
-          <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-[#3E8E5E]">
+          <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-emerald">
             Benefícios inclusos
           </h2>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -115,12 +115,12 @@ export default function Premium() {
         <div className="mb-6 text-center">
           <Button
             size="lg"
-            className="w-full shadow-lg shadow-[#2B5D3A]/20"
+            className="w-full shadow-lg shadow-primary-dark/20"
             onClick={handleStartPremium}
           >
             Começar agora
           </Button>
-          <p className="mt-2 text-xs font-medium text-[#8AB89A]">
+          <p className="mt-2 text-xs font-medium text-foregroundMuted">
             7 dias grátis. Cancele quando quiser.
           </p>
         </div>

@@ -30,13 +30,13 @@ function QRCodePlaceholder() {
 
   return (
     <div
-      className="grid rounded border border-[#CDEAD8] bg-white p-1.5"
+      className="grid rounded border border-stroke-muted bg-white p-1.5"
       style={{ gridTemplateColumns: "repeat(7, 1fr)", width: 60, height: 60 }}
     >
       {cells.map((filled, i) => (
         <div
           key={i}
-          className={filled ? "bg-[#1F2A24]" : "bg-white"}
+          className={filled ? "bg-foregroundDark" : "bg-white"}
           style={{ width: "100%", aspectRatio: "1" }}
         />
       ))}
@@ -65,60 +65,60 @@ export default function Certificate() {
   const linkedInUrl = `https://www.linkedin.com/shareArticle?mini=true&title=${encodeURIComponent("Certificado PromptLab")}&summary=${encodeURIComponent(`Concluí o curso: ${courseName}`)}`
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-4 py-6">
+    <div className="min-h-screen bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-4 py-6">
       <div className="mx-auto w-full max-w-[420px]">
         {/* Back */}
         <button
           onClick={() => navigate(-1)}
-          className="mb-5 flex items-center gap-1.5 text-sm font-semibold text-[#3E8E5E] hover:text-[#2B5D3A]"
+          className="mb-5 flex items-center gap-1.5 text-sm font-semibold text-emerald hover:text-primary-dark"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
         </button>
 
         {/* Certificate card */}
-        <div className="relative overflow-hidden rounded-3xl border-2 border-[#BFE3CC] bg-white shadow-lg">
+        <div className="relative overflow-hidden rounded-3xl border-2 border-stroke-light bg-white shadow-lg">
           {/* Green top accent */}
-          <div className="h-2 w-full bg-gradient-to-r from-[#2B5D3A] via-[#3E8E5E] to-[#7CC79A]" />
+          <div className="h-2 w-full bg-gradient-to-r from-primary-dark via-emerald to-[#7CC79A]" />
 
           {/* Card body */}
           <div className="flex flex-col items-center px-6 py-7">
             {/* Logo */}
             <div className="mb-1 flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#2B5D3A]">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-dark">
                 <span className="text-xs font-extrabold text-white">PL</span>
               </div>
-              <span className="text-sm font-extrabold tracking-tight text-[#2B5D3A]">PromptLab</span>
+              <span className="text-sm font-extrabold tracking-tight text-primary-dark">PromptLab</span>
             </div>
 
             {/* Title */}
-            <h1 className="mt-3 text-center text-2xl font-extrabold leading-tight text-[#1F2A24]">
+            <h1 className="mt-3 text-center text-2xl font-extrabold leading-tight text-foregroundDark">
               Certificado
               <br />
               de Conquista
             </h1>
-            <p className="mt-1 text-center text-xs font-medium text-[#6B9E7E]">
+            <p className="mt-1 text-center text-xs font-medium text-foregroundMuted">
               por concluir este curso com excelência
             </p>
 
             {/* Divider */}
-            <div className="my-4 h-px w-3/4 bg-gradient-to-r from-transparent via-[#CDEAD8] to-transparent" />
+            <div className="my-4 h-px w-3/4 bg-gradient-to-r from-transparent via-stroke-muted to-transparent" />
 
             {/* Recipient & Course */}
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#9AB0A4]">Para</p>
-            <p className="mt-0.5 text-2xl font-extrabold text-[#2B5D3A]">{displayName}</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-neutral">Para</p>
+            <p className="mt-0.5 text-2xl font-extrabold text-primary-dark">{displayName}</p>
 
-            <p className="mt-3 text-center text-sm font-semibold text-[#1F2A24]">{courseName}</p>
+            <p className="mt-3 text-center text-sm font-semibold text-foregroundDark">{courseName}</p>
 
             {/* Meta info */}
-            <div className="mt-4 flex w-full flex-col gap-1.5 rounded-xl bg-[#F0FAF3] px-4 py-3">
+            <div className="mt-4 flex w-full flex-col gap-1.5 rounded-xl bg-surface-soft px-4 py-3">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-[#6B9E7E] font-medium">Data de conclusão</span>
-                <span className="font-semibold text-[#1F2A24]">{completionDate}</span>
+                <span className="text-foregroundMuted font-medium">Data de conclusão</span>
+                <span className="font-semibold text-foregroundDark">{completionDate}</span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-[#6B9E7E] font-medium">Carga horária</span>
-                <span className="font-semibold text-[#1F2A24]">{hours}h</span>
+                <span className="text-foregroundMuted font-medium">Carga horária</span>
+                <span className="font-semibold text-foregroundDark">{hours}h</span>
               </div>
             </div>
 
@@ -126,7 +126,7 @@ export default function Certificate() {
             <div className="mt-5 flex w-full items-end justify-between">
               <div className="flex flex-col items-center gap-1">
                 <QRCodePlaceholder />
-                <span className="text-[9px] text-[#9AB0A4]">verificar</span>
+                <span className="text-[9px] text-neutral">verificar</span>
               </div>
 
               <img
@@ -137,14 +137,14 @@ export default function Certificate() {
 
               {/* Signature */}
               <div className="flex flex-col items-center gap-0.5">
-                <div className="h-px w-16 bg-[#CDEAD8]" />
-                <span className="text-[9px] font-medium text-[#9AB0A4]">PromptLab</span>
+                <div className="h-px w-16 bg-stroke-muted" />
+                <span className="text-[9px] font-medium text-neutral">PromptLab</span>
               </div>
             </div>
           </div>
 
           {/* Bottom accent */}
-          <div className="h-1 w-full bg-gradient-to-r from-[#7CC79A] via-[#3E8E5E] to-[#2B5D3A]" />
+          <div className="h-1 w-full bg-gradient-to-r from-[#7CC79A] via-emerald to-primary-dark" />
         </div>
 
         {/* Share button */}

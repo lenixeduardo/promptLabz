@@ -1,6 +1,7 @@
 import path from "path"
 import react from "@vitejs/plugin-react"
 import { defineConfig } from "vitest/config"
+import { sentryVitePlugin } from "@sentry/vite-plugin"
 import sourceIdentifierPlugin from 'vite-plugin-source-identifier'
 
 const isProd = process.env.BUILD_MODE === 'prod'
@@ -12,7 +13,13 @@ export default defineConfig({
       enabled: !isProd && !isTest,
       attributePrefix: 'data-matrix',
       includeProps: true,
-    })
+    }),
+    sentryVitePlugin({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      telemetry: false,
+    }),
   ],
   resolve: {
     alias: {
@@ -20,6 +27,7 @@ export default defineConfig({
     },
   },
   build: {
+    sourcemap: "hidden",
     rollupOptions: {
       output: {
         manualChunks: {

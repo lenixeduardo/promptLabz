@@ -53,7 +53,7 @@ function PodiumSpot({
       <div
         className={cn(
           "overflow-hidden rounded-full border-2",
-          user.isCurrentUser ? "border-[#2B5D3A]" : "border-white",
+          user.isCurrentUser ? "border-primary-dark" : "border-white",
           sizes.avatar
         )}
       >
@@ -63,17 +63,17 @@ function PodiumSpot({
           className="h-full w-full object-cover"
         />
       </div>
-      <p className="max-w-[80px] text-center text-[11px] font-bold leading-tight text-[#1F2A24]">
+      <p className="max-w-[80px] text-center text-[11px] font-bold leading-tight text-foregroundDark">
         {user.full_name ?? "Usuário"}
       </p>
-      <p className="text-[10px] text-[#4A7A5A]">{user.xp.toLocaleString("pt-BR")} XP</p>
+      <p className="text-[10px] text-emerald">{user.xp.toLocaleString("pt-BR")} XP</p>
       <div
         className={cn(
           "w-full rounded-t-xl",
           sizes.pedestal,
           rank === 1
-            ? "bg-gradient-to-t from-[#2B5D3A] to-[#3E8E5E]"
-            : "bg-gradient-to-t from-[#4A7A5A] to-[#6B9E7E]"
+            ? "bg-gradient-to-t from-primary-dark to-emerald"
+            : "bg-gradient-to-t from-emerald to-foregroundMuted"
         )}
       />
     </div>
@@ -136,14 +136,14 @@ export default function Ranking() {
   const rest = rankedUsers.slice(3)
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD]">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end">
       <div className="mx-auto flex w-full max-w-[420px] flex-col px-5 pb-24 pt-8">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl font-extrabold text-[#2B5D3A]">Ranking</h1>
+          <h1 className="text-2xl font-extrabold text-primary-dark">Ranking</h1>
           <button
             onClick={() => navigate("/profile")}
-            className="h-9 w-9 overflow-hidden rounded-full border-2 border-[#BFE3CC] shadow-sm"
+            className="h-9 w-9 overflow-hidden rounded-full border-2 border-stroke-light shadow-sm"
           >
             <img
               src={userAvatarImage}
@@ -153,7 +153,7 @@ export default function Ranking() {
           </button>
         </div>
 
-        <p className="mb-6 text-center text-sm text-[#4A7A5A]">Os maiores tops do PromptLab</p>
+        <p className="mb-6 text-center text-sm text-emerald">Os maiores tops do PromptLab</p>
 
         {loading ? (
           <div className="flex items-center justify-center py-16">
@@ -163,13 +163,13 @@ export default function Ranking() {
                 alt="Carregando"
                 className="mx-auto mb-3 h-20 w-auto"
               />
-              <p className="text-sm text-[#4A7A5A]">Carregando ranking...</p>
+              <p className="text-sm text-emerald">Carregando ranking...</p>
             </div>
           </div>
         ) : (
           <>
             {/* Pódio */}
-            <div className="mb-6 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
+            <div className="mb-6 rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
               <div className="flex items-end justify-center gap-2">
                 <PodiumSpot user={top3[1]} rank={2} />
                 <PodiumSpot user={top3[0]} rank={1} />
@@ -186,14 +186,14 @@ export default function Ranking() {
                     className={cn(
                       "flex items-center gap-3 rounded-2xl border px-4 py-3 shadow-sm",
                       entry.isCurrentUser
-                        ? "border-[#3E8E5E] bg-[#DCF1E4]"
-                        : "border-[#CDEAD8] bg-white"
+                        ? "border-emerald bg-surface-success"
+                        : "border-stroke-muted bg-white"
                     )}
                   >
-                    <span className="w-6 text-center text-sm font-bold text-[#6B7A70]">
+                    <span className="w-6 text-center text-sm font-bold text-foregroundTertiary">
                       {entry.position}
                     </span>
-                    <div className="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-[#CDEAD8]">
+                    <div className="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-stroke-muted">
                       <img
                         src={getAvatarImage(entry.avatar_url)}
                         alt={entry.full_name ?? ""}
@@ -204,7 +204,7 @@ export default function Ranking() {
                       <p
                         className={cn(
                           "truncate text-sm font-bold",
-                          entry.isCurrentUser ? "text-[#2B5D3A]" : "text-[#1F2A24]"
+                          entry.isCurrentUser ? "text-primary-dark" : "text-foregroundDark"
                         )}
                       >
                         {entry.full_name ?? "Usuário"}
@@ -215,7 +215,7 @@ export default function Ranking() {
                     </div>
                     <div className="flex items-center gap-1">
                       <Icons.Zap className="h-3.5 w-3.5 text-yellow-400" />
-                      <span className="text-sm font-bold text-[#2B5D3A]">
+                      <span className="text-sm font-bold text-primary-dark">
                         {entry.xp.toLocaleString("pt-BR")}
                       </span>
                     </div>

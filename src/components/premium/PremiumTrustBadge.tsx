@@ -17,11 +17,11 @@ export function PremiumTrustBadge({ item }: PremiumTrustBadgeProps) {
   return (
     <div className="flex items-center gap-1.5">
       {IconComp ? (
-        <IconComp className="h-4 w-4 text-[#8AB89A]" strokeWidth={2} />
+        <IconComp className="h-4 w-4 text-foregroundMuted" strokeWidth={2} />
       ) : (
-        <Icons.Shield className="h-4 w-4 text-[#8AB89A]" strokeWidth={2} />
+        <Icons.Shield className="h-4 w-4 text-foregroundMuted" strokeWidth={2} />
       )}
-      <span className="text-[11px] font-medium text-[#6B9E7E]">{item.label}</span>
+      <span className="text-[11px] font-medium text-foregroundMuted">{item.label}</span>
     </div>
   )
 }

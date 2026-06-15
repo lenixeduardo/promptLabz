@@ -1,3 +1,8 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// Entry Point — Sentry MUST be the first import to catch init errors.
+// ═══════════════════════════════════════════════════════════════════════════
+import "./instrument"
+
 import React from "react"
 import ReactDOM from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"

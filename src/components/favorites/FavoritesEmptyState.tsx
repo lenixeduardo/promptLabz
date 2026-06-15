@@ -30,16 +30,16 @@ export function FavoritesEmptyState({
           style={{ mixBlendMode: "multiply" }}
         />
         {/* Floating document icon */}
-        <div className="absolute -right-2 top-0 flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-md ring-2 ring-[#EAF7EF]">
-          <FileText className="h-5 w-5 text-[#3E8E5E]" strokeWidth={2.2} />
+        <div className="absolute -right-2 top-0 flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-md ring-2 ring-pageBgLight">
+          <FileText className="h-5 w-5 text-emerald" strokeWidth={2.2} />
         </div>
       </div>
 
       <div className="max-w-xs space-y-1">
-        <h2 className="text-lg font-extrabold text-[#1F2A24]">
+        <h2 className="text-lg font-extrabold text-foregroundDark">
           Você ainda não tem favoritos
         </h2>
-        <p className="text-sm leading-relaxed text-[#6B9E7E]">
+        <p className="text-sm leading-relaxed text-foregroundMuted">
           Salve prompts, templates e conteúdos favoritos para acessar rápido depois.
         </p>
       </div>

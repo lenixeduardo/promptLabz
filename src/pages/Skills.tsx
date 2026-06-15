@@ -23,7 +23,7 @@ const SKILL_CATEGORIES: { label: SkillCategory; icon: React.ReactNode }[] = [
 
 function SkillIcon({ iconName, className }: { iconName: string; className?: string }) {
   const Icon = (Icons as unknown as Record<string, Icons.LucideIcon>)[iconName] || Icons.BookOpen
-  return <Icon className={className || "h-5 w-5 text-[#3E8E5E]"} strokeWidth={2} />
+  return <Icon className={className || "h-5 w-5 text-emerald"} strokeWidth={2} />
 }
 
 function CountBadge({ count }: { count: number }) {
@@ -47,18 +47,18 @@ function SkillCard({
   onClick: () => void
 }) {
   return (
-    <div className="group relative flex flex-col gap-2 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md active:scale-95">
+    <div className="group relative flex flex-col gap-2 rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md active:scale-95">
       {/* Favorite heart button */}
       <button
         onClick={(e) => { e.stopPropagation(); onToggleFav() }}
-        className="absolute right-2.5 top-2.5 z-10 flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-[#FEE2E2]"
+        className="absolute right-2.5 top-2.5 z-10 flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-red-100"
         aria-label={isFav ? "Remover dos favoritos" : "Favoritar"}
       >
         <Icons.Heart
           className={`h-4 w-4 transition-all ${
             isFav
               ? "fill-red-500 text-red-500"
-              : "text-[#BFE3CC] group-hover:text-red-300"
+              : "text-stroke-light group-hover:text-red-300"
           }`}
           strokeWidth={isFav ? 2.5 : 2}
         />
@@ -66,24 +66,24 @@ function SkillCard({
 
       <div onClick={onClick} className="flex flex-col gap-2 cursor-pointer">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pageBgLight">
             <SkillIcon iconName={skill.icon} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold leading-tight text-[#1F2A24] line-clamp-2">{skill.name}</p>
-            <p className="text-[11px] font-medium text-[#6B9E7E]">por {skill.author}</p>
+            <p className="text-sm font-bold leading-tight text-foregroundDark line-clamp-2">{skill.name}</p>
+            <p className="text-[11px] font-medium text-foregroundMuted">por {skill.author}</p>
           </div>
         </div>
-        <p className="text-xs leading-relaxed text-[#4A5E52] line-clamp-2">{skill.description}</p>
+        <p className="text-xs leading-relaxed text-foregroundSecondary line-clamp-2">{skill.description}</p>
         <div className="flex items-center justify-between">
           <div className="flex flex-wrap gap-1">
             {skill.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="rounded-full bg-[#F4F9F5] px-2 py-0.5 text-[10px] font-medium text-[#2B5D3A]">
+              <span key={tag} className="rounded-full bg-[#F4F9F5] px-2 py-0.5 text-[10px] font-medium text-primary-dark">
                 {tag}
               </span>
             ))}
           </div>
-          <span className="flex items-center gap-0.5 text-[11px] font-semibold text-[#8AB89A]">
+          <span className="flex items-center gap-0.5 text-[11px] font-semibold text-foregroundMuted">
             <Icons.Download className="h-3 w-3" />
             {skill.installs}
           </span>
@@ -107,8 +107,8 @@ function SkillsGridView({
 }) {
   if (skills.length === 0) {
     return (
-      <div className="col-span-full flex flex-col items-center gap-3 py-16 text-[#6B9E7E]">
-        <Icons.Search className="h-16 w-16 text-[#CDEAD8]" />
+      <div className="col-span-full flex flex-col items-center gap-3 py-16 text-foregroundMuted">
+        <Icons.Search className="h-16 w-16 text-stroke-muted" />
         <p className="text-base font-semibold">Nenhuma skill encontrada</p>
         <p className="text-sm opacity-70">Tente ajustar o filtro ou a busca.</p>
       </div>
@@ -146,7 +146,7 @@ function RankingView({
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="mb-2 text-xs font-medium text-[#6B9E7E]">
+      <p className="mb-2 text-xs font-medium text-foregroundMuted">
         {ranked.length} skills ordenadas por número de instalações
       </p>
       {ranked.map((skill, idx) => {
@@ -158,17 +158,17 @@ function RankingView({
           <div
             key={skill.name}
             onClick={() => onSkillClick(skill)}
-            className="group flex cursor-pointer items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white px-4 py-3 shadow-sm transition-all hover:bg-[#F0FAF3] active:scale-[0.99]"
+            className="group flex cursor-pointer items-center gap-3 rounded-2xl border border-stroke-muted bg-white px-4 py-3 shadow-sm transition-all hover:bg-surface-soft active:scale-[0.99]"
           >
             {/* Favorite heart */}
             <button
               onClick={(e) => { e.stopPropagation(); onToggleFav(skill.name) }}
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[#FEE2E2]"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-red-100"
               aria-label={isFav ? "Remover dos favoritos" : "Favoritar"}
             >
               <Icons.Heart
                 className={`h-4 w-4 transition-all ${
-                  isFav ? "fill-red-500 text-red-500" : "text-[#BFE3CC] group-hover:text-red-300"
+                  isFav ? "fill-red-500 text-red-500" : "text-stroke-light group-hover:text-red-300"
                 }`}
                 strokeWidth={isFav ? 2.5 : 2}
               />
@@ -179,25 +179,25 @@ function RankingView({
               {medal ? (
                 <span className="text-lg">{medal}</span>
               ) : (
-                <span className="text-sm font-extrabold text-[#8AB89A]">{rank}</span>
+                <span className="text-sm font-extrabold text-foregroundMuted">{rank}</span>
               )}
             </div>
 
             {/* Icon */}
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pageBgLight">
               <SkillIcon iconName={skill.icon} />
             </span>
 
             {/* Info */}
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-bold text-[#1F2A24]">{skill.name}</p>
-              <p className="text-[11px] font-medium text-[#6B9E7E]">{skill.category} · por {skill.author}</p>
+              <p className="truncate text-sm font-bold text-foregroundDark">{skill.name}</p>
+              <p className="text-[11px] font-medium text-foregroundMuted">{skill.category} · por {skill.author}</p>
             </div>
 
             {/* Installs badge */}
             <div className="flex shrink-0 flex-col items-end gap-0.5">
-              <span className="text-sm font-extrabold text-[#2E7048]">{skill.installs}</span>
-              <span className="text-[10px] font-medium text-[#8AB89A]">instalações</span>
+              <span className="text-sm font-extrabold text-emerald">{skill.installs}</span>
+              <span className="text-[10px] font-medium text-foregroundMuted">instalações</span>
             </div>
           </div>
         )
@@ -257,13 +257,13 @@ export default function Skills() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white px-4 py-6">
+    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6">
       <div className="mx-auto w-full max-w-[1200px]">
         {/* Back button */}
         <div className="mb-4 flex items-center">
           <button
             onClick={() => navigate("/home")}
-            className="flex items-center gap-1 rounded-full p-1.5 text-[#2F6B45] transition-colors hover:bg-[#DCF1E4]"
+            className="flex items-center gap-1 rounded-full p-1.5 text-forest transition-colors hover:bg-surface-success"
             aria-label="Voltar"
           >
             <Icons.ChevronLeft className="h-6 w-6" />
@@ -271,13 +271,13 @@ export default function Skills() {
         </div>
 
         {/* Hero banner */}
-        <div className="relative mb-8 w-full overflow-hidden rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0] px-6 py-8 shadow-sm">
-          <h1 className="text-center text-xl font-extrabold text-[#1F2A24]">
+        <div className="relative mb-8 w-full overflow-hidden rounded-3xl bg-gradient-to-r from-stroke-muted to-stroke-light px-6 py-8 shadow-sm">
+          <h1 className="text-center text-xl font-extrabold text-foregroundDark">
             Central de Skills
           </h1>
-          <p className="mt-0.5 text-center text-sm font-medium text-[#2F6B45]">
+          <p className="mt-0.5 text-center text-sm font-medium text-forest">
             Skills reais do{" "}
-            <a href="https://www.skills.sh/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#1F2A24]">
+            <a href="https://www.skills.sh/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foregroundDark">
               skills.sh
             </a>
           </p>
@@ -285,17 +285,17 @@ export default function Skills() {
 
         {/* Search bar */}
         <div className="relative mb-5">
-          <div className="flex items-center gap-2 rounded-full border border-[#BFE3CC] bg-white px-5 py-3 shadow-sm ring-2 ring-[#EAF7EF]">
-            <Icons.Search className="h-5 w-5 text-[#6B9E7E]" strokeWidth={2} />
+          <div className="flex items-center gap-2 rounded-full border border-stroke-light bg-white px-5 py-3 shadow-sm ring-2 ring-pageBgLight">
+            <Icons.Search className="h-5 w-5 text-foregroundMuted" strokeWidth={2} />
             <input
               type="text"
               placeholder="Buscar skills por nome, autor, categoria ou tag…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent text-sm text-[#1F2A24] placeholder:text-[#8A998F] focus:outline-none"
+              className="flex-1 bg-transparent text-sm text-foregroundDark placeholder:text-foregroundPlaceholder focus:outline-none"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery("")} className="rounded-full p-1 text-[#6B9E7E] hover:bg-[#EAF7EF]">
+              <button onClick={() => setSearchQuery("")} className="rounded-full p-1 text-foregroundMuted hover:bg-pageBgLight">
                 <Icons.X className="h-4 w-4" />
               </button>
             )}
@@ -308,8 +308,8 @@ export default function Skills() {
             onClick={() => { setViewMode("all"); setActiveSkillCat("Todas") }}
             className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "all"
-                ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+                ? "border-primary-dark bg-primary-dark text-white"
+                : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
             }`}
           >
             <Icons.Grid3x3 className="h-4 w-4" />
@@ -320,8 +320,8 @@ export default function Skills() {
             onClick={() => setViewMode("favorites")}
             className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "favorites"
-                ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+                ? "border-primary-dark bg-primary-dark text-white"
+                : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
             }`}
           >
             <Icons.Heart
@@ -334,8 +334,8 @@ export default function Skills() {
             onClick={() => setViewMode("ranking")}
             className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "ranking"
-                ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+                ? "border-primary-dark bg-primary-dark text-white"
+                : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
             }`}
           >
             <Icons.Trophy className="h-4 w-4" />
@@ -349,7 +349,7 @@ export default function Skills() {
             <div
               key={mode}
               className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                viewMode === mode ? "bg-[#2B5D3A]" : "bg-[#CDEAD8] opacity-50"
+                viewMode === mode ? "bg-primary-dark" : "bg-stroke-muted opacity-50"
               }`}
             />
           ))}
@@ -362,8 +362,8 @@ export default function Skills() {
               onClick={() => setActiveSkillCat("Todas")}
               className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                 activeSkillCat === "Todas"
-                  ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                  : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+                  ? "border-primary-dark bg-primary-dark text-white"
+                  : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
               }`}
             >
               <Icons.LayoutGrid className="h-3.5 w-3.5" />
@@ -379,8 +379,8 @@ export default function Skills() {
                   onClick={() => setActiveSkillCat(label)}
                   className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                     isActive
-                      ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                      : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+                      ? "border-primary-dark bg-primary-dark text-white"
+                      : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
                   }`}
                 >
                   {icon}
@@ -394,8 +394,8 @@ export default function Skills() {
 
         {/* Favorites empty state */}
         {viewMode === "favorites" && favoritedSkills.length === 0 && (
-          <div className="flex flex-col items-center gap-3 py-16 text-[#6B9E7E]">
-            <Icons.Heart className="h-16 w-16 text-[#CDEAD8]" />
+          <div className="flex flex-col items-center gap-3 py-16 text-foregroundMuted">
+            <Icons.Heart className="h-16 w-16 text-stroke-muted" />
             <p className="text-base font-semibold">Nenhuma skill favoritada</p>
             <p className="text-sm opacity-70">Clique no ♡ dos cards para favoritar suas skills preferidas.</p>
           </div>
@@ -421,9 +421,9 @@ export default function Skills() {
         )}
 
         {/* Footer */}
-        <div className="mt-10 mb-4 text-center text-xs text-[#8AB89A]">
+        <div className="mt-10 mb-4 text-center text-xs text-foregroundMuted">
           Fonte:{" "}
-          <a href="https://www.skills.sh/" target="_blank" rel="noopener noreferrer" className="font-semibold text-[#2E8B57] hover:underline">
+          <a href="https://www.skills.sh/" target="_blank" rel="noopener noreferrer" className="font-semibold text-link hover:underline">
             skills.sh
           </a>{" "}
           · {TRENDING_SKILLS.length} skills catalogadas

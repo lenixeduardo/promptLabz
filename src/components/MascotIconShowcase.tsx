@@ -54,13 +54,13 @@ export function MascotIconShowcase() {
   return (
     <div className="w-full space-y-8 p-6">
       <div>
-        <h2 className="text-2xl font-bold text-[#1F2A24]">Mascot Icons Showcase</h2>
-        <p className="text-sm text-[#6B7A70]">21 ícones educacionais disponíveis</p>
+        <h2 className="text-2xl font-bold text-foregroundDark">Mascot Icons Showcase</h2>
+        <p className="text-sm text-foregroundTertiary">21 ícones educacionais disponíveis</p>
       </div>
 
       {Object.entries(grouped).map(([category, icons]) => (
         <div key={category}>
-          <h3 className="mb-4 text-lg font-semibold text-[#2E7048]">
+          <h3 className="mb-4 text-lg font-semibold text-emerald">
             {CATEGORIES[category as keyof typeof CATEGORIES].label}
           </h3>
           <div className={`grid grid-cols-2 gap-4 rounded-lg ${CATEGORIES[category as keyof typeof CATEGORIES].color} p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5`}>
@@ -74,8 +74,8 @@ export function MascotIconShowcase() {
                   />
                 </div>
                 <div className="text-center">
-                  <p className="text-xs font-semibold text-[#1F2A24]">{icon.name}</p>
-                  <p className="text-[10px] text-[#6B7A70]">{icon.description}</p>
+                  <p className="text-xs font-semibold text-foregroundDark">{icon.name}</p>
+                  <p className="text-[10px] text-foregroundTertiary">{icon.description}</p>
                 </div>
               </div>
             ))}
@@ -84,9 +84,9 @@ export function MascotIconShowcase() {
       ))}
 
       {/* Usage example */}
-      <div className="rounded-lg border border-[#BFE3CC] bg-white p-4">
-        <h3 className="mb-3 font-semibold text-[#2E7048]">Como Usar</h3>
-        <pre className="overflow-x-auto rounded bg-[#F9FCFA] p-3 text-[10px] text-[#1F2A24]">
+      <div className="rounded-lg border border-stroke-light bg-white p-4">
+        <h3 className="mb-3 font-semibold text-emerald">Como Usar</h3>
+        <pre className="overflow-x-auto rounded bg-[#F9FCFA] p-3 text-[10px] text-foregroundDark">
 {`<img
   src="/assets/mascot-icons/mascot_book.svg"
   alt="Mascote estudando"

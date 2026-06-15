@@ -69,9 +69,9 @@ function CircularScore({ score, total }: { score: number; total: number }) {
         />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="text-3xl font-extrabold text-[#2B5D3A]">{score}</span>
-        <div className="h-px w-8 bg-[#CDEAD8]" />
-        <span className="text-lg font-bold text-[#6B9E7E]">{total}</span>
+        <span className="text-3xl font-extrabold text-primary-dark">{score}</span>
+        <div className="h-px w-8 bg-stroke-muted" />
+        <span className="text-lg font-bold text-foregroundMuted">{total}</span>
       </div>
     </div>
   )
@@ -93,7 +93,7 @@ export default function QuizResult() {
   const performanceLabel = getPerformanceLabel(score, total)
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center overflow-hidden bg-gradient-to-b from-white via-[#EAF7EF] to-[#D2EEDD] px-5 pb-10 pt-8">
+    <div className="relative flex min-h-screen flex-col items-center overflow-hidden bg-gradient-to-b from-white via-pageBgLight to-gradient-end px-5 pb-10 pt-8">
       {CONFETTI.map((c, i) => (
         <span
           key={i}
@@ -111,17 +111,17 @@ export default function QuizResult() {
         />
       ))}
 
-      <Sparkles className="absolute left-6 top-20 h-5 w-5 animate-twinkle text-[#3E8E5E]/60" style={{ animationDelay: "0.3s" }} />
+      <Sparkles className="absolute left-6 top-20 h-5 w-5 animate-twinkle text-emerald/60" style={{ animationDelay: "0.3s" }} />
       <Sparkles className="absolute right-8 top-28 h-4 w-4 animate-twinkle text-[#7CC79A]"    style={{ animationDelay: "1s" }} />
       <Sparkles className="absolute left-10 top-52 h-3 w-3 animate-twinkle text-[#FFD166]"    style={{ animationDelay: "1.7s" }} />
-      <Sparkles className="absolute right-6 top-64 h-5 w-5 animate-twinkle text-[#3E8E5E]/50" style={{ animationDelay: "0.6s" }} />
+      <Sparkles className="absolute right-6 top-64 h-5 w-5 animate-twinkle text-emerald/50" style={{ animationDelay: "0.6s" }} />
 
       <div className="mx-auto flex w-full max-w-[380px] flex-col items-center">
         {/* Header */}
-        <p className="mb-1 text-sm font-semibold uppercase tracking-widest text-[#6B9E7E]">
+        <p className="mb-1 text-sm font-semibold uppercase tracking-widest text-foregroundMuted">
           Resultado da Prova
         </p>
-        <h1 className="mb-5 text-4xl font-extrabold text-[#2B5D3A]">{performanceLabel}</h1>
+        <h1 className="mb-5 text-4xl font-extrabold text-primary-dark">{performanceLabel}</h1>
 
         {/* Mascot */}
         <MascotGlow size={160}>
@@ -139,12 +139,12 @@ export default function QuizResult() {
 
         {/* XP + Streak badges */}
         <div className="mt-5 flex gap-3">
-          <div className="flex items-center gap-1.5 rounded-full bg-[#EAF7EF] px-4 py-2 shadow-sm">
-            <Zap className="h-4 w-4 text-[#3E8E5E]" />
-            <span className="text-sm font-extrabold text-[#2B5D3A]">+{xpEarned} xp</span>
+          <div className="flex items-center gap-1.5 rounded-full bg-pageBgLight px-4 py-2 shadow-sm">
+            <Zap className="h-4 w-4 text-emerald" />
+            <span className="text-sm font-extrabold text-primary-dark">+{xpEarned} xp</span>
           </div>
           <div className="flex items-center gap-1.5 rounded-full bg-[#FFF8EC] px-4 py-2 shadow-sm">
-            <Flame className="h-4 w-4 text-[#F5A623]" />
+            <Flame className="h-4 w-4 text-accent" />
             <span className="text-sm font-extrabold text-[#B87422]">
               Streak +{data.consecutiveDays > 0 ? "1" : "0"} dia
             </span>
@@ -157,33 +157,33 @@ export default function QuizResult() {
             <AlertCircle className="h-5 w-5 shrink-0 text-[#D4A017]" />
             <p className="text-sm font-semibold text-[#92600A]">
               Nova skill liberada!{" "}
-              <span className="font-bold text-[#3E8E5E]">Certificado</span>
+              <span className="font-bold text-emerald">Certificado</span>
             </p>
           </div>
         )}
 
         {/* Stats row */}
-        <div className="mt-5 flex w-full divide-x divide-[#E0F3E9] rounded-2xl border border-[#CDEAD8] bg-white shadow-sm">
+        <div className="mt-5 flex w-full divide-x divide-gradient-mid rounded-2xl border border-stroke-muted bg-white shadow-sm">
           <div className="flex flex-1 flex-col items-center gap-1 py-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#DCF1E4]">
-              <Check className="h-4 w-4 text-[#2B5D3A]" strokeWidth={2.5} />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-success">
+              <Check className="h-4 w-4 text-primary-dark" strokeWidth={2.5} />
             </div>
-            <span className="text-xl font-extrabold text-[#2B5D3A]">{score}</span>
-            <span className="text-[10px] font-medium text-[#9AB0A4]">certas</span>
+            <span className="text-xl font-extrabold text-primary-dark">{score}</span>
+            <span className="text-[10px] font-medium text-neutral">certas</span>
           </div>
           <div className="flex flex-1 flex-col items-center gap-1 py-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FEE2E2]">
-              <X className="h-4 w-4 text-[#DC2626]" strokeWidth={2.5} />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
+              <X className="h-4 w-4 text-red-600" strokeWidth={2.5} />
             </div>
-            <span className="text-xl font-extrabold text-[#DC2626]">{wrong}</span>
-            <span className="text-[10px] font-medium text-[#9AB0A4]">erradas</span>
+            <span className="text-xl font-extrabold text-red-600">{wrong}</span>
+            <span className="text-[10px] font-medium text-neutral">erradas</span>
           </div>
           <div className="flex flex-1 flex-col items-center gap-1 py-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EAF7EF]">
-              <Clock className="h-4 w-4 text-[#3E8E5E]" strokeWidth={2} />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-pageBgLight">
+              <Clock className="h-4 w-4 text-emerald" strokeWidth={2} />
             </div>
-            <span className="text-xl font-extrabold text-[#2B5D3A]">{formatTime(timeElapsed)}</span>
-            <span className="text-[10px] font-medium text-[#9AB0A4]">tempo</span>
+            <span className="text-xl font-extrabold text-primary-dark">{formatTime(timeElapsed)}</span>
+            <span className="text-[10px] font-medium text-neutral">tempo</span>
           </div>
         </div>
 
@@ -194,7 +194,7 @@ export default function QuizResult() {
           </Button>
           <button
             onClick={() => navigate("/quiz", { replace: true })}
-            className="w-full rounded-2xl border-2 border-[#BFE3CC] py-3.5 text-base font-semibold text-[#2B5D3A] transition-all hover:bg-[#F0FAF3]"
+            className="w-full rounded-2xl border-2 border-stroke-light py-3.5 text-base font-semibold text-primary-dark transition-all hover:bg-surface-soft"
           >
             Refazer prova
           </button>

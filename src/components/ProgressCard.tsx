@@ -10,17 +10,17 @@ export function ProgressCard({ level, currentXP, targetXP }: ProgressCardProps) 
   const percent = Math.min((currentXP / targetXP) * 100, 100)
 
   return (
-    <div className="rounded-2xl border-2 border-[#BFE3CC] bg-white px-4 py-4">
+    <div className="rounded-2xl border-2 border-stroke-light bg-white px-4 py-4">
       <div className="flex items-center justify-between mb-4">
-        <span className="text-sm font-bold text-[#1F2A24]">Seu progresso</span>
-        <BarChart2 className="h-5 w-5 text-[#3E8E5E]" strokeWidth={2} />
+        <span className="text-sm font-bold text-foregroundDark">Seu progresso</span>
+        <BarChart2 className="h-5 w-5 text-emerald" strokeWidth={2} />
       </div>
 
       <div className="flex items-center gap-4">
         {/* Hexagon badge */}
         <div className="relative flex-shrink-0 flex items-center justify-center" style={{ width: 52, height: 52 }}>
           <div
-            className="absolute inset-0 bg-[#2B5D3A]"
+            className="absolute inset-0 bg-primary-dark"
             style={{
               clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
             }}
@@ -33,12 +33,12 @@ export function ProgressCard({ level, currentXP, targetXP }: ProgressCardProps) 
 
         {/* XP + progress bar */}
         <div className="flex-1">
-          <p className="text-sm font-semibold text-[#1F2A24] mb-2">
+          <p className="text-sm font-semibold text-foregroundDark mb-2">
             {currentXP.toLocaleString("pt-BR")} / {targetXP.toLocaleString("pt-BR")} XP
           </p>
-          <div className="h-2.5 rounded-full bg-[#E0F3E9] overflow-hidden">
+          <div className="h-2.5 rounded-full bg-gradient-mid overflow-hidden">
             <div
-              className="h-full rounded-full bg-[#2B5D3A] transition-all duration-500"
+              className="h-full rounded-full bg-primary-dark transition-all duration-500"
               style={{ width: `${percent}%` }}
             />
           </div>

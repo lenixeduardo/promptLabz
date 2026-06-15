@@ -15,18 +15,18 @@ export function PremiumBenefitCard({ feature }: PremiumBenefitCardProps) {
   ]
 
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-[#EAF2ED] bg-white px-4 py-3.5 shadow-sm">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+    <div className="flex items-start gap-3 rounded-2xl border border-pageBgLight bg-white px-4 py-3.5 shadow-sm">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pageBgLight">
         {IconComp ? (
-          <IconComp className="h-5 w-5 text-[#3E8E5E]" strokeWidth={2} />
+          <IconComp className="h-5 w-5 text-emerald" strokeWidth={2} />
         ) : (
-          <Icons.Sparkles className="h-5 w-5 text-[#3E8E5E]" strokeWidth={2} />
+          <Icons.Sparkles className="h-5 w-5 text-emerald" strokeWidth={2} />
         )}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-bold text-[#1F2A24]">{feature.title}</p>
+        <p className="text-sm font-bold text-foregroundDark">{feature.title}</p>
         {feature.description && (
-          <p className="text-xs text-[#6B7A70]">{feature.description}</p>
+          <p className="text-xs text-foregroundTertiary">{feature.description}</p>
         )}
       </div>
     </div>

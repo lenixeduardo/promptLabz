@@ -73,7 +73,7 @@ export default function Login() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-5 py-8">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
       {/* Shrinking circle reveal â€” plays when arriving from Hero */}
       <CircleRevealEntry />
       <div className="mx-auto flex w-full max-w-[420px] flex-col items-center">
@@ -90,7 +90,7 @@ export default function Login() {
         <BrandLogo className="mt-1 text-5xl" />
 
         {/* Login card */}
-        <Card className="mt-7 w-full border-[#C6E7D2] bg-[#E1F2E7] p-6 shadow-md sm:p-7">
+        <Card className="mt-7 w-full border-stroke-muted bg-surface-success p-6 shadow-md sm:p-7">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <Input
               type="email"
@@ -115,7 +115,7 @@ export default function Login() {
 
             <Link
               to="/forgot-password"
-              className="-mt-1 self-end text-sm font-medium text-[#2E8B57] underline underline-offset-2 hover:text-primary"
+              className="-mt-1 self-end text-sm font-medium text-link underline underline-offset-2 hover:text-primary"
             >
               Esqueci minha senha
             </Link>
@@ -126,9 +126,9 @@ export default function Login() {
 
             {/* Divider */}
             <div className="my-1 flex items-center gap-3">
-              <span className="h-px flex-1 bg-[#BFD9C8]" />
-              <span className="text-sm text-[#6B7A70]">ou continue com</span>
-              <span className="h-px flex-1 bg-[#BFD9C8]" />
+              <span className="h-px flex-1 bg-stroke-light" />
+              <span className="text-sm text-foregroundTertiary">ou continue com</span>
+              <span className="h-px flex-1 bg-stroke-light" />
             </div>
 
             {/* Social logins */}
@@ -151,11 +151,11 @@ export default function Login() {
         </Card>
 
         {/* Footer */}
-        <p className="mt-7 text-center text-base text-[#1F2A24]">
+        <p className="mt-7 text-center text-base text-foregroundDark">
           NÃ£o tem uma conta?{" "}
           <Link
             to="/signup"
-            className="font-semibold text-[#2E8B57] underline underline-offset-2 hover:text-primary"
+            className="font-semibold text-link underline underline-offset-2 hover:text-primary"
           >
             Crie agora
           </Link>

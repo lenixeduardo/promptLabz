@@ -20,28 +20,28 @@ export function PremiumPlanCard({ plan, selected, onSelect }: PremiumPlanCardPro
       className={cn(
         "relative w-full rounded-2xl border bg-white px-5 py-4 text-left shadow-sm transition-all",
         selected
-          ? "border-[#2B5D3A] ring-2 ring-[#DCF1E4]"
-          : "border-[#CDEAD8] hover:border-[#8AB89A]",
+          ? "border-primary-dark ring-2 ring-surface-success"
+          : "border-stroke-muted hover:border-foregroundMuted",
       )}
     >
       {/* Badge */}
       {plan.badge && (
-        <span className="absolute -top-2.5 right-4 rounded-full bg-gradient-to-r from-[#3E8E5E] to-[#2E7048] px-3 py-0.5 text-[10px] font-bold text-white shadow-sm">
+        <span className="absolute -top-2.5 right-4 rounded-full bg-gradient-to-r from-emerald to-emerald-dark px-3 py-0.5 text-[10px] font-bold text-white shadow-sm">
           {plan.badge}
         </span>
       )}
 
       <div className="flex items-start justify-between">
         <div className="space-y-1">
-          <p className="text-sm font-bold text-[#1F2A24]">{plan.title}</p>
+          <p className="text-sm font-bold text-foregroundDark">{plan.title}</p>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl font-extrabold text-[#1F2A24]">
+            <span className="text-2xl font-extrabold text-foregroundDark">
               {plan.monthlyPrice}
             </span>
-            <span className="text-xs font-medium text-[#6B7A70]">/mês</span>
+            <span className="text-xs font-medium text-foregroundTertiary">/mês</span>
           </div>
           {plan.oldPrice && (
-            <p className="text-xs text-[#8AB89A] line-through">{plan.oldPrice}/mês</p>
+            <p className="text-xs text-foregroundMuted line-through">{plan.oldPrice}/mês</p>
           )}
         </div>
 
@@ -50,8 +50,8 @@ export function PremiumPlanCard({ plan, selected, onSelect }: PremiumPlanCardPro
           className={cn(
             "mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-all",
             selected
-              ? "border-[#2B5D3A] bg-[#2B5D3A]"
-              : "border-[#BFE3CC]",
+              ? "border-primary-dark bg-primary-dark"
+              : "border-stroke-light",
           )}
         >
           {selected && (
@@ -60,7 +60,7 @@ export function PremiumPlanCard({ plan, selected, onSelect }: PremiumPlanCardPro
         </span>
       </div>
 
-      <p className="mt-2 text-[11px] font-medium text-[#6B7A70]">
+      <p className="mt-2 text-[11px] font-medium text-foregroundTertiary">
         {plan.description}
       </p>
     </button>

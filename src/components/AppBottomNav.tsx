@@ -39,7 +39,7 @@ export function AppBottomNav({ items = BOTTOM_NAV_ITEMS }: AppBottomNavProps) {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#CDEAD8] bg-white/95 backdrop-blur-md"
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-stroke-muted bg-white/95 backdrop-blur-md"
       aria-label="Navegação principal"
     >
       <div className="mx-auto flex max-w-lg items-center justify-around px-2 py-1">
@@ -54,8 +54,8 @@ export function AppBottomNav({ items = BOTTOM_NAV_ITEMS }: AppBottomNavProps) {
               className={cn(
                 "flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors",
                 isActive
-                  ? "text-[#2B5D3A]"
-                  : "text-[#8AB89A] hover:text-[#2F6B45]",
+                  ? "text-primary-dark"
+                  : "text-foregroundMuted hover:text-forest",
               )}
               aria-label={item.label}
               aria-current={isActive ? "page" : undefined}
@@ -63,7 +63,7 @@ export function AppBottomNav({ items = BOTTOM_NAV_ITEMS }: AppBottomNavProps) {
               <IconComp
                 className={cn(
                   "h-6 w-6",
-                  isActive ? "fill-[#2B5D3A]/10" : "",
+                  isActive ? "fill-primary-dark/10" : "",
                 )}
                 strokeWidth={isActive ? 2.5 : 2}
               />
@@ -76,7 +76,7 @@ export function AppBottomNav({ items = BOTTOM_NAV_ITEMS }: AppBottomNavProps) {
                 {item.label}
               </span>
               {isActive && (
-                <span className="mt-0.5 h-1 w-1 rounded-full bg-[#2B5D3A]" />
+                <span className="mt-0.5 h-1 w-1 rounded-full bg-primary-dark" />
               )}
             </Link>
           )

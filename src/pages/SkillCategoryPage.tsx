@@ -21,10 +21,10 @@ const DIFF_LABELS: Record<DiffFilter, string> = {
 }
 
 const LEVEL_BADGE: Record<number, { bg: string; text: string }> = {
-  1: { bg: "bg-[#EAF7EF]", text: "text-[#2B5D3A]" },
-  2: { bg: "bg-[#EAF7EF]", text: "text-[#2B5D3A]" },
-  3: { bg: "bg-[#FFF7ED]", text: "text-[#92400E]" },
-  4: { bg: "bg-[#FEF2F2]", text: "text-[#991B1B]" },
+  1: { bg: "bg-pageBgLight", text: "text-primary-dark" },
+  2: { bg: "bg-pageBgLight", text: "text-primary-dark" },
+  3: { bg: "bg-[#FFF7ED]", text: "text-amber-800" },
+  4: { bg: "bg-[#FEF2F2]", text: "text-red" },
 }
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -48,11 +48,11 @@ export default function SkillCategoryPage() {
 
   if (!catData) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#F0FAF3] text-[#6B9E7E]">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-surface-soft text-foregroundMuted">
         <p className="text-base font-semibold">Categoria não encontrada</p>
         <button
           onClick={() => navigate(-1)}
-          className="text-sm font-semibold text-[#2B5D3A]"
+          className="text-sm font-semibold text-primary-dark"
         >
           Voltar
         </button>
@@ -63,21 +63,21 @@ export default function SkillCategoryPage() {
   const CategoryIcon = ICON_MAP[catData.icon] ?? Lightbulb
 
   return (
-    <div className="min-h-screen bg-[#F0FAF3] pb-24">
+    <div className="min-h-screen bg-surface-soft pb-24">
       {/* Header */}
       <div className="bg-white px-4 pb-4 pt-12 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate(-1)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[#2B5D3A] transition-colors hover:bg-[#EAF7EF]"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-primary-dark transition-colors hover:bg-pageBgLight"
               aria-label="Voltar"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <div>
-              <h1 className="text-lg font-extrabold text-[#1F2A24]">{catData.label}</h1>
-              <p className="text-xs text-[#6B9E7E]">{catData.skills.length} skills disponíveis</p>
+              <h1 className="text-lg font-extrabold text-foregroundDark">{catData.label}</h1>
+              <p className="text-xs text-foregroundMuted">{catData.skills.length} skills disponíveis</p>
             </div>
           </div>
 
@@ -86,7 +86,7 @@ export default function SkillCategoryPage() {
             className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFF3CD]"
             style={{ clipPath: "polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)" }}
           >
-            <CategoryIcon className="h-7 w-7 text-[#D97706]" strokeWidth={1.8} />
+            <CategoryIcon className="h-7 w-7 text-amber-600" strokeWidth={1.8} />
           </div>
         </div>
       </div>
@@ -100,8 +100,8 @@ export default function SkillCategoryPage() {
               onClick={() => setActiveDiff(d)}
               className={`inline-flex shrink-0 items-center rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors ${
                 activeDiff === d
-                  ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                  : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+                  ? "border-primary-dark bg-primary-dark text-white"
+                  : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
               }`}
             >
               {DIFF_LABELS[d]}
@@ -111,8 +111,8 @@ export default function SkillCategoryPage() {
 
         {/* Skill list */}
         {filtered.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 py-16 text-[#6B9E7E]">
-            <Star className="h-14 w-14 text-[#CDEAD8]" />
+          <div className="flex flex-col items-center gap-3 py-16 text-foregroundMuted">
+            <Star className="h-14 w-14 text-stroke-muted" />
             <p className="text-base font-semibold">Nenhuma skill encontrada</p>
             <p className="text-sm opacity-70">Tente outro filtro de dificuldade.</p>
           </div>
@@ -124,15 +124,15 @@ export default function SkillCategoryPage() {
               return (
                 <div
                   key={skill.id}
-                  className="flex items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm"
+                  className="flex items-center gap-3 rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm"
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
-                    <SkillIcon className="h-6 w-6 text-[#2B5D3A]" strokeWidth={1.8} />
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-pageBgLight">
+                    <SkillIcon className="h-6 w-6 text-primary-dark" strokeWidth={1.8} />
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-bold text-[#1F2A24]">{skill.name}</p>
-                    <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-[#6B9E7E]">
+                    <p className="text-sm font-bold text-foregroundDark">{skill.name}</p>
+                    <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-foregroundMuted">
                       {skill.description}
                     </p>
                   </div>
@@ -141,13 +141,13 @@ export default function SkillCategoryPage() {
                     <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${badge.bg} ${badge.text}`}>
                       Nível {skill.level}
                     </span>
-                    <span className="flex items-center gap-0.5 text-[10px] font-semibold text-[#D97706]">
-                      <Star className="h-3 w-3 fill-[#D97706] text-[#D97706]" />
+                    <span className="flex items-center gap-0.5 text-[10px] font-semibold text-amber-600">
+                      <Star className="h-3 w-3 fill-amber-600 text-amber-600" />
                       {skill.xp} XP
                     </span>
                   </div>
 
-                  <ChevronRight className="h-4 w-4 shrink-0 text-[#6B9E7E]" />
+                  <ChevronRight className="h-4 w-4 shrink-0 text-foregroundMuted" />
                 </div>
               )
             })}

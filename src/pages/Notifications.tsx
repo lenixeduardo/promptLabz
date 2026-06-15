@@ -43,7 +43,7 @@ export default function Notifications() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EAF7EF] to-white px-4 py-6 pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6 pb-24">
       <div className="mx-auto w-full max-w-md">
         {/* Header */}
         <AppPageHeader
@@ -52,7 +52,7 @@ export default function Notifications() {
           rightSlot={
             <button
               onClick={handleSettingsClick}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-[#2F6B45] transition-colors hover:bg-[#DCF1E4]"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-forest transition-colors hover:bg-surface-success"
               aria-label="Configurações"
             >
               <Settings className="h-5 w-5" strokeWidth={2.2} />
@@ -78,10 +78,10 @@ export default function Notifications() {
               className="h-24 w-auto object-contain opacity-50"
               style={{ mixBlendMode: "multiply" }}
             />
-            <p className="text-base font-semibold text-[#6B9E7E]">
+            <p className="text-base font-semibold text-foregroundMuted">
               Nenhuma notificação
             </p>
-            <p className="text-sm text-[#8AB89A]">
+            <p className="text-sm text-foregroundMuted">
               {activeFilter === "unread"
                 ? "Você já leu todas as notificações! 🎉"
                 : activeFilter === "mentions"
@@ -93,7 +93,7 @@ export default function Notifications() {
           <div className="flex flex-col gap-5">
             {groups.map((group) => (
               <section key={group.label}>
-                <h2 className="mb-2.5 text-xs font-bold uppercase tracking-wider text-[#3E8E5E]">
+                <h2 className="mb-2.5 text-xs font-bold uppercase tracking-wider text-emerald">
                   {group.label}
                 </h2>
                 <div className="flex flex-col gap-2">

@@ -73,45 +73,45 @@ export default function PromptChallenge() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD]">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end">
       <div className="mx-auto flex w-full max-w-[420px] flex-col px-5 pb-10 pt-6">
         {/* Header */}
         <div className="mb-3 flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#CDEAD8] bg-white shadow-sm transition-all hover:bg-[#F0FAF3]"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-stroke-muted bg-white shadow-sm transition-all hover:bg-surface-soft"
             aria-label="Fechar"
           >
-            <X className="h-5 w-5 text-[#2B5D3A]" />
+            <X className="h-5 w-5 text-primary-dark" />
           </button>
-          <p className="text-base font-bold text-[#2B5D3A]">{challenge.module}</p>
-          <span className="text-sm font-semibold text-[#8A998F]">
+          <p className="text-base font-bold text-primary-dark">{challenge.module}</p>
+          <span className="text-sm font-semibold text-foregroundPlaceholder">
             {challenge.step + 1}/{challenge.totalSteps}
           </span>
         </div>
 
         {/* Progress bar */}
-        <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-[#CDEAD8]">
+        <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-stroke-muted">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[#3E8E5E] to-[#2E7048] transition-all duration-500"
+            className="h-full rounded-full bg-gradient-to-r from-emerald to-emerald-dark transition-all duration-500"
             style={{ width: `${progressPct}%` }}
           />
         </div>
 
         {/* Challenge title */}
-        <h1 className="mb-1 text-xl font-extrabold text-[#1F2A24]">{challenge.title}</h1>
-        <p className="mb-5 text-sm text-[#6B7A70]">{challenge.subtitle}</p>
+        <h1 className="mb-1 text-xl font-extrabold text-foregroundDark">{challenge.title}</h1>
+        <p className="mb-5 text-sm text-foregroundTertiary">{challenge.subtitle}</p>
 
         {/* Task card */}
-        <div className="mb-5 rounded-2xl border border-[#BFE3CC] bg-[#EAF7EF] px-4 py-4">
-          <p className="mb-1 text-xs font-bold uppercase tracking-wider text-[#3E8E5E]">
+        <div className="mb-5 rounded-2xl border border-stroke-light bg-pageBgLight px-4 py-4">
+          <p className="mb-1 text-xs font-bold uppercase tracking-wider text-emerald">
             Sua tarefa
           </p>
-          <p className="text-sm leading-relaxed text-[#3A4B40]">{challenge.task}</p>
+          <p className="text-sm leading-relaxed text-foregroundDark">{challenge.task}</p>
         </div>
 
         {/* Prompt textarea */}
-        <p className="mb-2 text-base font-bold text-[#1F2A24]">Seu prompt</p>
+        <p className="mb-2 text-base font-bold text-foregroundDark">Seu prompt</p>
         <div className="relative mb-4">
           <textarea
             value={promptText}
@@ -120,16 +120,16 @@ export default function PromptChallenge() {
             }}
             placeholder="Digite aqui seu prompt..."
             rows={6}
-            className="w-full resize-none rounded-2xl border border-[#CDEAD8] bg-white px-4 py-3 pb-7 text-sm leading-relaxed text-[#1F2A24] placeholder:text-[#B0C0B5] focus:border-[#3E8E5E] focus:outline-none focus:ring-2 focus:ring-[#3E8E5E]/20"
+            className="w-full resize-none rounded-2xl border border-stroke-muted bg-white px-4 py-3 pb-7 text-sm leading-relaxed text-foregroundDark placeholder:text-[#B0C0B5] focus:border-emerald focus:outline-none focus:ring-2 focus:ring-emerald/20"
           />
-          <span className="absolute bottom-3 right-4 text-xs text-[#8A998F]">
+          <span className="absolute bottom-3 right-4 text-xs text-foregroundPlaceholder">
             {promptText.length}/{MAX_CHARS}
           </span>
         </div>
 
         {/* AI Feedback panel */}
         {showFeedback ? (
-          <div className="mb-5 rounded-2xl border border-[#BFE3CC] bg-[#EAF7EF] p-4">
+          <div className="mb-5 rounded-2xl border border-stroke-light bg-pageBgLight p-4">
             <div className="mb-3 flex items-start gap-3">
               <img
                 src="/assets/mascot-teacher.png"
@@ -137,24 +137,24 @@ export default function PromptChallenge() {
                 className="h-16 w-auto shrink-0 object-contain"
               />
               <div className="flex-1">
-                <p className="font-bold text-[#1F2A24]">Feedback da IA</p>
-                <p className="mt-0.5 text-xs text-[#6B9E7E]">{getIntroText(score)}</p>
+                <p className="font-bold text-foregroundDark">Feedback da IA</p>
+                <p className="mt-0.5 text-xs text-foregroundMuted">{getIntroText(score)}</p>
               </div>
             </div>
             <div className="flex flex-col gap-1.5">
               {CRITERIA.map(({ key, label }) => (
                 <div key={key} className="flex items-center gap-2">
                   {score[key] ? (
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-[#3E8E5E]" />
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald" />
                   ) : (
-                    <Diamond className="h-4 w-4 shrink-0 text-[#F5A623]" />
+                    <Diamond className="h-4 w-4 shrink-0 text-accent" />
                   )}
-                  <span className="text-sm text-[#1F2A24]">
+                  <span className="text-sm text-foregroundDark">
                     {label}:{" "}
                     <span
                       className={cn(
                         "font-medium",
-                        score[key] ? "text-[#3E8E5E]" : "text-[#F5A623]"
+                        score[key] ? "text-emerald" : "text-accent"
                       )}
                     >
                       {score[key] ? "bom" : "pode melhorar"}
@@ -163,11 +163,11 @@ export default function PromptChallenge() {
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-xs text-[#6B9E7E]">{challenge.tip}</p>
+            <p className="mt-3 text-xs text-foregroundMuted">{challenge.tip}</p>
           </div>
         ) : (
-          <div className="mb-5 rounded-2xl border border-[#CDEAD8] bg-white px-4 py-3 text-center">
-            <p className="text-xs text-[#8A998F]">
+          <div className="mb-5 rounded-2xl border border-stroke-muted bg-white px-4 py-3 text-center">
+            <p className="text-xs text-foregroundPlaceholder">
               Digite pelo menos {MIN_CHARS} caracteres para receber feedback ao vivo.
             </p>
           </div>
@@ -175,11 +175,11 @@ export default function PromptChallenge() {
 
         {/* Example panel (revealed on CTA click) */}
         {showExample && (
-          <div className="mb-5 rounded-2xl border border-[#BFE3CC] bg-white p-4">
-            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#3E8E5E]">
+          <div className="mb-5 rounded-2xl border border-stroke-light bg-white p-4">
+            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-emerald">
               Exemplo aprimorado ✨
             </p>
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-[#3A4B40]">
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-foregroundDark">
               {challenge.examplePrompt}
             </p>
           </div>
@@ -202,7 +202,7 @@ export default function PromptChallenge() {
         {/* Skip link */}
         <button
           onClick={handleSkip}
-          className="mt-3 w-full text-center text-sm text-[#6B9E7E] transition-colors hover:text-[#2B5D3A]"
+          className="mt-3 w-full text-center text-sm text-foregroundMuted transition-colors hover:text-primary-dark"
         >
           Pular por agora
         </button>

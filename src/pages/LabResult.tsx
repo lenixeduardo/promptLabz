@@ -33,7 +33,7 @@ function StarRating({ stars }: { stars: number }) {
           <span
             key={i}
             className={
-              filled ? "text-[#F5A623]" : half ? "text-[#F5A623] opacity-60" : "text-[#D1D5DB]"
+              filled ? "text-accent" : half ? "text-accent opacity-60" : "text-[#D1D5DB]"
             }
             style={{ fontSize: 16 }}
           >
@@ -41,7 +41,7 @@ function StarRating({ stars }: { stars: number }) {
           </span>
         )
       })}
-      <span className="ml-1 text-xs text-[#6B9E7E]">{stars}/5</span>
+      <span className="ml-1 text-xs text-foregroundMuted">{stars}/5</span>
     </div>
   )
 }
@@ -52,21 +52,21 @@ export default function LabResult() {
   const result = (location.state as typeof DEFAULT_RESULT) ?? DEFAULT_RESULT
 
   return (
-    <div className="min-h-screen bg-[#F0FAF3] pb-32">
+    <div className="min-h-screen bg-surface-soft pb-32">
       {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#C8EDD8] via-[#D5F0E2] to-[#EAF7EF] px-5 pb-6 pt-12">
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#C8EDD8] via-[#D5F0E2] to-pageBgLight px-5 pb-6 pt-12">
         <div className="mb-3 flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#CDEAD8] bg-white shadow-sm transition-all active:scale-95"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-stroke-muted bg-white shadow-sm transition-all active:scale-95"
             aria-label="Voltar"
           >
-            <ArrowRight className="h-4 w-4 rotate-180 text-[#2B5D3A]" />
+            <ArrowRight className="h-4 w-4 rotate-180 text-primary-dark" />
           </button>
         </div>
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h1 className="text-xl font-extrabold leading-tight text-[#1F2A24]">
+            <h1 className="text-xl font-extrabold leading-tight text-foregroundDark">
               Resultado do<br />Laboratório
             </h1>
             <p className="mt-1 text-xs text-[#3E6B50]">
@@ -83,14 +83,14 @@ export default function LabResult() {
 
       <div className="px-4 pt-5 space-y-4">
         {/* Pontuação geral */}
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-5 shadow-sm text-center">
-          <p className="mb-3 text-xs font-bold uppercase tracking-wider text-[#6B9E7E]">
+        <div className="rounded-2xl border border-stroke-muted bg-white p-5 shadow-sm text-center">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
             Pontuação geral
           </p>
-          <div className="relative mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#3E8E5E] to-[#2B5D3A] shadow-lg">
+          <div className="relative mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-primary-dark shadow-lg">
             <span className="text-4xl font-extrabold text-white">{result.score}</span>
           </div>
-          <span className="inline-block rounded-full bg-[#EAF7EF] px-4 py-1 text-sm font-bold text-[#2B5D3A]">
+          <span className="inline-block rounded-full bg-pageBgLight px-4 py-1 text-sm font-bold text-primary-dark">
             {result.label}
           </span>
           <div className="mt-3 flex justify-center">
@@ -99,50 +99,50 @@ export default function LabResult() {
         </div>
 
         {/* Prompt original */}
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#6B9E7E]">
+        <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
             Seu prompt original:
           </p>
           <div className="rounded-xl bg-[#F5FBF7] p-3">
-            <p className="text-xs leading-relaxed text-[#3A4B40]">{result.originalPrompt}</p>
+            <p className="text-xs leading-relaxed text-foregroundDark">{result.originalPrompt}</p>
           </div>
         </div>
 
         {/* Análise da IA */}
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#6B9E7E]">
+        <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
             Análise da IA:
           </p>
-          <p className="text-xs leading-relaxed text-[#3A4B40]">{result.analysis}</p>
+          <p className="text-xs leading-relaxed text-foregroundDark">{result.analysis}</p>
         </div>
 
         {/* Feedback da IA */}
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-          <p className="mb-3 text-xs font-bold uppercase tracking-wider text-[#6B9E7E]">
+        <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
             Feedback da IA:
           </p>
           <div className="flex flex-col gap-2">
             {result.feedback.map((item, i) => (
               <div key={i} className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#3E8E5E]" />
-                <span className="text-xs leading-relaxed text-[#1F2A24]">{item}</span>
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald" />
+                <span className="text-xs leading-relaxed text-foregroundDark">{item}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Compatibilidade */}
-        <div className="rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm">
-          <p className="mb-3 text-xs font-bold uppercase tracking-wider text-[#6B9E7E]">
+        <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
             Compatibilidade com IAs:
           </p>
           <div className="flex gap-2">
             {result.aiCompatibility.map(({ name, ok }) => (
               <span
                 key={name}
-                className="flex items-center gap-1 rounded-full border border-[#BFE3CC] bg-[#EAF7EF] px-3 py-1 text-xs font-semibold text-[#2B5D3A]"
+                className="flex items-center gap-1 rounded-full border border-stroke-light bg-pageBgLight px-3 py-1 text-xs font-semibold text-primary-dark"
               >
-                {ok && <CheckCircle2 className="h-3 w-3 text-[#3E8E5E]" />}
+                {ok && <CheckCircle2 className="h-3 w-3 text-emerald" />}
                 {name}
               </span>
             ))}
@@ -151,9 +151,9 @@ export default function LabResult() {
       </div>
 
       {/* Fixed bottom action */}
-      <div className="fixed bottom-[72px] left-0 right-0 z-30 border-t border-[#E5F5EB] bg-white px-4 py-3">
+      <div className="fixed bottom-[72px] left-0 right-0 z-30 border-t border-pageBgLight bg-white px-4 py-3">
         <div className="mx-auto max-w-[460px]">
-          <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#2B5D3A] py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-[#3E8E5E]">
+          <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald">
             <BookmarkPlus className="h-4 w-4" />
             Salvar Resultado
           </button>

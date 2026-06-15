@@ -41,14 +41,14 @@ export default function AuthCallback() {
   }, [navigate])
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#EAF7EF] via-[#E0F3E7] to-[#D2EEDD] px-6">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-6">
       <div className="text-center">
         <img
           src="/assets/mascot-login-new.png"
           alt="PromptLabz mascot"
           className="mx-auto mb-4 h-36 w-auto object-contain"
         />
-        <p className="text-lg font-medium text-[#2B5D3A]">{message}</p>
+        <p className="text-lg font-medium text-primary-dark">{message}</p>
       </div>
     </div>
   )

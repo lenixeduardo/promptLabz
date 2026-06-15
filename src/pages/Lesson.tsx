@@ -25,7 +25,7 @@ function ContentView({ content }: ContentViewProps) {
       {content.map((block, index) => {
         if (block.type === "heading") {
           return (
-            <p key={index} className="mt-1 text-base font-bold text-[#1F2A24]">
+            <p key={index} className="mt-1 text-base font-bold text-foregroundDark">
               {block.text}
             </p>
           )
@@ -35,9 +35,9 @@ function ContentView({ content }: ContentViewProps) {
           return (
             <div
               key={index}
-              className="rounded-2xl border border-[#BFE3CC] bg-[#EAF7EF] px-4 py-3"
+              className="rounded-2xl border border-stroke-light bg-pageBgLight px-4 py-3"
             >
-              <p className="text-sm italic leading-relaxed text-[#2B5D3A]">
+              <p className="text-sm italic leading-relaxed text-primary-dark">
                 {block.text}
               </p>
             </div>
@@ -45,7 +45,7 @@ function ContentView({ content }: ContentViewProps) {
         }
 
         return (
-          <p key={index} className="text-sm leading-relaxed text-[#3A4B40]">
+          <p key={index} className="text-sm leading-relaxed text-foregroundDark">
             {block.text}
           </p>
         )
@@ -73,10 +73,10 @@ function QuestionView({
 }: QuestionViewProps) {
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-xs font-bold uppercase tracking-widest text-[#3E8E5E]">
+      <p className="text-xs font-bold uppercase tracking-widest text-emerald">
         Questão {questionIndex + 1} de {total}
       </p>
-      <p className="text-base font-bold leading-snug text-[#1F2A24]">
+      <p className="text-base font-bold leading-snug text-foregroundDark">
         {question.question}
       </p>
 
@@ -95,21 +95,21 @@ function QuestionView({
               disabled={confirmed}
               className={cn(
                 "flex items-center gap-3 rounded-2xl border bg-white px-4 py-3.5 text-left transition-all",
-                !confirmed && !isSelected && "border-[#CDEAD8] hover:border-[#3E8E5E] hover:bg-[#F5FAF6]",
-                !confirmed && isSelected && "border-[#3E8E5E] bg-[#EAF7EF]",
-                showCorrect && "border-[#3E9A63] bg-[#DCF1E4]",
-                showWrong && "border-[#E05252] bg-[#FEE2E2]",
-                dimmed && "border-[#CDEAD8] opacity-50"
+                !confirmed && !isSelected && "border-stroke-muted hover:border-emerald hover:bg-surface-soft",
+                !confirmed && isSelected && "border-emerald bg-pageBgLight",
+                showCorrect && "border-emerald bg-surface-success",
+                showWrong && "border-red bg-red-100",
+                dimmed && "border-stroke-muted opacity-50"
               )}
             >
               <span
                 className={cn(
                   "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 text-sm font-bold",
-                  !confirmed && !isSelected && "border-[#CDEAD8] text-[#6B7A70]",
-                  !confirmed && isSelected && "border-[#3E8E5E] bg-[#3E8E5E] text-white",
-                  showCorrect && "border-[#3E9A63] bg-[#3E9A63] text-white",
-                  showWrong && "border-[#E05252] bg-[#E05252] text-white",
-                  dimmed && "border-[#CDEAD8] text-[#A0A8A3]"
+                  !confirmed && !isSelected && "border-stroke-muted text-foregroundTertiary",
+                  !confirmed && isSelected && "border-emerald bg-emerald text-white",
+                  showCorrect && "border-emerald bg-emerald text-white",
+                  showWrong && "border-red bg-red text-white",
+                  dimmed && "border-stroke-muted text-[#A0A8A3]"
                 )}
               >
                 {option.letter}
@@ -117,10 +117,10 @@ function QuestionView({
               <span
                 className={cn(
                   "flex-1 text-sm font-medium leading-snug",
-                  !confirmed && !isSelected && "text-[#3A4B40]",
-                  !confirmed && isSelected && "font-semibold text-[#2B5D3A]",
-                  showCorrect && "font-semibold text-[#1E6B3A]",
-                  showWrong && "text-[#991B1B]",
+                  !confirmed && !isSelected && "text-foregroundDark",
+                  !confirmed && isSelected && "font-semibold text-primary-dark",
+                  showCorrect && "font-semibold text-primary-dark",
+                  showWrong && "text-red",
                   dimmed && "text-[#A0A8A3]"
                 )}
               >
@@ -135,18 +135,18 @@ function QuestionView({
         <div
           className={cn(
             "mt-1 flex items-start gap-2.5 rounded-2xl p-3.5",
-            selected === question.correct ? "bg-[#DCF1E4]" : "bg-[#FEE2E2]"
+            selected === question.correct ? "bg-surface-success" : "bg-red-100"
           )}
         >
           {selected === question.correct ? (
-            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#1E6B3A]" />
+            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary-dark" />
           ) : (
-            <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#991B1B]" />
+            <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red" />
           )}
           <p
             className={cn(
               "text-sm font-semibold leading-snug",
-              selected === question.correct ? "text-[#1E6B3A]" : "text-[#991B1B]"
+              selected === question.correct ? "text-primary-dark" : "text-red"
             )}
           >
             {selected === question.correct
@@ -184,7 +184,7 @@ export default function Lesson() {
 
   if (!lessonObj) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F7FBF8] p-5 text-center">
+      <div className="flex min-h-screen items-center justify-center bg-surface-soft p-5 text-center">
         <div>
           <p className="text-lg font-bold text-red-600">Erro: lição não encontrada.</p>
           <Button onClick={() => navigate("/learn")} className="mt-4">
@@ -321,35 +321,35 @@ export default function Lesson() {
   const isLastStep = step === totalSteps - 1
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F7FBF8]">
-      <div className="sticky top-0 z-10 border-b border-[#EAF2ED] bg-[#F7FBF8] px-4 pb-3 pt-4">
+    <div className="flex min-h-screen flex-col bg-surface-soft">
+      <div className="sticky top-0 z-10 border-b border-pageBgLight bg-surface-soft px-4 pb-3 pt-4">
         <div className="mb-3 flex items-center justify-between">
           <button
             onClick={() => navigate(`/learn?category=${categoryId}`)}
-            className="rounded-full p-1.5 text-[#1F2A24] transition-colors hover:bg-[#DCF1E4]"
+            className="rounded-full p-1.5 text-foregroundDark transition-colors hover:bg-surface-success"
           >
             <X className="h-5 w-5" />
           </button>
-          <BookOpen className="h-5 w-5 text-[#3E8E5E]" />
+          <BookOpen className="h-5 w-5 text-emerald" />
         </div>
 
         <div className="flex items-center justify-between">
           <button
             onClick={goBack}
-            className="flex items-center gap-0.5 text-xs font-bold text-[#3E8E5E] transition-colors hover:text-[#2B5D3A]"
+            className="flex items-center gap-0.5 text-xs font-bold text-emerald transition-colors hover:text-primary-dark"
           >
             <ChevronLeft className="h-4 w-4" strokeWidth={2.5} />
             {moduleObj.title}
           </button>
-          <span className="text-sm font-semibold text-[#8A998F]">
+          <span className="text-sm font-semibold text-foregroundPlaceholder">
             {step + 1}/{totalSteps}
           </span>
         </div>
 
-        <h1 className="mt-2 text-lg font-extrabold leading-snug text-[#1F2A24]">
+        <h1 className="mt-2 text-lg font-extrabold leading-snug text-foregroundDark">
           {lessonObj.title}
         </h1>
-        <div className="mt-1.5 h-0.5 w-10 rounded-full bg-[#3E8E5E]" />
+        <div className="mt-1.5 h-0.5 w-10 rounded-full bg-emerald" />
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 pb-6">
@@ -369,7 +369,7 @@ export default function Lesson() {
         )}
       </div>
 
-      <div className="border-t border-[#EAF2ED] px-4 pb-8 pt-3">
+      <div className="border-t border-pageBgLight px-4 pb-8 pt-3">
         {step === 0 ? (
           <Button size="lg" className="w-full" onClick={handleNext}>
             Entendi, vamos lá! →

@@ -52,8 +52,8 @@ export function PillTabs<T extends string = string>({
                 ? "px-3.5 py-1.5 text-xs"
                 : "px-5 py-2 text-sm",
               isActive
-                ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]",
+                ? "border-primary-dark bg-primary-dark text-white"
+                : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight",
             )}
           >
             {item.label}
@@ -63,7 +63,7 @@ export function PillTabs<T extends string = string>({
                   "ml-0.5 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none",
                   isActive
                     ? "bg-white/30 text-white"
-                    : "bg-[#EAF7EF] text-[#2B5D3A]",
+                    : "bg-pageBgLight text-primary-dark",
                 )}
               >
                 {item.count}

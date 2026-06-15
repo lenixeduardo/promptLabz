@@ -112,11 +112,24 @@ Acesse `http://localhost:5173`
 ```bash
 pnpm typecheck        # TypeScript sem erros
 pnpm lint             # ESLint sem warnings
-pnpm test             # Vitest (106 testes — unit + integração + UI)
-pnpm build            # Build de produção (46 chunks · ~9s)
+pnpm test             # Vitest (163 testes — unit + integração + UI)
+pnpm build            # Build de produção (46 chunks · ~68s)
 ```
 
-**Cobertura atual:** hooks, components, pages, contexts — 15 arquivos de teste.
+**Cobertura atual:** hooks, components, pages, contexts — 19 arquivos de teste.
+
+---
+
+## Screenshots
+
+> 📸 Screenshots em breve — o app está em deploy ativo em **[promptlabz.vercel.app](https://promptlabz.vercel.app)**
+
+| | |
+|---|---|
+| 🏠 **Home** — Progresso, streak, trilha e acesso rápido | 📚 **Trilha de Aprendizado** — Módulos sequenciais com lições interativas |
+| 🏆 **Ranking** — Pódio com top 3 e lista de usuários | ⭐ **Skills** — 80+ skills com busca, filtros e favoritos |
+| 🔔 **Notificações** — Filtros Todas/Não lidas/Mentions | ❤️ **Favoritos** — Abas por tipo com empty state e sugestões |
+| 👑 **Premium** — Paywall com toggle de planos e benefícios | 👤 **Perfil** — Avatar, XP, gemas, conquistas e certificados |
 
 ---
 
@@ -161,14 +174,26 @@ supabase/
 
 ---
 
+## Demo
+
+> 🚧 Ambiente de demonstração está sendo configurado.
+>
+> **Enquanto isso:**
+> 1. Clone o repositório: `git clone https://github.com/lenixeduardo/promptLab.git`
+> 2. Instale as dependências: `pnpm install`
+> 3. Inicie o servidor: `pnpm dev`
+> 4. Acesse `http://localhost:5173` — o app funciona **sem credenciais Supabase** (modo degradado com dados locais)
+
+---
+
 ## Roadmap
 
 | Versão | Foco | Status |
 |--------|------|--------|
 | **v0.1** | MVP: auth, trilhas, skills, gamificação | ✅ Publicado |
-| **v0.2** | Notificações in-app, Favoritos, Premium UI, streak | 🔨 Em andamento |
-| **v0.3** | Testes de integração Supabase, Sentry, webhook Stripe | 📋 Planejado |
-| **v1.0** | Premium real, Stripe, certificados, PWA offline, mobile | 🔮 Futuro |
+| **v0.2** | Notificações in-app, Favoritos, Premium UI, Ranking, streak | ✅ Concluído |
+| **v0.3** | Stripe real, Sentry, testes E2E, comunidade | 🔨 Em desenvolvimento |
+| **v1.0** | Premium real, certificados, PWA offline, mobile | 🔮 Futuro |
 
 → Detalhes e estimativas em [ROADMAP.md](./ROADMAP.md)
 
