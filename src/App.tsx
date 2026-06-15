@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { LivesProvider } from "@/contexts/LivesContext"
 import { AchievementsProvider } from "@/contexts/AchievementsContext"
+import { ThemeProvider } from "@/contexts/ThemeContext"
 import { PrivateRoute } from "@/components/PrivateRoute"
 import { Toaster } from "sileo"
 import "sileo/styles.css"
@@ -88,9 +89,10 @@ function AnalyticsTracker() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <LivesProvider>
-        <AchievementsProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <LivesProvider>
+          <AchievementsProvider>
           <AnalyticsTracker />
           <Toaster position="top-right" />
           <Suspense fallback={<PageLoading />}>
@@ -328,8 +330,9 @@ export default function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
-        </AchievementsProvider>
-      </LivesProvider>
-    </AuthProvider>
+          </AchievementsProvider>
+        </LivesProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }

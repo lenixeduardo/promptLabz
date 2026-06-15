@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { Settings, ChevronRight, Zap, BookOpen, Edit2, Heart, Crown, Sparkles, User, Mail } from "lucide-react"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { BottomNav } from "@/components/BottomNav"
@@ -152,13 +153,16 @@ export default function Profile() {
             <h1 className="text-xl font-extrabold text-primary-dark">{levelTitle}</h1>
             <p className="text-xs text-foregroundMuted">{user?.email}</p>
           </div>
-          <button
-            onClick={() => setEditOpen((v) => !v)}
-            className="rounded-full p-2 text-emerald hover:bg-surface-success"
-            aria-label="Editar perfil"
-          >
-            <Settings className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setEditOpen((v) => !v)}
+              className="rounded-full p-2 text-emerald hover:bg-surface-success"
+              aria-label="Editar perfil"
+            >
+              <Settings className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </div>
 
