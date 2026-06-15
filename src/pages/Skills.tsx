@@ -108,12 +108,7 @@ function SkillsGridView({
   if (skills.length === 0) {
     return (
       <div className="col-span-full flex flex-col items-center gap-3 py-16 text-[#6B9E7E]">
-        <img
-          src="/assets/mascot-home.png"
-          alt="sem resultados"
-          className="h-24 w-auto opacity-50"
-          style={{ mixBlendMode: "multiply" }}
-        />
+        <Icons.Search className="h-16 w-16 text-[#CDEAD8]" />
         <p className="text-base font-semibold">Nenhuma skill encontrada</p>
         <p className="text-sm opacity-70">Tente ajustar o filtro ou a busca.</p>
       </div>
@@ -276,16 +271,8 @@ export default function Skills() {
         </div>
 
         {/* Hero banner */}
-        <div className="relative mb-8 w-full overflow-hidden rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0] pb-6 pt-5 shadow-sm">
-          <div className="flex justify-center">
-            <img
-              src="/assets/mascot-teacher.png"
-              alt="Professor cat"
-              className="h-28 w-auto object-contain"
-              style={{ mixBlendMode: "multiply" }}
-            />
-          </div>
-          <h1 className="mt-1 text-center text-xl font-extrabold text-[#1F2A24]">
+        <div className="relative mb-8 w-full overflow-hidden rounded-3xl bg-gradient-to-r from-[#D5EFE0] to-[#C2E8D0] px-6 py-8 shadow-sm">
+          <h1 className="text-center text-xl font-extrabold text-[#1F2A24]">
             Central de Skills
           </h1>
           <p className="mt-0.5 text-center text-sm font-medium text-[#2F6B45]">
@@ -316,10 +303,10 @@ export default function Skills() {
         </div>
 
         {/* View mode tabs */}
-        <div className="mb-5 flex gap-2">
+        <div className="no-scrollbar mb-3 flex gap-2 overflow-x-auto pb-1">
           <button
             onClick={() => { setViewMode("all"); setActiveSkillCat("Todas") }}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "all"
                 ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
                 : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
@@ -331,7 +318,7 @@ export default function Skills() {
           </button>
           <button
             onClick={() => setViewMode("favorites")}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "favorites"
                 ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
                 : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
@@ -345,7 +332,7 @@ export default function Skills() {
           </button>
           <button
             onClick={() => setViewMode("ranking")}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "ranking"
                 ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
                 : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
@@ -354,6 +341,18 @@ export default function Skills() {
             <Icons.Trophy className="h-4 w-4" />
             Mais Instaladas
           </button>
+        </div>
+
+        {/* Step indicator bar */}
+        <div className="mb-5 flex items-center gap-2">
+          {(["all", "favorites", "ranking"] as ViewMode[]).map((mode) => (
+            <div
+              key={mode}
+              className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                viewMode === mode ? "bg-[#2B5D3A]" : "bg-[#CDEAD8] opacity-50"
+              }`}
+            />
+          ))}
         </div>
 
         {/* Category filter — only show in "all" mode */}

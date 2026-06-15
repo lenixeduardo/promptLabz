@@ -9,6 +9,7 @@ import { sileo } from "sileo"
 import { lessonsData, type ContentBlock, type Question } from "@/data/lessonsData"
 import { useAuth } from "@/hooks/useAuth"
 import { saveProgress as saveProgressDb } from "@/lib/db"
+import { getLocalXP, saveLocalXP, getLevel } from "@/lib/xp"
 
 function getProgressStorageKey(userId?: string) {
   return userId ? `promptlabz_progress:${userId}` : "promptlabz_progress"
@@ -301,7 +302,20 @@ export default function Lesson() {
     }
 
     const bonusAwarded = awardPerfectBonus()
-    navigate("/mission", { state: { score, total, perfect, bonusAwarded, newAchievements } })
+
+    const xpToAdd = perfect ? 100 : 50
+    const prevXP = user?.id ? getLocalXP(user.id) : 0
+    const newXP = prevXP + xpToAdd
+    if (user?.id) saveLocalXP(user.id, newXP)
+
+    const prevLevel = getLevel(prevXP)
+    const newLevel = getLevel(newXP)
+
+    if (newLevel > prevLevel) {
+      navigate("/level-up", { state: { newLevel, prevLevel } })
+    } else {
+      navigate("/mission", { state: { score, total, perfect, bonusAwarded, newAchievements } })
+    }
   }
 
   const isLastStep = step === totalSteps - 1

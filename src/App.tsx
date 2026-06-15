@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react"
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { LivesProvider } from "@/contexts/LivesContext"
 import { AchievementsProvider } from "@/contexts/AchievementsContext"
@@ -15,6 +15,7 @@ const AuthCallback = lazy(() => import("@/pages/AuthCallback"))
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"))
 const Home = lazy(() => import("@/pages/Home"))
 const Profile = lazy(() => import("@/pages/Profile"))
+const AvatarScreen = lazy(() => import("@/pages/AvatarScreen"))
 const LearningLab = lazy(() => import("@/pages/LearningLab"))
 const Lesson = lazy(() => import("@/pages/Lesson"))
 const Skills = lazy(() => import("@/pages/Skills"))
@@ -23,9 +24,23 @@ const MissionComplete = lazy(() => import("@/pages/MissionComplete"))
 const Favorites = lazy(() => import("@/pages/Favorites"))
 const Notifications = lazy(() => import("@/pages/Notifications"))
 const Premium = lazy(() => import("@/pages/Premium"))
-const Achievements = import.meta.env.DEV
-  ? lazy(() => import("@/pages/Achievements"))
-  : () => null
+const Achievements = lazy(() => import("@/pages/Achievements"))
+const Prompts = lazy(() => import("@/pages/Prompts"))
+const PromptChallenge = lazy(() => import("@/pages/PromptChallenge"))
+const Subscription = lazy(() => import("@/pages/Subscription"))
+const SkillCategoryPage = lazy(() => import("@/pages/SkillCategoryPage"))
+const PromptCategoryPage = lazy(() => import("@/pages/PromptCategoryPage"))
+const LevelUp = lazy(() => import("@/pages/LevelUp"))
+const News = lazy(() => import("@/pages/News"))
+const QuickQuiz = lazy(() => import("@/pages/QuickQuiz"))
+const Inventory = lazy(() => import("@/pages/Inventory"))
+const Store = lazy(() => import("@/pages/Store"))
+const Ranking = lazy(() => import("@/pages/Ranking"))
+const PromptDetail = lazy(() => import("@/pages/PromptDetail"))
+const TemplateDetail = lazy(() => import("@/pages/TemplateDetail"))
+const LabResult = lazy(() => import("@/pages/LabResult"))
+const QuizResult = lazy(() => import("@/pages/QuizResult"))
+const Certificate = lazy(() => import("@/pages/Certificate"))
 
 function PageLoading() {
   return (
@@ -61,6 +76,14 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <Profile />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/avatars"
+                element={
+                  <PrivateRoute>
+                    <AvatarScreen />
                   </PrivateRoute>
                 }
               />
@@ -136,17 +159,143 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
-              {/* Achievements page — only in dev mode */}
-              {import.meta.env.DEV && (
-                <Route
-                  path="/achievements"
-                  element={
-                    <PrivateRoute>
-                      <Achievements />
-                    </PrivateRoute>
-                  }
-                />
-              )}
+              <Route
+                path="/achievements"
+                element={
+                  <PrivateRoute>
+                    <Achievements />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/prompts"
+                element={
+                  <PrivateRoute>
+                    <Prompts />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/challenge"
+                element={
+                  <PrivateRoute>
+                    <PromptChallenge />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/subscription"
+                element={
+                  <PrivateRoute>
+                    <Subscription />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/learn/category/:categoryId"
+                element={
+                  <PrivateRoute>
+                    <SkillCategoryPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/prompts/category/:categoryId"
+                element={
+                  <PrivateRoute>
+                    <PromptCategoryPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/level-up"
+                element={
+                  <PrivateRoute>
+                    <LevelUp />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/news"
+                element={
+                  <PrivateRoute>
+                    <News />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/quiz"
+                element={
+                  <PrivateRoute>
+                    <QuickQuiz />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/inventory"
+                element={
+                  <PrivateRoute>
+                    <Inventory />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/store"
+                element={
+                  <PrivateRoute>
+                    <Store />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/ranking"
+                element={
+                  <PrivateRoute>
+                    <Ranking />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/quiz-result"
+                element={
+                  <PrivateRoute>
+                    <QuizResult />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/certificate"
+                element={
+                  <PrivateRoute>
+                    <Certificate />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/prompt/:promptId"
+                element={
+                  <PrivateRoute>
+                    <PromptDetail />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/template/:templateId"
+                element={
+                  <PrivateRoute>
+                    <TemplateDetail />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/lab-result"
+                element={
+                  <PrivateRoute>
+                    <LabResult />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
         </AchievementsProvider>

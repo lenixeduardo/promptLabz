@@ -1,8 +1,6 @@
-import { createContext, useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   ACHIEVEMENTS,
-  type Achievement,
-  type AchievementsData,
   checkAchievements,
   updateStreak,
 } from "@/lib/achievements"
@@ -13,32 +11,15 @@ import {
   saveAchievementsToDb,
   syncLocalAchievementsToSupabase,
 } from "@/lib/achievements-db"
+import { loadStreak, saveStreak } from "@/lib/db"
 import { useAuthContext } from "@/contexts/AuthContext"
+import { AchievementsContext } from "./achievementsContextDef"
 
+export type { AchievementsCtx } from "./achievementsContextDef"
+export { AchievementsContext } from "./achievementsContextDef"
+
+import type { AchievementsData, Achievement } from "@/lib/achievements"
 import type { ReactNode } from "react"
-
-export interface AchievementsCtx {
-  /** All achievement definitions */
-  allAchievements: Achievement[]
-  /** IDs of unlocked achievements */
-  unlocked: string[]
-  /** Raw data object (for condition checks) */
-  data: AchievementsData
-  /** Whether we're still loading from DB on first mount */
-  initialLoading: boolean
-  /** Check achievements after a lesson completion */
-  checkLessonComplete: (wasPerfect: boolean) => Achievement[]
-  /** Check streak achievements on daily visit */
-  checkDailyVisit: (favoritesCount?: number) => Achievement[]
-  /** Add a visited category and check exploration achievements */
-  visitCategory: (categoryId: string) => void
-  /** Check favorites-based achievements */
-  checkFavorites: (count: number) => Achievement[]
-  /** Returns the Achievement object for an ID */
-  getAchievement: (id: string) => Achievement | undefined
-}
-
-export const AchievementsContext = createContext<AchievementsCtx | undefined>(undefined)
 
 export function AchievementsProvider({ children }: { children: ReactNode }) {
   const { user } = useAuthContext()
@@ -121,18 +102,52 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
   )
 
   const checkDailyVisit = useCallback(
-    (favoritesCount?: number): Achievement[] => {
+    async (userId?: string, favoritesCount?: number): Promise<Achievement[]> => {
       const existing = dataRef.current
+
+      // Calculate new streak locally first (optimistic)
       const { newLastVisit, newConsecutive } = updateStreak(existing.lastVisitDate, existing.consecutiveDays)
-      const streakData = { ...existing, lastVisitDate: newLastVisit, consecutiveDays: newConsecutive }
+
+      let finalConsecutive = newConsecutive
+      let finalLongest = Math.max(existing.longestStreak, newConsecutive)
+
+      // Sync with Supabase if authenticated
+      if (userId) {
+        const { data: remote } = await loadStreak(userId)
+        if (remote) {
+          // Use the highest value between local and remote to avoid data loss
+          finalConsecutive = Math.max(finalConsecutive, remote.currentStreak)
+          // If remote last_visit_date is today, trust remote streak
+          if (remote.lastVisitDate === newLastVisit) {
+            finalConsecutive = remote.currentStreak
+          }
+          finalLongest = Math.max(finalLongest, remote.longestStreak, finalConsecutive)
+        }
+
+        // Persist updated streak to Supabase (fire-and-forget)
+        saveStreak(userId, {
+          currentStreak: finalConsecutive,
+          longestStreak: finalLongest,
+          lastVisitDate: newLastVisit,
+        }).catch(() => {/* silent — localStorage is the fallback */})
+      }
+
+      const streakData: AchievementsData = {
+        ...existing,
+        lastVisitDate: newLastVisit,
+        consecutiveDays: finalConsecutive,
+        longestStreak: finalLongest,
+      }
 
       const { newUnlocks, data: next } = checkAchievements(streakData, {
-        consecutiveDays: newConsecutive,
+        consecutiveDays: finalConsecutive,
         favoritesCount,
       })
-      if (newLastVisit !== existing.lastVisitDate || newUnlocks.length > 0) {
-        setData(next)
+
+      if (newLastVisit !== existing.lastVisitDate || newUnlocks.length > 0 || finalConsecutive !== existing.consecutiveDays) {
+        setData({ ...next, longestStreak: finalLongest })
       }
+
       return newUnlocks
     },
     [],
@@ -149,7 +164,6 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
       if (newUnlocks.length > 0) {
         setData(next)
       } else {
-        // Still save the visited category even if no new unlocks
         setData({ ...existing, visitedCategories: [...existing.visitedCategories, categoryId] })
       }
     },

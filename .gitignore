@@ -1,9 +1,11 @@
+# Dependencies
 node_modules/
 .pnpm-store/
 
 # Build output
 dist/
 build/
+dist-ssr/
 
 # Environment
 .env
@@ -13,10 +15,28 @@ build/
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
 
+# Logs
+*.log
+npm-debug.log*
+
 # Testing
 coverage/
+.nyc_output/
+
+# Build
+*.tsbuildinfo
+
+# Claude Code internal
+.claude/worktrees/
+
+# Temp
+.tmp
+.cache
