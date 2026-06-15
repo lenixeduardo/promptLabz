@@ -1,6 +1,8 @@
 ﻿import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import {
+  Bell,
+  Heart,
   Search,
   Sparkles,
   PawPrint,
@@ -172,7 +174,25 @@ export default function Home() {
         {/* Top bar */}
         <header className="flex items-center justify-between">
           <BrandLogo className="text-3xl" />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {/* Notifications bell */}
+            <Link
+              to="/notifications"
+              className="flex items-center justify-center rounded-full border border-[#BFE3CC] bg-white/70 p-2 shadow-sm text-[#2F6B45] hover:bg-[#F0FAF3] transition-colors"
+              aria-label="Notificações"
+            >
+              <Bell className="h-5 w-5" strokeWidth={2.2} />
+            </Link>
+
+            {/* Favorites heart */}
+            <Link
+              to="/favorites"
+              className="flex items-center justify-center rounded-full border border-[#BFE3CC] bg-white/70 p-2 shadow-sm text-[#2F6B45] hover:bg-[#F0FAF3] transition-colors"
+              aria-label="Favoritos"
+            >
+              <Heart className="h-5 w-5" strokeWidth={2.2} />
+            </Link>
+
             <Link
               to="/profile"
               className="flex items-center gap-2 rounded-full border border-[#BFE3CC] bg-white/70 px-3 py-1.5 shadow-sm hover:bg-[#F0FAF3] transition-colors"
@@ -299,8 +319,29 @@ export default function Home() {
           ))}
         </div>
 
+        {/* Premium banner */}
+        <section className="mt-10">
+          <Link
+            to="/premium"
+            className="flex items-center justify-between rounded-3xl bg-gradient-to-r from-[#2B5D3A] to-[#1E4B2E] px-6 py-5 shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
+          >
+            <div className="flex flex-col gap-1">
+              <span className="flex items-center gap-2 text-lg font-extrabold text-white">
+                <Sparkles className="h-5 w-5 text-[#F5A623]" fill="#F5A623" />
+                PromptLabz Premium
+              </span>
+              <span className="text-sm text-[#A8D4B8]">
+                Desbloqueie todo o potencial. 7 dias grátis!
+              </span>
+            </div>
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F5A623]/20">
+              <Sparkles className="h-4 w-4 text-[#F5A623]" fill="#F5A623" />
+            </span>
+          </Link>
+        </section>
+
         {/* Continue Aprendendo */}
-        <section className="mt-12">
+        <section className="mt-10">
           <h2 className="text-2xl font-bold text-[#1F2A24]">Continue Aprendendo</h2>
           <div className="no-scrollbar mt-4 flex gap-3 overflow-x-auto pb-2">
             {chips.map(({ label, icon: Icon, categoryKey }) => {

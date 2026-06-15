@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { ArrowLeft, User, Mail, Calendar } from "lucide-react"
+import { ArrowLeft, User, Mail, Calendar, Sparkles, Heart, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -134,6 +134,24 @@ export default function Profile() {
             <Button type="submit" size="lg" className="mt-2 w-full" disabled={loading}>
               {loading ? "Salvando..." : "Salvar Alterações"}
             </Button>
+
+            <div className="mt-2 flex flex-col gap-2">
+              <Link
+                to="/favorites"
+                className="flex items-center justify-center gap-2 rounded-full border border-[#CDEAD8] bg-white px-4 py-3 text-sm font-semibold text-[#2B5D3A] shadow-sm transition-all hover:bg-[#F0FAF3]"
+              >
+                <Heart className="h-4 w-4" strokeWidth={2.2} />
+                Meus Favoritos
+              </Link>
+              <Link
+                to="/premium"
+                className="flex items-center justify-center gap-2 rounded-full border border-[#CDEAD8] bg-white px-4 py-3 text-sm font-semibold text-[#2B5D3A] shadow-sm transition-all hover:bg-[#F0FAF3]"
+              >
+                <Crown className="h-4 w-4 text-[#F5A623]" strokeWidth={2.2} />
+                <span>Premium</span>
+                <Sparkles className="h-3.5 w-3.5 text-[#F5A623]" fill="#F5A623" />
+              </Link>
+            </div>
           </form>
         </Card>
       </div>

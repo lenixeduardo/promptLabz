@@ -20,6 +20,9 @@ const Lesson = lazy(() => import("@/pages/Lesson"))
 const Skills = lazy(() => import("@/pages/Skills"))
 const SkillDetail = lazy(() => import("@/pages/SkillDetail"))
 const MissionComplete = lazy(() => import("@/pages/MissionComplete"))
+const Favorites = lazy(() => import("@/pages/Favorites"))
+const Notifications = lazy(() => import("@/pages/Notifications"))
+const Premium = lazy(() => import("@/pages/Premium"))
 const Achievements = import.meta.env.DEV
   ? lazy(() => import("@/pages/Achievements"))
   : () => null
@@ -106,6 +109,30 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <MissionComplete />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/favorites"
+                element={
+                  <PrivateRoute>
+                    <Favorites />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/notifications"
+                element={
+                  <PrivateRoute>
+                    <Notifications />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/premium"
+                element={
+                  <PrivateRoute>
+                    <Premium />
                   </PrivateRoute>
                 }
               />

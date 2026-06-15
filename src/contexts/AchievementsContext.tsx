@@ -4,10 +4,16 @@ import {
   type Achievement,
   type AchievementsData,
   checkAchievements,
-  loadAchievements,
-  saveAchievements,
   updateStreak,
 } from "@/lib/achievements"
+import {
+  loadAchievements,
+  saveAchievements,
+  loadAchievementsFromDb,
+  saveAchievementsToDb,
+  syncLocalAchievementsToSupabase,
+} from "@/lib/achievements-db"
+import { useAuthContext } from "@/contexts/AuthContext"
 
 import type { ReactNode } from "react"
 
@@ -18,6 +24,8 @@ export interface AchievementsCtx {
   unlocked: string[]
   /** Raw data object (for condition checks) */
   data: AchievementsData
+  /** Whether we're still loading from DB on first mount */
+  initialLoading: boolean
   /** Check achievements after a lesson completion */
   checkLessonComplete: (wasPerfect: boolean) => Achievement[]
   /** Check streak achievements on daily visit */
@@ -33,14 +41,69 @@ export interface AchievementsCtx {
 export const AchievementsContext = createContext<AchievementsCtx | undefined>(undefined)
 
 export function AchievementsProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuthContext()
+  const userId = user?.id ?? null
+
+  // Start with localStorage data (fast, works offline, no flash)
+  const [initialLoading, setInitialLoading] = useState(true)
   const [data, setData] = useState<AchievementsData>(loadAchievements)
   const dataRef = useRef(data)
   useEffect(() => { dataRef.current = data }, [data])
 
-  // Persist on changes
+  // ── Load from DB on mount / on user change ──────────────────────────────
+  const loadedUserIdRef = useRef<string | null>(null)
+
   useEffect(() => {
+    if (!userId) {
+      setInitialLoading(false)
+      return
+    }
+
+    // Only load from DB once per userId (handles user switching correctly)
+    if (loadedUserIdRef.current === userId) return
+    loadedUserIdRef.current = userId
+
+    let cancelled = false
+
+    ;(async () => {
+      // 1. Try loading from DB
+      const { data: dbData } = await loadAchievementsFromDb(userId)
+
+      if (cancelled) return
+
+      if (dbData) {
+        // DB has data — use it as source of truth, overwrite localStorage
+        setData(dbData)
+        saveAchievements(dbData)
+      } else {
+        // No DB data yet — sync localStorage → DB (first login or new user)
+        await syncLocalAchievementsToSupabase(userId)
+      }
+
+      setInitialLoading(false)
+    })()
+
+    return () => { cancelled = true }
+  }, [userId])
+
+  // ── Persist: always localStorage (offline-safe), DB when user is logged in ──
+  const lastSavedRef = useRef("")
+
+  useEffect(() => {
+    // Always persist to localStorage (fast, no network needed)
     saveAchievements(data)
-  }, [data])
+
+    // Write to DB when user is logged in (debounced via string diff)
+    const json = JSON.stringify(data)
+    if (userId && json !== lastSavedRef.current) {
+      lastSavedRef.current = json
+      saveAchievementsToDb(userId, data).catch(() => {
+        // Silently fail — localStorage is the fallback
+      })
+    }
+  }, [data, userId])
+
+  // ── Methods ──────────────────────────────────────────────────────────────
 
   const checkLessonComplete = useCallback(
     (wasPerfect: boolean): Achievement[] => {
@@ -114,6 +177,7 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
         allAchievements: ACHIEVEMENTS,
         unlocked: data.unlocked,
         data,
+        initialLoading,
         checkLessonComplete,
         checkDailyVisit,
         visitCategory,

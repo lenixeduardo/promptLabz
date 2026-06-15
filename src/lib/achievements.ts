@@ -1,5 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// Achievement System — Definitions, Storage & Condition Logic
+// Achievement System — Types, Definitions & Condition Logic (Pure)
+// No side effects (no localStorage, no I/O). Storage lives in achievements-db.ts.
 // This runs in all environments but the UI display is gated by DEV mode.
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -118,40 +119,6 @@ export const ACHIEVEMENTS: Achievement[] = [
 ]
 
 export const ACHIEVEMENTS_MAP = new Map(ACHIEVEMENTS.map((a) => [a.id, a]))
-
-// ─── Storage ─────────────────────────────────────────────────────────────
-
-const STORAGE_KEY = "pl:achievements"
-
-function getDefaultData(): AchievementsData {
-  return {
-    unlocked: [],
-    totalLessonsCompleted: 0,
-    perfectCount: 0,
-    lastVisitDate: null,
-    consecutiveDays: 0,
-    visitedCategories: [],
-    completedCategoryIds: [],
-  }
-}
-
-export function loadAchievements(): AchievementsData {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return getDefaultData()
-    return { ...getDefaultData(), ...JSON.parse(raw) }
-  } catch {
-    return getDefaultData()
-  }
-}
-
-export function saveAchievements(data: AchievementsData): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // localStorage full or unavailable — silently ignore
-  }
-}
 
 // ─── Condition Checking ──────────────────────────────────────────────────
 

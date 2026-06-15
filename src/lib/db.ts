@@ -1,4 +1,4 @@
-import { supabase } from "./supabase"
+import { supabase, isSupabaseConfigured, getErrorMessage } from "./supabase"
 
 export interface CategoryProgress {
   currentModuleIndex: number
@@ -22,12 +22,6 @@ export interface DbResult<T> {
 
 const profileColumns = "id,email,full_name,avatar_url,premium_status,trial_ends_at"
 const LEGACY_PROGRESS_KEYS = ["promptlabz_progress", "promptlab_progress"] as const
-
-const isSupabaseConfigured = (): boolean => {
-  const url = import.meta.env.VITE_SUPABASE_URL
-  const key = import.meta.env.VITE_SUPABASE_ANON_KEY
-  return !!url && !!key && url !== "your_supabase_url_here"
-}
 
 function getProgressStorageKey(userId?: string) {
   return userId ? `promptlabz_progress:${userId}` : LEGACY_PROGRESS_KEYS[0]
@@ -206,11 +200,4 @@ function updateLocalProgress(userId: string, categoryId: string, progress: Categ
   }
 }
 
-function getErrorMessage(err: unknown, fallback: string) {
-  if (err instanceof Error) return err.message
-  if (typeof err === "object" && err && "message" in err) {
-    const message = (err as { message?: unknown }).message
-    if (typeof message === "string") return message
-  }
-  return fallback
-}
+

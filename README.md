@@ -5,17 +5,29 @@ PromptLabz ajuda estudantes e criadores iniciantes a praticar prompts e habilida
 ## Funcionalidades
 
 - Autenticacao com Supabase: email/senha, reset de senha, Google OAuth e Apple OAuth.
-- Rotas protegidas para home, trilhas, licoes, skills, missao e perfil.
+- Rotas protegidas para home, trilhas, licoes, skills, missao, perfil, notificacoes, favoritos e premium.
 - Progresso por categoria salvo em `localStorage` e sincronizado em Supabase.
 - Perfil do usuario em `public.users`, criado automaticamente por trigger.
 - Base preparada para premium com status e IDs Stripe protegidos contra update pelo cliente.
+- **Tela de Notificacoes** (`/notifications`): filtros (Todas/Nao lidas/Mentions), agrupamento por data, indicador de nao lido.
+- **Tela de Favoritos** (`/favorites`): abas (Prompts/Templates/Noticias/Trilhas), estado vazio com CTA, secao "Dicas para voce".
+- **Tela Premium/Paywall** (`/premium`): toggle Mensal/Anual (-40%), cards de preco com selecao radio, grid de beneficios, trust badges, CTA com 7 dias gratis.
+- **Bottom Navigation Bar** (`AppBottomNav`): navegacao inferior fixa com 6 icones (Inicio, Trilha, Laboratorio, Desafios, Noticias, Perfil).
+- **Conquistas**: sistema de achievements com 12 conquistas, sincronizado com Supabase.
+- **Sistema de Vidas**: vidas recarregaveis (1/hora), bonus por 100%, controle de acesso a licoes.
+- **Biblioteca de Prompts**: 65+ templates de prompt para criatividade, marketing, programacao, educacao, produtividade e gestao de produto.
+- **Central de Skills**: 40+ skills catalogadas do skills.sh com filtro por categoria, favoritos e ranking.
 
 ## Stack
 
-- React + Vite: UI SPA rapida e simples de hospedar.
+- React 18 + Vite 6: UI SPA rapida e simples de hospedar.
 - TypeScript: contratos claros entre telas, hooks e camada de dados.
 - Supabase Auth + Postgres: backend gerenciado com RLS.
-- Vitest + Testing Library: testes unitarios e de fluxo de UI.
+- Tailwind CSS v3: design system consistente com tema verde-menta.
+- shadcn/ui: componentes base (Button, Card, Input).
+- lucide-react: biblioteca de icones tree-shakeable.
+- react-router-dom v6: navegacao SPA com lazy loading.
+- Vitest + Testing Library: 106 testes unitarios e de fluxo de UI.
 - ESLint + GitHub Actions: validacao automatica em PR/push.
 
 ## Arquitetura
@@ -106,12 +118,20 @@ pnpm smoke:supabase
 - Supabase foi escolhido para entregar Auth + Postgres + RLS sem manter servidor proprio.
 - Cursos continuam em `src/data` por enquanto para manter MVP rapido; se virarem conteudo editavel, devem migrar para tabelas com seeds.
 - Campos premium ficam em `public.users` por compatibilidade, mas update do cliente foi restringido por grants. Proximo passo ideal: tabela privada `billing_profiles`.
+- `src/lib/icons.ts` centraliza imports de lucide-react para tree-shaking, evitando importar toda a biblioteca (700+ kB).
+- Bottom nav e components compartilhados (`AppPageHeader`, `PillTabs`) foram criados como componentes opcionais e configuraveis, sem refatorar paginas existentes.
+- As telas de Notificacoes e Favoritos usam dados mock preparados para migracao futura para Supabase (estrutura de tabelas ja planejada).
 
 ## Roadmap
 
-- Criar testes de integracao com Supabase local para RLS e migrations.
-- Adicionar demo user/seed quando conteudo sair do front.
-- Integrar Sentry ou Logtail para erros de producao.
-- Implementar webhook Stripe via Edge Function.
-- Publicar URL demo com screenshots/GIF curto.
+- [x] Telas de Notificacoes, Favoritos e Premium implementadas.
+- [x] Sistema de conquistas com persistencia em Supabase.
+- [x] Bottom navigation bar.
+- [x] 106 testes (15 arquivos de teste).
+- [ ] Testes de integracao com Supabase local para RLS e migrations.
+- [ ] Adicionar demo user/seed quando conteudo sair do front.
+- [ ] Integrar Sentry ou Logtail para erros de producao.
+- [ ] Implementar webhook Stripe via Edge Function para checkout real.
+- [ ] Pagina `/community` com conteudo premium.
+- [ ] Publicar URL demo com screenshots/GIF curto.
 

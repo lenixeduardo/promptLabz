@@ -9,10 +9,18 @@ PromptLabz ajuda estudantes e criadores iniciantes a praticar prompts e habilida
 ## Funcionalidades
 
 - Autenticacao com Supabase: email/senha, reset de senha, Google OAuth e Apple OAuth.
-- Rotas protegidas para home, trilhas, licoes, skills, missao e perfil.
+- Rotas protegidas para home, trilhas, licoes, skills, missao, perfil, notificacoes, favoritos e premium.
 - Progresso por categoria salvo em `localStorage` e sincronizado em Supabase.
 - Perfil do usuario em `public.users`, criado automaticamente por trigger.
 - Base preparada para premium com status e IDs Stripe protegidos contra update pelo cliente.
+- **Tela de Notificacoes** (`/notifications`): filtros (Todas/Nao lidas/Mentions), agrupamento por data, indicador de nao lido.
+- **Tela de Favoritos** (`/favorites`): abas (Prompts/Templates/Noticias/Trilhas), estado vazio com CTA, secao "Dicas para voce".
+- **Tela Premium/Paywall** (`/premium`): toggle Mensal/Anual (-40%), cards de preco, grid de beneficios, trust badges, CTA.
+- **Bottom Navigation Bar**: navegacao inferior fixa com 6 icones.
+- **Sistema de Conquistas**: 12 achievements com persistencia em Supabase.
+- **Sistema de Vidas**: recarga passiva (1/hora), bonus por 100%.
+- **Biblioteca de Prompts**: 65+ templates.
+- **Central de Skills**: 40+ skills com filtro, favoritos e ranking.
 
 ## Stack
 
@@ -156,6 +164,12 @@ pnpm smoke:supabase
 - [x] Criar health/smoke check em `scripts/smoke-supabase.mjs`.
 - [x] Atualizar README de recrutador.
 - [x] Validar `typecheck`, `lint`, `test`, `build` e `smoke:supabase`.
+- [x] Pagina `/notifications` com filtros, agrupamento e indicador de nao lido.
+- [x] Pagina `/favorites` com abas e estado vazio.
+- [x] Pagina `/premium` com toggle de planos e CTA de checkout.
+- [x] Bottom navigation bar (AppBottomNav) com 6 rotas.
+- [x] Componentes reutilizaveis: AppPageHeader, PillTabs.
+- [x] 42 novos testes (106 totais, 15 arquivos).
 
 ### Backend e ambiente real
 
