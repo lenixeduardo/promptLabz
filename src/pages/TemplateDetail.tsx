@@ -1,8 +1,13 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { Bell, ArrowRight, ExternalLink, TrendingUp, Users } from "lucide-react"
+import { useNavigate, useParams } from "react-router-dom"
+import {
+  Bell, ArrowRight, ExternalLink,
+  TrendingUp, Users, BarChart3, Zap,
+  type LucideIcon,
+} from "lucide-react"
 import { BottomNav } from "@/components/BottomNav"
 import { cn } from "@/lib/utils"
+import { TEMPLATES, type Template } from "@/data/templatesData"
 
 type Tab = "inicio" | "pagina-web" | "prompt" | "resultado"
 
@@ -13,20 +18,8 @@ const TABS: { key: Tab; label: string }[] = [
   { key: "resultado", label: "Resultado" },
 ]
 
-const TEMPLATE_DATA = {
-  id: "1",
-  name: "Landing Page SaaS - Startup",
-  headline: "Sua startup merece ir além.",
-  subheadline: "Templates de copy otimizados para converter visitantes em clientes pagantes.",
-  stats: [
-    { icon: TrendingUp, value: "5.000+", label: "Prompts" },
-    { icon: Users, value: "2.1k", label: "Usuários" },
-  ],
-  about: `Este template foi desenvolvido especificamente para startups em fase de crescimento que precisam de uma landing page de alta conversão. Baseado nas melhores práticas de copywriting para SaaS, ele inclui todos os elementos essenciais para convencer seu visitante a tomar uma ação.
-
-O prompt guia a IA para criar copy com foco em benefícios claros, prova social convincente e chamadas para ação irresistíveis — tudo alinhado com o estágio e público-alvo do seu produto.`,
-  tags: ["Copywriting", "Builder", "Design/Layout", "Conversão"],
-  previewUrl: "#",
+const STAT_ICON_MAP: Record<string, LucideIcon> = {
+  TrendingUp, Users, BarChart3, Zap,
 }
 
 function MiniDashboardPreview() {
@@ -49,7 +42,7 @@ function MiniDashboardPreview() {
   )
 }
 
-function TabContent({ tab }: { tab: Tab }) {
+function TabContent({ tab, template }: { tab: Tab; template: Template }) {
   if (tab === "pagina-web") {
     return (
       <div className="px-4 pt-4">
@@ -115,14 +108,14 @@ function TabContent({ tab }: { tab: Tab }) {
         <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
           Sobre o template
         </p>
-        <p className="text-sm leading-relaxed text-foregroundDark">{TEMPLATE_DATA.about}</p>
+        <p className="text-sm leading-relaxed text-foregroundDark">{template.about}</p>
       </div>
       <div>
         <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
           Categorias
         </p>
         <div className="flex flex-wrap gap-2">
-          {TEMPLATE_DATA.tags.map((tag) => (
+          {template.tags.map((tag) => (
             <span
               key={tag}
               className="rounded-full border border-stroke-light bg-pageBgLight px-3 py-1 text-xs font-semibold text-primary-dark"
@@ -138,7 +131,10 @@ function TabContent({ tab }: { tab: Tab }) {
 
 export default function TemplateDetail() {
   const navigate = useNavigate()
+  const { templateId } = useParams<{ templateId: string }>()
   const [activeTab, setActiveTab] = useState<Tab>("inicio")
+
+  const template = TEMPLATES.find((t) => t.id === templateId) ?? TEMPLATES[0]
 
   return (
     <div className="min-h-screen bg-surface-soft pb-32">
@@ -188,22 +184,25 @@ export default function TemplateDetail() {
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <h1 className="text-xl font-extrabold leading-tight text-white">
-              {TEMPLATE_DATA.headline}
+              {template.headline}
             </h1>
             <p className="mt-1.5 text-xs leading-relaxed text-white/80">
-              {TEMPLATE_DATA.subheadline}
+              {template.subheadline}
             </p>
             {/* Stats */}
             <div className="mt-4 flex gap-4">
-              {TEMPLATE_DATA.stats.map(({ icon: Icon, value, label }) => (
-                <div key={label} className="flex items-center gap-1.5">
-                  <Icon className="h-4 w-4 text-white/70" strokeWidth={1.8} />
-                  <div>
-                    <span className="text-sm font-extrabold text-white">{value}</span>
-                    <span className="ml-1 text-xs text-white/70">{label}</span>
+              {template.stats.map(({ icon, value, label }) => {
+                const StatIcon = STAT_ICON_MAP[icon] ?? TrendingUp
+                return (
+                  <div key={label} className="flex items-center gap-1.5">
+                    <StatIcon className="h-4 w-4 text-white/70" strokeWidth={1.8} />
+                    <div>
+                      <span className="text-sm font-extrabold text-white">{value}</span>
+                      <span className="ml-1 text-xs text-white/70">{label}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
           <MiniDashboardPreview />
@@ -211,7 +210,7 @@ export default function TemplateDetail() {
       </div>
 
       {/* Tab content */}
-      <TabContent tab={activeTab} />
+      <TabContent tab={activeTab} template={template} />
 
       {/* Fixed bottom actions */}
       <div className="fixed bottom-[72px] left-0 right-0 z-30 border-t border-pageBgLight bg-white px-4 py-3">
@@ -221,7 +220,7 @@ export default function TemplateDetail() {
             Visualizar ao vivo
           </button>
           <button
-            onClick={() => navigate("/prompt/1")}
+            onClick={() => navigate(`/prompt/${template.promptId}`)}
             className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
           >
             Usar este template

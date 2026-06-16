@@ -11,9 +11,11 @@ import {
   Flame,
   Brain,
   ArrowRight,
+  ChevronRight,
   Clock,
   Zap,
   Newspaper,
+  LayoutTemplate,
   Sparkles,
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
@@ -209,6 +211,19 @@ export default function Home() {
                 <Zap className="h-5 w-5 text-primary-dark" strokeWidth={1.8} />
               </div>
               <span className="text-center text-xs font-bold text-foregroundDark">Prova Rápida</span>
+            </Link>
+            <Link
+              to="/templates"
+              className="col-span-2 flex items-center gap-3 rounded-2xl border-2 border-[#BFE3CC] bg-white px-4 py-3 transition-colors hover:border-[#3E8E5E]"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
+                <LayoutTemplate className="h-5 w-5 text-[#2B5D3A]" strokeWidth={1.8} />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-bold text-[#1F2A24]">Templates</p>
+                <p className="text-xs text-[#6B7A70]">Modelos prontos para usar</p>
+              </div>
+              <ChevronRight className="h-4 w-4 text-[#6B9E7E]" />
             </Link>
           </div>
         </div>

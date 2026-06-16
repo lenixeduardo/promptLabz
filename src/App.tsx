@@ -41,6 +41,7 @@ const Store = lazy(() => import("@/pages/Store"))
 const Ranking = lazy(() => import("@/pages/Ranking"))
 const PromptDetail = lazy(() => import("@/pages/PromptDetail"))
 const TemplateDetail = lazy(() => import("@/pages/TemplateDetail"))
+const Templates = lazy(() => import("@/pages/Templates"))
 const LabResult = lazy(() => import("@/pages/LabResult"))
 const QuizResult = lazy(() => import("@/pages/QuizResult"))
 const Certificate = lazy(() => import("@/pages/Certificate"))
@@ -308,6 +309,14 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <PromptDetail />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/templates"
+                element={
+                  <PrivateRoute>
+                    <Templates />
                   </PrivateRoute>
                 }
               />
