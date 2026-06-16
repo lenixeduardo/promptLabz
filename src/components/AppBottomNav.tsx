@@ -39,7 +39,7 @@ export function AppBottomNav({ items = BOTTOM_NAV_ITEMS }: AppBottomNavProps) {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-stroke-muted bg-white/95 backdrop-blur-md"
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-stroke-muted bg-card/95 backdrop-blur-md"
       aria-label="Navegação principal"
     >
       <div className="mx-auto flex max-w-lg items-center justify-around px-2 py-1">
