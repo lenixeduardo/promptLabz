@@ -39,8 +39,8 @@ export function LearningPathTrail({ modules, completedCount, totalCount }: Learn
               mod.status === "completed"
                 ? "bg-primary-dark border-primary-dark"
                 : mod.status === "current"
-                ? "bg-white border-primary-dark"
-                : "bg-white border-[#C8D5CC]"
+                ? "bg-card border-primary-dark"
+                : "bg-card border-stroke-light"
 
             const iconColor =
               mod.status === "completed"
@@ -52,7 +52,7 @@ export function LearningPathTrail({ modules, completedCount, totalCount }: Learn
             const lineColor =
               mod.status === "completed" || (idx > 0 && modules[idx - 1]?.status === "completed")
                 ? "bg-primary-dark"
-                : "bg-[#C8D5CC]"
+                : "bg-stroke-light"
 
             return (
               <div key={mod.id} className="flex items-start">

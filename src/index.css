@@ -133,25 +133,6 @@
     letter-spacing: -0.015em;
   }
 
-  /* ── Dark mode overrides for Tailwind built-in utilities ── */
-  .dark .bg-white {
-    background-color: hsl(var(--card));
-  }
-  .dark .bg-white\/95 {
-    background-color: hsl(var(--card) / 0.95);
-  }
-  .dark .bg-white\/80 {
-    background-color: hsl(var(--card) / 0.8);
-  }
-  .dark .bg-white\/70 {
-    background-color: hsl(var(--card) / 0.7);
-  }
-  .dark .bg-white\/60 {
-    background-color: hsl(var(--card) / 0.6);
-  }
-  .dark .bg-white\/30 {
-    background-color: hsl(var(--card) / 0.3);
-  }
   .dark .ring-pageBgLight {
     --tw-ring-color: hsl(var(--card));
   }
@@ -169,6 +150,41 @@
   }
   .dark .shadow-\[0_-4px_20px_rgba\(0\2c 0\2c 0\2c 0\.06\)\] {
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ── Dark mode overrides for bg-white — must be in @layer utilities to win
+   over Tailwind's own utility classes (CSS Cascade Layer ordering) ── */
+@layer utilities {
+  .dark .bg-white {
+    background-color: hsl(var(--card));
+  }
+  .dark .bg-white\/95 {
+    background-color: hsl(var(--card) / 0.95);
+  }
+  .dark .bg-white\/80 {
+    background-color: hsl(var(--card) / 0.8);
+  }
+  .dark .bg-white\/70 {
+    background-color: hsl(var(--card) / 0.7);
+  }
+  .dark .bg-white\/60 {
+    background-color: hsl(var(--card) / 0.6);
+  }
+  .dark .bg-white\/50 {
+    background-color: hsl(var(--card) / 0.5);
+  }
+  .dark .bg-white\/40 {
+    background-color: hsl(var(--card) / 0.4);
+  }
+  .dark .bg-white\/30 {
+    background-color: hsl(var(--card) / 0.3);
+  }
+  .dark .bg-white\/20 {
+    background-color: hsl(var(--card) / 0.2);
+  }
+  .dark .bg-white\/10 {
+    background-color: hsl(var(--card) / 0.1);
   }
 }
 
