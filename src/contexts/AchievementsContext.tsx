@@ -11,7 +11,7 @@ import {
   saveAchievementsToDb,
   syncLocalAchievementsToSupabase,
 } from "@/lib/achievements-db"
-import { loadStreak, saveStreak, insertNotification } from "@/lib/db"
+import { loadStreak, saveStreak, insertNotification, getAchievementDefinitions, type DbAchievementDefinition } from "@/lib/db"
 import { useAuthContext } from "@/contexts/AuthContext"
 import { AchievementsContext } from "./achievementsContextDef"
 
@@ -28,6 +28,7 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
   // Start with localStorage data (fast, works offline, no flash)
   const [initialLoading, setInitialLoading] = useState(true)
   const [data, setData] = useState<AchievementsData>(loadAchievements)
+  const [definitions, setDefinitions] = useState<Achievement[]>(ACHIEVEMENTS)
   const dataRef = useRef(data)
   useEffect(() => { dataRef.current = data }, [data])
   const userIdRef = useRef(userId)
@@ -68,6 +69,21 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
 
     return () => { cancelled = true }
   }, [userId])
+
+  // ── Fetch achievement definitions from DB ────────────────────────────────
+  useEffect(() => {
+    getAchievementDefinitions().then(({ data }) => {
+      if (data && data.length > 0) {
+        setDefinitions(data.map(d => ({
+          id: d.ach_id,
+          title: d.title,
+          description: d.description,
+          icon: d.icon,
+          category: d.category as Achievement["category"],
+        })))
+      }
+    })
+  }, [])
 
   // ── Persist: always localStorage (offline-safe), DB when user is logged in ──
   const lastSavedRef = useRef("")
@@ -200,7 +216,7 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
   return (
     <AchievementsContext.Provider
       value={{
-        allAchievements: ACHIEVEMENTS,
+        allAchievements: definitions,
         unlocked: data.unlocked,
         data,
         initialLoading,

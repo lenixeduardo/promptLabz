@@ -5,7 +5,6 @@
 import { type ReactNode } from "react"
 import * as Icons from "@/lib/icons"
 import {
-  TRENDING_SKILLS,
   type TrendingSkill,
   type SkillCategory,
 } from "@/data/trendingSkillsData"

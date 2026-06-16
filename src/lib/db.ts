@@ -420,3 +420,26 @@ export async function updateUserGems(userId: string, gems: number): Promise<DbRe
     return { data: null, error: getErrorMessage(err, "Erro ao atualizar gemas") }
   }
 }
+
+// ── Achievement Definitions ───────────────────────────────────────────────────
+
+export interface DbAchievementDefinition {
+  ach_id: string
+  title: string
+  description: string
+  icon: string
+  category: "progress" | "performance" | "streak" | "exploration"
+}
+
+export async function getAchievementDefinitions(): Promise<DbResult<DbAchievementDefinition[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { data, error } = await supabase
+      .from("achievement_definitions")
+      .select("ach_id,title,description,icon,category")
+    if (error) throw error
+    return { data: data as DbAchievementDefinition[], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao carregar definições de conquistas") }
+  }
+}
