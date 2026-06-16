@@ -4,7 +4,7 @@ import {
   ClipboardList, BarChart3, MessageSquare, Settings, Palette,
   Headphones, Users, type LucideIcon,
 } from "lucide-react"
-import { LAB_CATEGORIES, PROMPT_OF_THE_DAY } from "@/data/labCategoriesData"
+import { useLabCategories } from "@/hooks/useLabCategories"
 import type { LabCategory } from "@/data/labCategoriesData"
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -31,6 +31,7 @@ function CategoryCard({ cat }: { cat: LabCategory }) {
 
 export default function PromptsSection() {
   const navigate = useNavigate()
+  const { categories, promptOfTheDay, loading } = useLabCategories()
 
   return (
     <div className="px-4 pt-6">
@@ -40,7 +41,7 @@ export default function PromptsSection() {
 
       {/* Categories */}
       <div className="mb-5 grid grid-cols-4 gap-2.5">
-        {LAB_CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <CategoryCard key={cat.id} cat={cat} />
         ))}
       </div>
@@ -65,14 +66,14 @@ export default function PromptsSection() {
             <Briefcase className="h-8 w-8 text-primary-dark" strokeWidth={1.8} />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold text-foregroundDark">{PROMPT_OF_THE_DAY.title}</p>
+            <p className="text-sm font-bold text-foregroundDark">{promptOfTheDay?.title}</p>
             <p className="mt-0.5 text-xs leading-relaxed text-foregroundSecondary">
-              {PROMPT_OF_THE_DAY.description}
+              {promptOfTheDay?.description}
             </p>
           </div>
         </div>
         <button
-          onClick={() => navigate(`/prompts/category/${PROMPT_OF_THE_DAY.categoryId}`)}
+          onClick={() => navigate(`/prompts/category/${promptOfTheDay?.categoryId}`)}
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
         >
           Usar prompt

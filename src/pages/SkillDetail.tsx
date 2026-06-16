@@ -2,7 +2,8 @@ import { useEffect } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import * as Icons from "@/lib/icons"
 import { Button } from "@/components/ui/button"
-import { TRENDING_SKILLS, type TrendingSkill } from "@/data/trendingSkillsData"
+import { type TrendingSkill } from "@/data/trendingSkillsData"
+import { useTrendingSkills } from "@/hooks/useTrendingSkills"
 import { useFavorites } from "@/hooks/useFavorites"
 import { trackSkillViewed } from "@/lib/analytics"
 
@@ -16,10 +17,12 @@ export default function SkillDetail() {
   const { skillName } = useParams()
   const location = useLocation()
   const { toggleFavorite, isFavorite } = useFavorites()
+  const { skills: allSkills } = useTrendingSkills()
 
+  const stateSkill = (location.state as { skill?: TrendingSkill })?.skill
   const skill: TrendingSkill | null =
-    (location.state as { skill?: TrendingSkill })?.skill ??
-    TRENDING_SKILLS.find((s) => s.name === skillName) ??
+    stateSkill ??
+    allSkills.find((s) => s.name === skillName) ??
     null
 
   useEffect(() => {
@@ -39,11 +42,11 @@ export default function SkillDetail() {
     )
   }
 
-  const rankedIndex = [...TRENDING_SKILLS].sort((a, b) => b.installsCount - a.installsCount).findIndex(
+  const rankedIndex = [...allSkills].sort((a, b) => b.installsCount - a.installsCount).findIndex(
     (s) => s.name === skill.name
   )
   const rank = rankedIndex + 1
-  const total = TRENDING_SKILLS.length
+  const total = allSkills.length
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white">

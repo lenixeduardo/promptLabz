@@ -420,3 +420,146 @@ export async function updateUserGems(userId: string, gems: number): Promise<DbRe
     return { data: null, error: getErrorMessage(err, "Erro ao atualizar gemas") }
   }
 }
+
+// ── Content Tables ────────────────────────────────────────────────────────────
+
+export interface DbTrendingSkill {
+  id: string
+  name: string
+  description: string
+  category: string
+  author: string
+  installs: string
+  installs_count: number
+  tags: string[]
+  icon: string
+  sort_order: number
+}
+
+export interface DbSkillTrailItem {
+  id: string
+  trail_item_id: string
+  category_id: string
+  name: string
+  description: string
+  icon: string
+  level: number
+  xp: number
+  difficulty: string
+  sort_order: number
+}
+
+export interface DbSkillTrailCategory {
+  category_id: string
+  label: string
+  icon: string
+  sort_order: number
+  skill_trail_items: DbSkillTrailItem[]
+}
+
+export interface DbPrompt {
+  id: string
+  title: string
+  difficulty: string
+  color: string
+  category: string
+  prompt_text: string
+  description: string
+  example_input: string | null
+  example_output: string | null
+  sort_order: number
+}
+
+export interface DbLabCategory {
+  category_id: string
+  label: string
+  icon: string
+  prompt_count: number
+  sort_order: number
+}
+
+export interface DbLabConfig {
+  potd_title: string
+  potd_description: string
+  potd_category_id: string
+}
+
+export interface DbAchievementDefinition {
+  ach_id: string
+  title: string
+  description: string
+  icon: string
+  category: string
+  sort_order: number
+}
+
+export async function getTrendingSkills(category?: string): Promise<DbResult<DbTrendingSkill[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    let query = supabase.from("trending_skills").select("*").order("sort_order")
+    if (category) query = query.eq("category", category)
+    const { data, error } = await query
+    if (error) throw error
+    return { data: data ?? [], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to load skills") }
+  }
+}
+
+export async function getSkillTrailCategories(): Promise<DbResult<DbSkillTrailCategory[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    const { data, error } = await supabase.from("skill_trail_categories").select("*, skill_trail_items(*)").order("sort_order")
+    if (error) throw error
+    return { data: data ?? [], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to load skill trails") }
+  }
+}
+
+export async function getPrompts(category?: string, difficulty?: string): Promise<DbResult<DbPrompt[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    let query = supabase.from("prompts").select("*").order("sort_order")
+    if (category) query = query.eq("category", category)
+    if (difficulty) query = query.eq("difficulty", difficulty)
+    const { data, error } = await query
+    if (error) throw error
+    return { data: data ?? [], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to load prompts") }
+  }
+}
+
+export async function getLabCategories(): Promise<DbResult<DbLabCategory[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    const { data, error } = await supabase.from("lab_categories").select("*").order("sort_order")
+    if (error) throw error
+    return { data: data ?? [], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to load lab categories") }
+  }
+}
+
+export async function getLabConfig(): Promise<DbResult<DbLabConfig>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    const { data, error } = await supabase.from("lab_config").select("*").eq("id", 1).single()
+    if (error) throw error
+    return { data, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to load lab config") }
+  }
+}
+
+export async function getAchievementDefinitions(): Promise<DbResult<DbAchievementDefinition[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    const { data, error } = await supabase.from("achievement_definitions").select("*").order("sort_order")
+    if (error) throw error
+    return { data: data ?? [], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to load achievement definitions") }
+  }
+}
