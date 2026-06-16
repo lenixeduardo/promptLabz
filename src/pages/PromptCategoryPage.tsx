@@ -6,8 +6,9 @@ import {
   MessageSquare, Settings, Briefcase, Palette, Headphones, Users,
   type LucideIcon,
 } from "lucide-react"
-import { PROMPTS, type PromptCard } from "@/data/promptsData"
-import { LAB_CATEGORIES } from "@/data/labCategoriesData"
+import { type PromptCard } from "@/data/promptsData"
+import { usePrompts } from "@/hooks/usePrompts"
+import { useLabCategories } from "@/hooks/useLabCategories"
 import { BottomNav } from "@/components/BottomNav"
 
 type DiffFilter = "Todos" | PromptCard["difficulty"]
@@ -84,13 +85,16 @@ export default function PromptCategoryPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
 
-  const catMeta = LAB_CATEGORIES.find((c) => c.id === categoryId)
+  const { categories, loading: labLoading } = useLabCategories()
+  const { prompts, loading: promptsLoading } = usePrompts(categoryId)
+
+  const catMeta = categories.find((c) => c.id === categoryId)
   const label = catMeta?.label.replace("\n", " ") ?? categoryId ?? "Categoria"
   const CategoryIcon = ICON_MAP[catMeta?.icon ?? ""] ?? Lightbulb
 
   const basePrompts = useMemo(
-    () => PROMPTS.filter((p) => p.category === categoryId),
-    [categoryId],
+    () => prompts,
+    [prompts],
   )
 
   const filtered = useMemo(() => {

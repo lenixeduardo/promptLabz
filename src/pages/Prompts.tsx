@@ -6,7 +6,8 @@ import {
   MessageSquare, Settings, Palette, Headphones, Users,
   type LucideIcon,
 } from "lucide-react"
-import { LAB_CATEGORIES, PROMPT_OF_THE_DAY, type LabCategory } from "@/data/labCategoriesData"
+import { type LabCategory } from "@/data/labCategoriesData"
+import { useLabCategories } from "@/hooks/useLabCategories"
 import { BottomNav } from "@/components/BottomNav"
 
 type DiffFilter = "Todos" | "Iniciante" | "Intermediario" | "Avancado"
@@ -43,6 +44,7 @@ function CategoryCard({ cat, onClick }: { cat: LabCategory; onClick: () => void 
 export default function Prompts() {
   const navigate = useNavigate()
   const [activeDiff, setActiveDiff] = useState<DiffFilter>("Todos")
+  const { categories, promptOfTheDay, loading } = useLabCategories()
 
   return (
     <div className="min-h-screen bg-surface-soft pb-24">
@@ -86,7 +88,7 @@ export default function Prompts() {
         {/* Categories section */}
         <h2 className="mb-3 text-base font-bold text-foregroundDark">Categorias</h2>
         <div className="mb-6 grid grid-cols-4 gap-2.5">
-          {LAB_CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <CategoryCard
               key={cat.id}
               cat={cat}
@@ -115,14 +117,14 @@ export default function Prompts() {
               <Briefcase className="h-8 w-8 text-primary-dark" strokeWidth={1.8} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-foregroundDark">{PROMPT_OF_THE_DAY.title}</p>
+              <p className="text-sm font-bold text-foregroundDark">{promptOfTheDay?.title}</p>
               <p className="mt-0.5 text-xs leading-relaxed text-foregroundSecondary">
-                {PROMPT_OF_THE_DAY.description}
+                {promptOfTheDay?.description}
               </p>
             </div>
           </div>
           <button
-            onClick={() => navigate(`/prompts/category/${PROMPT_OF_THE_DAY.categoryId}`)}
+            onClick={() => navigate(`/prompts/category/${promptOfTheDay?.categoryId}`)}
             className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
           >
             Usar prompt

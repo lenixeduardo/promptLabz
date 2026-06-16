@@ -1,3 +1,7 @@
+/**
+ * @deprecated Content is now served from Supabase. Kept as offline fallback only.
+ */
+
 export type SkillDifficulty = "Iniciante" | "Intermediario" | "Avancado"
 
 export interface TrailSkill {

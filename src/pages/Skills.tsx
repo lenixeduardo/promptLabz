@@ -1,11 +1,8 @@
 import { useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import * as Icons from "@/lib/icons"
-import {
-  TRENDING_SKILLS,
-  type TrendingSkill,
-  type SkillCategory,
-} from "@/data/trendingSkillsData"
+import { type TrendingSkill, type SkillCategory } from "@/data/trendingSkillsData"
+import { useTrendingSkills } from "@/hooks/useTrendingSkills"
 import { useFavorites } from "@/hooks/useFavorites"
 import { useAchievements } from "@/hooks/useAchievements"
 import { trackSkillFavorited } from "@/lib/analytics"
@@ -98,6 +95,7 @@ function RankingView({
 // ─── Main Component ───────────────────────────────────────────────────────
 export default function Skills() {
   const navigate = useNavigate()
+  const { skills: allSkills, loading } = useTrendingSkills()
   const { favorites, toggleFavorite, isFavorite } = useFavorites()
   const achievements = useAchievements()
   const [viewMode, setViewMode] = useState<ViewMode>("all")
@@ -106,8 +104,8 @@ export default function Skills() {
 
   const filteredByCat =
     activeSkillCat === "Todas"
-      ? TRENDING_SKILLS
-      : TRENDING_SKILLS.filter((s) => s.category === activeSkillCat)
+      ? allSkills
+      : allSkills.filter((s) => s.category === activeSkillCat)
 
   const searched = useMemo(() => {
     if (!searchQuery.trim()) return filteredByCat
@@ -123,8 +121,8 @@ export default function Skills() {
   }, [searchQuery, filteredByCat])
 
   const favoritedSkills = useMemo(
-    () => TRENDING_SKILLS.filter((s) => favorites.includes(s.name)),
-    [favorites]
+    () => allSkills.filter((s) => favorites.includes(s.name)),
+    [allSkills, favorites]
   )
 
   const displaySkills = viewMode === "favorites" ? favoritedSkills : searched
@@ -203,7 +201,7 @@ export default function Skills() {
           >
             <Icons.Grid3x3 className="h-4 w-4" />
             Todas
-            <CountBadge count={TRENDING_SKILLS.length} />
+            <CountBadge count={allSkills.length} />
           </button>
           <button
             onClick={() => setViewMode("favorites")}
@@ -315,7 +313,7 @@ export default function Skills() {
           <a href="https://www.skills.sh/" target="_blank" rel="noopener noreferrer" className="font-semibold text-link hover:underline">
             skills.sh
           </a>{" "}
-          · {TRENDING_SKILLS.length} skills catalogadas
+          · {allSkills.length} skills catalogadas
           {favorites.length > 0 && ` · ${favorites.length} favoritadas`}
         </div>
       </div>
