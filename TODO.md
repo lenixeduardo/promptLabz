@@ -18,13 +18,17 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ pendente · 🔮 futuro (v1.
 
 ---
 
-## Ponto 2 — News com dados reais `[decisão pendente]` ⏳
+## Ponto 2 — News com dados reais `[v0.2]` ✅
 
-> **Problema:** `/news` usa mock data estático em `newsData.ts`, sem integração externa.
+> **Problema:** `/news` usava mock data estático em `newsData.ts`, sem integração externa.
+> **Decisão:** tabela Supabase com seed — elimina deploy obrigatório para curar artigos, sem dependências externas. Fallback para mock estático se Supabase estiver offline.
 
-- [ ] **Decisão:** manter mock curado (aceitável para MVP) ou integrar feed RSS/API de notícias de IA?
-- [ ] Se integrar: criar Edge Function Supabase que consome feed (ex: TechCrunch AI, OpenAI blog)
-- [ ] Se manter mock: documentar como "curado manualmente" e criar processo de atualização
+- [x] Criar migration `20260616_005_news_articles.sql` com tabela `news_articles` + RLS pública de leitura
+- [x] Seed com os 10 artigos atuais via `INSERT ON CONFLICT DO NOTHING`
+- [x] Adicionar `getNewsArticles()` em `src/lib/db.ts`
+- [x] Atualizar `News.tsx` para buscar do Supabase (loading skeleton + fallback para `NEWS_ARTICLES` se offline)
+- [ ] Integração RSS/API (OpenAI blog, Anthropic blog) via Edge Function ⏳ v0.3
+- [ ] Cron job para refresh automático de artigos ⏳ v0.3
 
 ---
 

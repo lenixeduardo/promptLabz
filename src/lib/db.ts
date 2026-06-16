@@ -299,6 +299,33 @@ export async function getLeaderboard(limit = 20): Promise<DbResult<LeaderboardEn
   }
 }
 
+// ── News ──────────────────────────────────────────────────────────────────────
+
+export interface DbNewsArticle {
+  id: string
+  title: string
+  description: string
+  category: "OpenAI" | "Anthropic" | "Google" | "ChatGPT"
+  image_emoji: string
+  published_at: string
+}
+
+export async function getNewsArticles(limit = 30): Promise<DbResult<DbNewsArticle[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { data, error } = await supabase
+      .from("news_articles")
+      .select("id,title,description,category,image_emoji,published_at")
+      .eq("visible", true)
+      .order("published_at", { ascending: false })
+      .limit(limit)
+    if (error) throw error
+    return { data: data as DbNewsArticle[], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao carregar notícias") }
+  }
+}
+
 // ── Notifications ─────────────────────────────────────────────────────────────
 
 export interface DbNotification {
