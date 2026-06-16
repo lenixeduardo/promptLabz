@@ -69,9 +69,9 @@ export default function Home() {
   const { level, currentXP, targetXP } = getLevelProgress(xp)
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-pageBgLight to-white pb-24">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-pageBgLight to-pageBg pb-24">
       {/* Header */}
-      <div className="bg-white border-b border-stroke-muted px-4 py-3 flex items-center justify-between sticky top-0 z-10">
+      <div className="bg-card border-b border-stroke-muted px-4 py-3 flex items-center justify-between sticky top-0 z-10">
         <div>
           <h1 className="text-lg font-bold text-primary-dark">Olá, Explorador! 👋</h1>
           <p className="text-xs text-foregroundTertiary">Pronto para mais um desafio?</p>
@@ -79,7 +79,7 @@ export default function Home() {
         <div className="flex items-center gap-2">
           <Link
             to="/favorites"
-            className="flex items-center justify-center rounded-full border border-stroke-light bg-white/70 p-2 shadow-sm text-forest hover:bg-surface-soft transition-colors"
+            className="flex items-center justify-center rounded-full border border-stroke-light bg-card/70 p-2 shadow-sm text-forest hover:bg-surface-soft transition-colors"
             aria-label="Favoritos"
           >
             <Heart className="h-5 w-5" strokeWidth={2.2} />
@@ -104,7 +104,7 @@ export default function Home() {
         {/* Stats row: streak + gems */}
         <div className="grid grid-cols-2 gap-3">
           {/* Streak card */}
-          <div className="rounded-2xl border-2 border-stroke-light bg-white px-4 py-3">
+          <div className="rounded-2xl border-2 border-stroke-light bg-card px-4 py-3">
             <p className="text-[11px] font-semibold text-foregroundTertiary mb-1">Sequência diária</p>
             {streakLoading ? (
               <div className="h-7 w-16 rounded bg-stroke-light animate-pulse" />
@@ -124,7 +124,7 @@ export default function Home() {
           </div>
 
           {/* Gems card */}
-          <div className="rounded-2xl border-2 border-stroke-light bg-white px-4 py-3">
+          <div className="rounded-2xl border-2 border-stroke-light bg-card px-4 py-3">
             <p className="text-[11px] font-semibold text-foregroundTertiary mb-1">Gemas</p>
             <div className="flex items-center gap-1.5">
               <span className="text-2xl">💎</span>
@@ -144,7 +144,7 @@ export default function Home() {
         {/* Featured lesson */}
         <div>
           <h2 className="text-base font-bold text-foregroundDark mb-3">Aula em destaque</h2>
-          <div className="rounded-2xl border-2 border-stroke-light bg-white p-4">
+          <div className="rounded-2xl border-2 border-stroke-light bg-card p-4">
             <div className="flex gap-4 mb-4">
               <div className="w-20 h-20 flex-shrink-0 rounded-xl bg-pageBgLight flex items-center justify-center">
                 <Brain className="h-9 w-9 text-primary-dark" strokeWidth={1.5} />
@@ -194,7 +194,7 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-3">
             <Link
               to="/news"
-              className="flex flex-col items-center gap-2 rounded-2xl border-2 border-stroke-light bg-white px-3 py-4 transition-colors hover:border-emerald"
+              className="flex flex-col items-center gap-2 rounded-2xl border-2 border-stroke-light bg-card px-3 py-4 transition-colors hover:border-emerald"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pageBgLight">
                 <Newspaper className="h-5 w-5 text-primary-dark" strokeWidth={1.8} />
@@ -203,7 +203,7 @@ export default function Home() {
             </Link>
             <Link
               to="/quiz"
-              className="flex flex-col items-center gap-2 rounded-2xl border-2 border-stroke-light bg-white px-3 py-4 transition-colors hover:border-emerald"
+              className="flex flex-col items-center gap-2 rounded-2xl border-2 border-stroke-light bg-card px-3 py-4 transition-colors hover:border-emerald"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pageBgLight">
                 <Zap className="h-5 w-5 text-primary-dark" strokeWidth={1.8} />
@@ -215,7 +215,7 @@ export default function Home() {
       </div>
 
       {/* Bottom navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-stroke-muted px-2 py-2 flex items-center justify-around">
+      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-stroke-muted px-2 py-2 flex items-center justify-around">
         {NAV_ITEMS.map(({ label, icon: Icon, to }) => {
           const isActive = location.pathname === to
           return (

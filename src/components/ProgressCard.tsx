@@ -10,7 +10,7 @@ export function ProgressCard({ level, currentXP, targetXP }: ProgressCardProps) 
   const percent = Math.min((currentXP / targetXP) * 100, 100)
 
   return (
-    <div className="rounded-2xl border-2 border-stroke-light bg-white px-4 py-4">
+    <div className="rounded-2xl border-2 border-stroke-light bg-card px-4 py-4">
       <div className="flex items-center justify-between mb-4">
         <span className="text-sm font-bold text-foregroundDark">Seu progresso</span>
         <BarChart2 className="h-5 w-5 text-emerald" strokeWidth={2} />
