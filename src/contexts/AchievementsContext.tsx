@@ -11,7 +11,7 @@ import {
   saveAchievementsToDb,
   syncLocalAchievementsToSupabase,
 } from "@/lib/achievements-db"
-import { loadStreak, saveStreak } from "@/lib/db"
+import { loadStreak, saveStreak, insertNotification } from "@/lib/db"
 import { useAuthContext } from "@/contexts/AuthContext"
 import { AchievementsContext } from "./achievementsContextDef"
 
@@ -30,6 +30,8 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<AchievementsData>(loadAchievements)
   const dataRef = useRef(data)
   useEffect(() => { dataRef.current = data }, [data])
+  const userIdRef = useRef(userId)
+  useEffect(() => { userIdRef.current = userId }, [userId])
 
   // ── Load from DB on mount / on user change ──────────────────────────────
   const loadedUserIdRef = useRef<string | null>(null)
@@ -95,6 +97,16 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
       })
       if (newUnlocks.length > 0) {
         setData(next)
+        const uid = userIdRef.current
+        if (uid) {
+          newUnlocks.forEach((achievement) => {
+            insertNotification(uid, {
+              type: "achievement",
+              title: `Conquista desbloqueada! 🏆`,
+              description: `Você conquistou "${achievement.title}": ${achievement.description}`,
+            }).catch(() => {/* silent — non-critical */})
+          })
+        }
       }
       return newUnlocks
     },

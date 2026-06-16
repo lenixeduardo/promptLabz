@@ -1,34 +1,64 @@
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Settings } from "lucide-react"
 import { AppPageHeader } from "@/components/AppPageHeader"
 import { PillTabs, type PillTabItem } from "@/components/PillTabs"
 import { NotificationItem } from "@/components/notifications/NotificationItem"
 import {
-  NOTIFICATIONS_MOCK,
   getNotificationsCounts,
   filterNotifications,
   groupNotifications,
   type NotificationsFilter,
+  type AppNotification,
 } from "@/data/notificationsData"
+import { getNotifications, markNotificationsRead, type DbNotification } from "@/lib/db"
+import { useAuth } from "@/hooks/useAuth"
 import { AppBottomNav } from "@/components/AppBottomNav"
 import { sileo } from "sileo"
 
+function mapDbToLocal(row: DbNotification): AppNotification {
+  return {
+    id: row.id,
+    type: row.type,
+    title: row.title,
+    description: row.description,
+    createdAt: row.created_at,
+    unread: row.read_at === null,
+    mention: row.mention,
+    actionLabel: row.action_label ?? undefined,
+    href: row.href ?? undefined,
+  }
+}
+
 export default function Notifications() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [activeFilter, setActiveFilter] = useState<NotificationsFilter>("all")
+  const [notifications, setNotifications] = useState<AppNotification[]>([])
+  const [loading, setLoading] = useState(true)
 
-  // Dynamic counts derived from mock data
-  const counts = useMemo(() => getNotificationsCounts(NOTIFICATIONS_MOCK), [])
+  useEffect(() => {
+    if (!user?.id) {
+      setLoading(false)
+      return
+    }
 
-  // Filtered + grouped notifications
+    getNotifications(user.id).then(({ data }) => {
+      setNotifications(data ? data.map(mapDbToLocal) : [])
+      setLoading(false)
+      if (data && data.some((n) => n.read_at === null)) {
+        markNotificationsRead(user.id!)
+      }
+    })
+  }, [user?.id])
+
+  const counts = useMemo(() => getNotificationsCounts(notifications), [notifications])
   const filtered = useMemo(
-    () => filterNotifications(NOTIFICATIONS_MOCK, activeFilter),
-    [activeFilter],
+    () => filterNotifications(notifications, activeFilter),
+    [notifications, activeFilter],
   )
   const groups = useMemo(() => groupNotifications(filtered), [filtered])
 
-  // Update filter tab counts
   const filterItemsWithCounts: PillTabItem<NotificationsFilter>[] = [
     { key: "all", label: "Todas", count: counts.all },
     { key: "unread", label: "Não lidas", count: counts.unread },
@@ -45,7 +75,6 @@ export default function Notifications() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6 pb-24">
       <div className="mx-auto w-full max-w-md">
-        {/* Header */}
         <AppPageHeader
           title="Notificações"
           onBack={() => navigate("/home")}
@@ -60,7 +89,6 @@ export default function Notifications() {
           }
         />
 
-        {/* Filter tabs */}
         <PillTabs
           items={filterItemsWithCounts}
           activeKey={activeFilter}
@@ -69,8 +97,13 @@ export default function Notifications() {
           scrollable
         />
 
-        {/* Notification groups */}
-        {groups.length === 0 ? (
+        {loading ? (
+          <div className="flex flex-col gap-3">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-20 animate-pulse rounded-2xl bg-stroke-muted/30" />
+            ))}
+          </div>
+        ) : groups.length === 0 ? (
           <div className="flex flex-col items-center gap-4 py-16 text-center">
             <img
               src="/assets/mascot-home.png"
