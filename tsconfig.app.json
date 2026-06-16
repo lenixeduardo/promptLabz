@@ -12,6 +12,7 @@
     "skipLibCheck": true,
     "types": ["vite/client"],
     /* Tailwind stuff */
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@/*": [
