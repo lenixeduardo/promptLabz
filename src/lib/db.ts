@@ -299,6 +299,112 @@ export async function getLeaderboard(limit = 20): Promise<DbResult<LeaderboardEn
   }
 }
 
+// ── News ──────────────────────────────────────────────────────────────────────
+
+export interface DbNewsArticle {
+  id: string
+  title: string
+  description: string
+  category: "OpenAI" | "Anthropic" | "Google" | "ChatGPT"
+  image_emoji: string
+  published_at: string
+}
+
+export async function getNewsArticles(limit = 30): Promise<DbResult<DbNewsArticle[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { data, error } = await supabase
+      .from("news_articles")
+      .select("id,title,description,category,image_emoji,published_at")
+      .eq("visible", true)
+      .order("published_at", { ascending: false })
+      .limit(limit)
+    if (error) throw error
+    return { data: data as DbNewsArticle[], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao carregar notícias") }
+  }
+}
+
+// ── Notifications ─────────────────────────────────────────────────────────────
+
+export interface DbNotification {
+  id: string
+  user_id: string
+  type: "achievement" | "mention" | "system" | "reminder"
+  title: string
+  description: string
+  action_label: string | null
+  href: string | null
+  mention: boolean
+  read_at: string | null
+  created_at: string
+}
+
+export async function getNotifications(userId: string, limit = 50): Promise<DbResult<DbNotification[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { data, error } = await supabase
+      .from("notifications")
+      .select("id,user_id,type,title,description,action_label,href,mention,read_at,created_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(limit)
+    if (error) throw error
+    return { data: data as DbNotification[], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao carregar notificações") }
+  }
+}
+
+export async function markNotificationsRead(userId: string): Promise<DbResult<void>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { error } = await supabase
+      .from("notifications")
+      .update({ read_at: new Date().toISOString() })
+      .eq("user_id", userId)
+      .is("read_at", null)
+    if (error) throw error
+    return { data: null, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao marcar notificações como lidas") }
+  }
+}
+
+export async function insertNotification(
+  userId: string,
+  notification: {
+    type: "achievement" | "mention" | "system" | "reminder"
+    title: string
+    description: string
+    action_label?: string
+    href?: string
+    mention?: boolean
+  }
+): Promise<DbResult<DbNotification>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { data, error } = await supabase
+      .from("notifications")
+      .insert({
+        user_id: userId,
+        type: notification.type,
+        title: notification.title,
+        description: notification.description,
+        action_label: notification.action_label ?? null,
+        href: notification.href ?? null,
+        mention: notification.mention ?? false,
+      })
+      .select()
+      .single()
+    if (error) throw error
+    return { data: data as DbNotification, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao inserir notificação") }
+  }
+}
+
 // ── Gems Sync ─────────────────────────────────────────────────────────────────
 
 export async function updateUserGems(userId: string, gems: number): Promise<DbResult<void>> {

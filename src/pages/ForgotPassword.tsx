@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { ArrowLeft, Mail } from "lucide-react"
+import { ArrowLeft, Mail, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -105,7 +105,8 @@ export default function ForgotPassword() {
               <p className="text-center text-sm text-foregroundSecondary">
                 Enviaremos um link de redefinição de senha para o seu e-mail.
               </p>
-              <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
+              <Button type="submit" size="lg" className="mt-1 w-full gap-2" disabled={loading}>
+                {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                 {loading ? "Enviando..." : "Enviar link de redefinição"}
               </Button>
             </form>

@@ -46,6 +46,36 @@ const CRITERIA: { key: keyof FeedbackScore; label: string }[] = [
   { key: "publicoAlvo", label: "Público-alvo" },
 ]
 
+const RESULT_LABELS = ["Tente novamente", "Continue praticando", "Bom início!", "Muito bom!", "Excelente!"]
+const RESULT_ANALYSES = [
+  "Continue praticando! Um bom prompt precisa de contexto claro, objetivo bem definido e especificações de saída.",
+  "Você está no caminho certo! Foque em clareza e defina melhor o público-alvo para resultados melhores.",
+  "Bom começo! Adicionar mais detalhamento e contexto vai ajudar a IA a gerar resultados muito mais precisos.",
+  "Prompt muito bem estruturado! Pequenos ajustes no detalhamento podem elevá-lo ao máximo.",
+  "Excelente! Contexto claro, objetivo bem definido e todos os critérios essenciais presentes. Seu prompt está pronto para produção.",
+]
+
+function buildLabResultState(promptText: string, score: FeedbackScore) {
+  const passing = Object.values(score).filter(Boolean).length
+  const scoreNum = Math.round((passing / 4) * 100)
+  const stars = parseFloat(((passing / 4) * 5).toFixed(1))
+  return {
+    score: scoreNum,
+    label: RESULT_LABELS[passing],
+    stars,
+    originalPrompt: promptText,
+    analysis: RESULT_ANALYSES[passing],
+    feedback: CRITERIA.map(({ key, label }) =>
+      `${label}: ${score[key] ? "bem definido ✓" : "pode melhorar"}`
+    ),
+    aiCompatibility: [
+      { name: "GPT-4", ok: true },
+      { name: "Claude", ok: true },
+      { name: "Gemini", ok: true },
+    ],
+  }
+}
+
 export default function PromptChallenge() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -59,12 +89,12 @@ export default function PromptChallenge() {
   const showFeedback = promptText.length >= MIN_CHARS
   const progressPct = ((challenge.step + 1) / challenge.totalSteps) * 100
 
-  function handleSkip() {
+  function handleNext() {
     const nextStep = challenge.step + 1
     if (nextStep < CHALLENGES.length) {
       navigate(`/challenge?step=${nextStep}`)
     } else {
-      navigate("/home")
+      navigate("/lab-result", { state: buildLabResultState(promptText, score) })
     }
   }
 
@@ -189,19 +219,19 @@ export default function PromptChallenge() {
         <Button
           size="lg"
           className="w-full"
-          onClick={showExample ? handleSkip : handleShowExample}
+          onClick={showExample ? handleNext : handleShowExample}
           disabled={!showExample && promptText.length < MIN_CHARS}
         >
           {showExample
             ? challenge.step + 1 < CHALLENGES.length
               ? "Próximo desafio →"
-              : "Concluir módulo"
+              : "Ver resultado →"
             : "Ver exemplo aprimorado ✨"}
         </Button>
 
         {/* Skip link */}
         <button
-          onClick={handleSkip}
+          onClick={handleNext}
           className="mt-3 w-full text-center text-sm text-foregroundMuted transition-colors hover:text-primary-dark"
         >
           Pular por agora

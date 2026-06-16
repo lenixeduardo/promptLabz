@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { Lock, ArrowLeft } from "lucide-react"
+import { Lock, ArrowLeft, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -128,7 +128,8 @@ export default function ResetPassword() {
               A senha deve ter pelo menos 8 caracteres, uma letra maiúscula e um número.
             </p>
 
-            <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
+            <Button type="submit" size="lg" className="mt-1 w-full gap-2" disabled={loading}>
+              {loading && <Loader2 className="h-4 w-4 animate-spin" />}
               {loading ? "Salvando..." : "Redefinir Senha"}
             </Button>
           </form>

@@ -11,6 +11,7 @@ export default function AvatarScreen() {
   const { user } = useAuth()
   const [selectedAvatarId, setSelectedAvatarId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [loadingAvatar, setLoadingAvatar] = useState(true)
   const [userBalance, setUserBalance] = useState(0)
   const [currentAvatar, setCurrentAvatar] = useState<string | null>(null)
 
@@ -27,6 +28,8 @@ export default function AvatarScreen() {
         }
       } catch (err) {
         console.error("Error loading avatar:", err)
+      } finally {
+        setLoadingAvatar(false)
       }
     }
     loadUserAvatar()
@@ -86,6 +89,16 @@ export default function AvatarScreen() {
         </p>
 
         {/* Avatar Grid — 5 columns */}
+        {loadingAvatar ? (
+          <div className="grid grid-cols-5 gap-2">
+            {[...Array(15)].map((_, i) => (
+              <div key={i} className="flex flex-col items-center gap-1">
+                <div className="h-14 w-14 animate-pulse rounded-xl bg-stroke-muted/40" />
+                <div className="h-3 w-8 animate-pulse rounded bg-stroke-muted/30" />
+              </div>
+            ))}
+          </div>
+        ) : (
         <div className="grid grid-cols-5 gap-2">
           {AVATARS.map((avatar) => {
             const isSelected = selectedAvatarId === avatar.id
@@ -135,6 +148,7 @@ export default function AvatarScreen() {
             )
           })}
         </div>
+        )}
       </div>
 
       {/* Diamond bar + Bottom nav — fixed */}

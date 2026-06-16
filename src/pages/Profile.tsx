@@ -91,6 +91,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [avatarImage, setAvatarImage] = useState("/assets/avatar-cat.png")
+  const [loadingAvatar, setLoadingAvatar] = useState(true)
 
   const xp = user?.id ? getLocalXP(user.id) : 0
   const gems = user?.id ? getLocalGems(user.id) : 0
@@ -99,12 +100,16 @@ export default function Profile() {
   const levelTitle = getLevelTitle(level)
 
   useEffect(() => {
-    if (!user?.id) return
+    if (!user?.id) {
+      setLoadingAvatar(false)
+      return
+    }
     getUserProfile(user.id).then(({ data: profile }) => {
       if (profile?.avatar_url) {
         const found = getAvatarById(profile.avatar_url)
         if (found) setAvatarImage(found.image)
       }
+      setLoadingAvatar(false)
     })
   }, [user?.id])
 
@@ -170,16 +175,22 @@ export default function Profile() {
         {/* Avatar */}
         <div className="mb-5 flex flex-col items-center gap-2">
           <div className="relative">
-            <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-emerald shadow-md">
-              <img src={avatarImage} alt="Avatar" className="h-full w-full object-cover" />
-            </div>
-            <button
-              onClick={() => navigate("/avatars")}
-              className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-emerald shadow-sm"
-              aria-label="Trocar avatar"
-            >
-              <Edit2 className="h-3 w-3 text-white" />
-            </button>
+            {loadingAvatar ? (
+              <div className="h-24 w-24 animate-pulse rounded-full border-4 border-stroke-muted bg-stroke-muted/40" />
+            ) : (
+              <>
+                <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-emerald shadow-md">
+                  <img src={avatarImage} alt="Avatar" className="h-full w-full object-cover" />
+                </div>
+                <button
+                  onClick={() => navigate("/avatars")}
+                  className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-emerald shadow-sm"
+                  aria-label="Trocar avatar"
+                >
+                  <Edit2 className="h-3 w-3 text-white" />
+                </button>
+              </>
+            )}
           </div>
           <p className="text-base font-bold text-primary-dark">
             {user?.user_metadata?.full_name || levelTitle}

@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Mail, Lock } from "lucide-react"
+import { Mail, Lock, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -123,7 +123,8 @@ export default function Login() {
               Esqueci minha senha
             </Link>
 
-            <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
+            <Button type="submit" size="lg" className="mt-1 w-full gap-2" disabled={loading}>
+              {loading && <Loader2 className="h-4 w-4 animate-spin" />}
               {loading ? "Entrando..." : "Entrar"}
             </Button>
 
