@@ -79,8 +79,8 @@ export default function Login() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
       <PageSEO
-        title="Entrar"
-        description="Acesse sua conta PromptLabz e continue aprendendo engenharia de prompts com gamificação."
+        title="Entrar no PromptLabz — Aprenda IA com Gamificacao"
+        description="Acesse sua conta PromptLabz e retome seu progresso. Trilha gamificada de engenharia de prompts com sistema de vidas, XP e conquistas. Continue agora."
         canonicalPath="/login"
       />
       {/* Shrinking circle reveal â€" plays when arriving from Hero */}

@@ -133,8 +133,8 @@ export default function Signup() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
       <PageSEO
-        title="Criar Conta Grátis"
-        description="Crie sua conta gratuita no PromptLabz e comece a aprender engenharia de prompts e habilidades de IA hoje mesmo."
+        title="Comece Gratis — Aprenda Prompts de IA"
+        description="Crie sua conta gratuita em 30 segundos. Aprenda engenharia de prompts com gamificacao, XP e conquistas. Do zero ao avancado. Sem cartao de credito!"
         canonicalPath="/signup"
       />
       <div className="mx-auto flex w-full max-w-[420px] flex-col">

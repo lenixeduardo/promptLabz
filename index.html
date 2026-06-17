@@ -20,32 +20,33 @@
   <meta http-equiv="X-Frame-Options" content="DENY" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://api.resend.com https://*.posthog.com https://us.i.posthog.com https://*.sentry.io; frame-src 'none'; object-src 'none'; base-uri 'self'" />
+  <!-- CSP: googletagmanager.com added for gtag.js; google-analytics.com for GA4 beacons -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://api.resend.com https://*.posthog.com https://us.i.posthog.com https://*.sentry.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; frame-src 'none'; object-src 'none'; base-uri 'self'" />
 
-  <!-- SEO Meta Tags -->
-  <title>PromptLabz — Aprenda Engenharia de Prompts com IA</title>
-  <meta name="description" content="PromptLabz é a plataforma gamificada para aprender engenharia de prompts e habilidades de IA. Lições interativas, trilha progressiva e laboratório de prompts. Comece grátis!" />
-  <meta name="keywords" content="engenharia de prompts, IA, prompts para ChatGPT, prompts para Claude, aprender inteligência artificial, curso de IA gratuito, prompt engineering" />
+  <!-- SEO Meta Tags — fallback para crawlers sem JS (WhatsApp, Telegram, etc.) -->
+  <title>Engenharia de Prompts Gamificada | PromptLabz</title>
+  <meta name="description" content="Domine prompts para ChatGPT, Claude e Gemini com licoes gamificadas e XP. Trilha do zero ao avancado. Comece gratis agora — sem cartao de credito!" />
+  <meta name="keywords" content="engenharia de prompts, IA, prompts para ChatGPT, prompts para Claude, aprender inteligencia artificial, curso de IA gratuito, prompt engineering" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://promptlabz.vercel.app/" />
 
   <!-- Open Graph -->
   <meta property="og:site_name" content="PromptLabz" />
-  <meta property="og:title" content="PromptLabz — Aprenda Engenharia de Prompts com IA" />
-  <meta property="og:description" content="Plataforma gamificada para aprender engenharia de prompts e habilidades de IA. Lições interativas, trilha progressiva e laboratório de prompts. Comece grátis!" />
+  <meta property="og:title" content="Engenharia de Prompts Gamificada | PromptLabz" />
+  <meta property="og:description" content="Domine prompts para ChatGPT, Claude e Gemini com licoes gamificadas. Trilha do zero ao avancado. Comece gratis!" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://promptlabz.vercel.app/" />
   <meta property="og:image" content="https://promptlabz.vercel.app/assets/mascot-login-new.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="PromptLabz — Aprenda IA brincando" />
+  <meta property="og:image:alt" content="PromptLabz — Aprenda engenharia de prompts de forma gamificada" />
   <meta property="og:locale" content="pt_BR" />
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@promptlabz" />
-  <meta name="twitter:title" content="PromptLabz — Aprenda Engenharia de Prompts com IA" />
-  <meta name="twitter:description" content="Plataforma gamificada para aprender engenharia de prompts e habilidades de IA. Comece grátis!" />
+  <meta name="twitter:title" content="Engenharia de Prompts Gamificada | PromptLabz" />
+  <meta name="twitter:description" content="Domine prompts para ChatGPT, Claude e Gemini. Trilha gamificada do zero ao avancado. Comece gratis!" />
   <meta name="twitter:image" content="https://promptlabz.vercel.app/assets/mascot-login-new.png" />
 
   <!-- PWA / Mobile -->
@@ -58,34 +59,17 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/assets/favicon.png" />
 
-  <!-- Structured Data: WebApplication -->
+  <!-- Structured Data: WebSite + SiteLinksSearchBox -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PromptLabz",
+    "@type": "WebSite",
+    "@id": "https://promptlabz.vercel.app/#website",
     "url": "https://promptlabz.vercel.app",
-    "description": "Plataforma gamificada para aprender engenharia de prompts e habilidades de IA. Lições interativas, trilha de aprendizado progressiva e laboratório de prompts para iniciantes.",
-    "applicationCategory": "EducationalApplication",
-    "operatingSystem": "Web",
+    "name": "PromptLabz",
+    "description": "Plataforma gamificada para aprender engenharia de prompts e IA generativa em português.",
     "inLanguage": "pt-BR",
-    "offers": [
-      {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "BRL",
-        "description": "Plano gratuito com acesso às primeiras lições"
-      }
-    ],
-    "audience": {
-      "@type": "Audience",
-      "audienceType": "Estudantes e criadores iniciantes interessados em Inteligência Artificial"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "PromptLabz",
-      "url": "https://promptlabz.vercel.app"
-    }
+    "publisher": { "@id": "https://promptlabz.vercel.app/#organization" }
   }
   </script>
 
@@ -94,9 +78,64 @@
   {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": "https://promptlabz.vercel.app/#organization",
     "name": "PromptLabz",
     "url": "https://promptlabz.vercel.app",
-    "logo": "https://promptlabz.vercel.app/assets/favicon.png"
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://promptlabz.vercel.app/assets/favicon.png",
+      "width": 512,
+      "height": 512
+    },
+    "description": "Plataforma educacional gamificada para aprender engenharia de prompts e IA generativa em português.",
+    "inLanguage": "pt-BR",
+    "foundingDate": "2025",
+    "sameAs": ["https://twitter.com/promptlabz"],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer support",
+      "availableLanguage": "Portuguese"
+    }
+  }
+  </script>
+
+  <!-- Structured Data: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "@id": "https://promptlabz.vercel.app/#webapp",
+    "name": "PromptLabz",
+    "url": "https://promptlabz.vercel.app",
+    "description": "Plataforma gamificada para aprender engenharia de prompts e IA generativa. Licoes interativas com sistema de XP, vidas e conquistas. Do zero ao avancado.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web",
+    "inLanguage": "pt-BR",
+    "browserRequirements": "Requer JavaScript. Compativel com Chrome, Firefox, Safari e Edge.",
+    "featureList": [
+      "Licoes gamificadas de engenharia de prompts",
+      "Sistema de XP, vidas e conquistas",
+      "Laboratorio interativo de prompts",
+      "Trilha progressiva do zero ao avancado",
+      "Suporte a ChatGPT, Claude e Gemini"
+    ],
+    "screenshot": "https://promptlabz.vercel.app/assets/mascot-login-new.png",
+    "offers": [
+      {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BRL",
+        "name": "Plano Gratuito",
+        "description": "Acesso as primeiras licoes, laboratorio de prompts e trilha inicial",
+        "availability": "https://schema.org/InStock"
+      }
+    ],
+    "audience": {
+      "@type": "EducationalAudience",
+      "educationalRole": "student",
+      "audienceType": "Estudantes e profissionais interessados em Inteligencia Artificial e engenharia de prompts"
+    },
+    "publisher": { "@id": "https://promptlabz.vercel.app/#organization" }
   }
   </script>
 
@@ -105,21 +144,33 @@
   {
     "@context": "https://schema.org",
     "@type": "Course",
-    "name": "Engenharia de Prompts do Zero ao Avançado",
-    "description": "Trilha de aprendizado completa sobre engenharia de prompts e IA generativa. Do básico ao avançado, com gamificação e lições interativas.",
-    "provider": {
-      "@type": "Organization",
-      "name": "PromptLabz",
-      "url": "https://promptlabz.vercel.app"
-    },
+    "@id": "https://promptlabz.vercel.app/learn#course",
+    "name": "Engenharia de Prompts do Zero ao Avancado",
+    "description": "Trilha de aprendizado completa sobre engenharia de prompts e IA generativa. Do basico ao avancado, com gamificacao, licoes interativas e laboratorio de prompts para ChatGPT, Claude e Gemini.",
     "url": "https://promptlabz.vercel.app/learn",
     "inLanguage": "pt-BR",
-    "educationalLevel": "Iniciante a Avançado",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "BRL",
-      "category": "free"
+    "educationalLevel": "Beginner to Advanced",
+    "teaches": [
+      "Engenharia de prompts",
+      "Prompt engineering para ChatGPT",
+      "Prompt engineering para Claude",
+      "IA generativa",
+      "Tecnicas de few-shot e chain-of-thought"
+    ],
+    "courseMode": "online",
+    "isAccessibleForFree": true,
+    "provider": { "@id": "https://promptlabz.vercel.app/#organization" },
+    "hasCourseInstance": {
+      "@type": "CourseInstance",
+      "courseMode": "online",
+      "inLanguage": "pt-BR",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BRL",
+        "availability": "https://schema.org/InStock",
+        "url": "https://promptlabz.vercel.app/signup"
+      }
     }
   }
   </script>
@@ -129,42 +180,116 @@
   {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": "https://promptlabz.vercel.app/#faq",
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "O que é engenharia de prompts?",
+        "name": "O que e engenharia de prompts?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Engenharia de prompts é a habilidade de formular instruções claras e eficazes para modelos de linguagem como ChatGPT, Claude e Gemini, a fim de obter respostas mais precisas e úteis."
+          "text": "Engenharia de prompts e a habilidade de formular instrucoes claras e eficazes para modelos de linguagem como ChatGPT, Claude e Gemini, a fim de obter respostas mais precisas, uteis e criativas. E uma das habilidades mais valorizadas na era da IA generativa."
         }
       },
       {
         "@type": "Question",
-        "name": "PromptLabz é gratuito?",
+        "name": "PromptLabz e gratuito?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Sim, o PromptLabz oferece um plano gratuito com acesso às lições iniciais, laboratório de prompts e trilha de aprendizado. O plano Premium desbloqueia todo o conteúdo avançado."
+          "text": "Sim, o PromptLabz oferece plano gratuito com acesso as licoes iniciais, laboratorio de prompts e trilha de aprendizado. O plano Premium desbloqueia todo o conteudo avancado, conquistas exclusivas e recursos ilimitados."
         }
       },
       {
         "@type": "Question",
-        "name": "Para quem é o PromptLabz?",
+        "name": "Para quem e o PromptLabz?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "O PromptLabz é ideal para estudantes, criadores de conteúdo, profissionais e iniciantes que querem aprender a usar IA de forma prática, com lições gamificadas e progresso personalizado."
+          "text": "O PromptLabz e ideal para estudantes, criadores de conteudo, profissionais de marketing, desenvolvedores e qualquer pessoa que queira aprender a usar IA de forma pratica. As licoes sao gamificadas e o progresso e personalizado, sem exigir experiencia previa."
         }
       },
       {
         "@type": "Question",
-        "name": "Como funciona a gamificação do PromptLabz?",
+        "name": "Como funciona a gamificacao do PromptLabz?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "O PromptLabz usa um sistema de vidas, XP (pontos de experiência), conquistas e trilha progressiva similar ao Duolingo. Você ganha XP ao completar lições, sobe de nível e desbloqueia novos conteúdos."
+          "text": "O PromptLabz usa um sistema de vidas, XP (pontos de experiencia), conquistas e trilha progressiva similar ao Duolingo. Voce ganha XP ao completar licoes, sobe de nivel e desbloqueia novos conteudos. O sistema de vidas incentiva o estudo diario."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quanto tempo leva para aprender engenharia de prompts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Com o PromptLabz, voce consegue dominar os fundamentos em 2 a 4 semanas estudando 10 a 15 minutos por dia. A trilha completa do zero ao avancado leva de 4 a 8 semanas, dependendo do seu ritmo."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "O PromptLabz funciona para ChatGPT, Claude e Gemini?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sim! As tecnicas ensinadas no PromptLabz sao aplicaveis a todos os principais modelos de linguagem: ChatGPT (OpenAI), Claude (Anthropic), Gemini (Google) e outros. Os principios de engenharia de prompts sao transferiveis entre diferentes IAs."
         }
       }
     ]
   }
   </script>
+
+  <!-- Structured Data: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": "https://promptlabz.vercel.app/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Criar Conta",
+        "item": "https://promptlabz.vercel.app/signup"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Aprender",
+        "item": "https://promptlabz.vercel.app/learn"
+      }
+    ]
+  }
+  </script>
+  <!--
+    Google Tag (gtag.js)
+    ════════════════════
+    Replace G-XXXXXXXXXX with your actual Measurement ID from Google Ads / GA4.
+    The ID is also stored in VITE_GTAG_ID (.env) so the app JS can reference it.
+
+    To activate:
+      1. Create a Google Ads account → Tools → Conversions → "Website" conversion
+      2. Copy the Measurement ID (G-XXXXXXXXXX) and paste below AND in .env
+      3. Copy the Conversion label (AaBbCcDdEe) into VITE_GTAG_CONVERSION_SIGNUP in .env
+
+    Leave the script commented out until you have a real ID — an invalid ID silently
+    fails but wastes bandwidth.
+  -->
+  <!-- GTAG_PLACEHOLDER_START — uncomment and replace G-XXXXXXXXXX -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', {
+      send_page_view: false,
+      cookie_flags: 'SameSite=None;Secure',
+      anonymize_ip: true
+    });
+  </script>
+  -->
+  <!-- GTAG_PLACEHOLDER_END -->
 </head>
 
 <body>
