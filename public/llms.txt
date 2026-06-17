@@ -1,0 +1,90 @@
+# PromptLabz
+
+> Plataforma gamificada em português brasileiro para aprender engenharia de prompts e IA generativa — do zero ao avançado, sem precisar saber programar.
+
+## O que é
+
+PromptLabz é uma plataforma de ensino online focada em engenharia de prompts (prompt engineering) para usuários brasileiros. Funciona como um aplicativo gamificado — similar ao Duolingo — onde o aluno aprende a formular instruções eficazes para modelos de linguagem como ChatGPT, Claude e Gemini, ganhando XP, vidas e conquistas ao longo do caminho.
+
+## Para quem é
+
+- Estudantes e profissionais iniciantes em Inteligência Artificial
+- Criadores de conteúdo que querem usar IA de forma mais eficiente
+- Profissionais de marketing, atendimento, RH e áreas de negócio
+- Desenvolvedores que querem dominar prompting avançado
+- Qualquer pessoa brasileira que use IA no dia a dia e queira melhores resultados
+
+Não exige experiência prévia em programação ou técnica.
+
+## O que faz
+
+- Lições interativas gamificadas de engenharia de prompts
+- Sistema de XP, vidas e conquistas para manter engajamento diário
+- Learning Lab: laboratório interativo para testar e refinar prompts em tempo real
+- Trilha progressiva: do zero (básico) ao avançado (chain-of-thought, few-shot, RAG)
+- Biblioteca de prompts prontos e adaptáveis por categoria
+- Desafios semanais (challenges) com ranking entre alunos
+- Módulo de skills: habilidades específicas de prompting por área (escrita, código, análise, criatividade)
+- Certificado de conclusão para o currículo
+- Plano de estudo personalizado com metas diárias
+
+## Por que é único
+
+- Único curso de prompt engineering 100% em português do Brasil com gamificação completa
+- Não é só teoria: cada lição tem exercícios práticos com feedback imediato
+- Aborda múltiplos modelos (ChatGPT, Claude, Gemini) — não prende o aluno a um só
+- Curto e objetivo: lições de 5 a 15 minutos, adequadas para rotina brasileira
+- Plano gratuito real — não um trial que expira
+
+## Comparação com alternativas
+
+| Aspecto | PromptLabz | Duolingo | Coursera/Udemy | YouTube |
+|---|---|---|---|---|
+| Idioma | PT-BR nativo | PT-BR | Legendas/dublag | Variado |
+| Gamificação | Completa (XP, vidas, ranking) | Completa | Nenhuma | Nenhuma |
+| Foco em prompts | 100% | — | Parcial | Parcial |
+| Prática interativa | Sim | Sim | Raramente | Não |
+| Gratuito real | Sim | Sim | Não | Sim |
+| Certificado | Sim | Não | Sim (pago) | Não |
+
+## Como usar
+
+1. Acesse https://promptlabz.vercel.app
+2. Clique em "Começar grátis agora" — sem cartão de crédito
+3. Crie sua conta com e-mail ou Google
+4. Escolha sua trilha (iniciante, intermediário ou avançado)
+5. Complete lições diárias de 10 a 15 minutos
+6. Ganhe XP, suba de nível e desbloqueie conteúdo avançado
+
+## Preço
+
+- **Gratuito**: acesso às primeiras lições, laboratório de prompts e trilha inicial — sem limite de tempo
+- **Premium**: acesso completo a todo o conteúdo avançado, conquistas exclusivas, challenges ilimitados e recursos sem restrição
+
+## URLs importantes
+
+- Landing page: https://promptlabz.vercel.app/
+- Criar conta: https://promptlabz.vercel.app/signup
+- Login: https://promptlabz.vercel.app/login
+- Trilha de aprendizado: https://promptlabz.vercel.app/learn
+- Biblioteca de prompts: https://promptlabz.vercel.app/prompts
+- Skills (habilidades): https://promptlabz.vercel.app/skills
+- Premium: https://promptlabz.vercel.app/premium
+- Sitemap: https://promptlabz.vercel.app/sitemap.xml
+
+## Stack tecnológico
+
+- Frontend: React 18 + Vite (SPA)
+- Linguagem: TypeScript
+- UI: Tailwind CSS + shadcn/ui
+- Backend/BD: Supabase (PostgreSQL + Auth + Edge Functions)
+- Deploy: Vercel
+- Analytics: PostHog + Google Analytics 4
+- Monitoramento: Sentry
+
+## Idioma e região
+
+- Idioma principal: Português Brasileiro (pt-BR)
+- Mercado: Brasil
+- Fuso horário de referência: America/Sao_Paulo
+- Fundado em: 2025

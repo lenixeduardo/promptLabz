@@ -9,6 +9,7 @@ import { Toaster } from "sileo"
 import "sileo/styles.css"
 import { initAnalytics, pageView, identify, reset } from "@/lib/analytics"
 import { useAuth } from "@/hooks/useAuth"
+import { useUTM } from "@/hooks/useUTM"
 
 const Hero = lazy(() => import("@/pages/Hero"))
 const Login = lazy(() => import("@/pages/Login"))
@@ -61,10 +62,13 @@ function PageLoading() {
   )
 }
 
-// ── Analytics tracker (page views + user identification) ─────────────────
+// ── Analytics tracker (page views + user identification + UTM capture) ───
 function AnalyticsTracker() {
   const location = useLocation()
   const { user } = useAuth()
+  // useUTM captures UTM/gclid params on first load and persists to sessionStorage.
+  // Subsequent calls from anywhere in the app (e.g. trackSignUp) read from there.
+  useUTM()
 
   useEffect(() => {
     initAnalytics()
