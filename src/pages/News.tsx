@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 import { NEWS_ARTICLES, type NewsArticle, type NewsCategory } from "@/data/newsData"
 import { getNewsArticles, type DbNewsArticle } from "@/lib/db"
 import { cn } from "@/lib/utils"
@@ -134,7 +134,7 @@ export default function News() {
         )}
       </div>
 
-      <BottomNav active="home" />
+      <AppBottomNav />
     </div>
   )
 }

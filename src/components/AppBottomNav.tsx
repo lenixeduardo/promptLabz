@@ -13,8 +13,8 @@ export const BOTTOM_NAV_ITEMS: BottomNavItem[] = [
   { key: "home", label: "Início", href: "/home", icon: "LayoutGrid" },
   { key: "tracks", label: "Trilha", href: "/learn", icon: "GraduationCap" },
   { key: "lab", label: "Laboratório", href: "/skills", icon: "Code2" },
-  { key: "challenges", label: "Desafios", href: "/mission", icon: "Target" },
-  { key: "news", label: "Notícias", href: "/notifications", icon: "Bell" },
+  { key: "challenges", label: "Missões", href: "/daily-missions", icon: "Target" },
+  { key: "news", label: "Notícias", href: "/news", icon: "Newspaper" },
   { key: "profile", label: "Perfil", href: "/profile", icon: "User" },
 ]
 

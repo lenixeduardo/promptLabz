@@ -25,6 +25,7 @@ const Lesson = lazy(() => import("@/pages/Lesson"))
 const Skills = lazy(() => import("@/pages/Skills"))
 const SkillDetail = lazy(() => import("@/pages/SkillDetail"))
 const MissionComplete = lazy(() => import("@/pages/MissionComplete"))
+const DailyMissions = lazy(() => import("@/pages/DailyMissions"))
 const Favorites = lazy(() => import("@/pages/Favorites"))
 const Notifications = lazy(() => import("@/pages/Notifications"))
 const Premium = lazy(() => import("@/pages/Premium"))
@@ -169,6 +170,14 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <MissionComplete />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/daily-missions"
+                element={
+                  <PrivateRoute>
+                    <DailyMissions />
                   </PrivateRoute>
                 }
               />
