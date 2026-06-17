@@ -30,6 +30,10 @@ vi.mock("@/lib/db", () => ({
     }
   }),
   saveProgress: vi.fn().mockResolvedValue(undefined),
+  getAchievementDefinitions: vi.fn().mockResolvedValue({ data: [], error: null }),
+  loadStreak: vi.fn().mockResolvedValue({ data: null, error: null }),
+  saveStreak: vi.fn().mockResolvedValue({ data: null, error: null }),
+  insertNotification: vi.fn().mockResolvedValue({ data: null, error: null }),
 }))
 
 // Mock sileo
