@@ -1,0 +1,40 @@
+User-agent: *
+
+# Landing page e auth publicos — indexar
+Allow: /$
+Allow: /login$
+Allow: /signup$
+Allow: /forgot-password$
+
+# Rotas autenticadas — nao indexar
+Disallow: /home
+Disallow: /learn
+Disallow: /lesson
+Disallow: /skills
+Disallow: /skill/
+Disallow: /mission
+Disallow: /favorites
+Disallow: /notifications
+Disallow: /premium
+Disallow: /achievements
+Disallow: /prompts
+Disallow: /prompt/
+Disallow: /challenge
+Disallow: /subscription
+Disallow: /templates
+Disallow: /template/
+Disallow: /level-up
+Disallow: /news
+Disallow: /quiz
+Disallow: /quiz-result
+Disallow: /inventory
+Disallow: /store
+Disallow: /ranking
+Disallow: /certificate
+Disallow: /lab-result
+Disallow: /profile
+Disallow: /avatars
+Disallow: /auth/
+Disallow: /reset-password
+
+Sitemap: https://promptlabz.vercel.app/sitemap.xml

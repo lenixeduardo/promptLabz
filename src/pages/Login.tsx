@@ -10,6 +10,7 @@ import { CircleRevealEntry } from "@/components/CircleTransition"
 import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
 import { trackLogin } from "@/lib/analytics"
+import { PageSEO } from "@/components/PageSEO"
 
 function GoogleIcon() {
   return (
@@ -77,7 +78,12 @@ export default function Login() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
-      {/* Shrinking circle reveal â€” plays when arriving from Hero */}
+      <PageSEO
+        title="Entrar"
+        description="Acesse sua conta PromptLabz e continue aprendendo engenharia de prompts com gamificação."
+        canonicalPath="/login"
+      />
+      {/* Shrinking circle reveal â€" plays when arriving from Hero */}
       <CircleRevealEntry />
       <div className="mx-auto flex w-full max-w-[420px] flex-col items-center">
         {/* Mascot with animated glow halo */}

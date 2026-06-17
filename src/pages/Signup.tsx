@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
 import { z } from "zod"
 import { trackSignUp } from "@/lib/analytics"
+import { PageSEO } from "@/components/PageSEO"
 
 function GoogleIcon() {
   return (
@@ -131,6 +132,11 @@ export default function Signup() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
+      <PageSEO
+        title="Criar Conta Grátis"
+        description="Crie sua conta gratuita no PromptLabz e comece a aprender engenharia de prompts e habilidades de IA hoje mesmo."
+        canonicalPath="/signup"
+      />
       <div className="mx-auto flex w-full max-w-[420px] flex-col">
         {/* Back */}
         <Link

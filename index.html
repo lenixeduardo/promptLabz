@@ -5,33 +5,166 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Google Fonts — preconnect evita bloqueio de render -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" />
+  </noscript>
+
+  <!-- Preload do LCP element — mascote da landing -->
+  <link rel="preload" as="image" href="/assets/mascot-login-new.png" fetchpriority="high" />
+
   <!-- Security Headers -->
   <meta http-equiv="X-Frame-Options" content="DENY" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://*.supabase.co https://api.resend.com; frame-src 'none'; object-src 'none'; base-uri 'self'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://api.resend.com https://*.posthog.com https://us.i.posthog.com https://*.sentry.io; frame-src 'none'; object-src 'none'; base-uri 'self'" />
 
   <!-- SEO Meta Tags -->
-  <meta name="description" content="PromptLabz ajuda estudantes e criadores iniciantes a praticar prompts e habilidades de IA com lições interativas, gamificação e progresso personalizado." />
-  <meta name="keywords" content="IA, prompts, engenharia de prompts, aprendizado, inteligência artificial, cursos" />
+  <title>PromptLabz — Aprenda Engenharia de Prompts com IA</title>
+  <meta name="description" content="PromptLabz é a plataforma gamificada para aprender engenharia de prompts e habilidades de IA. Lições interativas, trilha progressiva e laboratório de prompts. Comece grátis!" />
+  <meta name="keywords" content="engenharia de prompts, IA, prompts para ChatGPT, prompts para Claude, aprender inteligência artificial, curso de IA gratuito, prompt engineering" />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://promptlabz.vercel.app/" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="PromptLabz — Seu Laboratório de Ideias com IA" />
-  <meta property="og:description" content="Pratique prompts e habilidades de IA com lições interativas, gamificação e progresso personalizado." />
+  <meta property="og:site_name" content="PromptLabz" />
+  <meta property="og:title" content="PromptLabz — Aprenda Engenharia de Prompts com IA" />
+  <meta property="og:description" content="Plataforma gamificada para aprender engenharia de prompts e habilidades de IA. Lições interativas, trilha progressiva e laboratório de prompts. Comece grátis!" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="/assets/login-wireframe.jpeg" />
+  <meta property="og:url" content="https://promptlabz.vercel.app/" />
+  <meta property="og:image" content="https://promptlabz.vercel.app/assets/mascot-login-new.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="PromptLabz — Aprenda IA brincando" />
   <meta property="og:locale" content="pt_BR" />
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="PromptLabz — Seu Laboratório de Ideias com IA" />
-  <meta name="twitter:description" content="Pratique prompts e habilidades de IA com lições interativas, gamificação e progresso personalizado." />
-  <meta name="twitter:image" content="/assets/login-wireframe.jpeg" />
+  <meta name="twitter:site" content="@promptlabz" />
+  <meta name="twitter:title" content="PromptLabz — Aprenda Engenharia de Prompts com IA" />
+  <meta name="twitter:description" content="Plataforma gamificada para aprender engenharia de prompts e habilidades de IA. Comece grátis!" />
+  <meta name="twitter:image" content="https://promptlabz.vercel.app/assets/mascot-login-new.png" />
 
+  <!-- PWA / Mobile -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#1E4D2F" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="apple-touch-icon" href="/assets/favicon.png" />
+
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="/assets/favicon.png" />
-  <link rel="alternate icon" type="image/jpeg" href="/assets/login-wireframe.jpeg" />
-  <title>PromptLabz — Seu Laboratório de Ideias com IA</title>
+
+  <!-- Structured Data: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PromptLabz",
+    "url": "https://promptlabz.vercel.app",
+    "description": "Plataforma gamificada para aprender engenharia de prompts e habilidades de IA. Lições interativas, trilha de aprendizado progressiva e laboratório de prompts para iniciantes.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web",
+    "inLanguage": "pt-BR",
+    "offers": [
+      {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BRL",
+        "description": "Plano gratuito com acesso às primeiras lições"
+      }
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "Estudantes e criadores iniciantes interessados em Inteligência Artificial"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "PromptLabz",
+      "url": "https://promptlabz.vercel.app"
+    }
+  }
+  </script>
+
+  <!-- Structured Data: Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "PromptLabz",
+    "url": "https://promptlabz.vercel.app",
+    "logo": "https://promptlabz.vercel.app/assets/favicon.png"
+  }
+  </script>
+
+  <!-- Structured Data: Course -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "Engenharia de Prompts do Zero ao Avançado",
+    "description": "Trilha de aprendizado completa sobre engenharia de prompts e IA generativa. Do básico ao avançado, com gamificação e lições interativas.",
+    "provider": {
+      "@type": "Organization",
+      "name": "PromptLabz",
+      "url": "https://promptlabz.vercel.app"
+    },
+    "url": "https://promptlabz.vercel.app/learn",
+    "inLanguage": "pt-BR",
+    "educationalLevel": "Iniciante a Avançado",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "BRL",
+      "category": "free"
+    }
+  }
+  </script>
+
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "O que é engenharia de prompts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Engenharia de prompts é a habilidade de formular instruções claras e eficazes para modelos de linguagem como ChatGPT, Claude e Gemini, a fim de obter respostas mais precisas e úteis."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "PromptLabz é gratuito?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sim, o PromptLabz oferece um plano gratuito com acesso às lições iniciais, laboratório de prompts e trilha de aprendizado. O plano Premium desbloqueia todo o conteúdo avançado."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Para quem é o PromptLabz?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "O PromptLabz é ideal para estudantes, criadores de conteúdo, profissionais e iniciantes que querem aprender a usar IA de forma prática, com lições gamificadas e progresso personalizado."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Como funciona a gamificação do PromptLabz?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "O PromptLabz usa um sistema de vidas, XP (pontos de experiência), conquistas e trilha progressiva similar ao Duolingo. Você ganha XP ao completar lições, sobe de nível e desbloqueia novos conteúdos."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
+import { PageSEO } from "@/components/PageSEO"
 
 export default function ForgotPassword() {
   const { resetPassword } = useAuth()
@@ -29,6 +30,12 @@ export default function ForgotPassword() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
+      <PageSEO
+        title="Recuperar Senha"
+        description="Recupere o acesso à sua conta PromptLabz."
+        canonicalPath="/forgot-password"
+        noIndex={true}
+      />
       <div className="mx-auto flex w-full max-w-[420px] flex-col">
         {/* Back */}
         <Link

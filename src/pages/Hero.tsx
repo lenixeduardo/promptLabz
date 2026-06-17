@@ -4,6 +4,7 @@ import { Lightbulb, Pencil, Sparkles, Plus, Type, ArrowRight, MessageSquarePlus 
 import { Button } from "@/components/ui/button"
 import { BrandLogo } from "@/components/BrandLogo"
 import { CircleTransition } from "@/components/CircleTransition"
+import { PageSEO } from "@/components/PageSEO"
 
 export default function Hero() {
   const [transitioning, setTransitioning] = useState(false)
@@ -11,6 +12,11 @@ export default function Hero() {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center bg-gradient-to-b from-[#EAF7F0] to-[#D6EEE3] px-6 pb-10 pt-12 overflow-hidden">
+      <PageSEO
+        title="Aprenda Engenharia de Prompts com IA"
+        description="PromptLabz é a plataforma gamificada para aprender engenharia de prompts e habilidades de IA. Lições interativas, trilha progressiva e laboratório de prompts. Comece grátis!"
+        canonicalPath="/"
+      />
       <CircleTransition to="/signup" active={transitioning} />
 
       {/* Background sparkles */}
@@ -53,7 +59,10 @@ export default function Hero() {
         <Sparkles className="animate-twinkle absolute bottom-4 left-20 h-3 w-3 text-emerald" style={{ animationDelay: "1.6s" }} />
         <img
           src="/assets/mascot-login-new.png"
-          alt="PromptLabz mascot"
+          alt="Mascote do PromptLabz — aprenda engenharia de prompts"
+          width={400}
+          height={400}
+          fetchPriority="high"
           className="h-56 w-auto object-contain drop-shadow-md"
         />
       </div>
@@ -61,10 +70,10 @@ export default function Hero() {
       {/* Headline */}
       <div className="flex flex-col items-center gap-3 mt-2 mb-6">
         <h1 className="text-4xl font-extrabold text-[#1E4D2F] text-center leading-tight">
-          Aprenda IA<br />brincando
+          Aprenda Engenharia<br />de Prompts
         </h1>
         <p className="text-base text-[#4A7A5C] text-center max-w-xs leading-relaxed">
-          Domine a arte de escrever prompts e transforme suas ideias em resultados incríveis.
+          Domine a arte de escrever prompts para IA, transforme suas ideias em resultados incríveis e evolua com lições gamificadas.
         </p>
       </div>
 

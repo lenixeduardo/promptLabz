@@ -13,7 +13,6 @@ if (dsn) {
     environment: import.meta.env.PROD ? "production" : "development",
     integrations: [
       Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration(),
     ],
     // Performance monitoring — sample rate in production
     tracesSampleRate: import.meta.env.PROD ? 0.25 : 1.0,
