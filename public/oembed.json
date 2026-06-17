@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "type": "rich",
+  "provider_name": "PromptLabz",
+  "provider_url": "https://promptlabz.vercel.app",
+  "title": "PromptLabz — Aprenda Engenharia de Prompts Gratuitamente",
+  "description": "Plataforma gamificada em português para aprender engenharia de prompts e IA generativa.",
+  "author_name": "PromptLabz",
+  "author_url": "https://promptlabz.vercel.app",
+  "thumbnail_url": "https://promptlabz.vercel.app/assets/mascot-login-new.png",
+  "thumbnail_width": 1200,
+  "thumbnail_height": 630
+}
