@@ -50,17 +50,15 @@ function TabContent({ tab, template }: { tab: Tab; template: Template }) {
           <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
             Estrutura da Página
           </p>
-          {["Hero Section", "Benefícios", "Como Funciona", "Depoimentos", "Preços", "FAQ", "CTA Final"].map(
-            (section) => (
-              <div
-                key={section}
-                className="flex items-center gap-3 border-b border-stroke-light py-2.5 last:border-0"
-              >
-                <div className="h-2 w-2 rounded-full bg-primary-dark" />
-                <span className="text-sm text-foregroundDark">{section}</span>
-              </div>
-            )
-          )}
+          {template.webSections.map((section) => (
+            <div
+              key={section}
+              className="flex items-center gap-3 border-b border-stroke-light py-2.5 last:border-0"
+            >
+              <div className="h-2 w-2 rounded-full bg-primary-dark" />
+              <span className="text-sm text-foregroundDark">{section}</span>
+            </div>
+          ))}
         </div>
       </div>
     )
@@ -75,9 +73,7 @@ function TabContent({ tab, template }: { tab: Tab; template: Template }) {
           </p>
           <div className="rounded-xl bg-[#F5FBF7] p-3">
             <p className="text-xs leading-relaxed text-foregroundDark">
-              Você é um especialista em copywriting para SaaS. Crie uma landing page completa para
-              [PRODUTO], focada em conversão para [PÚBLICO-ALVO]. Inclua headline, benefícios, prova
-              social e CTA persuasivo. Tom: [FORMAL/CASUAL].
+              {template.promptContent}
             </p>
           </div>
         </div>
@@ -90,11 +86,11 @@ function TabContent({ tab, template }: { tab: Tab; template: Template }) {
       <div className="px-4 pt-4">
         <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm text-center">
           <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-pageBgLight">
-            <span className="text-2xl font-extrabold text-primary-dark">92</span>
+            <span className="text-2xl font-extrabold text-primary-dark">{template.resultScore}</span>
           </div>
           <p className="text-sm font-bold text-foregroundDark">Excelente resultado!</p>
           <p className="mt-1 text-xs text-foregroundMuted">
-            Este template gera copy de alta qualidade consistentemente.
+            Este template gera resultados de alta qualidade consistentemente.
           </p>
         </div>
       </div>
@@ -134,7 +130,24 @@ export default function TemplateDetail() {
   const { templateId } = useParams<{ templateId: string }>()
   const [activeTab, setActiveTab] = useState<Tab>("inicio")
 
-  const template = TEMPLATES.find((t) => t.id === templateId) ?? TEMPLATES[0]
+  const template = TEMPLATES.find((t) => t.id === templateId)
+
+  if (!template) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-surface-soft px-6 text-center">
+        <p className="text-lg font-bold text-primary-dark">Template não encontrado</p>
+        <p className="text-sm text-foregroundMuted">
+          O template que você está tentando acessar não existe ou foi removido.
+        </p>
+        <button
+          onClick={() => navigate("/templates")}
+          className="rounded-xl bg-primary-dark px-6 py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
+        >
+          Ver todos os templates
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-surface-soft pb-32">

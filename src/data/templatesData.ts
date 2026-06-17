@@ -27,6 +27,9 @@ export interface Template {
   tags: string[]
   stats: TemplateStats[]
   promptId: string
+  webSections: string[]
+  promptContent: string
+  resultScore: number
 }
 
 export const TEMPLATE_CATEGORIES: { id: string; label: string }[] = [
@@ -59,6 +62,10 @@ export const TEMPLATES: Template[] = [
       { icon: "Users", value: "2.1k", label: "Usuários" },
     ],
     promptId: "1",
+    webSections: ["Hero Section", "Benefícios", "Como Funciona", "Depoimentos", "Preços", "FAQ", "CTA Final"],
+    promptContent:
+      "Você é um especialista em copywriting para SaaS. Crie uma landing page completa para [PRODUTO], focada em conversão para [PÚBLICO-ALVO]. Inclua headline, benefícios, prova social e CTA persuasivo. Tom: [FORMAL/CASUAL].",
+    resultScore: 92,
   },
   {
     id: "2",
@@ -79,7 +86,11 @@ export const TEMPLATES: Template[] = [
       { icon: "TrendingUp", value: "3.800+", label: "Usuários" },
       { icon: "BarChart3", value: "98%", label: "Satisfação" },
     ],
-    promptId: "1",
+    promptId: "2",
+    webSections: ["Visão Geral", "Receitas", "Despesas", "Investimentos", "Metas", "Relatórios", "Configurações"],
+    promptContent:
+      "Você é um especialista em finanças pessoais e design de dashboards. Crie um dashboard financeiro completo para [PERFIL] (freelancer/empresa/pessoa física). Inclua visão de receitas, despesas, saldo, metas e projeções para [PERÍODO].",
+    resultScore: 88,
   },
   {
     id: "3",
@@ -100,7 +111,11 @@ export const TEMPLATES: Template[] = [
       { icon: "Zap", value: "4.1k", label: "Usuários" },
       { icon: "TrendingUp", value: "4.9", label: "Avaliação" },
     ],
-    promptId: "1",
+    promptId: "3",
+    webSections: ["Visão da Semana", "Tarefas do Dia", "Acompanhamento de Hábitos", "Metas Semanais", "Prioridades", "Retrospectiva", "Notas"],
+    promptContent:
+      "Você é um coach de produtividade. Crie um planner semanal completo para [PERFIL DE USUÁRIO]. Organize as tarefas por prioridade, inclua acompanhamento de hábitos e espaço para reflexão diária. Foco: [ÁREA: trabalho/estudos/pessoal].",
+    resultScore: 90,
   },
   {
     id: "4",
@@ -121,7 +136,11 @@ export const TEMPLATES: Template[] = [
       { icon: "Users", value: "12.4k", label: "Usuários" },
       { icon: "TrendingUp", value: "4.8", label: "Avaliação" },
     ],
-    promptId: "1",
+    promptId: "4",
+    webSections: ["Calendário Mensal", "Visão Diária", "Visão Semanal", "Compromissos", "Contatos", "Lembretes", "Configurações"],
+    promptContent:
+      "Você é um assistente de organização pessoal. Crie um sistema de agenda completo para [PROFISSÃO]. Estruture compromissos por categoria, defina lembretes automáticos e integre com lista de contatos. Contexto: [VOLUME DE COMPROMISSOS/dia].",
+    resultScore: 85,
   },
   {
     id: "5",
@@ -142,7 +161,11 @@ export const TEMPLATES: Template[] = [
       { icon: "TrendingUp", value: "8.7k", label: "Usuários" },
       { icon: "Users", value: "35%", label: "↑ Conversão" },
     ],
-    promptId: "1",
+    promptId: "5",
+    webSections: ["Home / Vitrine", "Listagem de Produtos", "Página do Produto", "Carrinho", "Checkout", "Confirmação do Pedido", "Área do Cliente"],
+    promptContent:
+      "Você é um especialista em UX de e-commerce e copywriting de vendas. Crie o conteúdo completo para uma loja virtual de [NICHO/PRODUTO]. Inclua descrições de produto, página de categoria, processo de checkout e e-mails transacionais. Público: [PÚBLICO-ALVO].",
+    resultScore: 94,
   },
   {
     id: "6",
@@ -163,7 +186,11 @@ export const TEMPLATES: Template[] = [
       { icon: "TrendingUp", value: "5.2k", label: "Usuários" },
       { icon: "Users", value: "100%", label: "Profissional" },
     ],
-    promptId: "1",
+    promptId: "6",
+    webSections: ["Painel Principal", "Clientes", "Serviços", "Notas Fiscais", "Recebimentos", "Relatório Mensal", "Configurações"],
+    promptContent:
+      "Você é um especialista em gestão financeira para autônomos. Crie um sistema de faturamento simplificado para [PROFISSÃO/SERVIÇO]. Inclua emissão de notas, controle de recebimentos pendentes e relatório mensal. Volume estimado: [X clientes/mês].",
+    resultScore: 87,
   },
   {
     id: "7",
@@ -184,7 +211,11 @@ export const TEMPLATES: Template[] = [
       { icon: "Users", value: "4.1k", label: "Usuários" },
       { icon: "TrendingUp", value: "50k", label: "Alunos" },
     ],
-    promptId: "1",
+    promptId: "7",
+    webSections: ["Página Inicial", "Catálogo de Cursos", "Página do Curso", "Área do Aluno", "Progresso", "Certificados", "Suporte"],
+    promptContent:
+      "Você é um especialista em educação online e design instrucional. Crie o conteúdo completo para uma plataforma de cursos sobre [TEMA]. Inclua apresentação do curso, módulos, área do aluno e landing page de vendas. Público-alvo: [PERFIL DO ALUNO].",
+    resultScore: 91,
   },
   {
     id: "8",
@@ -205,6 +236,10 @@ export const TEMPLATES: Template[] = [
       { icon: "TrendingUp", value: "3.2k", label: "Usuários" },
       { icon: "BarChart3", value: "99%", label: "Precisão" },
     ],
-    promptId: "1",
+    promptId: "8",
+    webSections: ["Resumo Executivo", "Performance Mensal", "Top Produtos", "Vendas por Canal", "Comparativo de Período", "Projeções", "Ações Recomendadas"],
+    promptContent:
+      "Você é um analista de vendas sênior. Crie um relatório completo de performance de vendas para [EMPRESA/SETOR] referente a [PERÍODO]. Inclua métricas principais, análise de tendências, comparativo com período anterior e recomendações estratégicas.",
+    resultScore: 96,
   },
 ]
