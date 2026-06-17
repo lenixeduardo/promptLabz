@@ -4,6 +4,69 @@ import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import Notifications from "./Notifications"
 
+const mockUser = { id: "user-1", email: "test@test.com" }
+
+vi.mock("@/hooks/useAuth", () => ({
+  useAuth: () => ({ user: { id: "user-1", email: "test@test.com" } }),
+}))
+
+vi.mock("@/lib/db", () => ({
+  getNotifications: vi.fn().mockResolvedValue({
+    data: [
+      {
+        id: "n1",
+        user_id: "user-1",
+        type: "achievement",
+        title: "Conquista desbloqueada! 🏆",
+        description: "Você completou sua primeira lição!",
+        created_at: new Date().toISOString(),
+        read_at: null,
+        mention: false,
+        action_label: null,
+        href: null,
+      },
+      {
+        id: "n2",
+        user_id: "user-1",
+        type: "mention",
+        title: "Mencionaram você no fórum",
+        description: "Carlos respondeu seu comentário.",
+        created_at: new Date().toISOString(),
+        read_at: null,
+        mention: true,
+        action_label: null,
+        href: null,
+      },
+      {
+        id: "n3",
+        user_id: "user-1",
+        type: "system",
+        title: "Nova skill disponível",
+        description: "Nova skill adicionada ao catálogo.",
+        created_at: new Date().toISOString(),
+        read_at: new Date().toISOString(),
+        mention: false,
+        action_label: null,
+        href: null,
+      },
+      {
+        id: "n4",
+        user_id: "user-1",
+        type: "system",
+        title: "Atualização da plataforma",
+        description: "Novo recurso disponível.",
+        created_at: new Date(Date.now() - 3 * 86400000).toISOString(),
+        read_at: new Date().toISOString(),
+        mention: false,
+        action_label: null,
+        href: null,
+      },
+    ],
+    error: null,
+  }),
+  markNotificationsRead: vi.fn().mockResolvedValue({ data: null, error: null }),
+}))
+
 vi.mock("@/components/AppBottomNav", () => ({
   AppBottomNav: () => <div data-testid="bottom-nav">Bottom Nav</div>,
 }))
@@ -36,15 +99,15 @@ describe("Notifications — renderização", () => {
     expect(screen.getByText("Mentions")).toBeInTheDocument()
   })
 
-  it("exibe notificações agrupadas", () => {
+  it("exibe notificações agrupadas", async () => {
     renderNotifications()
-    expect(screen.getByText("Hoje")).toBeInTheDocument()
+    expect(await screen.findByText("Hoje")).toBeInTheDocument()
     expect(screen.getByText("Anterior")).toBeInTheDocument()
   })
 
-  it("exibe itens de notificação com títulos", () => {
+  it("exibe itens de notificação com títulos", async () => {
     renderNotifications()
-    expect(screen.getByText(/Conquista desbloqueada/i)).toBeInTheDocument()
+    expect(await screen.findByText(/Conquista desbloqueada/i)).toBeInTheDocument()
     expect(screen.getByText(/Mencionaram você/i)).toBeInTheDocument()
     expect(screen.getByText(/Nova skill disponível/i)).toBeInTheDocument()
   })
@@ -63,17 +126,17 @@ describe("Notifications — renderização", () => {
 describe("Notifications — filtros", () => {
   it("filtra por 'Não lidas' ao clicar na aba", async () => {
     renderNotifications()
+    await screen.findByText(/Conquista desbloqueada/i)
     await userEvent.click(screen.getByText("Não lidas"))
 
-    // "Conquista desbloqueada" is unread, should still be visible
     expect(screen.getByText(/Conquista desbloqueada/i)).toBeInTheDocument()
   })
 
   it("filtra por 'Mentions' ao clicar na aba", async () => {
     renderNotifications()
+    await screen.findByText(/Mencionaram você/i)
     await userEvent.click(screen.getByText("Mentions"))
 
-    // "Mencionaram você" is a mention, should be visible
     expect(screen.getByText(/Mencionaram você/i)).toBeInTheDocument()
   })
 

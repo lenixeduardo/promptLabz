@@ -23,6 +23,9 @@ vi.mock("@/lib/icons", () => {
     Bell: (props: Record<string, unknown>) => (
       <svg data-testid="icon-Bell" {...props} />
     ),
+    Newspaper: (props: Record<string, unknown>) => (
+      <svg data-testid="icon-Newspaper" {...props} />
+    ),
     User: (props: Record<string, unknown>) => (
       <svg data-testid="icon-User" {...props} />
     ),
@@ -48,14 +51,14 @@ describe("AppBottomNav", () => {
     expect(screen.getByText("Início")).toBeInTheDocument()
     expect(screen.getByText("Trilha")).toBeInTheDocument()
     expect(screen.getByText("Laboratório")).toBeInTheDocument()
-    expect(screen.getByText("Desafios")).toBeInTheDocument()
+    expect(screen.getByText("Missões")).toBeInTheDocument()
     expect(screen.getByText("Notícias")).toBeInTheDocument()
     expect(screen.getByText("Perfil")).toBeInTheDocument()
   })
 
   it("destaca o item ativo com aria-current='page'", () => {
     render(
-      <MemoryRouter initialEntries={["/notifications"]}>
+      <MemoryRouter initialEntries={["/news"]}>
         <AppBottomNav />
       </MemoryRouter>
     )

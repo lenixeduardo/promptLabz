@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
+import { HelmetProvider } from "react-helmet-async"
 import ForgotPassword from "./ForgotPassword"
 import { sileo } from "sileo"
 
@@ -21,12 +22,14 @@ vi.mock("sileo", () => ({
 
 function renderForgotPassword() {
   return render(
-    <MemoryRouter initialEntries={["/forgot-password"]}>
-      <Routes>
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/login" element={<div>login</div>} />
-      </Routes>
-    </MemoryRouter>
+    <HelmetProvider>
+      <MemoryRouter initialEntries={["/forgot-password"]}>
+        <Routes>
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/login" element={<div>login</div>} />
+        </Routes>
+      </MemoryRouter>
+    </HelmetProvider>
   )
 }
 
