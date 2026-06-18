@@ -305,8 +305,10 @@ export interface DbNewsArticle {
   id: string
   title: string
   description: string
-  category: "OpenAI" | "Anthropic" | "Google" | "ChatGPT"
+  category: "OpenAI" | "Anthropic" | "Google" | "ChatGPT" | "Meta" | "Microsoft" | "General"
   image_emoji: string
+  image_url: string | null
+  source_url: string | null
   published_at: string
 }
 
@@ -315,7 +317,7 @@ export async function getNewsArticles(limit = 30): Promise<DbResult<DbNewsArticl
   try {
     const { data, error } = await supabase
       .from("news_articles")
-      .select("id,title,description,category,image_emoji,published_at")
+      .select("id,title,description,category,image_emoji,image_url,source_url,published_at")
       .eq("visible", true)
       .order("published_at", { ascending: false })
       .limit(limit)

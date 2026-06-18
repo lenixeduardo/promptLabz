@@ -1,4 +1,4 @@
-export type NewsCategory = "OpenAI" | "Anthropic" | "Google" | "ChatGPT"
+export type NewsCategory = "OpenAI" | "Anthropic" | "Google" | "ChatGPT" | "Meta" | "Microsoft" | "General"
 
 export interface NewsArticle {
   id: string
@@ -7,6 +7,18 @@ export interface NewsArticle {
   category: NewsCategory
   date: string
   imageEmoji: string
+  imageUrl: string
+  sourceUrl?: string
+}
+
+export const CATEGORY_COVER_IMAGES: Record<NewsCategory, string> = {
+  OpenAI:    "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80",
+  Anthropic: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80",
+  Google:    "https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&q=80",
+  ChatGPT:   "https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=800&q=80",
+  Meta:      "https://images.unsplash.com/photo-1682687982501-1e58ab814714?w=800&q=80",
+  Microsoft: "https://images.unsplash.com/photo-1633419461186-7d40a38105ec?w=800&q=80",
+  General:   "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80",
 }
 
 export const NEWS_ARTICLES: NewsArticle[] = [
@@ -18,33 +30,37 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     category: "OpenAI",
     date: "13 Jun 2026",
     imageEmoji: "🚀",
+    imageUrl: CATEGORY_COVER_IMAGES.OpenAI,
   },
   {
     id: "2",
     title: "Novo modelo Llama 3 chega com desempenho superior",
     description:
       "Meta lança o Llama 3 com 70B de parâmetros, rivalizando com GPT-4 em benchmarks de raciocínio e codificação.",
-    category: "Anthropic",
+    category: "Meta",
     date: "11 Jun 2026",
     imageEmoji: "🦙",
+    imageUrl: CATEGORY_COVER_IMAGES.Meta,
   },
   {
     id: "3",
     title: "Prompt Engineering se torna profissão do futuro",
     description:
       "Pesquisa da Stanford aponta que profissionais de prompt engineering ganham 40% mais e têm demanda crescente no mercado.",
-    category: "OpenAI",
+    category: "General",
     date: "09 Jun 2026",
     imageEmoji: "💼",
+    imageUrl: CATEGORY_COVER_IMAGES.General,
   },
   {
     id: "4",
     title: "Notion integra IA em todas as ferramentas",
     description:
       "O Notion AI agora está disponível em documentos, bancos de dados e calendários, com suporte a comandos em português.",
-    category: "ChatGPT",
+    category: "General",
     date: "07 Jun 2026",
     imageEmoji: "📝",
+    imageUrl: CATEGORY_COVER_IMAGES.General,
   },
   {
     id: "5",
@@ -54,6 +70,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     category: "Anthropic",
     date: "05 Jun 2026",
     imageEmoji: "🔒",
+    imageUrl: CATEGORY_COVER_IMAGES.Anthropic,
   },
   {
     id: "6",
@@ -63,6 +80,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     category: "Google",
     date: "03 Jun 2026",
     imageEmoji: "✨",
+    imageUrl: CATEGORY_COVER_IMAGES.Google,
   },
   {
     id: "7",
@@ -72,6 +90,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     category: "ChatGPT",
     date: "01 Jun 2026",
     imageEmoji: "🎬",
+    imageUrl: CATEGORY_COVER_IMAGES.ChatGPT,
   },
   {
     id: "8",
@@ -81,6 +100,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     category: "Google",
     date: "29 Mai 2026",
     imageEmoji: "📚",
+    imageUrl: CATEGORY_COVER_IMAGES.Google,
   },
   {
     id: "9",
@@ -90,6 +110,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     category: "OpenAI",
     date: "27 Mai 2026",
     imageEmoji: "🧠",
+    imageUrl: CATEGORY_COVER_IMAGES.OpenAI,
   },
   {
     id: "10",
@@ -99,5 +120,6 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     category: "ChatGPT",
     date: "25 Mai 2026",
     imageEmoji: "📈",
+    imageUrl: CATEGORY_COVER_IMAGES.ChatGPT,
   },
 ]
