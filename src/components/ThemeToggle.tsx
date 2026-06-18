@@ -1,40 +1,32 @@
-// ═══════════════════════════════════════════════════════════════════════════
-// ThemeToggle — Dark/Light mode switch button
-// ═══════════════════════════════════════════════════════════════════════════
+import { Sun, Moon } from "lucide-react";
+import { useTheme } from "@/components/ThemeProvider";
+import { cn } from "@/lib/utils";
 
-import { Moon, Sun } from "lucide-react"
-import { useTheme } from "@/contexts/ThemeContext"
-
-interface ThemeToggleProps {
-  /** Show label text alongside icon (default: false) */
-  showLabel?: boolean
-  /** Size variant */
-  size?: "sm" | "md"
-}
-
-export function ThemeToggle({ showLabel = false, size = "md" }: ThemeToggleProps) {
-  const { theme, toggleTheme, isDark } = useTheme()
-
-  const sizeClasses = size === "sm" ? "h-8 w-8" : "h-9 w-9"
-  const iconSize = size === "sm" ? "h-4 w-4" : "h-5 w-5"
+export function ThemeToggle({ className }: { className?: string }) {
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <button
       onClick={toggleTheme}
-      className={`flex items-center justify-center gap-1.5 rounded-full transition-all hover:scale-105 active:scale-95 ${sizeClasses} ${
-        isDark
-          ? "bg-[#2A3A30] text-[#FFD93D] hover:bg-[#345040]"
-          : "bg-pageBgLight text-emerald-dark hover:bg-surface-success"
-      }`}
-      aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
-      title={isDark ? "Modo claro" : "Modo escuro"}
-    >
-      {isDark ? <Sun className={iconSize} /> : <Moon className={iconSize} />}
-      {showLabel && (
-        <span className="text-xs font-semibold">
-          {isDark ? "Claro" : "Escuro"}
-        </span>
+      aria-label={theme === "dark" ? "Ativar modo claro" : "Ativar modo escuro"}
+      className={cn(
+        "relative flex h-8 w-14 items-center rounded-full border border-border bg-muted transition-colors duration-300",
+        theme === "light" ? "bg-emerald/20 border-emerald/30" : "",
+        className,
       )}
+    >
+      <span
+        className={cn(
+          "absolute flex h-6 w-6 items-center justify-center rounded-full bg-card shadow-md transition-all duration-300",
+          theme === "dark" ? "left-1" : "left-7",
+        )}
+      >
+        {theme === "dark" ? (
+          <Moon className="h-3.5 w-3.5 text-foreground" />
+        ) : (
+          <Sun className="h-3.5 w-3.5 text-amber-500" />
+        )}
+      </span>
     </button>
-  )
+  );
 }
