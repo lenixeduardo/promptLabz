@@ -1,0 +1,55 @@
+{
+  "name": "skills-prompts-sync",
+  "schedule": "0 8 */3 * *",
+  "description": "Varre GitHub por novas skills (SKILL.md) e prompts trending, persiste no banco e atualiza o Obsidian vault.",
+
+  "skills_sources": [
+    {
+      "id": "github-search",
+      "description": "GitHub Code Search para arquivos SKILL.md",
+      "api": "https://api.github.com/search/code?q=filename:SKILL.md+path:/",
+      "fetch_limit": 50,
+      "auth": "GITHUB_TOKEN (opcional, aumenta rate limit de 10 para 30 req/min)"
+    }
+  ],
+
+  "prompt_sources": [
+    { "repo": "f/awesome-chatgpt-prompts",          "file": "prompts.csv" },
+    { "repo": "ai-boost/awesome-prompts",            "file": "prompts.csv" },
+    { "repo": "PlexPt/awesome-chatgpt-prompts-zh",   "file": "prompts.csv" },
+    { "repo": "yokoffing/ChatGPT-Prompts",           "file": "README.md" },
+    { "repo": "linexjlin/GPTs",                      "file": "README.md" }
+  ],
+
+  "category_mapping": {
+    "note": "Mapeia categorias em inglês (SKILL.md) para categorias em português (banco)",
+    "productivity":      "Produtividade",
+    "development":       "Desenvolvimento",
+    "design":            "Design & UI",
+    "marketing":         "Marketing",
+    "ai-media":          "IA & Media",
+    "cloud":             "Cloud & Infra",
+    "agent-workflows":   "Agentes & Workflows"
+  },
+
+  "prompt_categories": [
+    "Criatividade", "Marketing", "Programacao",
+    "Educacao", "Produtividade", "Gestao de Produto"
+  ],
+
+  "trending_score": {
+    "formula": "popularity(0.6) + recency(0.4)",
+    "popularity": "min(100, log10(stars + forks + 1) * 30)",
+    "recency":    "max(0, 100 - days_since_last_push * 0.3)",
+    "threshold_trending": 70,
+    "threshold_prompts":  60
+  },
+
+  "vault": {
+    "path": "vault/",
+    "skills_dir": "vault/skills/",
+    "prompts_dir": "vault/prompts/",
+    "obsidian_config": "vault/.obsidian/",
+    "index_filename": "_index.md"
+  }
+}

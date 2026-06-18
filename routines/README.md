@@ -5,6 +5,7 @@ Automações recorrentes do PromptLabz. Cada rotina possui sua própria pasta co
 | Rotina | Frequência | Descrição |
 |--------|-----------|-----------|
 | [`daily-tech-news`](./daily-tech-news/) | Diária · 07:00 UTC | Busca notícias de IA/tech e persiste no banco |
+| [`skills-prompts-sync`](./skills-prompts-sync/) | A cada 3 dias · 08:00 UTC | Varre GitHub por novas skills e prompts trending, atualiza banco e vault Obsidian |
 
 ## Como funciona
 
