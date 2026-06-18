@@ -1,16 +1,26 @@
 import { useState, useEffect } from "react"
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { NEWS_ARTICLES, type NewsArticle, type NewsCategory } from "@/data/newsData"
+import {
+  NEWS_ARTICLES,
+  CATEGORY_COVER_IMAGES,
+  type NewsArticle,
+  type NewsCategory,
+} from "@/data/newsData"
 import { getNewsArticles, type DbNewsArticle } from "@/lib/db"
 import { cn } from "@/lib/utils"
 
-const CATEGORIES: Array<"Todos" | NewsCategory> = ["Todos", "OpenAI", "Anthropic", "Google", "ChatGPT"]
+const CATEGORIES: Array<"Todos" | NewsCategory> = [
+  "Todos", "OpenAI", "Anthropic", "Google", "ChatGPT", "Meta", "Microsoft", "General",
+]
 
 const CATEGORY_STYLES: Record<NewsCategory, string> = {
   OpenAI:    "bg-blue-50 text-blue-700 border border-blue-200",
   Anthropic: "bg-purple-50 text-purple-700 border border-purple-200",
   Google:    "bg-amber-50 text-amber-700 border border-amber-200",
   ChatGPT:   "bg-teal-50 text-teal-700 border border-teal-200",
+  Meta:      "bg-indigo-50 text-indigo-700 border border-indigo-200",
+  Microsoft: "bg-sky-50 text-sky-700 border border-sky-200",
+  General:   "bg-gray-50 text-gray-600 border border-gray-200",
 }
 
 const PT_MONTHS = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
@@ -28,41 +38,81 @@ function mapDbArticle(row: DbNewsArticle): NewsArticle {
     category: row.category,
     date: formatDate(row.published_at),
     imageEmoji: row.image_emoji,
+    imageUrl: row.image_url ?? CATEGORY_COVER_IMAGES[row.category] ?? CATEGORY_COVER_IMAGES.General,
+    sourceUrl: row.source_url ?? undefined,
   }
 }
 
 function NewsCard({ article }: { article: NewsArticle }) {
-  return (
-    <div className="flex gap-3 rounded-2xl border border-stroke-muted bg-white p-4">
-      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-pageBgLight text-3xl">
-        {article.imageEmoji}
-      </div>
-      <div className="flex flex-1 flex-col">
+  const [imgError, setImgError] = useState(false)
+  const coverSrc = imgError ? CATEGORY_COVER_IMAGES[article.category] : article.imageUrl
+
+  const cardContent = (
+    <div className="overflow-hidden rounded-2xl border border-stroke-muted bg-white">
+      {/* Cover image */}
+      <div className="relative h-44 w-full overflow-hidden bg-pageBgLight">
+        <img
+          src={coverSrc}
+          alt={article.title}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          onError={() => setImgError(true)}
+          loading="lazy"
+        />
+        {/* Gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        {/* Category badge over image */}
         <span
           className={cn(
-            "w-fit rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide",
-            CATEGORY_STYLES[article.category]
+            "absolute left-3 top-3 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide backdrop-blur-sm",
+            CATEGORY_STYLES[article.category],
           )}
         >
           {article.category}
         </span>
-        <p className="mt-1 text-sm font-bold leading-snug text-foregroundDark">
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col gap-1.5 p-4">
+        <p className="text-sm font-bold leading-snug text-foregroundDark line-clamp-2">
           {article.title}
         </p>
-        <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-foregroundTertiary">
+        <p className="line-clamp-2 text-xs leading-relaxed text-foregroundTertiary">
           {article.description}
         </p>
-        <span className="mt-2 text-[10px] text-foregroundPlaceholder">{article.date}</span>
+        <div className="mt-1 flex items-center justify-between">
+          <span className="text-[10px] text-foregroundPlaceholder">{article.date}</span>
+          {article.sourceUrl && (
+            <span className="text-[10px] font-medium text-emerald-600">
+              Ler artigo →
+            </span>
+          )}
+        </div>
       </div>
     </div>
   )
+
+  if (article.sourceUrl) {
+    return (
+      <a
+        href={article.sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group block"
+        aria-label={article.title}
+      >
+        {cardContent}
+      </a>
+    )
+  }
+
+  return <div className="group">{cardContent}</div>
 }
 
 function NewsCardSkeleton() {
   return (
-    <div className="flex gap-3 rounded-2xl border border-stroke-muted bg-white p-4">
-      <div className="h-14 w-14 shrink-0 animate-pulse rounded-xl bg-stroke-muted/40" />
-      <div className="flex flex-1 flex-col gap-2">
+    <div className="overflow-hidden rounded-2xl border border-stroke-muted bg-white">
+      <div className="h-44 w-full animate-pulse bg-stroke-muted/40" />
+      <div className="flex flex-col gap-2 p-4">
         <div className="h-3 w-16 animate-pulse rounded-full bg-stroke-muted/40" />
         <div className="h-4 w-full animate-pulse rounded bg-stroke-muted/40" />
         <div className="h-3 w-4/5 animate-pulse rounded bg-stroke-muted/30" />
@@ -109,7 +159,7 @@ export default function News() {
                 "shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors",
                 activeCategory === cat
                   ? "border-primary-dark bg-primary-dark text-white"
-                  : "border-stroke-light bg-white text-primary-dark hover:border-emerald"
+                  : "border-stroke-light bg-white text-primary-dark hover:border-emerald",
               )}
             >
               {cat}
@@ -118,11 +168,11 @@ export default function News() {
         </div>
       </div>
 
-      {/* Articles list */}
-      <div className="flex flex-1 flex-col gap-3 px-4 py-4">
+      {/* Articles grid */}
+      <div className="flex flex-1 flex-col gap-4 px-4 py-4">
         {loading ? (
           <>
-            {[...Array(5)].map((_, i) => <NewsCardSkeleton key={i} />)}
+            {[...Array(4)].map((_, i) => <NewsCardSkeleton key={i} />)}
           </>
         ) : filtered.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-2 py-16 text-center">

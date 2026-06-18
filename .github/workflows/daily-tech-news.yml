@@ -1,0 +1,42 @@
+name: Daily Tech News
+
+on:
+  schedule:
+    - cron: '0 7 * * *'   # Every day at 07:00 UTC
+  workflow_dispatch:        # Allow manual trigger from GitHub UI
+
+jobs:
+  fetch-news:
+    name: Fetch & ingest tech news
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Trigger daily-tech-news Edge Function
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          DAILY_NEWS_SECRET: ${{ secrets.DAILY_NEWS_SECRET }}
+        run: |
+          FUNCTION_URL="${SUPABASE_URL%/}/functions/v1/daily-tech-news"
+          echo "→ POST $FUNCTION_URL"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST \
+            -H "Authorization: Bearer ${DAILY_NEWS_SECRET}" \
+            -H "Content-Type: application/json" \
+            --max-time 60 \
+            "$FUNCTION_URL")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | head -n -1)
+
+          echo "← HTTP $HTTP_CODE"
+          echo "$BODY"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::Edge Function returned $HTTP_CODE"
+            exit 1
+          fi
+
+          INSERTED=$(echo "$BODY" | grep -o '"inserted":[0-9]*' | grep -o '[0-9]*' || echo "?")
+          echo "::notice::Inserted $INSERTED new articles"
