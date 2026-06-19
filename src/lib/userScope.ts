@@ -58,6 +58,7 @@ export function initUserScope() {
 }
 
 export function getUserId(): string | null {
+  if (import.meta.env.VITE_PREVIEW_MODE === 'true') return 'preview';
   return cachedUid;
 }
 
