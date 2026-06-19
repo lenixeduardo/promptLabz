@@ -3,13 +3,19 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { LivesProvider } from "@/contexts/LivesContext"
 import { AchievementsProvider } from "@/contexts/AchievementsContext"
-import { ThemeProvider } from "@/contexts/ThemeContext"
+import { ThemeProvider } from "@/components/ThemeProvider"
+import { AvatarProvider } from "@/components/AvatarProvider"
+import { PremiumProvider } from "@/components/PremiumProvider"
 import { PrivateRoute } from "@/components/PrivateRoute"
 import { Toaster } from "sileo"
 import "sileo/styles.css"
 import { initAnalytics, pageView, identify, reset } from "@/lib/analytics"
+import { initUserScope } from "@/lib/userScope"
 import { useAuth } from "@/hooks/useAuth"
 import { useUTM } from "@/hooks/useUTM"
+
+// Initialize user-scoped localStorage namespacing
+initUserScope()
 
 const Hero = lazy(() => import("@/pages/Hero"))
 const Login = lazy(() => import("@/pages/Login"))
@@ -47,6 +53,15 @@ const Templates = lazy(() => import("@/pages/Templates"))
 const LabResult = lazy(() => import("@/pages/LabResult"))
 const QuizResult = lazy(() => import("@/pages/QuizResult"))
 const Certificate = lazy(() => import("@/pages/Certificate"))
+const Onboarding = lazy(() => import("@/pages/Onboarding"))
+const PromptLab = lazy(() => import("@/pages/PromptLab"))
+const Missions = lazy(() => import("@/pages/Missions"))
+const ModuleExam = lazy(() => import("@/pages/ModuleExam"))
+const PromptWars = lazy(() => import("@/pages/PromptWars"))
+const Roadmap = lazy(() => import("@/pages/Roadmap"))
+const Settings = lazy(() => import("@/pages/Settings"))
+const Community = lazy(() => import("@/pages/Community"))
+const Verify = lazy(() => import("@/pages/Verify"))
 
 function PageLoading() {
   return (
@@ -97,6 +112,8 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
+        <AvatarProvider>
+          <PremiumProvider>
         <LivesProvider>
           <AchievementsProvider>
           <AnalyticsTracker />
@@ -349,11 +366,71 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
+              <Route path="/onboarding" element={<Onboarding />} />
+              <Route
+                path="/prompt-lab"
+                element={
+                  <PrivateRoute>
+                    <PromptLab />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/missions"
+                element={
+                  <PrivateRoute>
+                    <Missions />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/module-exam"
+                element={
+                  <PrivateRoute>
+                    <ModuleExam />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/prompt-wars"
+                element={
+                  <PrivateRoute>
+                    <PromptWars />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/roadmap"
+                element={
+                  <PrivateRoute>
+                    <Roadmap />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <PrivateRoute>
+                    <Settings />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/community"
+                element={
+                  <PrivateRoute>
+                    <Community />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/verify/:id" element={<Verify />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
           </AchievementsProvider>
         </LivesProvider>
+          </PremiumProvider>
+        </AvatarProvider>
       </AuthProvider>
     </ThemeProvider>
   )

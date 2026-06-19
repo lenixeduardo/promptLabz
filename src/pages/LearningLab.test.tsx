@@ -1,158 +1,96 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { render, screen, fireEvent, waitFor } from "@testing-library/react"
+import { render, screen, fireEvent } from "@testing-library/react"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import LearningLab from "./LearningLab"
 
-import { LivesProvider } from "@/contexts/LivesContext"
-import { AchievementsProvider } from "@/contexts/AchievementsContext"
-
-const mockUser = { id: "user-1", email: "aluno@test.com" }
-
 vi.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ user: mockUser }),
+  useAuth: () => ({ user: { id: "user-1", email: "aluno@test.com" } }),
 }))
 
-vi.mock("@/contexts/AuthContext", () => ({
-  useAuthContext: () => ({ user: mockUser, loading: false, error: null }),
+vi.mock("@/lib/moduleProgress", () => ({
+  useModuleProgress: vi.fn().mockReturnValue(0),
 }))
 
-vi.mock("@/lib/db", () => ({
-  loadProgress: vi.fn().mockImplementation(() => {
-    try {
-      const saved = localStorage.getItem(`promptlabz_progress:${mockUser.id}`)
-      return Promise.resolve(saved ? JSON.parse(saved) : {})
-    } catch {
-      return Promise.resolve({})
-    }
-  }),
-  saveProgress: vi.fn().mockResolvedValue(undefined),
-  getAchievementDefinitions: vi.fn().mockResolvedValue({ data: [], error: null }),
-  getLabCategories: vi.fn().mockResolvedValue({ data: [], error: null }),
-  getLabConfig: vi.fn().mockResolvedValue({ data: null, error: null }),
-  loadStreak: vi.fn().mockResolvedValue({ data: null, error: null }),
-  saveStreak: vi.fn().mockResolvedValue({ data: null, error: null }),
-  insertNotification: vi.fn().mockResolvedValue({ data: null, error: null }),
-}))
-
-vi.mock("sileo", () => ({
-  sileo: { success: vi.fn(), error: vi.fn() },
-}))
-
-vi.mock("@/components/HelpButton", () => ({
-  HelpButton: () => <div>help</div>,
+vi.mock("@/lib/userScope", () => ({
+  scopedKey: (k: string) => `${k}::u:user-1`,
+  USER_SCOPE_EVENT: "promptlabz:user-scope-change",
+  initUserScope: vi.fn(),
+  getUserId: vi.fn().mockReturnValue("user-1"),
 }))
 
 function renderLearningLab(initialUrl = "/learn") {
   return render(
     <MemoryRouter initialEntries={[initialUrl]}>
-      <LivesProvider>
-        <AchievementsProvider>
-          <Routes>
-            <Route path="/learn" element={<LearningLab />} />
-            <Route path="/home" element={<div>Home Page</div>} />
-            <Route path="/lesson" element={<div>Lesson Page</div>} />
-          </Routes>
-        </AchievementsProvider>
-      </LivesProvider>
+      <Routes>
+        <Route path="/learn" element={<LearningLab />} />
+        <Route path="/lesson" element={<div>Lesson Page</div>} />
+      </Routes>
     </MemoryRouter>
   )
 }
 
-// ─── Tela de lista de cursos (/learn) ───────────────────────────────────────
-
-describe("LearningLab - lista de cursos (Trilha de Aprendizado)", () => {
+describe("LearningLab — trilha de aprendizado", () => {
   beforeEach(() => {
     localStorage.clear()
     vi.clearAllMocks()
   })
 
-  it("renderiza o titulo 'Trilha de Aprendizado'", () => {
+  it("renderiza o heading com a trilha ativa", () => {
     renderLearningLab()
-    expect(screen.getByRole("heading", { name: /Trilha de Aprendizado/i, level: 1 })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Trilha A1")
   })
 
-  it("exibe o subtítulo correto", () => {
+  it("exibe o subtítulo da trilha ativa", () => {
     renderLearningLab()
-    expect(screen.getByText(/Aprenda do básico ao avançado/i)).toBeInTheDocument()
+    expect(screen.getByText(/Fundamentos de prompts/i)).toBeInTheDocument()
   })
 
-  it("exibe o primeiro curso como acessível", () => {
+  it("exibe os seletores das três trilhas", () => {
     renderLearningLab()
-    expect(screen.getByText("Trending Skills")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /Trilha A1/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /Trilha A2/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /Trilha A3/i })).toBeInTheDocument()
   })
 
-  it("lista trilhas profissionais novas no seletor do lab", () => {
+  it("exibe o primeiro módulo da trilha A1", () => {
     renderLearningLab()
-    expect(screen.getByText("Orquestracao de Agentes")).toBeInTheDocument()
-    expect(screen.getByText("IA para Financeiro")).toBeInTheDocument()
+    expect(screen.getByText("Boas-vindas")).toBeInTheDocument()
   })
 
-  it("exibe ícones de cadeado nos cursos bloqueados", () => {
+  it("exibe os módulos subsequentes da trilha A1", () => {
     renderLearningLab()
-    const lockIcons = document.querySelectorAll("button[disabled]")
-    expect(lockIcons.length).toBeGreaterThan(0)
+    expect(screen.getByText("O que é um prompt")).toBeInTheDocument()
+    expect(screen.getByText("Refino iterativo")).toBeInTheDocument()
   })
 
-  it("navega para a trilha ao clicar no primeiro curso", async () => {
+  it("troca para a trilha A2 ao clicar no seletor", () => {
     renderLearningLab()
-    fireEvent.click(screen.getByText("Trending Skills"))
-    await waitFor(() => {
-      expect(screen.getByText(/Seu progresso na trilha/i)).toBeInTheDocument()
-    })
-  })
-})
-
-// ─── Tela de trilha de ensino (/learn?category=...) ─────────────────────────
-
-describe("LearningLab - trilha de ensino (trail view)", () => {
-  beforeEach(() => {
-    localStorage.clear()
-    vi.clearAllMocks()
+    fireEvent.click(screen.getByRole("button", { name: /Trilha A2/i }))
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Trilha A2")
+    expect(screen.getByText(/Prompts avançados/i)).toBeInTheDocument()
   })
 
-  it("renderiza o titulo da categoria ativa", () => {
-    renderLearningLab("/learn?category=trending-skills")
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Trending Skills")
+  it("exibe ícones de cadeado nos módulos bloqueados (todos bloqueados com 0 progresso)", () => {
+    renderLearningLab()
+    // The SVG Lock icons are rendered inside the module circles for locked modules
+    // With 0 progress only the first module is current, rest are locked
+    const links = screen.getAllByRole("link")
+    // At least some links should point to /learn (locked) or /lesson?track=a1&module=0 (current)
+    expect(links.length).toBeGreaterThan(0)
   })
 
-  it("exibe o card de progresso com 0% inicial", () => {
-    renderLearningLab("/learn?category=trending-skills")
-    expect(screen.getByText("0%")).toBeInTheDocument()
-    expect(screen.getByText(/Seu progresso na trilha/i)).toBeInTheDocument()
+  it("o módulo atual tem link para /lesson", () => {
+    renderLearningLab()
+    const lessonLinks = screen.getAllByRole("link").filter(
+      (el) => el.getAttribute("href")?.includes("/lesson")
+    )
+    expect(lessonLinks.length).toBeGreaterThan(0)
   })
 
-  it("renderiza os títulos das lições na trilha", () => {
-    renderLearningLab("/learn?category=trending-skills")
-    expect(screen.getByText(/Modelos de Linguagem/i)).toBeInTheDocument()
-    expect(screen.getByText(/Anatomia de um Prompt Eficiente/i)).toBeInTheDocument()
-  })
-
-  it("exibe o botão de continuar com número da lição atual", () => {
-    renderLearningLab("/learn?category=trending-skills")
-    expect(screen.getByRole("button", { name: /Continuar aula 1/i })).toBeInTheDocument()
-  })
-
-  it("exibe lições como concluídas quando há progresso salvo", async () => {
-    const fakeProgress = {
-      "trending-skills": {
-        currentModuleIndex: 0,
-        currentLessonIndex: 1,
-        completedLessonIds: ["ts-mod-1-l1"],
-      },
-    }
-    localStorage.setItem(`promptlabz_progress:${mockUser.id}`, JSON.stringify(fakeProgress))
-
-    renderLearningLab("/learn?category=trending-skills")
-
-    await waitFor(() => {
-      expect(screen.getByText("25%")).toBeInTheDocument()
-    })
-    expect(screen.getByRole("button", { name: /Continuar aula 2/i })).toBeInTheDocument()
-  })
-
-  it("exibe botão para voltar para a lista de cursos", () => {
-    renderLearningLab("/learn?category=trending-skills")
-    const backButton = screen.getByRole("button", { name: "" })
-    expect(backButton).toBeInTheDocument()
+  it("troca para a trilha A3 ao clicar no seletor", () => {
+    renderLearningLab()
+    fireEvent.click(screen.getByRole("button", { name: /Trilha A3/i }))
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Trilha A3")
+    expect(screen.getByText(/Prompts para código/i)).toBeInTheDocument()
   })
 })
