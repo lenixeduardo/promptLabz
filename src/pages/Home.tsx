@@ -20,6 +20,10 @@ import { useStreak } from "@/lib/streak";
 import { useState, useEffect } from "react";
 import { useModuleProgress, type TrackId } from "@/lib/moduleProgress";
 import { scopedKey, USER_SCOPE_EVENT } from "@/lib/userScope";
+import { useAuth } from "@/hooks/useAuth";
+import { getUserProfile } from "@/lib/db";
+import { getLevelProgress } from "@/lib/xp";
+import { getLevelTitle } from "@/lib/levelTitles";
 
 type TrackInfo = { id: TrackId; label: string; modules: string[] };
 
@@ -102,6 +106,7 @@ function useMissionsDone(): number {
 
 export default function HomePage() {
   const { equipped } = useAvatar();
+  const { user } = useAuth();
   const a1 = useModuleProgress("a1");
   const a2 = useModuleProgress("a2");
   const a3 = useModuleProgress("a3");
@@ -132,12 +137,23 @@ export default function HomePage() {
   const missionsDone = useMissionsDone();
   const missionsPct = Math.round((Math.min(missionsDone, CHEST_TOTAL) / CHEST_TOTAL) * 100);
 
-  const level = 4;
-  const currentXP = 320;
-  const targetXP = 500;
+  const [xp, setXp] = useState(0);
+  const [gems, setGems] = useState(0);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    getUserProfile(user.id).then(({ data: profile }) => {
+      if (profile) {
+        setXp(profile.xp ?? 0);
+        setGems(profile.gems ?? 0);
+      }
+    });
+  }, [user?.id]);
+
+  const { currentXP, targetXP, level } = getLevelProgress(xp);
   const xpPct = Math.round((currentXP / targetXP) * 100);
+  const levelTitle = getLevelTitle(level);
   const { count: streak, longest: longestStreak } = useStreak();
-  const gems = 142;
   const [streakCelebration, setStreakCelebration] = useState(false);
 
   useEffect(() => {
@@ -167,7 +183,7 @@ export default function HomePage() {
       <div className="flex flex-col min-h-screen bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
         <div className="bg-card border-b border-stroke-muted px-4 py-3 flex items-center justify-between sticky top-0 z-10">
           <div>
-            <h1 className="text-lg font-bold text-primary-dark">Olá, Explorador! 👋</h1>
+            <h1 className="text-lg font-bold text-primary-dark">Olá, {levelTitle}! 👋</h1>
             <p className="text-xs text-foreground-tertiary">Pronto para mais um desafio?</p>
           </div>
           <div className="flex items-center gap-2">
@@ -193,7 +209,7 @@ export default function HomePage() {
                 <p className="text-xs font-semibold uppercase tracking-wider opacity-80">
                   Nível {level}
                 </p>
-                <p className="text-xl font-extrabold">Aprendiz de Prompts</p>
+                <p className="text-xl font-extrabold">{levelTitle}</p>
               </div>
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-card/15 backdrop-blur">
                 <Star className="h-7 w-7 text-luxury fill-luxury" />
