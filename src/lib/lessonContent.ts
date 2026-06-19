@@ -1,5 +1,10 @@
 import type { TrackId } from "@/lib/moduleProgress";
 
+// ── Tipos de atividade ─────────────────────────────────────────────────
+
+export type ActivityType = "multiple-choice" | "fill-blank" | "match" | "order";
+
+/** Multiple choice (existente) */
 export type Question = {
   id: string;
   prompt: string;
@@ -8,6 +13,150 @@ export type Question = {
   explanation: string;
   hint?: string;
 };
+
+/** Completar frase — lacuna {___} com opções de palavra */
+export type FillBlankActivity = {
+  id: string;
+  type: "fill-blank";
+  sentence: string;           // frase com {___} para lacuna
+  options: { id: string; text: string }[];
+  correct: string;
+  explanation: string;
+  hint?: string;
+};
+
+/** Ligar palavra → significado */
+export type MatchActivity = {
+  id: string;
+  type: "match";
+  instruction: string;
+  pairs: { word: string; definition: string }[];
+  explanation: string;
+};
+
+/** Conectar itens entre duas colunas */
+export type OrderActivity = {
+  id: string;
+  type: "order";
+  instruction: string;
+  leftItems: { id: string; text: string }[];
+  rightItems: { id: string; text: string }[];
+  correctPairs: Record<string, string>;  // leftId → rightId
+  explanation: string;
+};
+
+export type LessonActivity = Question | FillBlankActivity | MatchActivity | OrderActivity;
+
+// ── Guards ─────────────────────────────────────────────────────────────
+export function isFillBlank(a: LessonActivity): a is FillBlankActivity {
+  return a.type === "fill-blank";
+}
+export function isMatch(a: LessonActivity): a is MatchActivity {
+  return a.type === "match";
+}
+export function isOrder(a: LessonActivity): a is OrderActivity {
+  return a.type === "order";
+}
+// ── Atividades dos novos tipos ─────────────────────────────────────────
+
+const apiKeyFillBlank: LessonActivity[] = [
+  {
+    id: "ak-fill-1",
+    type: "fill-blank",
+    sentence: "Uma {___} é uma credencial secreta que identifica seu aplicativo ao chamar um serviço externo.",
+    options: [
+      { id: "a", text: "chave de API" },
+      { id: "b", text: "token JWT" },
+      { id: "c", text: "hash de senha" },
+    ],
+    correct: "a",
+    explanation: "Chave de API (API key) é o segredo que prova ao servidor quem está chamando. JWT é um formato de token, hash é unidirecional.",
+  },
+  {
+    id: "ak-fill-2",
+    type: "fill-blank",
+    sentence: "Quando sua chave de API vaza, a primeira ação deve ser {___} a chave no painel do provedor.",
+    options: [
+      { id: "a", text: "rotacionar (revogar e gerar nova)" },
+      { id: "b", text: "apenas apagar o commit" },
+      { id: "c", text: "esperar para ver se alguém usa" },
+    ],
+    correct: "a",
+    explanation: "Rotação (rotate) é obrigatória: o histórico do Git mantém o segredo mesmo após o delete. Revogue, gere outra e atualize seus segredos.",
+  },
+]
+
+const llmMatch: LessonActivity[] = [
+  {
+    id: "llm-match-1",
+    type: "match",
+    instruction: "Ligue cada modelo de linguagem à sua empresa criadora:",
+    pairs: [
+      { word: "Claude", definition: "Anthropic" },
+      { word: "GPT-4", definition: "OpenAI" },
+      { word: "Gemini", definition: "Google" },
+      { word: "Qwen", definition: "Alibaba" },
+    ],
+    explanation: "Cada modelo é desenvolvido por uma organização diferente. Claude = Anthropic, GPT = OpenAI, Gemini = Google, Qwen = Alibaba.",
+  },
+]
+
+const gitOrder: LessonActivity[] = [
+  {
+    id: "gb-order-1",
+    type: "order",
+    instruction: "Conecte cada comando Git à sua função correspondente:",
+    leftItems: [
+      { id: "a", text: "git add" },
+      { id: "b", text: "git commit" },
+      { id: "c", text: "git push" },
+      { id: "d", text: "git clone" },
+    ],
+    rightItems: [
+      { id: "w", text: "Prepara arquivos para o commit" },
+      { id: "x", text: "Salva alterações no histórico local" },
+      { id: "y", text: "Envia commits para o repositório remoto" },
+      { id: "z", text: "Faz cópia local de um repositório remoto" },
+    ],
+    correctPairs: { a: "w", b: "x", c: "y", d: "z" },
+    explanation: "Fluxo Git: clone (baixar) → add (preparar) → commit (salvar local) → push (enviar remoto).",
+  },
+]
+
+const cronMatch: LessonActivity[] = [
+  {
+    id: "cj-match-1",
+    type: "match",
+    instruction: "Ligue cada expressão cron ao seu significado:",
+    pairs: [
+      { word: "0 9 * * 1", definition: "Toda segunda às 09:00" },
+      { word: "*/15 * * * *", definition: "A cada 15 minutos" },
+      { word: "0 0 * * *", definition: "Todo dia à meia-noite" },
+      { word: "0 0 1 * *", definition: "Primeiro dia de cada mês" },
+    ],
+    explanation: "Os 5 campos do cron são: minuto, hora, dia-do-mês, mês, dia-da-semana. * = qualquer valor, */N = a cada N.",
+  },
+]
+
+const healthOrder: LessonActivity[] = [
+  {
+    id: "hc-order-1",
+    type: "order",
+    instruction: "Conecte cada conceito de health check à sua descrição:",
+    leftItems: [
+      { id: "a", text: "Liveness" },
+      { id: "b", text: "Readiness" },
+      { id: "c", text: "SELECT 1" },
+    ],
+    rightItems: [
+      { id: "x", text: "Verifica se o processo está vivo" },
+      { id: "y", text: "Verifica se está pronto para receber tráfego" },
+      { id: "z", text: "Consulta leve para testar o banco de dados" },
+    ],
+    correctPairs: { a: "x", b: "y", c: "z" },
+    explanation: "Liveness reinicia o app se travar. Readiness tira do balanceador. SELECT 1 testa o banco sem gerar carga.",
+  },
+]
 
 // Conteúdo padrão (fallback para módulos sem conteúdo dedicado)
 export const DEFAULT_QUESTIONS: Question[] = [
@@ -699,7 +848,8 @@ const skillsLLMBasico: Question[] = [
 
 
 // Conteúdo por trilha → módulo (índice). Falta → DEFAULT_QUESTIONS.
-export const LESSONS: Record<TrackId, Question[][]> = {
+// Agora suporta LessonActivity[] (múltiplos tipos) em vez de apenas Question[]
+export const LESSONS: Record<TrackId, LessonActivity[][]> = {
   a1: [],
   a2: [
     [], [], [], [], [], [], [], // 0..6 (módulos antigos → fallback)
@@ -714,20 +864,25 @@ export const LESSONS: Record<TrackId, Question[][]> = {
     claudeCodePratica,            // 10
     skillsClaudeCode,             // 11
     personalizarTemplates,        // 12
-    apiKeyBasico,                 // 13
+    [...apiKeyBasico, ...apiKeyFillBlank], // 13 — API Key (MC + FillBlank)
     migrationsBasico,             // 14
-    healthCheckBasico,            // 15
-    cronJobsBasico,               // 16
+    [...healthCheckBasico, ...healthOrder], // 15 — Health (MC + Order)
+    [...cronJobsBasico, ...cronMatch],   // 16 — Cron (MC + Match)
     nodeBasico,                   // 17
-    gitBashBasico,                // 18
+    [...gitBashBasico, ...gitOrder],   // 18 — Git (MC + Order)
     npmBasico,                    // 19
-    skillsLLMBasico,              // 20
+    [...skillsLLMBasico, ...llmMatch],  // 20 — Skills (MC + Match)
   ],
 };
 
-export function getQuestions(track: TrackId, moduleIndex: number): Question[] {
+export function getActivities(track: TrackId, moduleIndex: number): LessonActivity[] {
   const set = LESSONS[track]?.[moduleIndex];
   return set && set.length > 0 ? set : DEFAULT_QUESTIONS;
+}
+
+/** @deprecated Use getActivities instead */
+export function getQuestions(track: TrackId, moduleIndex: number): LessonActivity[] {
+  return getActivities(track, moduleIndex);
 }
 
 // Total de módulos por trilha (sincronizado com TRACKS em learn.tsx)

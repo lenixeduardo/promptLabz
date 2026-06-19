@@ -1,9 +1,8 @@
 import { Link, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
-  Send,
-  Lightbulb,
   Heart,
+  Send,
   ArrowRight,
   CheckCircle2,
   Camera,
@@ -11,9 +10,10 @@ import {
   ImageIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
 import { advanceModule, type TrackId } from "@/lib/moduleProgress";
-import { getQuestions, getProofTask, TRACK_TOTALS } from "@/lib/lessonContent";
+import { getActivities, getProofTask, TRACK_TOTALS, isMatch, isOrder } from "@/lib/lessonContent";
+import type { LessonActivity } from "@/lib/lessonContent";
+import { ActivityRenderer } from "@/components/activities/ActivityRenderer";
 import { scopedKey } from "@/lib/userScope";
 
 const proofKey = (track: TrackId, module: number) =>
@@ -33,11 +33,12 @@ export default function LessonPage() {
   const track = (searchParams.get("track") as TrackId) || "a1";
   const module = parseInt(searchParams.get("module") || "0", 10);
 
-  const QUESTIONS = useMemo(() => getQuestions(track, module), [track, module]);
+  const ACTIVITIES = useMemo(() => getActivities(track, module), [track, module]);
   const proofTask = useMemo(() => getProofTask(track, module), [track, module]);
   const [step, setStep] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [matchOrderAnswers, setMatchOrderAnswers] = useState<Record<string, Record<string, string>>>({});
   const [proofDataUrl, setProofDataUrl] = useState<string | null>(() => readProof(track, module));
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -45,19 +46,42 @@ export default function LessonPage() {
     setProofDataUrl(readProof(track, module));
   }, [track, module]);
 
-  const finished = step >= QUESTIONS.length;
-  const q = QUESTIONS[step];
-  const answered = selected !== null;
-  const isRight = !finished && selected === q?.correct;
-  const isLast = step === QUESTIONS.length - 1;
-  const score = Object.entries(answers).filter(
-    ([qId, ans]) => QUESTIONS.find((qq) => qq.id === qId)?.correct === ans,
-  ).length;
+  const finished = step >= ACTIVITIES.length;
+  const currentActivity = ACTIVITIES[step] as LessonActivity | undefined;
+  const answered = selected !== null || !!matchOrderAnswers[step];
+  const isLast = step === ACTIVITIES.length - 1;
+
+  // Score: multiple-choice e fill-blank usam selected === correct
+  // match e order usam o número de pares corretos
+  const score = ACTIVITIES.reduce((acc, activity, i) => {
+    if (isMatch(activity) || isOrder(activity)) {
+      const pairs = matchOrderAnswers[i]
+      if (!pairs) return acc
+      const correct = activity.correctPairs || {}
+      const matchScore = Object.entries(pairs).filter(([k, v]) => correct[k] === v).length
+      return acc + (matchScore === Object.keys(correct).length ? 1 : 0)
+    }
+    const answer = answers[activity.id]
+    if (!answer) return acc
+    return acc + (answer === (activity as any).correct ? 1 : 0)
+  }, 0)
 
   function pick(id: string) {
-    if (answered || !q) return;
-    setSelected(id);
-    setAnswers((prev) => ({ ...prev, [q.id]: id }));
+    if (answered || !currentActivity) return
+    setSelected(id)
+    setAnswers((prev) => ({ ...prev, [currentActivity.id]: id }))
+  }
+
+  function handleMatchAnswer(pairs: Record<string, string>) {
+    if (answered || !currentActivity) return
+    setMatchOrderAnswers((prev) => ({ ...prev, [step]: pairs }))
+    setSelected("__match_done__")
+  }
+
+  function handleOrderAnswer(pairs: Record<string, string>) {
+    if (answered || !currentActivity) return
+    setMatchOrderAnswers((prev) => ({ ...prev, [step]: pairs }))
+    setSelected("__order_done__")
   }
 
   function next() {
@@ -91,9 +115,9 @@ export default function LessonPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
-  const progress = Math.round(((step + (answered ? 1 : 0)) / QUESTIONS.length) * 100);
+  const progress = Math.round(((step + (answered ? 1 : 0)) / ACTIVITIES.length) * 100);
 
-  const perfect = finished && score === QUESTIONS.length;
+  const perfect = finished && score === ACTIVITIES.length;
   const needsProof = !!proofTask;
   const proofDone = !!proofDataUrl;
   const lessonComplete = perfect && (!needsProof || proofDone);
@@ -185,7 +209,7 @@ export default function LessonPage() {
             {perfect ? "Perfeito!" : "Boa tentativa!"}
           </h2>
           <p className="mt-1 text-sm text-foreground-tertiary">
-            Você acertou {score} de {QUESTIONS.length} perguntas
+            Você acertou {score} de {ACTIVITIES.length} atividades
           </p>
           {perfect && (
             <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald/15 px-3 py-1 text-xs font-bold text-emerald">
@@ -272,61 +296,16 @@ export default function LessonPage() {
       </div>
 
       <div className="flex flex-1 flex-col px-5 py-6">
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-foreground-tertiary">
-          Pergunta {step + 1} de {QUESTIONS.length}
-        </p>
-
-        <div className="mb-6 flex items-start gap-3">
-          <img src="/assets/mascot-teacher.png" alt="" className="h-16 w-16 shrink-0 object-contain" />
-          <div className="relative rounded-2xl rounded-tl-none border-2 border-stroke-light bg-card px-4 py-3 shadow-sm">
-            <p className="text-sm font-bold text-foreground-dark">{q.prompt}</p>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-3">
-          {q.options.map((opt) => {
-            const isSelected = selected === opt.id;
-            const isOptCorrect = opt.id === q.correct;
-            return (
-              <button
-                key={opt.id}
-                disabled={answered}
-                onClick={() => pick(opt.id)}
-                className={cn(
-                  "rounded-2xl border-2 px-4 py-3 text-left text-sm font-medium transition-all active:scale-[0.99]",
-                  !answered && "border-stroke-light bg-card hover:border-emerald",
-                  answered && isOptCorrect && "border-emerald bg-surface-success text-emerald-dark",
-                  answered && isSelected && !isOptCorrect && "border-red-300 bg-red-50 text-red-700",
-                  answered && !isSelected && !isOptCorrect && "border-stroke-light bg-card opacity-60",
-                )}
-              >
-                <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-page-bg-light text-xs font-extrabold text-forest">
-                  {opt.id.toUpperCase()}
-                </span>
-                {opt.text}
-              </button>
-            );
-          })}
-        </div>
-
-        {answered && (
-          <div
-            className={cn(
-              "mt-6 rounded-2xl border-2 p-4",
-              isRight ? "border-emerald bg-surface-success" : "border-red-300 bg-red-50",
-            )}
-          >
-            <div className="flex items-start gap-2">
-              <Lightbulb className={cn("h-5 w-5 shrink-0", isRight ? "text-emerald-dark" : "text-red-500")} />
-              <div>
-                <p className={cn("text-sm font-bold", isRight ? "text-emerald-dark" : "text-red-700")}>
-                  {isRight ? "Mandou bem!" : "Quase lá!"}
-                </p>
-                <p className="mt-1 text-xs text-foreground-secondary">{q.explanation}</p>
-              </div>
-            </div>
-          </div>
-        )}
+        <ActivityRenderer
+          activity={currentActivity!}
+          selected={selected}
+          answered={answered}
+          step={step}
+          total={ACTIVITIES.length}
+          onSelect={pick}
+          onMatchAnswer={handleMatchAnswer}
+          onOrderAnswer={handleOrderAnswer}
+        />
 
         <div className="mt-auto pt-6">
           {answered ? (
@@ -334,12 +313,14 @@ export default function LessonPage() {
               onClick={next}
               className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald py-4 text-sm font-extrabold uppercase tracking-wide text-white transition-colors hover:bg-emerald-dark"
             >
-              {isLast ? "Ver resultado" : "Próxima pergunta"}
+              {isLast ? "Ver resultado" : "Próxima atividade"}
               <ArrowRight className="h-4 w-4" />
             </button>
           ) : (
             <div className="flex w-full items-center justify-center gap-2 rounded-2xl bg-stroke-light py-4 text-sm font-extrabold uppercase tracking-wide text-neutral pointer-events-none">
-              Selecione uma opção
+              {isMatch(currentActivity!) || isOrder(currentActivity!)
+                ? "Conecte todos os itens para continuar"
+                : "Selecione uma opção"}
               <Send className="h-4 w-4" />
             </div>
           )}
