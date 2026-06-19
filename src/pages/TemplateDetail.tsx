@@ -9,13 +9,14 @@ import { BottomNav } from "@/components/BottomNav"
 import { cn } from "@/lib/utils"
 import { TEMPLATES, type Template } from "@/data/templatesData"
 
-type Tab = "inicio" | "pagina-web" | "prompt" | "resultado"
+type Tab = "inicio" | "pagina-web" | "prompt" | "resultado" | "live-preview"
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "inicio", label: "Início" },
   { key: "pagina-web", label: "Página Web" },
   { key: "prompt", label: "Prompt" },
   { key: "resultado", label: "Resultado" },
+  { key: "live-preview", label: "Preview" },
 ]
 
 const STAT_ICON_MAP: Record<string, LucideIcon> = {
@@ -97,6 +98,10 @@ function TabContent({ tab, template }: { tab: Tab; template: Template }) {
     )
   }
 
+  if (tab === "live-preview") {
+    return <LivePreview template={template} />
+  }
+
   // inicio (default)
   return (
     <div className="px-4 pt-4 space-y-4">
@@ -120,6 +125,89 @@ function TabContent({ tab, template }: { tab: Tab; template: Template }) {
             </span>
           ))}
         </div>
+      </div>
+    </div>
+  )
+}
+
+function LivePreview({ template }: { template: Template }) {
+  const accent = template.previewColor ?? "#1E3A5F"
+  const isPlanner = ["9", "10", "11", "12"].includes(template.id)
+
+  return (
+    <div className="px-4 pt-4">
+      <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+        <p className="mb-3 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
+          Visualização
+        </p>
+
+        {isPlanner ? (
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="h-16 flex-1 rounded-xl border border-stroke-light bg-pageBgLight p-3">
+                <div className="mb-2 h-2 w-24 rounded-full bg-stroke-light" />
+                <div className="grid grid-cols-2 gap-2">
+                  {template.webSections.slice(0, 4).map((section) => (
+                    <div key={section} className="rounded-lg border border-stroke-light bg-white p-2">
+                      <div className="mb-1.5 h-1.5 w-14 rounded-full bg-stroke-light" />
+                      <div className="space-y-1">
+                        <div className="h-1.5 w-full rounded-full bg-stroke-light/70" />
+                        <div className="h-1.5 w-10 rounded-full bg-stroke-light/70" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div
+                className="h-16 w-16 rounded-xl border border-white/40 p-2 text-[10px] font-bold text-white shadow-sm"
+                style={{ background: accent }}
+              >
+                {template.name}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              {template.webSections.slice(4, 7).map((section) => (
+                <div key={section} className="rounded-xl border border-stroke-light bg-[#F5FBF7] p-3">
+                  <div className="mb-2 h-2 w-20 rounded-full bg-primary-dark/20" />
+                  <div className="space-y-1.5">
+                    <div className="h-1.5 w-full rounded-full bg-stroke-light/80" />
+                    <div className="h-1.5 w-full rounded-full bg-stroke-light/80" />
+                    <div className="h-1.5 w-8 rounded-full bg-primary-dark/30" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="h-8 flex-1 rounded-full border border-stroke-light bg-pageBgLight" />
+              <div className="h-8 w-20 rounded-full bg-primary-dark/90" />
+            </div>
+          </div>
+        ) : (
+          <div
+            className="rounded-xl border border-stroke-light p-4"
+            style={{ background: `${accent}12` }}
+          >
+            <div className="mb-3 h-2 w-32 rounded-full bg-stroke-light" />
+            <div className="mb-4 h-2 w-48 rounded-full bg-stroke-light" />
+            <div className="grid grid-cols-2 gap-2">
+              {template.webSections.map((section) => (
+                <div key={section} className="rounded-lg border border-stroke-light bg-white p-2.5">
+                  <div className="mb-1.5 h-1.5 w-16 rounded-full bg-stroke-light" />
+                  <div className="space-y-1">
+                    <div className="h-1.5 w-full rounded-full bg-stroke-light/80" />
+                    <div className="h-1.5 w-10 rounded-full bg-stroke-light/70" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 flex items-center gap-2">
+              <div className="h-8 flex-1 rounded-full border border-stroke-light bg-pageBgLight" />
+              <div className="h-8 w-24 rounded-full bg-primary-dark" />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -228,7 +316,10 @@ export default function TemplateDetail() {
       {/* Fixed bottom actions */}
       <div className="fixed bottom-[72px] left-0 right-0 z-30 border-t border-pageBgLight bg-white px-4 py-3">
         <div className="mx-auto flex max-w-[460px] gap-3">
-          <button className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-primary-dark py-3 text-sm font-semibold text-primary-dark transition-all active:scale-95 hover:bg-pageBgLight">
+          <button
+            onClick={() => setActiveTab("live-preview")}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-primary-dark py-3 text-sm font-semibold text-primary-dark transition-all active:scale-95 hover:bg-pageBgLight"
+          >
             <ExternalLink className="h-4 w-4" />
             Visualizar ao vivo
           </button>
