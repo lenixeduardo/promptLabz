@@ -63,3 +63,11 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ pendente · 🔮 futuro (v1.
 | `/certificate` | QR Code real (UUID verificável) | v0.3 ⏳ |
 | `/notifications` | Configurações de preferências persistidas | v0.3 ⏳ |
 | `/lab-result` | Botão "Salvar Resultado" funcional | v0.2 ⏳ |
+
+## Pendências de Merge e Layout
+
+| Tela | Item | Status |
+|------|------|--------|
+| `/certificate` | Certificado não está com a nova interface mergeada — precisa integrar o redesign visual ao componente de certificado | ⏳
+| `/home` | Homepage quebra em telas grandes — limitar responsividade (max-width) para não esticar conteúdo em monitores largos | ⏳
+| `/laboratory` | Laboratório (LearningLab) não exibe os 3 itens (Prompts, Skills e Templates) unificados em uma única página como definido anteriormente no Lovable | ⏳ |
