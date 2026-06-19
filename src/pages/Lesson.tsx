@@ -1,401 +1,350 @@
-import { useState } from "react"
-import { useNavigate, useSearchParams } from "react-router-dom"
-import { X, BookOpen, ChevronLeft, CheckCircle2, XCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useLives } from "@/contexts/useLives"
-import { useAchievements } from "@/hooks/useAchievements"
-import { cn } from "@/lib/utils"
-import { sileo } from "sileo"
-import { lessonsData, type ContentBlock, type Question } from "@/data/lessonsData"
-import { useAuth } from "@/hooks/useAuth"
-import { saveProgress as saveProgressDb } from "@/lib/db"
-import { getLocalXP, saveLocalXP, getLevel } from "@/lib/xp"
-import { trackLessonStarted, trackLessonCompleted } from "@/lib/analytics"
+import { Link, useSearchParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  Send,
+  Lightbulb,
+  Heart,
+  ArrowRight,
+  CheckCircle2,
+  Camera,
+  Upload,
+  ImageIcon,
+} from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
+import { advanceModule, type TrackId } from "@/lib/moduleProgress";
+import { getQuestions, getProofTask, TRACK_TOTALS } from "@/lib/lessonContent";
+import { scopedKey } from "@/lib/userScope";
 
-function getProgressStorageKey(userId?: string) {
-  return userId ? `promptlabz_progress:${userId}` : "promptlabz_progress"
+const proofKey = (track: TrackId, module: number) =>
+  scopedKey(`promptlabz:proof:${track}:${module}`);
+
+function readProof(track: TrackId, module: number): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return localStorage.getItem(proofKey(track, module));
+  } catch {
+    return null;
+  }
 }
 
-interface ContentViewProps {
-  content: ContentBlock[]
-}
+export default function LessonPage() {
+  const [searchParams] = useSearchParams();
+  const track = (searchParams.get("track") as TrackId) || "a1";
+  const module = parseInt(searchParams.get("module") || "0", 10);
 
-function ContentView({ content }: ContentViewProps) {
-  return (
-    <div className="flex flex-col gap-3.5">
-      {content.map((block, index) => {
-        if (block.type === "heading") {
-          return (
-            <p key={index} className="mt-1 text-base font-bold text-foregroundDark">
-              {block.text}
+  const QUESTIONS = useMemo(() => getQuestions(track, module), [track, module]);
+  const proofTask = useMemo(() => getProofTask(track, module), [track, module]);
+  const [step, setStep] = useState(0);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [proofDataUrl, setProofDataUrl] = useState<string | null>(() => readProof(track, module));
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    setProofDataUrl(readProof(track, module));
+  }, [track, module]);
+
+  const finished = step >= QUESTIONS.length;
+  const q = QUESTIONS[step];
+  const answered = selected !== null;
+  const isRight = !finished && selected === q?.correct;
+  const isLast = step === QUESTIONS.length - 1;
+  const score = Object.entries(answers).filter(
+    ([qId, ans]) => QUESTIONS.find((qq) => qq.id === qId)?.correct === ans,
+  ).length;
+
+  function pick(id: string) {
+    if (answered || !q) return;
+    setSelected(id);
+    setAnswers((prev) => ({ ...prev, [q.id]: id }));
+  }
+
+  function next() {
+    setSelected(null);
+    setStep((s) => s + 1);
+  }
+
+  function handleFile(file: File) {
+    if (!file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result ?? "");
+      if (!dataUrl) return;
+      try {
+        localStorage.setItem(proofKey(track, module), dataUrl);
+      } catch {
+        // quota full: keep in memory only
+      }
+      setProofDataUrl(dataUrl);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearProof() {
+    try {
+      localStorage.removeItem(proofKey(track, module));
+    } catch {
+      // ignore
+    }
+    setProofDataUrl(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  const progress = Math.round(((step + (answered ? 1 : 0)) / QUESTIONS.length) * 100);
+
+  const perfect = finished && score === QUESTIONS.length;
+  const needsProof = !!proofTask;
+  const proofDone = !!proofDataUrl;
+  const lessonComplete = perfect && (!needsProof || proofDone);
+
+  useEffect(() => {
+    if (lessonComplete) advanceModule(TRACK_TOTALS[track], track);
+  }, [lessonComplete, track]);
+
+  if (finished && needsProof && !proofDone) {
+    return (
+      <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg">
+        <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
+          <Link to="/learn" className="rounded-full p-1.5 text-forest hover:bg-surface-success">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <h1 className="text-base font-bold text-primary-dark">Tarefa prática</h1>
+        </div>
+
+        <div className="flex flex-1 flex-col px-5 py-6">
+          <div className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-luxury/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-luxury">
+            <Camera className="h-3.5 w-3.5" /> Enviar comprovação
+          </div>
+
+          <h2 className="text-xl font-extrabold text-foreground-dark">{proofTask!.title}</h2>
+          <p className="mt-2 text-sm text-foreground-secondary">{proofTask!.description}</p>
+
+          <div className="mt-4 rounded-2xl border border-stroke-muted bg-surface-soft p-3">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-foreground-tertiary">
+              Exemplos válidos
             </p>
-          )
-        }
+            <ul className="mt-1.5 space-y-1 text-xs text-foreground-secondary">
+              {proofTask!.examples.map((ex) => (
+                <li key={ex} className="flex items-start gap-1.5">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald" />
+                  <span>{ex}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        if (block.type === "quote") {
-          return (
-            <div
-              key={index}
-              className="rounded-2xl border border-stroke-light bg-pageBgLight px-4 py-3"
-            >
-              <p className="text-sm italic leading-relaxed text-primary-dark">
-                {block.text}
-              </p>
-            </div>
-          )
-        }
+          <label
+            htmlFor="proof-file"
+            className="mt-6 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-stroke-light bg-card px-4 py-10 text-center transition-colors hover:border-emerald hover:bg-surface-success/40"
+          >
+            <Upload className="h-8 w-8 text-emerald" />
+            <p className="text-sm font-bold text-foreground-dark">Toque para enviar um print</p>
+            <p className="text-[11px] text-foreground-tertiary">PNG ou JPG · da galeria ou câmera</p>
+          </label>
+          <input
+            id="proof-file"
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleFile(f);
+            }}
+          />
 
-        return (
-          <p key={index} className="text-sm leading-relaxed text-foregroundDark">
-            {block.text}
+          <div className="mt-4 flex items-start gap-2 rounded-xl bg-amber-50 px-3 py-2 text-[11px] text-amber-800">
+            <ImageIcon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            <span>
+              O print fica salvo só no seu dispositivo. Ele serve para você validar sua prática —
+              o módulo só é concluído após o envio.
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (finished) {
+    return (
+      <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg">
+        <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
+          <Link to="/learn" className="rounded-full p-1.5 text-forest hover:bg-surface-success">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <h1 className="text-base font-bold text-primary-dark">Lição concluída</h1>
+        </div>
+
+        <div className="flex flex-1 flex-col items-center justify-center px-6 py-8 text-center">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald/15">
+            <CheckCircle2 className="h-10 w-10 text-emerald" strokeWidth={2.5} />
+          </div>
+          <h2 className="mt-4 text-2xl font-extrabold text-foreground-dark">
+            {perfect ? "Perfeito!" : "Boa tentativa!"}
+          </h2>
+          <p className="mt-1 text-sm text-foreground-tertiary">
+            Você acertou {score} de {QUESTIONS.length} perguntas
           </p>
-        )
-      })}
-    </div>
-  )
-}
+          {perfect && (
+            <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald/15 px-3 py-1 text-xs font-bold text-emerald">
+              <CheckCircle2 className="h-3.5 w-3.5" /> Próximo módulo desbloqueado!
+            </p>
+          )}
 
-interface QuestionViewProps {
-  question: Question
-  questionIndex: number
-  total: number
-  selected: string | null
-  confirmed: boolean
-  onSelect: (letter: string) => void
-}
+          {needsProof && proofDataUrl && (
+            <div className="mt-5 w-full max-w-xs">
+              <p className="mb-2 inline-flex items-center gap-1 rounded-full bg-emerald/15 px-3 py-1 text-[11px] font-bold text-emerald">
+                <Camera className="h-3 w-3" /> Comprovação enviada
+              </p>
+              <img
+                src={proofDataUrl}
+                alt="Print enviado"
+                className="w-full rounded-xl border border-stroke-muted object-cover"
+              />
+              <button
+                type="button"
+                onClick={clearProof}
+                className="mt-2 text-[11px] font-bold text-foreground-tertiary underline"
+              >
+                Enviar outro print
+              </button>
+            </div>
+          )}
 
-function QuestionView({
-  question,
-  questionIndex,
-  total,
-  selected,
-  confirmed,
-  onSelect,
-}: QuestionViewProps) {
-  return (
-    <div className="flex flex-col gap-4">
-      <p className="text-xs font-bold uppercase tracking-widest text-emerald">
-        Questão {questionIndex + 1} de {total}
-      </p>
-      <p className="text-base font-bold leading-snug text-foregroundDark">
-        {question.question}
-      </p>
+          <div className="mt-5 grid w-full max-w-xs grid-cols-2 gap-3">
+            <div className="rounded-xl border border-stroke-muted bg-surface-soft py-3 text-center">
+              <p className="text-[10px] font-semibold text-foreground-tertiary">XP</p>
+              <p className="text-base font-extrabold text-emerald">+{score * 25}</p>
+            </div>
+            <div className="rounded-xl border border-stroke-muted bg-surface-soft py-3 text-center">
+              <p className="text-[10px] font-semibold text-foreground-tertiary">Gemas</p>
+              <p className="text-base font-extrabold text-luxury">+{score * 3}</p>
+            </div>
+          </div>
 
-      <div className="mt-1 flex flex-col gap-2.5">
-        {question.options.map((option) => {
-          const isSelected = selected === option.letter
-          const isCorrect = option.letter === question.correct
-          const showCorrect = confirmed && isCorrect
-          const showWrong = confirmed && isSelected && !isCorrect
-          const dimmed = confirmed && !isSelected && !isCorrect
-
-          return (
-            <button
-              key={option.letter}
-              onClick={() => !confirmed && onSelect(option.letter)}
-              disabled={confirmed}
-              className={cn(
-                "flex items-center gap-3 rounded-2xl border bg-white px-4 py-3.5 text-left transition-all",
-                !confirmed && !isSelected && "border-stroke-muted hover:border-emerald hover:bg-surface-soft",
-                !confirmed && isSelected && "border-emerald bg-pageBgLight",
-                showCorrect && "border-emerald bg-surface-success",
-                showWrong && "border-red bg-red-100",
-                dimmed && "border-stroke-muted opacity-50"
-              )}
+          <div className="mt-6 flex w-full max-w-xs flex-col gap-3">
+            <Link
+              to="/module-exam"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-luxury py-4 text-sm font-extrabold uppercase tracking-wide text-luxury-foreground shadow-lg shadow-luxury/30 transition-transform active:scale-[0.98]"
             >
-              <span
-                className={cn(
-                  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 text-sm font-bold",
-                  !confirmed && !isSelected && "border-stroke-muted text-foregroundTertiary",
-                  !confirmed && isSelected && "border-emerald bg-emerald text-white",
-                  showCorrect && "border-emerald bg-emerald text-white",
-                  showWrong && "border-red bg-red text-white",
-                  dimmed && "border-stroke-muted text-[#A0A8A3]"
-                )}
-              >
-                {option.letter}
-              </span>
-              <span
-                className={cn(
-                  "flex-1 text-sm font-medium leading-snug",
-                  !confirmed && !isSelected && "text-foregroundDark",
-                  !confirmed && isSelected && "font-semibold text-primary-dark",
-                  showCorrect && "font-semibold text-primary-dark",
-                  showWrong && "text-red",
-                  dimmed && "text-[#A0A8A3]"
-                )}
-              >
-                {option.text}
-              </span>
+              Fazer prova final do módulo
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/learn"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-emerald bg-card py-3 text-sm font-bold text-emerald hover:bg-surface-success"
+            >
+              Voltar à trilha
+            </Link>
+            <button
+              onClick={() => {
+                setStep(0);
+                setSelected(null);
+                setAnswers({});
+              }}
+              className="rounded-2xl border-2 border-stroke-light bg-card py-3 text-sm font-bold text-foreground-dark transition-colors hover:bg-surface-soft"
+            >
+              Refazer lição
             </button>
-          )
-        })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg">
+      <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
+        <Link to="/learn" className="rounded-full p-1.5 text-forest hover:bg-surface-success">
+          <ArrowLeft className="h-5 w-5" />
+        </Link>
+        <div className="h-2 flex-1 overflow-hidden rounded-full bg-stroke-muted/40">
+          <div
+            className="h-full rounded-full bg-emerald transition-all"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <div className="flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-sm font-bold text-red-500">
+          <Heart className="h-3.5 w-3.5 fill-red-500" /> <span>5</span>
+        </div>
       </div>
 
-      {confirmed && (
-        <div
-          className={cn(
-            "mt-1 flex items-start gap-2.5 rounded-2xl p-3.5",
-            selected === question.correct ? "bg-surface-success" : "bg-red-100"
-          )}
-        >
-          {selected === question.correct ? (
-            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary-dark" />
-          ) : (
-            <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red" />
-          )}
-          <p
+      <div className="flex flex-1 flex-col px-5 py-6">
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-foreground-tertiary">
+          Pergunta {step + 1} de {QUESTIONS.length}
+        </p>
+
+        <div className="mb-6 flex items-start gap-3">
+          <img src="/assets/mascot-teacher.png" alt="" className="h-16 w-16 shrink-0 object-contain" />
+          <div className="relative rounded-2xl rounded-tl-none border-2 border-stroke-light bg-card px-4 py-3 shadow-sm">
+            <p className="text-sm font-bold text-foreground-dark">{q.prompt}</p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {q.options.map((opt) => {
+            const isSelected = selected === opt.id;
+            const isOptCorrect = opt.id === q.correct;
+            return (
+              <button
+                key={opt.id}
+                disabled={answered}
+                onClick={() => pick(opt.id)}
+                className={cn(
+                  "rounded-2xl border-2 px-4 py-3 text-left text-sm font-medium transition-all active:scale-[0.99]",
+                  !answered && "border-stroke-light bg-card hover:border-emerald",
+                  answered && isOptCorrect && "border-emerald bg-surface-success text-emerald-dark",
+                  answered && isSelected && !isOptCorrect && "border-red-300 bg-red-50 text-red-700",
+                  answered && !isSelected && !isOptCorrect && "border-stroke-light bg-card opacity-60",
+                )}
+              >
+                <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-page-bg-light text-xs font-extrabold text-forest">
+                  {opt.id.toUpperCase()}
+                </span>
+                {opt.text}
+              </button>
+            );
+          })}
+        </div>
+
+        {answered && (
+          <div
             className={cn(
-              "text-sm font-semibold leading-snug",
-              selected === question.correct ? "text-primary-dark" : "text-red"
+              "mt-6 rounded-2xl border-2 p-4",
+              isRight ? "border-emerald bg-surface-success" : "border-red-300 bg-red-50",
             )}
           >
-            {selected === question.correct
-              ? "Correto! Muito bem!"
-              : `Incorreto. A resposta certa é: ${
-                  question.options.find((option) => option.letter === question.correct)?.text
-                }`}
-          </p>
-        </div>
-      )}
-    </div>
-  )
-}
-
-export default function Lesson() {
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const { user } = useAuth()
-  const { awardPerfectBonus } = useLives()
-  const achievements = useAchievements()
-
-  const categoryId = searchParams.get("category") || "trending-skills"
-  const moduleIndex = parseInt(searchParams.get("moduleIndex") || "0", 10)
-  const lessonIndex = parseInt(searchParams.get("lessonIndex") || "0", 10)
-
-  const categoryObj = lessonsData[categoryId] || lessonsData["trending-skills"]
-  const moduleObj = categoryObj.modules[moduleIndex] || categoryObj.modules[0]
-  const lessonObj = moduleObj?.lessons[lessonIndex] || moduleObj?.lessons[0]
-
-  const [step, setStep] = useState(0)
-  const [selected, setSelected] = useState<string | null>(null)
-  const [confirmed, setConfirmed] = useState(false)
-  const [answerResults, setAnswerResults] = useState<Record<number, boolean>>({})
-  const [isSaving, setIsSaving] = useState(false)
-
-  if (!lessonObj) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-surface-soft p-5 text-center">
-        <div>
-          <p className="text-lg font-bold text-red-600">Erro: lição não encontrada.</p>
-          <Button onClick={() => navigate("/learn")} className="mt-4">
-            Voltar ao Lab
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
-  const totalSteps = 1 + lessonObj.questions.length
-  const currentQuestion = step > 0 ? lessonObj.questions[step - 1] : null
-
-  function goBack() {
-    if (step > 0) {
-      setStep((value) => value - 1)
-      setSelected(null)
-      setConfirmed(false)
-    } else {
-      navigate(`/learn?category=${categoryId}`)
-    }
-  }
-
-  function handleConfirm() {
-    if (!selected || !currentQuestion) return
-
-    const isCorrect = selected === currentQuestion.correct
-    setAnswerResults((results) => ({
-      ...results,
-      [currentQuestion.id]: isCorrect,
-    }))
-
-    if (isCorrect) {
-      sileo.success({ title: "Correto!", description: "Muito bem! 🎉" })
-    } else {
-      sileo.error({ title: "Incorreto", description: "Verifique a resposta correta abaixo." })
-    }
-    setConfirmed(true)
-  }
-
-  async function saveProgress() {
-    try {
-      const saved = localStorage.getItem(getProgressStorageKey(user?.id))
-      const progress = saved ? JSON.parse(saved) : {}
-
-      const catProgress = progress[categoryId] || {
-        currentModuleIndex: 0,
-        currentLessonIndex: 0,
-        completedLessonIds: [],
-      }
-
-      if (!catProgress.completedLessonIds.includes(lessonObj.id)) {
-        catProgress.completedLessonIds.push(lessonObj.id)
-      }
-
-      if (
-        moduleIndex === catProgress.currentModuleIndex &&
-        lessonIndex === catProgress.currentLessonIndex
-      ) {
-        const nextLessonIndex = lessonIndex + 1
-        if (nextLessonIndex < moduleObj.lessons.length) {
-          catProgress.currentLessonIndex = nextLessonIndex
-        } else {
-          const nextModuleIndex = moduleIndex + 1
-          if (nextModuleIndex < categoryObj.modules.length) {
-            catProgress.currentModuleIndex = nextModuleIndex
-            catProgress.currentLessonIndex = 0
-          }
-        }
-      }
-
-      const result = await saveProgressDb(user?.id || "", categoryId, catProgress)
-      if (result?.error && user?.id) {
-        sileo.error({
-          title: "Progresso salvo neste dispositivo",
-          description: "Não foi possível sincronizar com a nuvem agora.",
-        })
-      }
-    } catch (err) {
-      console.error("Error saving progress:", err)
-    }
-  }
-
-  async  function handleNext() {
-    if (step < totalSteps - 1) {
-      // Track lesson started when moving from content to first question
-      if (step === 0) {
-        trackLessonStarted(lessonObj.id)
-      }
-      setStep((value) => value + 1)
-      setSelected(null)
-      setConfirmed(false)
-      return
-    }
-
-    const total = lessonObj.questions.length
-    const score = lessonObj.questions.filter((question) => answerResults[question.id]).length
-    const perfect = score === total
-
-    if (!perfect) {
-      sileo.error({
-        title: "Atividade não concluída",
-        description: "Acerte todas as questões para marcar a lição como concluída.",
-      })
-      setStep(1)
-      setSelected(null)
-      setConfirmed(false)
-      return
-    }
-
-    setIsSaving(true)
-    await saveProgress()
-    setIsSaving(false)
-
-    trackLessonCompleted(lessonObj.id, score)
-
-    // Check achievements — increment internal counters
-    const newAchievements = achievements.checkLessonComplete(perfect)
-    if (newAchievements.length > 0 && import.meta.env.DEV) {
-      console.log("[DEV] Novas conquistas desbloqueadas:", newAchievements.map((a) => a.title))
-    }
-
-    const bonusAwarded = awardPerfectBonus()
-
-    const xpToAdd = perfect ? 100 : 50
-    const prevXP = user?.id ? getLocalXP(user.id) : 0
-    const newXP = prevXP + xpToAdd
-    if (user?.id) saveLocalXP(user.id, newXP)
-
-    const prevLevel = getLevel(prevXP)
-    const newLevel = getLevel(newXP)
-
-    if (newLevel > prevLevel) {
-      navigate("/level-up", { state: { newLevel, prevLevel } })
-    } else {
-      navigate("/mission", { state: { score, total, perfect, bonusAwarded, newAchievements } })
-    }
-  }
-
-  const isLastStep = step === totalSteps - 1
-
-  return (
-    <div className="flex min-h-screen flex-col bg-surface-soft">
-      <div className="sticky top-0 z-10 border-b border-pageBgLight bg-surface-soft px-4 pb-3 pt-4">
-        <div className="mb-3 flex items-center justify-between">
-          <button
-            onClick={() => navigate(`/learn?category=${categoryId}`)}
-            className="rounded-full p-1.5 text-foregroundDark transition-colors hover:bg-surface-success"
-          >
-            <X className="h-5 w-5" />
-          </button>
-          <BookOpen className="h-5 w-5 text-emerald" />
-        </div>
-
-        <div className="flex items-center justify-between">
-          <button
-            onClick={goBack}
-            className="flex items-center gap-0.5 text-xs font-bold text-emerald transition-colors hover:text-primary-dark"
-          >
-            <ChevronLeft className="h-4 w-4" strokeWidth={2.5} />
-            {moduleObj.title}
-          </button>
-          <span className="text-sm font-semibold text-foregroundPlaceholder">
-            {step + 1}/{totalSteps}
-          </span>
-        </div>
-
-        <h1 className="mt-2 text-lg font-extrabold leading-snug text-foregroundDark">
-          {lessonObj.title}
-        </h1>
-        <div className="mt-1.5 h-0.5 w-10 rounded-full bg-emerald" />
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 py-4 pb-6">
-        {step === 0 ? (
-          <ContentView content={lessonObj.content} />
-        ) : (
-          currentQuestion && (
-            <QuestionView
-              question={currentQuestion}
-              questionIndex={step - 1}
-              total={lessonObj.questions.length}
-              selected={selected}
-              confirmed={confirmed}
-              onSelect={setSelected}
-            />
-          )
+            <div className="flex items-start gap-2">
+              <Lightbulb className={cn("h-5 w-5 shrink-0", isRight ? "text-emerald-dark" : "text-red-500")} />
+              <div>
+                <p className={cn("text-sm font-bold", isRight ? "text-emerald-dark" : "text-red-700")}>
+                  {isRight ? "Mandou bem!" : "Quase lá!"}
+                </p>
+                <p className="mt-1 text-xs text-foreground-secondary">{q.explanation}</p>
+              </div>
+            </div>
+          </div>
         )}
-      </div>
 
-      <div className="border-t border-pageBgLight px-4 pb-8 pt-3">
-        {step === 0 ? (
-          <Button size="lg" className="w-full" onClick={handleNext}>
-            Entendi, vamos lá! →
-          </Button>
-        ) : !confirmed ? (
-          <Button
-            size="lg"
-            className={cn("w-full transition-opacity", !selected && "opacity-50")}
-            disabled={!selected}
-            onClick={handleConfirm}
-          >
-            Confirmar resposta
-          </Button>
-        ) : (
-          <Button size="lg" className="w-full" onClick={handleNext} disabled={isSaving}>
-            {isSaving ? "Salvando..." : isLastStep ? "Ver resultado" : "Próxima →"}
-          </Button>
-        )}
+        <div className="mt-auto pt-6">
+          {answered ? (
+            <button
+              onClick={next}
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald py-4 text-sm font-extrabold uppercase tracking-wide text-white transition-colors hover:bg-emerald-dark"
+            >
+              {isLast ? "Ver resultado" : "Próxima pergunta"}
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          ) : (
+            <div className="flex w-full items-center justify-center gap-2 rounded-2xl bg-stroke-light py-4 text-sm font-extrabold uppercase tracking-wide text-neutral pointer-events-none">
+              Selecione uma opção
+              <Send className="h-4 w-4" />
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  )
+  );
 }

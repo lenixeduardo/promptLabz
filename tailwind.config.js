@@ -36,7 +36,7 @@ module.exports = {
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
-			pageBg: 'var(--page-bg)',
+				pageBg: 'var(--page-bg)',
 				pageBgLight: 'var(--page-bg-light)',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
@@ -72,11 +72,21 @@ module.exports = {
 				emerald: 'var(--emerald)',
 				'emerald-dark': 'var(--emerald-dark)',
 				forest: 'var(--forest)',
+				mint: 'var(--mint)',
+				/* camelCase aliases (backward compat with existing components) */
 				foregroundDark: 'var(--foreground-dark)',
 				foregroundMuted: 'var(--foreground-muted)',
 				foregroundSecondary: 'var(--foreground-secondary)',
 				foregroundTertiary: 'var(--foreground-tertiary)',
 				foregroundPlaceholder: 'var(--foreground-placeholder)',
+				/* kebab-case aliases (ZIP components) */
+				'foreground-dark': 'var(--foreground-dark)',
+				'foreground-muted': 'var(--foreground-muted)',
+				'foreground-secondary': 'var(--foreground-secondary)',
+				'foreground-tertiary': 'var(--foreground-tertiary)',
+				'foreground-placeholder': 'var(--foreground-placeholder)',
+				'page-bg': 'var(--page-bg)',
+				'page-bg-light': 'var(--page-bg-light)',
 				stroke: {
 					light: 'var(--stroke-light)',
 					muted: 'var(--stroke-muted)',
@@ -90,7 +100,10 @@ module.exports = {
 					end: 'var(--gradient-end)',
 				},
 				link: 'var(--link)',
-				luxury: 'var(--luxury)',
+				luxury: {
+					DEFAULT: 'var(--luxury)',
+					foreground: 'var(--luxury-foreground)',
+				},
 				neutral: 'var(--neutral)',
 				/* Semantic design tokens */
 				bgPrimary: 'var(--bg-primary)',
@@ -104,6 +117,10 @@ module.exports = {
 				brandBlue: 'var(--brand-blue)',
 				brandGold: 'var(--brand-gold)',
 				brandOrange: 'var(--brand-orange)',
+				'brand-purple': 'var(--brand-purple)',
+				'brand-blue': 'var(--brand-blue)',
+				'brand-gold': 'var(--brand-gold)',
+				'brand-orange': 'var(--brand-orange)',
 				statusPremium: 'var(--status-premium)',
 				tag: {
 					bgAdvanced: 'var(--tag-bg-advanced)',
@@ -128,10 +145,50 @@ module.exports = {
 					from: { height: 'var(--radix-accordion-content-height)' },
 					to: { height: 0 },
 				},
+				'flame-flicker': {
+					'0%, 100%': { transform: 'scaleY(1) rotate(-1deg)', opacity: '1' },
+					'50%': { transform: 'scaleY(1.08) rotate(1deg)', opacity: '0.9' },
+				},
+				'ping-slow': {
+					'75%, 100%': { transform: 'scale(1.8)', opacity: '0' },
+				},
+				'ping-slower': {
+					'75%, 100%': { transform: 'scale(2.4)', opacity: '0' },
+				},
+				'bounce-slow': {
+					'0%, 100%': { transform: 'translateY(-4px)', animationTimingFunction: 'cubic-bezier(0.8,0,1,1)' },
+					'50%': { transform: 'translateY(0)', animationTimingFunction: 'cubic-bezier(0,0,0.2,1)' },
+				},
+				'score-pop': {
+					'0%': { transform: 'scale(1)' },
+					'40%': { transform: 'scale(1.4)' },
+					'70%': { transform: 'scale(0.9)' },
+					'100%': { transform: 'scale(1)' },
+				},
+				'ring-expand': {
+					'0%': { transform: 'scale(0)', opacity: '0.5' },
+					'100%': { transform: 'scale(2)', opacity: '0' },
+				},
+				'fade-in': {
+					from: { opacity: '0' },
+					to: { opacity: '1' },
+				},
+				'scale-in': {
+					from: { transform: 'scale(0.85)', opacity: '0' },
+					to: { transform: 'scale(1)', opacity: '1' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
+				'flame-flicker': 'flame-flicker 0.9s ease-in-out infinite',
+				'ping-slow': 'ping-slow 1.6s cubic-bezier(0,0,0.2,1) infinite',
+				'ping-slower': 'ping-slower 2.2s cubic-bezier(0,0,0.2,1) infinite',
+				'bounce-slow': 'bounce-slow 1.4s infinite',
+				'score-pop': 'score-pop 0.5s cubic-bezier(0.4,0,0.2,1)',
+				'ring-expand': 'ring-expand 0.8s ease-out forwards',
+				'fade-in': 'fade-in 0.25s ease-out',
+				'scale-in': 'scale-in 0.3s cubic-bezier(0.34,1.56,0.64,1)',
 			},
 		},
 	},

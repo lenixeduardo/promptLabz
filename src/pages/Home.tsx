@@ -1,255 +1,382 @@
-import { useState, useEffect } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { Link } from "react-router-dom";
 import {
-  Home as HomeIcon,
-  User,
-  Trophy,
-  BarChart2,
-  Map,
-  Bell,
   Heart,
-  Flame,
   Brain,
   ArrowRight,
-  ChevronRight,
   Clock,
-  Zap,
-  Newspaper,
-  LayoutTemplate,
   Sparkles,
-} from "lucide-react"
-import { useAuth } from "@/hooks/useAuth"
-import { useAchievements } from "@/hooks/useAchievements"
-import { ProgressCard } from "@/components/ProgressCard"
-import { LearningPathTrail, DEFAULT_TRAIL_MODULES, type TrailModule } from "@/components/LearningPathTrail"
-import { getUserProfile, loadProgress } from "@/lib/db"
-import { getLevelProgress, getLocalXP, getLocalGems } from "@/lib/xp"
-import { lessonsData } from "@/data/lessonsData"
-import { computeTrailModules } from "@/lib/trail"
+  Star,
+  Lock,
+  Check,
+  Zap,
+  Gift,
+} from "lucide-react";
+import { NotificationsBell } from "@/components/NotificationsBell";
+import { AppBottomNav } from "@/components/AppBottomNav";
+import { useAvatar } from "@/components/AvatarProvider";
+import { StreakFlame } from "@/components/StreakFlame";
+import { StreakCelebration } from "@/components/StreakCelebration";
+import { useStreak } from "@/lib/streak";
+import { useState, useEffect } from "react";
+import { useModuleProgress, type TrackId } from "@/lib/moduleProgress";
+import { scopedKey, USER_SCOPE_EVENT } from "@/lib/userScope";
 
-const CATEGORIES = Object.values(lessonsData)
-const TOTAL_COUNT = CATEGORIES.length
+type TrackInfo = { id: TrackId; label: string; modules: string[] };
 
-const NAV_ITEMS = [
-  { label: "Início", icon: HomeIcon, to: "/home" },
-  { label: "Trilha", icon: Map, to: "/learn" },
-  { label: "Desafios", icon: Trophy, to: "/achievements" },
-  { label: "Ranking", icon: BarChart2, to: "/ranking" },
-  { label: "Perfil", icon: User, to: "/profile" },
-]
+const TRACKS: TrackInfo[] = [
+  {
+    id: "a1",
+    label: "A1",
+    modules: [
+      "Boas-vindas",
+      "O que é um prompt",
+      "Contexto & clareza",
+      "Personas e papéis",
+      "Estruturas de prompt",
+      "Few-shot & exemplos",
+      "Refino iterativo",
+    ],
+  },
+  {
+    id: "a2",
+    label: "A2",
+    modules: [
+      "Chain-of-thought",
+      "Decomposição de tarefas",
+      "Prompts com restrições",
+      "Estilo e tom controlado",
+      "Prompts multi-etapa",
+      "Avaliação de respostas",
+      "Refino guiado por dados",
+    ],
+  },
+  {
+    id: "a3",
+    label: "A3",
+    modules: [
+      "Prompts para código",
+      "Automação com IA",
+      "Prompts para negócios",
+      "Workflows com agentes",
+      "Avaliação & métricas",
+      "Segurança e guardrails",
+      "Projeto final",
+    ],
+  },
+];
 
-export default function Home() {
-  const { user } = useAuth()
-  const { checkDailyVisit, data } = useAchievements()
-  const location = useLocation()
+const MISSIONS_BASE = "promptlabz:dailyMissions";
+const CHEST_TOTAL = 5;
 
-  const [streakLoading, setStreakLoading] = useState(true)
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
-  const [xp, setXp] = useState(0)
-  const [gems, setGems] = useState(0)
-  const [trailModules, setTrailModules] = useState<TrailModule[]>(DEFAULT_TRAIL_MODULES)
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+}
+
+function useMissionsDone(): number {
+  const [done, setDone] = useState(0);
+  useEffect(() => {
+    const read = () => {
+      try {
+        const raw = localStorage.getItem(scopedKey(MISSIONS_BASE));
+        if (!raw) return setDone(0);
+        const parsed = JSON.parse(raw) as { day?: string; completed?: Record<string, boolean> };
+        if (parsed.day !== todayKey() || !parsed.completed) return setDone(0);
+        setDone(Object.values(parsed.completed).filter(Boolean).length);
+      } catch {
+        setDone(0);
+      }
+    };
+    read();
+    window.addEventListener("storage", read);
+    window.addEventListener("focus", read);
+    window.addEventListener(USER_SCOPE_EVENT, read);
+    return () => {
+      window.removeEventListener("storage", read);
+      window.removeEventListener("focus", read);
+      window.removeEventListener(USER_SCOPE_EVENT, read);
+    };
+  }, []);
+  return done;
+}
+
+export default function HomePage() {
+  const { equipped } = useAvatar();
+  const a1 = useModuleProgress("a1");
+  const a2 = useModuleProgress("a2");
+  const a3 = useModuleProgress("a3");
+  const completions: Record<TrackId, number> = { a1, a2, a3 };
+
+  const activeTrack =
+    TRACKS.find((t) => completions[t.id] < t.modules.length) ?? TRACKS[TRACKS.length - 1];
+  const activeCompleted = completions[activeTrack.id];
+  const currentModuleIdx = Math.min(activeCompleted, activeTrack.modules.length - 1);
+  const currentModuleTitle = activeTrack.modules[currentModuleIdx];
+
+  const WINDOW = 5;
+  const startIdx = Math.max(
+    0,
+    Math.min(activeTrack.modules.length - WINDOW, currentModuleIdx - 2),
+  );
+  const trail = activeTrack.modules.slice(startIdx, startIdx + WINDOW).map((label, i) => {
+    const absIdx = startIdx + i;
+    const status: "completed" | "current" | "locked" =
+      absIdx < activeCompleted
+        ? "completed"
+        : absIdx === activeCompleted
+          ? "current"
+          : "locked";
+    return { label, status };
+  });
+
+  const missionsDone = useMissionsDone();
+  const missionsPct = Math.round((Math.min(missionsDone, CHEST_TOTAL) / CHEST_TOTAL) * 100);
+
+  const level = 4;
+  const currentXP = 320;
+  const targetXP = 500;
+  const xpPct = Math.round((currentXP / targetXP) * 100);
+  const { count: streak, longest: longestStreak } = useStreak();
+  const gems = 142;
+  const [streakCelebration, setStreakCelebration] = useState(false);
 
   useEffect(() => {
-    setStreakLoading(true)
-    checkDailyVisit(user?.id).then(() => setStreakLoading(false))
-  }, [checkDailyVisit, user?.id])
-
-  useEffect(() => {
-    if (!user?.id) return
-
-    getUserProfile(user.id).then(({ data: profile }) => {
-      if (profile?.avatar_url) setAvatarUrl(profile.avatar_url)
-      setXp(profile?.xp ?? getLocalXP(user.id!))
-      setGems(profile?.gems ?? getLocalGems(user.id!))
-    })
-
-    loadProgress(user.id).then((progress) => {
-      setTrailModules(computeTrailModules(progress, CATEGORIES))
-    })
-  }, [user?.id])
-
-  const { level, currentXP, targetXP } = getLevelProgress(xp)
+    if (streak < 7) return;
+    try {
+      const key = scopedKey("promptlabz:lastStreakCelebrated");
+      const last = Number(localStorage.getItem(key) || "0");
+      if (streak > last) {
+        const t = setTimeout(() => setStreakCelebration(true), 800);
+        localStorage.setItem(key, String(streak));
+        return () => clearTimeout(t);
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, [streak]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-pageBgLight to-pageBg pb-24">
-      {/* Header */}
-      <div className="bg-card border-b border-stroke-muted px-4 py-3 flex items-center justify-between sticky top-0 z-10">
-        <div>
-          <h1 className="text-lg font-bold text-primary-dark">Olá, Explorador! 👋</h1>
-          <p className="text-xs text-foregroundTertiary">Pronto para mais um desafio?</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link
-            to="/favorites"
-            className="flex items-center justify-center rounded-full border border-stroke-light bg-card/70 p-2 shadow-sm text-forest hover:bg-surface-soft transition-colors"
-            aria-label="Favoritos"
-          >
-            <Heart className="h-5 w-5" strokeWidth={2.2} />
-          </Link>
-          <Link to="/news" className="relative">
-            <Bell className="h-6 w-6 text-primary-dark" strokeWidth={2} />
-            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-500" />
-          </Link>
-          <img
-            src={avatarUrl || "/assets/mascot-login-new.png"}
-            alt="Avatar"
-            className="w-9 h-9 rounded-full object-cover border-2 border-stroke-light"
-          />
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="flex-1 px-4 py-5 flex flex-col gap-5">
-        {/* Progress card */}
-        <ProgressCard level={level} currentXP={currentXP} targetXP={targetXP} />
-
-        {/* Stats row: streak + gems */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* Streak card */}
-          <div className="rounded-2xl border-2 border-stroke-light bg-card px-4 py-3">
-            <p className="text-[11px] font-semibold text-foregroundTertiary mb-1">Sequência diária</p>
-            {streakLoading ? (
-              <div className="h-7 w-16 rounded bg-stroke-light animate-pulse" />
-            ) : (
-              <>
-                <div className="flex items-center gap-1.5">
-                  <Flame className="h-6 w-6 text-orange-500 flex-shrink-0" strokeWidth={2.5} />
-                  <span className="text-xl font-extrabold text-foregroundDark">
-                    {data.consecutiveDays} dias
-                  </span>
-                </div>
-                <p className="text-[11px] text-foregroundPlaceholder mt-0.5">
-                  Recorde: {data.longestStreak} dias
-                </p>
-              </>
-            )}
+    <>
+      <StreakCelebration
+        active={streakCelebration}
+        streak={streak}
+        avatarSrc={equipped.image}
+        avatarName={equipped.name}
+        onClose={() => setStreakCelebration(false)}
+      />
+      <div className="flex flex-col min-h-screen bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
+        <div className="bg-card border-b border-stroke-muted px-4 py-3 flex items-center justify-between sticky top-0 z-10">
+          <div>
+            <h1 className="text-lg font-bold text-primary-dark">Olá, Explorador! 👋</h1>
+            <p className="text-xs text-foreground-tertiary">Pronto para mais um desafio?</p>
           </div>
-
-          {/* Gems card */}
-          <div className="rounded-2xl border-2 border-stroke-light bg-card px-4 py-3">
-            <p className="text-[11px] font-semibold text-foregroundTertiary mb-1">Gemas</p>
-            <div className="flex items-center gap-1.5">
-              <span className="text-2xl">💎</span>
-              <span className="text-xl font-extrabold text-foregroundDark">{gems}</span>
-            </div>
-            <p className="text-[11px] text-foregroundPlaceholder mt-0.5">Use para desbloquear</p>
-          </div>
-        </div>
-
-        {/* Learning path trail */}
-        <LearningPathTrail
-          modules={trailModules}
-          completedCount={trailModules.filter((m) => m.status === "completed").length}
-          totalCount={TOTAL_COUNT}
-        />
-
-        {/* Featured lesson */}
-        <div>
-          <h2 className="text-base font-bold text-foregroundDark mb-3">Aula em destaque</h2>
-          <div className="rounded-2xl border-2 border-stroke-light bg-card p-4">
-            <div className="flex gap-4 mb-4">
-              <div className="w-20 h-20 flex-shrink-0 rounded-xl bg-pageBgLight flex items-center justify-center">
-                <Brain className="h-9 w-9 text-primary-dark" strokeWidth={1.5} />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-foregroundDark leading-snug">
-                  Como dar contexto para a IA entender o que você quer
-                </p>
-                <div className="flex items-center gap-1 mt-2 text-foregroundTertiary">
-                  <Clock className="h-3.5 w-3.5" strokeWidth={2} />
-                  <span className="text-xs">10 min</span>
-                </div>
-              </div>
-            </div>
-            <Link
-              to="/learn"
-              className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary-dark text-white text-sm font-semibold py-3 hover:bg-[#1F4A2D] transition-colors"
+          <div className="flex items-center gap-2">
+            <button
+              className="flex items-center justify-center rounded-full border border-stroke-light bg-card/70 p-2 shadow-sm text-forest hover:bg-surface-soft transition-colors"
+              aria-label="Favoritos"
             >
-              Continuar aula
-              <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
-            </Link>
+              <Heart className="h-5 w-5" strokeWidth={2.2} />
+            </button>
+            <NotificationsBell />
+            <img
+              src={equipped.image}
+              alt={equipped.name}
+              className="w-9 h-9 rounded-full object-cover border-2 border-stroke-light bg-card"
+            />
           </div>
         </div>
 
-        {/* Premium banner */}
-        <Link
-          to="/premium"
-          className="flex items-center justify-between rounded-2xl bg-gradient-to-r from-primary-dark to-[#1E4B2E] px-5 py-4 shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
-        >
-          <div className="flex flex-col gap-1">
-            <span className="flex items-center gap-2 text-base font-extrabold text-white">
-              <Sparkles className="h-4 w-4 text-accent" fill="#F5A623" />
-              PromptLabz Premium
-            </span>
-            <span className="text-xs text-[#A8D4B8]">
-              Desbloqueie todo o potencial. 7 dias grátis!
-            </span>
+        <div className="flex-1 px-4 py-5 flex flex-col gap-5">
+          <div className="rounded-2xl bg-gradient-to-br from-forest to-emerald-dark p-5 text-white shadow-lg shadow-forest/20">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider opacity-80">
+                  Nível {level}
+                </p>
+                <p className="text-xl font-extrabold">Aprendiz de Prompts</p>
+              </div>
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-card/15 backdrop-blur">
+                <Star className="h-7 w-7 text-luxury fill-luxury" />
+              </div>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-card/20">
+              <div
+                className="h-full rounded-full bg-luxury transition-all"
+                style={{ width: `${xpPct}%` }}
+              />
+            </div>
+            <p className="mt-2 text-xs opacity-90">
+              {currentXP} / {targetXP} XP para o próximo nível
+            </p>
           </div>
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/20">
-            <Sparkles className="h-4 w-4 text-accent" fill="#F5A623" />
-          </span>
-        </Link>
 
-        {/* Quick access */}
-        <div>
-          <h2 className="text-base font-bold text-foregroundDark mb-3">Acesso rápido</h2>
           <div className="grid grid-cols-2 gap-3">
-            <Link
-              to="/news"
-              className="flex flex-col items-center gap-2 rounded-2xl border-2 border-stroke-light bg-card px-3 py-4 transition-colors hover:border-emerald"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pageBgLight">
-                <Newspaper className="h-5 w-5 text-primary-dark" strokeWidth={1.8} />
+            <div className="rounded-2xl border-2 border-stroke-light bg-card px-4 py-3">
+              <p className="text-[11px] font-semibold text-foreground-tertiary mb-1">
+                Sequência diária
+              </p>
+              <div className="flex items-center gap-1.5">
+                <StreakFlame streak={streak} />
               </div>
-              <span className="text-center text-xs font-bold text-foregroundDark">Notícias de IA</span>
-            </Link>
-            <Link
-              to="/quiz"
-              className="flex flex-col items-center gap-2 rounded-2xl border-2 border-stroke-light bg-card px-3 py-4 transition-colors hover:border-emerald"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pageBgLight">
-                <Zap className="h-5 w-5 text-primary-dark" strokeWidth={1.8} />
+              <p className="text-[11px] text-foreground-placeholder mt-0.5">
+                Recorde: {longestStreak} dias
+              </p>
+            </div>
+            <div className="rounded-2xl border-2 border-stroke-light bg-card px-4 py-3">
+              <p className="text-[11px] font-semibold text-foreground-tertiary mb-1">
+                Gemas
+              </p>
+              <div className="flex items-center gap-1.5">
+                <span className="text-2xl">💎</span>
+                <span className="text-xl font-extrabold text-foreground-dark">
+                  {gems}
+                </span>
               </div>
-              <span className="text-center text-xs font-bold text-foregroundDark">Prova Rápida</span>
-            </Link>
-            <Link
-              to="/templates"
-              className="col-span-2 flex items-center gap-3 rounded-2xl border-2 border-[#BFE3CC] bg-white px-4 py-3 transition-colors hover:border-[#3E8E5E]"
-            >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
-                <LayoutTemplate className="h-5 w-5 text-[#2B5D3A]" strokeWidth={1.8} />
+              <p className="text-[11px] text-foreground-placeholder mt-0.5">
+                Use para desbloquear
+              </p>
+            </div>
+          </div>
+
+          <Link
+            to="/quiz"
+            className="group relative block overflow-hidden rounded-2xl border-2 border-luxury/40 bg-gradient-to-br from-luxury/15 to-card p-4 transition-transform active:scale-[0.98]"
+          >
+            <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-luxury/20 blur-2xl" />
+            <div className="relative flex items-start justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-luxury/20 text-luxury">
+                <Zap className="h-5 w-5" strokeWidth={2.4} />
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-[#1F2A24]">Templates</p>
-                <p className="text-xs text-[#6B7A70]">Modelos prontos para usar</p>
+              <span className="rounded-full bg-luxury/20 px-2 py-0.5 text-[9px] font-extrabold uppercase text-luxury">
+                2 min
+              </span>
+            </div>
+            <p className="mt-3 text-sm font-extrabold text-foreground-dark">Prova rápida</p>
+            <p className="mt-0.5 text-[11px] text-foreground-tertiary">Ganhe XP em 3 perguntas</p>
+          </Link>
+
+          <Link
+            to="/prompt-lab"
+            className="group relative flex items-center gap-3 overflow-hidden rounded-2xl border-2 border-emerald/40 bg-gradient-to-br from-emerald/15 to-card p-4 transition-transform active:scale-[0.99]"
+          >
+            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-emerald/20 blur-2xl" />
+            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald/20 text-emerald">
+              <Sparkles className="h-6 w-6" strokeWidth={2.2} />
+            </div>
+            <div className="relative flex-1">
+              <p className="text-sm font-extrabold text-foreground-dark">Laboratório de Avaliação</p>
+              <p className="text-[11px] text-foreground-tertiary">
+                Escreva seu prompt e receba nota da gatinha
+              </p>
+            </div>
+            <ArrowRight className="relative h-5 w-5 text-emerald" />
+          </Link>
+
+          <div className="rounded-2xl border-2 border-stroke-light bg-card p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-base font-bold text-foreground-dark">Sua trilha</h2>
+                <p className="text-[11px] text-foreground-tertiary">Trilha {activeTrack.label} em andamento</p>
               </div>
-              <ChevronRight className="h-4 w-4 text-[#6B9E7E]" />
-            </Link>
+              <span className="text-xs font-semibold text-emerald">
+                {activeCompleted} / {activeTrack.modules.length} módulos
+              </span>
+            </div>
+            <ol className="relative space-y-3 pl-2">
+              {trail.map((m, i) => (
+                <li key={i} className="flex items-center gap-3">
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 ${
+                      m.status === "completed"
+                        ? "bg-emerald border-emerald text-white"
+                        : m.status === "current"
+                          ? "bg-luxury border-luxury text-luxury-foreground animate-pulse"
+                          : "bg-surface-soft border-stroke-light text-neutral"
+                    }`}
+                  >
+                    {m.status === "completed" ? (
+                      <Check className="h-5 w-5" strokeWidth={3} />
+                    ) : m.status === "current" ? (
+                      <Sparkles className="h-5 w-5" strokeWidth={2.5} />
+                    ) : (
+                      <Lock className="h-4 w-4" />
+                    )}
+                  </div>
+                  <span
+                    className={`text-sm font-semibold ${
+                      m.status === "locked" ? "text-neutral" : "text-foreground-dark"
+                    }`}
+                  >
+                    {m.label}
+                  </span>
+                </li>
+              ))}
+
+              <li className="pt-1">
+                <Link
+                  to="/missions"
+                  className="flex items-center gap-3 rounded-xl border-2 border-luxury/40 bg-gradient-to-br from-luxury/15 to-luxury/5 p-2.5 transition-transform active:scale-[0.99]"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-luxury bg-luxury text-luxury-foreground">
+                    <Gift className="h-5 w-5" strokeWidth={2.4} />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-extrabold text-foreground-dark">Baú de Missões</p>
+                      <span className="text-[10px] font-bold text-luxury">
+                        {Math.min(missionsDone, CHEST_TOTAL)}/{CHEST_TOTAL}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-stroke-muted/40">
+                      <div
+                        className="h-full rounded-full bg-luxury transition-all"
+                        style={{ width: `${missionsPct}%` }}
+                      />
+                    </div>
+                    <p className="mt-1 text-[10px] text-foreground-tertiary">
+                      Complete {CHEST_TOTAL} missões diárias para abrir
+                    </p>
+                  </div>
+                </Link>
+              </li>
+            </ol>
+          </div>
+
+          <div>
+            <h2 className="text-base font-bold text-foreground-dark mb-3">
+              Aula em destaque
+            </h2>
+            <div className="rounded-2xl border-2 border-stroke-light bg-card p-4">
+              <div className="flex gap-4 mb-4">
+                <div className="w-20 h-20 flex-shrink-0 rounded-xl bg-page-bg-light flex items-center justify-center">
+                  <Brain className="h-9 w-9 text-primary-dark" strokeWidth={1.5} />
+                </div>
+                <div className="flex-1">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-foreground-tertiary">
+                    Trilha {activeTrack.label} · Módulo {currentModuleIdx + 1}
+                  </p>
+                  <p className="text-sm font-bold text-foreground-dark leading-snug">
+                    {currentModuleTitle}
+                  </p>
+                  <div className="flex items-center gap-1 mt-2 text-foreground-tertiary">
+                    <Clock className="h-3.5 w-3.5" strokeWidth={2} />
+                    <span className="text-xs">10 min</span>
+                  </div>
+                </div>
+              </div>
+              <Link
+                to={`/lesson?track=${activeTrack.id}`}
+                className="flex items-center justify-center gap-2 w-full rounded-xl bg-emerald py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-dark"
+              >
+                {activeCompleted === 0 ? "Começar lição" : "Continuar lição"}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Bottom navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-stroke-muted px-2 py-2 flex items-center justify-around">
-        {NAV_ITEMS.map(({ label, icon: Icon, to }) => {
-          const isActive = location.pathname === to
-          return (
-            <Link
-              key={to}
-              to={to}
-              className={`flex flex-col items-center gap-0.5 px-2 py-1 ${
-                isActive ? "text-primary-dark" : "text-foregroundPlaceholder"
-              }`}
-              aria-label={label}
-            >
-              <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 2} />
-              <span className={`text-[10px] ${isActive ? "font-bold" : "font-medium"}`}>
-                {label}
-              </span>
-            </Link>
-          )
-        })}
-      </nav>
-    </div>
-  )
+        <AppBottomNav />
+      </div>
+    </>
+  );
 }

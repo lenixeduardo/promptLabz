@@ -13,7 +13,7 @@ export const BOTTOM_NAV_ITEMS: BottomNavItem[] = [
   { key: "home", label: "Início", href: "/home", icon: "LayoutGrid" },
   { key: "tracks", label: "Trilha", href: "/learn", icon: "GraduationCap" },
   { key: "lab", label: "Laboratório", href: "/skills", icon: "Code2" },
-  { key: "challenges", label: "Missões", href: "/daily-missions", icon: "Target" },
+  { key: "challenges", label: "Missões", href: "/missions", icon: "Target" },
   { key: "news", label: "Notícias", href: "/news", icon: "Newspaper" },
   { key: "profile", label: "Perfil", href: "/profile", icon: "User" },
 ]
@@ -55,7 +55,7 @@ export function AppBottomNav({ items = BOTTOM_NAV_ITEMS }: AppBottomNavProps) {
                 "flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors",
                 isActive
                   ? "text-primary-dark"
-                  : "text-foregroundMuted hover:text-forest",
+                  : "text-foreground-muted hover:text-forest",
               )}
               aria-label={item.label}
               aria-current={isActive ? "page" : undefined}

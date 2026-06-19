@@ -2,60 +2,32 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import Lesson from "./Lesson"
-import { sileo } from "sileo"
-import { saveProgress } from "@/lib/db"
 
-import { LivesProvider } from "@/contexts/LivesContext"
-import { AchievementsProvider } from "@/contexts/AchievementsContext"
-
-const mockUser = { id: "user-1", email: "aluno@test.com" }
-
-// Mock useAuth
-vi.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ user: mockUser }),
+vi.mock("@/lib/moduleProgress", () => ({
+  advanceModule: vi.fn(),
+  useModuleProgress: vi.fn().mockReturnValue(0),
 }))
 
-// Mock useAuthContext
-vi.mock("@/contexts/AuthContext", () => ({
-  useAuthContext: () => ({ user: mockUser, loading: false, error: null }),
+vi.mock("@/lib/userScope", () => ({
+  scopedKey: (k: string) => `${k}::u:user-1`,
+  USER_SCOPE_EVENT: "promptlabz:user-scope-change",
+  initUserScope: vi.fn(),
+  getUserId: vi.fn().mockReturnValue("user-1"),
 }))
 
-vi.mock("@/lib/db", () => ({
-  loadProgress: vi.fn().mockImplementation(() => {
-    try {
-      const saved = localStorage.getItem(`promptlabz_progress:${mockUser.id}`)
-      return Promise.resolve(saved ? JSON.parse(saved) : {})
-    } catch {
-      return Promise.resolve({})
-    }
-  }),
-  saveProgress: vi.fn().mockResolvedValue(undefined),
-  getAchievementDefinitions: vi.fn().mockResolvedValue({ data: [], error: null }),
-  loadStreak: vi.fn().mockResolvedValue({ data: null, error: null }),
-  saveStreak: vi.fn().mockResolvedValue({ data: null, error: null }),
-  insertNotification: vi.fn().mockResolvedValue({ data: null, error: null }),
-}))
+// DEFAULT_QUESTIONS for a1, module 0: 3 questions
+// q1 correct = "b", q2 correct = "b", q3 correct = "b"
+const Q1_PROMPT = "Qual desses prompts daria o melhor resultado?"
+const Q1_OPT_B = "Atue como copywriter sênior e escreva um anúncio de Instagram"
 
-// Mock sileo
-vi.mock("sileo", () => ({
-  sileo: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
-}))
-
-function renderLesson(url = "/lesson?category=trending-skills&moduleIndex=0&lessonIndex=0") {
+function renderLesson(url = "/lesson?track=a1&module=0") {
   return render(
     <MemoryRouter initialEntries={[url]}>
-      <LivesProvider>
-        <AchievementsProvider>
-        <Routes>
-          <Route path="/lesson" element={<Lesson />} />
-          <Route path="/learn" element={<div>Learning Lab Page</div>} />
-          <Route path="/mission" element={<div>Mission Completed Page<span>+1 Vida</span></div>} />
-        </Routes>
-        </AchievementsProvider>
-      </LivesProvider>
+      <Routes>
+        <Route path="/lesson" element={<Lesson />} />
+        <Route path="/learn" element={<div>Learning Lab Page</div>} />
+        <Route path="/module-exam" element={<div>Module Exam Page</div>} />
+      </Routes>
     </MemoryRouter>
   )
 }
@@ -66,101 +38,122 @@ describe("Lesson — fluxo de aprendizado", () => {
     vi.clearAllMocks()
   })
 
-  it("carrega a lição correta a partir dos parâmetros e exibe conteúdo inicial", () => {
+  it("exibe a primeira pergunta e a barra de progresso", () => {
     renderLesson()
-    expect(screen.getByText("A Revolução dos Modelos de Linguagem (LLMs)")).toBeInTheDocument()
-    expect(screen.getByText("Entendendo os Modelos de Linguagem de Larga Escala")).toBeInTheDocument()
-    expect(screen.getByText("Entendi, vamos lá! →")).toBeInTheDocument()
+    expect(screen.getByText(/Pergunta 1 de/i)).toBeInTheDocument()
+    expect(screen.getByText(Q1_PROMPT)).toBeInTheDocument()
   })
 
-  it("navega para a primeira pergunta após clique em avançar", async () => {
+  it("exibe o botão desabilitado antes de selecionar uma opção", () => {
     renderLesson()
-    
-    const nextBtn = screen.getByRole("button", { name: /entendi, vamos lá!/i })
-    fireEvent.click(nextBtn)
-
-    // Deve exibir a Questão 1
-    expect(screen.getByText("Questão 1 de 2")).toBeInTheDocument()
-    expect(screen.getByText("Como os Large Language Models (LLMs) geram respostas?")).toBeInTheDocument()
+    expect(screen.getByText(/Selecione uma opção/i)).toBeInTheDocument()
   })
 
-  it("valida respostas de múltipla escolha corretas e incorretas", async () => {
+  it("mostra feedback positivo ao acertar a resposta", () => {
     renderLesson()
-
-    // Ir para a questão
-    fireEvent.click(screen.getByRole("button", { name: /entendi, vamos lá!/i }))
-
-    // Selecionar a resposta correta ("B")
-    const optionB = screen.getByText("Prevendo a próxima palavra mais provável de acordo com o contexto estatístico fornecido.")
-    fireEvent.click(optionB)
-
-    // Confirmar resposta
-    const confirmBtn = screen.getByRole("button", { name: /confirmar resposta/i })
-    fireEvent.click(confirmBtn)
-
-    await waitFor(() => {
-      expect(sileo.success).toHaveBeenCalledWith({ title: "Correto!", description: "Muito bem! 🎉" })
-    })
-
-    // Deve exibir botão para Próxima
-    expect(screen.getByRole("button", { name: /^Próxima →$/ })).toBeInTheDocument()
-  })
-
-  it("salva o progresso no localStorage e navega para /mission ao terminar", async () => {
-    renderLesson()
-
-    // 1. Entendi
-    fireEvent.click(screen.getByRole("button", { name: /entendi, vamos lá!/i }))
-
-    // Q1: Correta (B)
-    fireEvent.click(screen.getByText("Prevendo a próxima palavra mais provável de acordo com o contexto estatístico fornecido."))
-    fireEvent.click(screen.getByRole("button", { name: /confirmar resposta/i }))
-    fireEvent.click(screen.getByRole("button", { name: /^Próxima →$/ }))
-
-    // Q2: Correta (C)
-    fireEvent.click(screen.getByText("A precisão, clareza e estrutura do prompt enviado."))
-    fireEvent.click(screen.getByRole("button", { name: /confirmar resposta/i }))
-
-    // Finalizar lição
-    fireEvent.click(screen.getByRole("button", { name: /ver resultado/i }))
-
-    // Deve salvar no localStorage e ir para a página de missão concluída
-    await waitFor(() => {
-      expect(screen.getByText("Mission Completed Page")).toBeInTheDocument()
-    })
-    expect(screen.getByText("+1 Vida")).toBeInTheDocument()
-
-    expect(saveProgress).toHaveBeenCalledWith(
-      "user-1",
-      "trending-skills",
-      expect.objectContaining({
-        completedLessonIds: expect.arrayContaining(["ts-mod-1-l1"]),
-      })
+    // Click on option B (correct answer)
+    const optionB = screen.getAllByRole("button").find(
+      (el) => el.textContent?.includes(Q1_OPT_B)
     )
+    expect(optionB).toBeTruthy()
+    fireEvent.click(optionB!)
+    expect(screen.getByText(/Mandou bem!/i)).toBeInTheDocument()
   })
 
-  it("nao salva progresso quando o aluno erra alguma questao", async () => {
+  it("mostra feedback negativo ao errar a resposta", () => {
     renderLesson()
+    // Click on option A (wrong answer for q1)
+    const optionA = screen.getAllByRole("button").find(
+      (el) => el.textContent?.includes("Escreva um texto sobre marketing")
+    )
+    expect(optionA).toBeTruthy()
+    fireEvent.click(optionA!)
+    expect(screen.getByText(/Quase lá!/i)).toBeInTheDocument()
+  })
 
-    fireEvent.click(screen.getByRole("button", { name: /entendi, vamos lá/i }))
+  it("exibe o botão 'Próxima pergunta' após responder", () => {
+    renderLesson()
+    const optionB = screen.getAllByRole("button").find(
+      (el) => el.textContent?.includes(Q1_OPT_B)
+    )
+    fireEvent.click(optionB!)
+    expect(screen.getByRole("button", { name: /Próxima pergunta/i })).toBeInTheDocument()
+  })
 
-    fireEvent.click(screen.getByText("Procurando respostas pré-programadas em um banco de dados estático."))
-    fireEvent.click(screen.getByRole("button", { name: /confirmar resposta/i }))
-    fireEvent.click(screen.getByRole("button", { name: /^Próxima →$/ }))
+  it("avança para a próxima pergunta ao clicar em 'Próxima pergunta'", () => {
+    renderLesson()
+    // Answer q1
+    const optionB = screen.getAllByRole("button").find(
+      (el) => el.textContent?.includes(Q1_OPT_B)
+    )
+    fireEvent.click(optionB!)
+    fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
+    expect(screen.getByText(/Pergunta 2 de/i)).toBeInTheDocument()
+  })
 
-    fireEvent.click(screen.getByText("A precisão, clareza e estrutura do prompt enviado."))
-    fireEvent.click(screen.getByRole("button", { name: /confirmar resposta/i }))
-    fireEvent.click(screen.getByRole("button", { name: /ver resultado/i }))
+  it("exibe 'Ver resultado' na última pergunta", async () => {
+    renderLesson()
+    // q1: correct option B
+    let btn = screen.getAllByRole("button").find(el => el.textContent?.includes(Q1_OPT_B))
+    fireEvent.click(btn!)
+    fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
+
+    // q2: correct = b = "Aprendizado com poucos exemplos"
+    btn = screen.getAllByRole("button").find(el => el.textContent?.includes("Aprendizado com poucos exemplos"))
+    fireEvent.click(btn!)
+    fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
+
+    // q3: last question — should show "Ver resultado"
+    await waitFor(() => {
+      expect(screen.getByText(/Pergunta 3 de/i)).toBeInTheDocument()
+    })
+    btn = screen.getAllByRole("button").find(el => el.textContent?.includes("Atribuição de papel"))
+    fireEvent.click(btn!)
+    expect(screen.getByRole("button", { name: /Ver resultado/i })).toBeInTheDocument()
+  })
+
+  it("exibe tela de resultado após completar todas as perguntas", async () => {
+    renderLesson()
+    // Answer all 3 questions correctly
+    const answers = [
+      Q1_OPT_B,
+      "Aprendizado com poucos exemplos",
+      "Atribuição de papel",
+    ]
+    for (let i = 0; i < answers.length; i++) {
+      const btn = screen.getAllByRole("button").find(el => el.textContent?.includes(answers[i]))
+      fireEvent.click(btn!)
+      if (i < answers.length - 1) {
+        fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
+      } else {
+        fireEvent.click(screen.getByRole("button", { name: /Ver resultado/i }))
+      }
+    }
 
     await waitFor(() => {
-      expect(sileo.error).toHaveBeenCalledWith({
-        title: "Atividade não concluída",
-        description: "Acerte todas as questões para marcar a lição como concluída.",
-      })
+      expect(screen.getByText(/Perfeito!/i)).toBeInTheDocument()
     })
+    expect(screen.getByText(/XP/i)).toBeInTheDocument()
+  })
 
-    expect(saveProgress).not.toHaveBeenCalled()
-    expect(screen.queryByText("Mission Completed Page")).not.toBeInTheDocument()
-    expect(screen.getByText("Questão 1 de 2")).toBeInTheDocument()
+  it("exibe 'Boa tentativa!' ao errar alguma pergunta", async () => {
+    renderLesson()
+    // Answer q1 wrong (option A)
+    const wrongBtn = screen.getAllByRole("button").find(el => el.textContent?.includes("Escreva um texto sobre marketing"))
+    fireEvent.click(wrongBtn!)
+    fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
+
+    // Answer rest correctly
+    let btn = screen.getAllByRole("button").find(el => el.textContent?.includes("Aprendizado com poucos exemplos"))
+    fireEvent.click(btn!)
+    fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
+
+    btn = screen.getAllByRole("button").find(el => el.textContent?.includes("Atribuição de papel"))
+    fireEvent.click(btn!)
+    fireEvent.click(screen.getByRole("button", { name: /Ver resultado/i }))
+
+    await waitFor(() => {
+      expect(screen.getByText(/Boa tentativa!/i)).toBeInTheDocument()
+    })
   })
 })
