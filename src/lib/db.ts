@@ -495,6 +495,15 @@ export interface DbAchievementDefinition {
   sort_order: number
 }
 
+export interface DbReview {
+  id: string
+  user_id: string
+  rating: number
+  comment: string | null
+  created_at: string
+  updated_at: string
+}
+
 export async function getTrendingSkills(category?: string): Promise<DbResult<DbTrendingSkill[]>> {
   if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
   try {
@@ -563,5 +572,96 @@ export async function getAchievementDefinitions(): Promise<DbResult<DbAchievemen
     return { data: data ?? [], error: null }
   } catch (err) {
     return { data: null, error: getErrorMessage(err, "Failed to load achievement definitions") }
+  }
+}
+
+// ── Reviews Operations ───────────────────────────────────────────────────────────
+
+export interface ReviewInput {
+  rating: number
+  comment: string | null
+}
+
+export async function getReviews(limit = 50): Promise<DbResult<DbReview[]>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    const { data, error } = await supabase
+      .from("reviews")
+      .select("id,user_id,rating,comment,created_at,updated_at")
+      .order("created_at", { ascending: false })
+      .limit(limit)
+    if (error) throw error
+    return { data: data as DbReview[], error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to load reviews") }
+  }
+}
+
+export async function getUserReview(userId: string): Promise<DbResult<DbReview>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    const { data, error } = await supabase
+      .from("reviews")
+      .select("id,user_id,rating,comment,created_at,updated_at")
+      .eq("user_id", userId)
+      .single()
+    if (error) throw error
+    return { data: data as DbReview, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to load user review") }
+  }
+}
+
+export async function insertReview(userId: string, review: ReviewInput): Promise<DbResult<DbReview>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    const { data, error } = await supabase
+      .from("reviews")
+      .insert({
+        user_id: userId,
+        rating: review.rating,
+        comment: review.comment,
+      })
+      .select()
+      .single()
+    if (error) throw error
+    return { data: data as DbReview, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to insert review") }
+  }
+}
+
+export async function updateReview(reviewId: string, userId: string, review: ReviewInput): Promise<DbResult<DbReview>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    const { data, error } = await supabase
+      .from("reviews")
+      .update({
+        rating: review.rating,
+        comment: review.comment,
+      })
+      .eq("id", reviewId)
+      .eq("user_id", userId)
+      .select()
+      .single()
+    if (error) throw error
+    return { data: data as DbReview, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to update review") }
+  }
+}
+
+export async function deleteReview(reviewId: string, userId: string): Promise<DbResult<void>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase not configured" }
+  try {
+    const { error } = await supabase
+      .from("reviews")
+      .delete()
+      .eq("id", reviewId)
+      .eq("user_id", userId)
+    if (error) throw error
+    return { data: null, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Failed to delete review") }
   }
 }

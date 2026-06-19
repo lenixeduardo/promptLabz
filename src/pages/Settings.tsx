@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Bell,
@@ -15,30 +15,20 @@ import {
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { AppPageHeader } from "@/components/AppPageHeader";
 import { ThemeToggle } from "@/components/ThemeToggle";
-
-function Toggle({ on, onChange }: { on: boolean; onChange: (v: boolean) => void }) {
-  return (
-    <button
-      type="button"
-      onClick={() => onChange(!on)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
-        on ? "bg-emerald" : "bg-zinc-300 dark:bg-zinc-700"
-      }`}
-      aria-pressed={on}
-    >
-      <span
-        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
-          on ? "translate-x-[22px]" : "translate-x-0.5"
-        }`}
-      />
-    </button>
-  );
-}
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { getReminderEnabled, setReminderEnabled } from "@/hooks/useInactiveReminder";
+import { ReviewModal } from "@/components/ReviewModal";
 
 export default function SettingsPage() {
   const [notif, setNotif] = useState(true);
   const [sound, setSound] = useState(true);
-  const [reminders, setReminders] = useState(true);
+  const [reminders, setReminders] = useState(() => getReminderEnabled());
+  const [showReviewModal, setShowReviewModal] = useState(false);
+
+  useEffect(() => {
+    setReminderEnabled(reminders);
+  }, [reminders]);
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
@@ -55,21 +45,21 @@ export default function SettingsPage() {
               <span className="flex-1 text-sm font-semibold text-foreground-dark">
                 Notificações push
               </span>
-              <Toggle on={notif} onChange={setNotif} />
+              <Switch checked={notif} onCheckedChange={setNotif} />
             </div>
             <div className="flex items-center gap-3 px-4 py-3">
               <Volume2 className="h-5 w-5 text-emerald" />
               <span className="flex-1 text-sm font-semibold text-foreground-dark">
                 Sons e efeitos
               </span>
-              <Toggle on={sound} onChange={setSound} />
+              <Switch checked={sound} onCheckedChange={setSound} />
             </div>
             <div className="flex items-center gap-3 px-4 py-3">
               <Sparkles className="h-5 w-5 text-emerald" />
               <span className="flex-1 text-sm font-semibold text-foreground-dark">
                 Lembrete diário (streak)
               </span>
-              <Toggle on={reminders} onChange={setReminders} />
+              <Switch checked={reminders} onCheckedChange={setReminders} />
             </div>
             <div className="flex items-center gap-3 px-4 py-3">
               <Globe className="h-5 w-5 text-emerald" />
@@ -144,6 +134,31 @@ export default function SettingsPage() {
         <p className="text-center text-[11px] text-foreground-tertiary">
           PromptLabz · v0.3 MVP
         </p>
+
+        {/* Review Section */}
+        <div className="mx-auto w-full max-w-lg px-4 py-6">
+          <section className="rounded-2xl border-2 border-stroke-light bg-card">
+            <p className="px-4 pt-4 text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+              Feedback
+            </p>
+            <div className="flex items-center gap-3 px-4 py-6">
+              <Button
+                variant="outline"
+                onClick={() => setShowReviewModal(true)}
+                className="w-full"
+              >
+                Avalie nosso projeto
+              </Button>
+            </div>
+          </section>
+        </div>
+
+        {/* Review Modal */}
+        <ReviewModal
+          open={showReviewModal}
+          onOpenChange={setShowReviewModal}
+        />
+
       </div>
 
       <AppBottomNav />
