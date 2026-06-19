@@ -20,6 +20,9 @@ import { useStreak } from "@/lib/streak";
 import { useState, useEffect } from "react";
 import { useModuleProgress, type TrackId } from "@/lib/moduleProgress";
 import { scopedKey, USER_SCOPE_EVENT } from "@/lib/userScope";
+import { useAuth } from "@/hooks/useAuth";
+import { getLocalXP, getLocalGems } from "@/lib/xp";
+import { getLevelTitle } from "@/lib/levelTitles";
 
 type TrackInfo = { id: TrackId; label: string; modules: string[] };
 
@@ -132,13 +135,18 @@ export default function HomePage() {
   const missionsDone = useMissionsDone();
   const missionsPct = Math.round((Math.min(missionsDone, CHEST_TOTAL) / CHEST_TOTAL) * 100);
 
-  const level = 4;
-  const currentXP = 320;
-  const targetXP = 500;
-  const xpPct = Math.round((currentXP / targetXP) * 100);
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
+  const xp = userId ? getLocalXP(userId) : 0;
+  const gems = userId ? getLocalGems(userId) : 0;
   const { count: streak, longest: longestStreak } = useStreak();
-  const gems = 142;
   const [streakCelebration, setStreakCelebration] = useState(false);
+
+  const XP_PER_LEVEL = 500;
+  const level = Math.floor(xp / XP_PER_LEVEL) + 1;
+  const currentXPInLevel = xp % XP_PER_LEVEL;
+  const targetXPInLevel = XP_PER_LEVEL;
+  const xpPct = Math.round((currentXPInLevel / targetXPInLevel) * 100);
 
   useEffect(() => {
     if (streak < 7) return;
@@ -193,7 +201,7 @@ export default function HomePage() {
                 <p className="text-xs font-semibold uppercase tracking-wider opacity-80">
                   Nível {level}
                 </p>
-                <p className="text-xl font-extrabold">Aprendiz de Prompts</p>
+                <p className="text-xl font-extrabold">{getLevelTitle(level)}</p>
               </div>
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-card/15 backdrop-blur">
                 <Star className="h-7 w-7 text-luxury fill-luxury" />
@@ -204,10 +212,10 @@ export default function HomePage() {
                 className="h-full rounded-full bg-luxury transition-all"
                 style={{ width: `${xpPct}%` }}
               />
-            </div>
+            </div
             <p className="mt-2 text-xs opacity-90">
-              {currentXP} / {targetXP} XP para o próximo nível
-            </p>
+              {currentXPInLevel} / {targetXPInLevel} XP para o próximo nível
+              </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3">

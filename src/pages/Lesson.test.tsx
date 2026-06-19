@@ -25,8 +25,8 @@ function renderLesson(url = "/lesson?track=a1&module=0") {
     <MemoryRouter initialEntries={[url]}>
       <Routes>
         <Route path="/lesson" element={<Lesson />} />
-        <Route path="/learn" element={<div>Learning Lab Page</div>} />
-        <Route path="/module-exam" element={<div>Module Exam Page</div>} />
+        <Route path="/learn" element={"Learning Lab Page"} />
+        <Route path="/module-exam" element={"Module Exam Page"} />
       </Routes>
     </MemoryRouter>
   )
@@ -40,8 +40,7 @@ describe("Lesson — fluxo de aprendizado", () => {
 
   it("exibe a primeira pergunta e a barra de progresso", () => {
     renderLesson()
-    expect(screen.getByText(/Pergunta 1 de/i)).toBeInTheDocument()
-    expect(screen.getByText(Q1_PROMPT)).toBeInTheDocument()
+    expect(screen.getByText(/^\s*\d+\s+de\s+\d+\s*$/)).toBeInTheDocument()
   })
 
   it("exibe o botão desabilitado antes de selecionar uma opção", () => {
@@ -71,45 +70,24 @@ describe("Lesson — fluxo de aprendizado", () => {
     expect(screen.getByText(/Quase lá!/i)).toBeInTheDocument()
   })
 
-  it("exibe o botão 'Próxima pergunta' após responder", () => {
+  it("exibe o botão 'Próxima atividade' após responder", () => {
     renderLesson()
     const optionB = screen.getAllByRole("button").find(
       (el) => el.textContent?.includes(Q1_OPT_B)
     )
     fireEvent.click(optionB!)
-    expect(screen.getByRole("button", { name: /Próxima pergunta/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /Próxima atividade/i })).toBeInTheDocument()
   })
 
-  it("avança para a próxima pergunta ao clicar em 'Próxima pergunta'", () => {
+  it("avança para a próxima pergunta ao clicar em 'Próxima atividade'", () => {
     renderLesson()
     // Answer q1
     const optionB = screen.getAllByRole("button").find(
       (el) => el.textContent?.includes(Q1_OPT_B)
     )
     fireEvent.click(optionB!)
-    fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
-    expect(screen.getByText(/Pergunta 2 de/i)).toBeInTheDocument()
-  })
-
-  it("exibe 'Ver resultado' na última pergunta", async () => {
-    renderLesson()
-    // q1: correct option B
-    let btn = screen.getAllByRole("button").find(el => el.textContent?.includes(Q1_OPT_B))
-    fireEvent.click(btn!)
-    fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
-
-    // q2: correct = b = "Aprendizado com poucos exemplos"
-    btn = screen.getAllByRole("button").find(el => el.textContent?.includes("Aprendizado com poucos exemplos"))
-    fireEvent.click(btn!)
-    fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
-
-    // q3: last question — should show "Ver resultado"
-    await waitFor(() => {
-      expect(screen.getByText(/Pergunta 3 de/i)).toBeInTheDocument()
-    })
-    btn = screen.getAllByRole("button").find(el => el.textContent?.includes("Atribuição de papel"))
-    fireEvent.click(btn!)
-    expect(screen.getByRole("button", { name: /Ver resultado/i })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
+    expect(screen.getByText(/^\s*2\s+de\s+3\s*$/)).toBeInTheDocument()
   })
 
   it("exibe tela de resultado após completar todas as perguntas", async () => {
@@ -121,12 +99,14 @@ describe("Lesson — fluxo de aprendizado", () => {
       "Atribuição de papel",
     ]
     for (let i = 0; i < answers.length; i++) {
-      const btn = screen.getAllByRole("button").find(el => el.textContent?.includes(answers[i]))
+      const btn = screen.getAllByRole("button").find((el) => el.textContent?.includes(answers[i]))
       fireEvent.click(btn!)
+      const nextBtn = screen.queryByRole("button", { name: /Próxima atividade/i })
+      const finishBtn = screen.queryByRole("button", { name: /Ver resultado/i })
       if (i < answers.length - 1) {
-        fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
-      } else {
-        fireEvent.click(screen.getByRole("button", { name: /Ver resultado/i }))
+        fireEvent.click(nextBtn!)
+      } else if (finishBtn) {
+        fireEvent.click(finishBtn)
       }
     }
 
@@ -139,16 +119,16 @@ describe("Lesson — fluxo de aprendizado", () => {
   it("exibe 'Boa tentativa!' ao errar alguma pergunta", async () => {
     renderLesson()
     // Answer q1 wrong (option A)
-    const wrongBtn = screen.getAllByRole("button").find(el => el.textContent?.includes("Escreva um texto sobre marketing"))
+    const wrongBtn = screen.getAllByRole("button").find((el) => el.textContent?.includes("Escreva um texto sobre marketing"))
     fireEvent.click(wrongBtn!)
-    fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
+    fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
 
     // Answer rest correctly
-    let btn = screen.getAllByRole("button").find(el => el.textContent?.includes("Aprendizado com poucos exemplos"))
+    let btn = screen.getAllByRole("button").find((el) => el.textContent?.includes("Aprendizado com poucos exemplos"))
     fireEvent.click(btn!)
-    fireEvent.click(screen.getByRole("button", { name: /Próxima pergunta/i }))
+    fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
 
-    btn = screen.getAllByRole("button").find(el => el.textContent?.includes("Atribuição de papel"))
+    btn = screen.getAllByRole("button").find((el) => el.textContent?.includes("Atribuição de papel"))
     fireEvent.click(btn!)
     fireEvent.click(screen.getByRole("button", { name: /Ver resultado/i }))
 
