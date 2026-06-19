@@ -19,6 +19,30 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$CLAUDE_TOOL_FILE_PATH\" ] && [[ \"$CLAUDE_TOOL_FILE_PATH\" =~ \.(tsx?|ts|js|jsx|json|css|scss|md)$ ]]; then npx prettier --write \"$CLAUDE_TOOL_FILE_PATH\"; fi",
+            "description": "Format supported files with Prettier after edit",
+            "matcher": "Edit|Write",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$CLAUDE_TOOL_FILE_PATH\" ]; then pnpm test --${CLAUDE_TOOL_FILE_PATH\\.test\\.(tsx?$|ts$)}; fi",
+            "description": "Run related tests after file edit",
+            "matcher": "Edit|Write",
+            "timeout": 15000
+          }
+        ]
+      }
     ]
   }
 }

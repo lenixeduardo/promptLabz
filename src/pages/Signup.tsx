@@ -41,7 +41,6 @@ export default function Signup() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
-  const [pendingEmail, setPendingEmail] = useState("")
 
   useEffect(() => {
     if (user) {
@@ -81,12 +80,9 @@ export default function Signup() {
     const result = await signup(email, password, name.trim())
     if (result.success) {
       trackSignUp("email")
+      localStorage.setItem("promptlabz:hasAccount", "true")
       sileo.success({ title: "Conta criada com sucesso!" })
-      if (result.needsConfirmation) {
-        setPendingEmail(email)
-      } else {
-        navigate("/home")
-      }
+      navigate("/home")
     } else {
       sileo.error({ title: result.error || "Erro ao criar conta" })
     }
@@ -95,39 +91,17 @@ export default function Signup() {
 
   const handleGoogleSignup = async () => {
     setLoading(true)
+    localStorage.setItem("promptlabz:hasAccount", "true")
     const result = await loginWithGoogle()
     if (result.success) {
       trackSignUp("google")
       sileo.success({ title: "Conta criada com o Google!" })
       navigate("/home")
     } else {
+      localStorage.removeItem("promptlabz:hasAccount")
       sileo.error({ title: result.error || "Erro ao criar conta com Google" })
     }
     setLoading(false)
-  }
-
-  if (pendingEmail) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-6 text-center">
-        <img
-          src="/assets/mascot-login-new.png"
-          alt="Mascot"
-          className="h-36 w-auto drop-shadow-md"
-        />
-        <h1 className="text-3xl font-extrabold text-primary-dark">Confirme seu e-mail</h1>
-        <p className="max-w-sm text-sm text-foregroundSecondary">
-          Enviamos um link de confirmação para{" "}
-          <span className="font-semibold text-primary-dark">{pendingEmail}</span>.
-          <br />Clique no link para ativar sua conta.
-        </p>
-        <Link
-          to="/login"
-          className="mt-2 rounded-full bg-primary-dark px-8 py-3 text-sm font-semibold text-white hover:opacity-90"
-        >
-          Ir para o login
-        </Link>
-      </div>
-    )
   }
 
   return (

@@ -95,8 +95,8 @@ describe("Signup — validações", () => {
 })
 
 describe("Signup — submissão", () => {
-  it("navega para /home quando signup é direto (sem confirmação)", async () => {
-    mockSignup.mockResolvedValue({ success: true, needsConfirmation: false })
+  it("navega para /home quando signup é bem-sucedido", async () => {
+    mockSignup.mockResolvedValue({ success: true })
 
     renderSignup()
     await fillForm()
@@ -104,19 +104,6 @@ describe("Signup — submissão", () => {
 
     await waitFor(() => expect(screen.getByText("home")).toBeInTheDocument())
     expect(mockSignup).toHaveBeenCalledWith("novo@test.com", "Senha123", "Novo User")
-  })
-
-  it("exibe tela 'Confirme seu e-mail' quando confirmação é necessária", async () => {
-    mockSignup.mockResolvedValue({ success: true, needsConfirmation: true })
-
-    renderSignup()
-    await fillForm("novo@test.com")
-    await userEvent.click(screen.getByRole("button", { name: /criar conta/i }))
-
-    await waitFor(() =>
-      expect(screen.getByText("Confirme seu e-mail")).toBeInTheDocument()
-    )
-    expect(screen.getByText(/novo@test\.com/)).toBeInTheDocument()
   })
 
   it("exibe mensagem de erro quando signup falha", async () => {

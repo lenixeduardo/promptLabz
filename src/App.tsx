@@ -13,6 +13,7 @@ import { initAnalytics, pageView, identify, reset } from "@/lib/analytics"
 import { initUserScope } from "@/lib/userScope"
 import { useAuth } from "@/hooks/useAuth"
 import { useUTM } from "@/hooks/useUTM"
+import { useInactiveReminder } from "@/hooks/useInactiveReminder"
 
 // Initialize user-scoped localStorage namespacing
 initUserScope()
@@ -108,6 +109,14 @@ function AnalyticsTracker() {
   return null
 }
 
+// ── Activity & Reminder Tracker ───────────────────────────────────────────
+function ActivityTracker() {
+  // Monitors inactivity, records activity, and triggers push notifications
+  // when the user hasn't accessed in 12+ hours and hasn't visited today.
+  useInactiveReminder()
+  return null
+}
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -117,6 +126,7 @@ export default function App() {
         <LivesProvider>
           <AchievementsProvider>
           <AnalyticsTracker />
+          <ActivityTracker />
           <Toaster position="top-right" />
           <Suspense fallback={<PageLoading />}>
             <Routes>

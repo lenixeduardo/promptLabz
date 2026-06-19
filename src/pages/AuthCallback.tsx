@@ -29,6 +29,7 @@ export default function AuthCallback() {
         return
       }
 
+      localStorage.setItem("promptlabz:hasAccount", "true")
       setMessage("Login concluído. Redirecionando...")
       navigate("/home", { replace: true })
     }

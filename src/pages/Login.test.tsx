@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi, beforeEach } from "vitest"
+import { describe, it, expect, vi, beforeEach } from "vitest"
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
@@ -52,16 +52,19 @@ function renderLogin() {
   )
 }
 
-beforeEach(() => vi.clearAllMocks())
+beforeEach(() => {
+  vi.clearAllMocks()
+  localStorage.clear()
+})
 
-describe("Login â€” renderizaÃ§Ã£o", () => {
+describe("Login — renderização", () => {
   it("exibe campos de email e senha", () => {
     renderLogin()
     expect(screen.getByPlaceholderText("Seu e-mail")).toBeInTheDocument()
     expect(screen.getByPlaceholderText("Sua senha")).toBeInTheDocument()
   })
 
-  it("exibe o botÃ£o de entrar", () => {
+  it("exibe o botão de entrar", () => {
     renderLogin()
     expect(screen.getByRole("button", { name: /entrar/i })).toBeInTheDocument()
   })
@@ -75,9 +78,20 @@ describe("Login â€” renderizaÃ§Ã£o", () => {
     renderLogin()
     expect(screen.getByText(/crie agora/i)).toBeInTheDocument()
   })
+
+  it("não exibe 'Bem-vindo de volta' para novo usuário", () => {
+    renderLogin()
+    expect(screen.queryByText(/bem-vindo de volta/i)).not.toBeInTheDocument()
+  })
+
+  it("exibe 'Bem-vindo de volta' para usuário que já tem conta", () => {
+    localStorage.setItem("promptlabz:hasAccount", "true")
+    renderLogin()
+    expect(screen.getByText(/bem-vindo de volta/i)).toBeInTheDocument()
+  })
 })
 
-describe("Login â€” submissÃ£o", () => {
+describe("Login — submissão", () => {
   it("navega para /home ao fazer login com sucesso", async () => {
     mockLogin.mockResolvedValue({ success: true, user: { email: "a@a.com" } })
 
@@ -90,7 +104,7 @@ describe("Login â€” submissÃ£o", () => {
   })
 
   it("exibe mensagem de erro quando login falha", async () => {
-    mockLogin.mockResolvedValue({ success: false, error: "Credenciais invÃ¡lidas" })
+    mockLogin.mockResolvedValue({ success: false, error: "Credenciais inválidas" })
 
     renderLogin()
     await userEvent.type(screen.getByPlaceholderText("Seu e-mail"), "a@a.com")
@@ -98,11 +112,11 @@ describe("Login â€” submissÃ£o", () => {
     await userEvent.click(screen.getByRole("button", { name: /entrar/i }))
 
     await waitFor(() =>
-      expect(sileo.error).toHaveBeenCalledWith({ title: "Credenciais invÃ¡lidas" })
+      expect(sileo.error).toHaveBeenCalledWith({ title: "Credenciais inválidas" })
     )
   })
 
-  it("exibe 'Entrando...' enquanto request estÃ¡ em andamento", async () => {
+  it("exibe 'Entrando...' enquanto request está em andamento", async () => {
     mockLogin.mockImplementation(() => new Promise(() => {}))
 
     renderLogin()
@@ -114,7 +128,7 @@ describe("Login â€” submissÃ£o", () => {
   })
 })
 
-describe("Login â€” navegaÃ§Ã£o", () => {
+describe("Login — navegação", () => {
   it("navega para /forgot-password ao clicar em 'Esqueci minha senha'", async () => {
     renderLogin()
     await userEvent.click(screen.getByText(/esqueci minha senha/i))
@@ -131,4 +145,3 @@ describe("Login â€” navegaÃ§Ã£o", () => {
     )
   })
 })
-

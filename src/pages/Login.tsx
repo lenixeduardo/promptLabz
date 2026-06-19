@@ -35,12 +35,16 @@ function GoogleIcon() {
   )
 }
 
+const HAS_ACCOUNT_KEY = "promptlabz:hasAccount"
+
 export default function Login() {
   const navigate = useNavigate()
   const { login, loginWithGoogle, user } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const isReturning =
+    typeof window !== "undefined" && localStorage.getItem(HAS_ACCOUNT_KEY) === "true"
 
   useEffect(() => {
     if (user) {
@@ -97,6 +101,12 @@ export default function Login() {
 
         {/* Wordmark */}
         <BrandLogo className="mt-1 text-5xl" />
+
+        {isReturning && (
+          <p className="mt-3 text-sm font-semibold text-forest">
+            Bem-vindo de volta! 👋
+          </p>
+        )}
 
         {/* Login card */}
         <Card className="mt-7 w-full border-stroke-muted bg-surface-success p-6 shadow-md sm:p-7">

@@ -69,7 +69,7 @@ describe("useAuth — login", () => {
 
 
 describe("useAuth — signup", () => {
-  it("retorna sucesso e needsConfirmation=true quando session é null", async () => {
+  it("retorna sucesso ao criar conta com dados válidos", async () => {
     mockAuth.signUp.mockResolvedValue({
       data: { user: { id: "abc", email: "novo@test.com" }, session: null },
       error: null,
@@ -80,7 +80,7 @@ describe("useAuth — signup", () => {
     await act(async () => { res = await result.current.signup("novo@test.com", "senha123", "Novo User") })
 
     expect(res.success).toBe(true)
-    expect(res.needsConfirmation).toBe(true)
+    expect(res.user.email).toBe("novo@test.com")
     expect(mockAuth.signUp).toHaveBeenCalledWith(
       expect.objectContaining({
         options: expect.objectContaining({
@@ -90,7 +90,7 @@ describe("useAuth — signup", () => {
     )
   })
 
-  it("retorna needsConfirmation=false quando session está presente", async () => {
+  it("retorna sucesso quando a sessão é criada imediatamente", async () => {
     mockAuth.signUp.mockResolvedValue({
       data: {
         user: { id: "abc", email: "novo@test.com" },
@@ -104,7 +104,6 @@ describe("useAuth — signup", () => {
     await act(async () => { res = await result.current.signup("novo@test.com", "senha123") })
 
     expect(res.success).toBe(true)
-    expect(res.needsConfirmation).toBe(false)
   })
 
   it("retorna erro quando email já está cadastrado", async () => {

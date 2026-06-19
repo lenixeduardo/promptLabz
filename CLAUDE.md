@@ -1,4 +1,4 @@
-﻿# PromptLabz â€” CLAUDE.md
+# PromptLabz â€” CLAUDE.md
 
 ## Checklist de Qualidade para Todo Projeto Desenvolvido
 
@@ -130,3 +130,79 @@ Isso é o que mais tira você do "copiei do YouTube":
 - [ ] Um doc curto: "trade-offs e próximos passos"
 - [ ] Changelog de versões (v0.1, v0.2â€¦)
 
+---
+
+## Claude Code Project Context
+
+### Development Commands
+```bash
+# Development
+pnpm dev                    # Start development server on http://localhost:5173
+pnpm typecheck              # TypeScript type checking
+pnpm lint                   # ESLint linting
+pnpm test                   # Run Vitest unit tests
+pnpm test:watch             # Run Vitest in watch mode
+pnpm test:coverage          # Run tests with coverage report
+pnpm test:e2e               # Run Playwright E2E tests
+pnpm test:e2e:ui            # Run Playwright E2E tests with UI
+pnpm build                  # Build for production
+pnpm preview                # Preview production build
+pnpm smoke:supabase         # Test Supabase connection
+pnpm check                  # Run all checks (typecheck, lint, test, build, smoke)
+pnpm install-deps           # Install dependencies with pnpm
+pnpm clean                  # Clean node_modules and pnpm store
+```
+
+### Architecture Overview
+PromptLabz follows a React SPA architecture with Supabase as backend:
+
+```
+Browser (React SPA)
+  └── Pages → Hooks → lib/db → Supabase JS SDK
+                                      │
+                              ┌───────▼───────┐
+                              │   Supabase     │
+                              │  Auth (JWT)    │
+                              │  Postgres+RLS  │
+                              │  Edge Fns      │
+                              └───────────────┘
+```
+
+**Key patterns:**
+- **Offline-first**: Progress saved to localStorage before syncing with Supabase
+- **Lazy loading**: Pages loaded on demand with React.lazy()
+- **Context API**: 3 contexts (Auth, Lives, Achievements) with well-defined scope
+- **RLS**: Users can only access their own data; premium fields protected at database level
+
+### Environment Setup
+1. Copy environment example: `cp .env.example .env.local`
+2. Configure Supabase credentials in `.env.local`:
+   - `VITE_SUPABASE_URL` - Supabase project URL
+   - `VITE_SUPABASE_ANON_KEY` - Supabase anon key
+3. For local development (recommended):
+   ```bash
+   supabase start          # Start Supabase locally (requires Docker)
+   supabase db reset       # Reset database to clean state
+   # Copy the displayed URL and anon key to .env.local
+   pnpm dev
+   ```
+4. Without Supabase (degraded mode):
+   ```bash
+   pnpm dev  # App works with localStorage only
+   ```
+
+### Testing Workflow
+- **Unit tests**: Vitest + Testing Library (`pnpm test`)
+- **E2E tests**: Playwright (`pnpm test:e2e`)
+- **Test files** located alongside source files with `.test.tsx` suffix
+- **CI**: GitHub Actions runs typecheck → lint → test → build on every PR
+
+### Non-obvious Patterns & Gotchas
+- **Offline-first behavior**: Changes are immediately saved to localStorage, then synced to Supabase when online. If sync fails, data remains in localStorage and retries automatically.
+- **Context API usage**: Auth context provides user data and auth functions; Lives context manages game lives system; Achievements context tracks badge progress.
+- **RLS implementation**: Database policies ensure users can only access their own records. Client-side filtering complements but doesn't replace server-side RLS.
+- **Supabase configuration**: For full functionality, ensure:
+  1. Email authentication is enabled in Supabase auth settings
+  2. Google/OAuth providers are configured (if using social login)
+  3. Edge Function `send-auth-email` is deployed with Resend configuration
+  4. Database migrations are applied (`supabase db push`)

@@ -15,13 +15,22 @@ const SOCIAL_PROOF = {
   ratingCount: "312",
 }
 
+const HAS_ACCOUNT_KEY = "promptlabz:hasAccount"
+
 export default function Hero() {
   const [transitioning, setTransitioning] = useState(false)
   const navigate = useNavigate()
+  const hasAccount =
+    typeof window !== "undefined" && localStorage.getItem(HAS_ACCOUNT_KEY) === "true"
 
   function handleCTA() {
-    capture("hero_cta_clicked", { cta_text: "Começar grátis agora" })
-    setTransitioning(true)
+    if (hasAccount) {
+      capture("hero_cta_clicked", { cta_text: "Continuar aprendendo" })
+      navigate("/login")
+    } else {
+      capture("hero_cta_clicked", { cta_text: "Começar grátis agora" })
+      setTransitioning(true)
+    }
   }
 
   function handleLoginClick() {
@@ -127,7 +136,7 @@ export default function Hero() {
           disabled={transitioning}
           onClick={handleCTA}
         >
-          <span>Começar grátis agora</span>
+          <span>{hasAccount ? "Continuar aprendendo" : "Começar grátis agora"}</span>
           <ArrowRight className="h-5 w-5" />
         </Button>
 
