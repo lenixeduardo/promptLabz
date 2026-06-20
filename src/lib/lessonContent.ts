@@ -847,17 +847,804 @@ const skillsLLMBasico: Question[] = [
 ];
 
 
+// ── A1 — Fundamentos de Prompts ───────────────────────────────────────────
+
+const a1Boas_vindas: Question[] = [
+  {
+    id: "a1bv0",
+    prompt: "O que é o PromptLabz?",
+    options: [
+      { id: "a", text: "Uma plataforma para treinar modelos de IA do zero." },
+      { id: "b", text: "Uma trilha de aprendizado prática para você dominar a arte de escrever prompts e usar IA com eficiência." },
+      { id: "c", text: "Um substituto para o ChatGPT." },
+    ],
+    correct: "b",
+    explanation: "PromptLabz é um curso prático em formato de trilha. Você aprende prompts — desde o básico até aplicações profissionais — com atividades, exemplos reais e desafios.",
+  },
+  {
+    id: "a1bv1",
+    prompt: "Qual é a habilidade central que você vai desenvolver nesta trilha?",
+    options: [
+      { id: "a", text: "Programar modelos de linguagem (LLMs) em Python." },
+      { id: "b", text: "Escrever prompts claros, específicos e eficazes para obter respostas de qualidade da IA." },
+      { id: "c", text: "Criar apresentações de slides com IA." },
+    ],
+    correct: "b",
+    explanation: "Engenharia de prompt (Prompt Engineering) é a habilidade de comunicar intenções com clareza para a IA. Pequenas mudanças no prompt geram grandes diferenças no resultado.",
+    hint: "Pense em prompt como a instrução que você dá à IA.",
+  },
+  {
+    id: "a1bv2",
+    prompt: "Por que aprender a escrever bons prompts é valioso?",
+    options: [
+      { id: "a", text: "Porque a IA não funciona sem prompts perfeitos." },
+      { id: "b", text: "Porque prompts bem escritos multiplicam sua produtividade — você consegue resultados melhores, mais rápido, sem precisar saber programar." },
+      { id: "c", text: "Porque a maioria dos modelos de IA cobra por palavra no prompt." },
+    ],
+    correct: "b",
+    explanation: "Um bom prompt é a diferença entre uma resposta genérica e uma resposta que resolve seu problema real. É a habilidade mais acessível e de maior retorno para usar IA no dia a dia.",
+  },
+];
+
+const a1OQueEPrompt: Question[] = [
+  {
+    id: "a1oqp0",
+    prompt: "O que é um prompt em IA?",
+    options: [
+      { id: "a", text: "O botão 'Enviar' no chat." },
+      { id: "b", text: "A instrução, pergunta ou texto que você envia para um modelo de linguagem (LLM) para obter uma resposta." },
+      { id: "c", text: "O nome do servidor onde a IA roda." },
+    ],
+    correct: "b",
+    explanation: "Prompt é a sua entrada (input) para o modelo. Pode ser uma pergunta, um comando, um trecho de texto para continuar — qualquer coisa que você envia para a IA processar.",
+    hint: "É o que você 'digita' para a IA.",
+  },
+  {
+    id: "a1oqp1",
+    prompt: "Qual destes é um exemplo de prompt ruim?",
+    options: [
+      { id: "a", text: "\"Resuma em 3 pontos os benefícios de beber água para adultos sedentários.\"" },
+      { id: "b", text: "\"Me conta algo.\"" },
+      { id: "c", text: "\"Liste 5 estratégias de marketing para um restaurante italiano delivery no bairro do Itaim Bibi.\"" },
+    ],
+    correct: "b",
+    explanation: "\"Me conta algo\" é vago demais. Sem contexto ou objetivo, a IA vai gerar algo aleatório e inútil. Bons prompts têm objetivo claro e contexto suficiente.",
+  },
+  {
+    id: "a1oqp2",
+    prompt: "O que torna um prompt eficaz?",
+    options: [
+      { id: "a", text: "Usar palavras em maiúsculas para dar ênfase." },
+      { id: "b", text: "Ser longo — quanto maior, melhor." },
+      { id: "c", text: "Ter objetivo claro, contexto relevante e instrução específica sobre o que você quer." },
+    ],
+    correct: "c",
+    explanation: "Um prompt eficaz responde internamente: 'O que eu quero?', 'Para quem?', 'Em que formato?' Clareza vence comprimento.",
+  },
+];
+
+const a1ContextoClareza: Question[] = [
+  {
+    id: "a1cc0",
+    prompt: "Por que adicionar contexto em um prompt melhora a resposta?",
+    options: [
+      { id: "a", text: "Porque a IA cobra menos quando recebe mais texto." },
+      { id: "b", text: "Porque o modelo não tem acesso ao seu histórico ou situação — o contexto é a única fonte de informação que ele tem sobre você." },
+      { id: "c", text: "Para confundir o modelo e gerar respostas criativas." },
+    ],
+    correct: "b",
+    explanation: "O modelo não conhece você. Fornecer contexto (quem você é, para que serve, qual o público) é a forma de personalizar a resposta para o seu cenário específico.",
+  },
+  {
+    id: "a1cc1",
+    prompt: "Qual prompt tem mais contexto e clareza?",
+    options: [
+      { id: "a", text: "\"Crie um e-mail.\"" },
+      { id: "b", text: "\"Crie um e-mail formal de 5 linhas recusando uma proposta de parceria, mantendo tom cordial, para enviar ao CEO de uma startup de fintech.\"" },
+      { id: "c", text: "\"E-mail de recusa para CEO de fintech.\"" },
+    ],
+    correct: "b",
+    explanation: "O prompt B especifica tipo (formal), tamanho (5 linhas), objetivo (recusa), tom (cordial) e destinatário (CEO de fintech). Esses detalhes eliminam ambiguidade.",
+  },
+  {
+    id: "a1cc2",
+    prompt: "O que é 'ambiguidade' em prompts e por que ela é problemática?",
+    options: [
+      { id: "a", text: "Quando o prompt tem mais de 500 caracteres — o modelo fica confuso." },
+      { id: "b", text: "Quando o prompt pode ser interpretado de várias formas, levando a respostas que não atendem ao que você realmente queria." },
+      { id: "c", text: "Quando você usa linguagem técnica demais." },
+    ],
+    correct: "b",
+    explanation: "Ambiguidade força o modelo a 'adivinhar' sua intenção. Ser específico elimina interpretações erradas e aumenta a chance de a resposta ser exatamente o que você precisa.",
+  },
+];
+
+const a1PersonasRoles: Question[] = [
+  {
+    id: "a1pr0",
+    prompt: "O que é 'role prompting' (atribuição de papel)?",
+    options: [
+      { id: "a", text: "Definir o papel do usuário como administrador no chat." },
+      { id: "b", text: "Pedir ao modelo que assuma uma persona específica — ex.: 'Aja como um médico', 'Você é um copywriter sênior' — para que responda com esse nível de expertise e tom." },
+      { id: "c", text: "Dar uma função matemática para o modelo calcular." },
+    ],
+    correct: "b",
+    explanation: "Role prompting direciona o estilo, tom e profundidade da resposta. 'Aja como um professor para crianças de 8 anos' gera uma explicação bem diferente de 'Aja como um PhD em física'.",
+  },
+  {
+    id: "a1pr1",
+    prompt: "Como a atribuição de persona muda a resposta do modelo?",
+    options: [
+      { id: "a", text: "Não muda nada — o modelo ignora essa instrução." },
+      { id: "b", text: "Ajusta o vocabulário, nível técnico, tom e perspectiva da resposta de acordo com a persona pedida." },
+      { id: "c", text: "Faz o modelo responder em outra língua automaticamente." },
+    ],
+    correct: "b",
+    explanation: "Uma persona calibra toda a resposta. 'Aja como um chef de cozinha' trará termos culinários e dicas práticas. 'Aja como um crítico gastronômico' trará análise e vocabulário sofisticado.",
+  },
+  {
+    id: "a1pr2",
+    prompt: "Qual é a forma mais eficaz de definir uma persona em um prompt?",
+    options: [
+      { id: "a", text: "\"Seja inteligente.\"" },
+      { id: "b", text: "\"Aja como um especialista.\"" },
+      { id: "c", text: "\"Você é um gerente de produto com 10 anos de experiência em SaaS B2B. Responda como se estivesse orientando um founder iniciante.\"" },
+    ],
+    correct: "c",
+    explanation: "Personas eficazes têm especificidade: área, nível de experiência e relação com o interlocutor. Quanto mais detalhada, mais consistente e útil a resposta.",
+  },
+];
+
+const a1EstruturasPrompt: Question[] = [
+  {
+    id: "a1ep0",
+    prompt: "O framework CRAFT (Contexto, Papel, Ação, Formato, Tom) serve para:",
+    options: [
+      { id: "a", text: "Criar logos com IA." },
+      { id: "b", text: "Estruturar prompts de forma completa, garantindo que todos os elementos importantes estejam presentes." },
+      { id: "c", text: "Programar robôs de automação." },
+    ],
+    correct: "b",
+    explanation: "CRAFT é um checklist de boas práticas: Contexto (situação), Role/Papel (persona), Ação (o que fazer), Formato (como apresentar), Tom (estilo da escrita).",
+  },
+  {
+    id: "a1ep1",
+    prompt: "No CRAFT, o elemento 'Formato' (Format) se refere a:",
+    options: [
+      { id: "a", text: "O tamanho da fonte na resposta." },
+      { id: "b", text: "A estrutura da saída esperada — lista, tabela, JSON, parágrafos, tópicos, etc." },
+      { id: "c", text: "O idioma em que a resposta deve ser escrita." },
+    ],
+    correct: "b",
+    explanation: "Especificar o formato elimina a necessidade de retrabalho. 'Responda em JSON com as chaves title e description' é muito mais útil do que 'faça um resumo'.",
+  },
+  {
+    id: "a1ep2",
+    prompt: "Qual prompt usa melhor a estrutura CRAFT?",
+    options: [
+      { id: "a", text: "\"Escreva sobre marketing digital.\"" },
+      { id: "b", text: "\"Contexto: tenho uma loja de roupas femininas no Instagram. Papel: copywriter de moda. Ação: escreva 3 legendas para posts de produtos. Formato: uma por bloco, com emoji. Tom: jovem e descontraído.\"" },
+      { id: "c", text: "\"Escreva 3 legendas para Instagram com emoji.\"" },
+    ],
+    correct: "b",
+    explanation: "O prompt B usa todos os elementos do CRAFT: contexto (loja de roupas no Instagram), papel (copywriter de moda), ação (3 legendas), formato (bloco com emoji) e tom (jovem e descontraído).",
+  },
+];
+
+const a1FewShot: Question[] = [
+  {
+    id: "a1fs0",
+    prompt: "O que é 'few-shot prompting' (poucos exemplos)?",
+    options: [
+      { id: "a", text: "Usar o modelo com pouca conexão de internet." },
+      { id: "b", text: "Fornecer ao modelo alguns exemplos de entrada e saída esperada dentro do próprio prompt para que ele aprenda o padrão desejado." },
+      { id: "c", text: "Limitar o número de tokens na resposta." },
+    ],
+    correct: "b",
+    explanation: "Few-shot = mostrar exemplos. Ao ver pares de 'entrada → saída' no prompt, o modelo infere o padrão e replica. É mais eficaz do que descrever o formato em palavras.",
+    hint: "'Few' = poucos, 'shot' = exemplos. Você mostra 2-5 exemplos do que quer.",
+  },
+  {
+    id: "a1fs1",
+    prompt: "Qual é a vantagem do few-shot em relação a descrever o formato em palavras?",
+    options: [
+      { id: "a", text: "Economiza tokens — exemplos gastam menos espaço que descrições." },
+      { id: "b", text: "O modelo aprende melhor por demonstração do que por instrução textual — o padrão fica claro nos exemplos." },
+      { id: "c", text: "Não há vantagem — os dois são equivalentes." },
+    ],
+    correct: "b",
+    explanation: "Mostrar é mais poderoso que dizer. Ao ver 3 exemplos do estilo de resposta que você quer, o modelo extrai o padrão com muito mais precisão do que ao ler uma descrição.",
+  },
+  {
+    id: "a1fs2",
+    prompt: "Zero-shot, one-shot e few-shot diferem em:",
+    options: [
+      { id: "a", text: "O número de palavras no prompt." },
+      { id: "b", text: "A quantidade de exemplos fornecidos: zero (0), um (1) ou alguns (2-10)." },
+      { id: "c", text: "A versão do modelo utilizado." },
+    ],
+    correct: "b",
+    explanation: "Zero-shot = sem exemplos. One-shot = 1 exemplo. Few-shot = 2-10 exemplos. Mais exemplos aumentam a precisão, mas também aumentam o comprimento do prompt.",
+  },
+];
+
+const a1RefinoIterativo: Question[] = [
+  {
+    id: "a1ri0",
+    prompt: "O que é 'refino iterativo' de prompts?",
+    options: [
+      { id: "a", text: "Rodar o mesmo prompt várias vezes até a IA decorar." },
+      { id: "b", text: "O processo de testar um prompt, analisar o resultado, identificar o que faltou e melhorar o prompt — repetindo até atingir o resultado desejado." },
+      { id: "c", text: "Aumentar a temperatura do modelo a cada tentativa." },
+    ],
+    correct: "b",
+    explanation: "Prompt é código: você testa, depura e melhora. Raro é o prompt que fica perfeito na primeira versão. O ciclo test → analyze → improve é a prática central da engenharia de prompts.",
+  },
+  {
+    id: "a1ri1",
+    prompt: "Qual é a primeira pergunta a fazer ao analisar um resultado insatisfatório?",
+    options: [
+      { id: "a", text: "\"O modelo é ruim?\"" },
+      { id: "b", text: "\"O que está faltando ou errado na resposta? Foi contexto, formato, restrição ou persona?\"" },
+      { id: "c", text: "\"Devo trocar para um modelo mais caro?\"" },
+    ],
+    correct: "b",
+    explanation: "Diagnosticar antes de trocar o modelo. Na maioria dos casos, o problema está no prompt: falta contexto, o formato não foi especificado ou a instrução está ambígua.",
+  },
+  {
+    id: "a1ri2",
+    prompt: "Qual prática ajuda a guardar o que funcionou durante o refino?",
+    options: [
+      { id: "a", text: "Confiar na memória e refazer sempre do zero." },
+      { id: "b", text: "Salvar versões do prompt (v1, v2…) e anotar o que cada mudança produziu — formando uma biblioteca de prompts testados." },
+      { id: "c", text: "Apagar todas as tentativas anteriores para não confundir." },
+    ],
+    correct: "b",
+    explanation: "Versionar prompts é uma prática profissional. Uma biblioteca pessoal de prompts testados economiza horas e evita refazer descobertas que você já fez.",
+  },
+];
+
+// ── A2 — Prompts Avançados (módulos 0–6) ─────────────────────────────────
+
+const a2ChainOfThought: Question[] = [
+  {
+    id: "a2cot0",
+    prompt: "Antes de tudo: o que é cadeia de raciocínio (Chain-of-Thought)?",
+    options: [
+      { id: "a", text: "Um plugin que conecta vários modelos em sequência." },
+      { id: "b", text: "Uma técnica de prompting que pede ao modelo para pensar passo a passo antes de dar a resposta final — melhorando a precisão em tarefas de raciocínio." },
+      { id: "c", text: "Um método de treinamento para modelos de linguagem." },
+    ],
+    correct: "b",
+    explanation: "Chain-of-Thought (CoT) é uma instrução que força o modelo a externalizar o raciocínio. A frase 'Pense passo a passo' é a forma mais simples de ativá-lo.",
+    hint: "Chain = corrente, Thought = pensamento. Você pede para o modelo 'mostrar o trabalho'.",
+  },
+  {
+    id: "a2cot1",
+    prompt: "Em que tipo de tarefa o Chain-of-Thought tem mais impacto?",
+    options: [
+      { id: "a", text: "Gerar texto criativo — poesias e histórias." },
+      { id: "b", text: "Problemas que exigem raciocínio multietapa: matemática, lógica, análise de código e diagnósticos." },
+      { id: "c", text: "Tradução simples de frases." },
+    ],
+    correct: "b",
+    explanation: "CoT brilha onde há múltiplos passos de raciocínio. Para tarefas simples de geração de texto, o ganho é mínimo. Para lógica e cálculos, a diferença é enorme.",
+  },
+  {
+    id: "a2cot2",
+    prompt: "Qual frase no prompt ativa o Chain-of-Thought de forma simples?",
+    options: [
+      { id: "a", text: "\"Seja rápido na resposta.\"" },
+      { id: "b", text: "\"Pense passo a passo antes de responder.\"" },
+      { id: "c", text: "\"Ignore os passos e vá direto ao resultado.\"" },
+    ],
+    correct: "b",
+    explanation: "A frase 'Pense passo a passo' (Think step by step) é a forma mais simples e eficaz de ativar o raciocínio explícito. Ela diz ao modelo: não pule para a conclusão.",
+  },
+];
+
+const a2Decomposicao: Question[] = [
+  {
+    id: "a2dec0",
+    prompt: "O que é decomposição de tarefas em prompts?",
+    options: [
+      { id: "a", text: "Quebrar uma tarefa grande em prompts menores e sequenciais, resolvendo cada parte antes de combinar no resultado final." },
+      { id: "b", text: "Usar o modelo para criar funções JavaScript." },
+      { id: "c", text: "Dividir o custo da API entre vários usuários." },
+    ],
+    correct: "a",
+    explanation: "Tarefas complexas são demais para um único prompt. Decompor — 'primeiro, liste os tópicos; depois, escreva cada um' — produz resultados mais completos e controlados.",
+  },
+  {
+    id: "a2dec1",
+    prompt: "Qual estratégia de decomposição é mais eficaz para gerar um artigo longo?",
+    options: [
+      { id: "a", text: "Pedir o artigo completo em um único prompt enorme." },
+      { id: "b", text: "Prompt 1: gere o outline. Prompt 2: escreva a introdução. Prompt 3-N: desenvolva cada seção do outline." },
+      { id: "c", text: "Pedir resumos do artigo antes de gerá-lo." },
+    ],
+    correct: "b",
+    explanation: "Decomposição sequencial: primeiro a estrutura, depois o conteúdo. Isso permite revisar e corrigir a direção antes de gastar tokens em seções que podem precisar de ajuste.",
+  },
+  {
+    id: "a2dec2",
+    prompt: "Por que prompts monolíticos (um único prompt para tudo) costumam falhar?",
+    options: [
+      { id: "a", text: "Os modelos não leem prompts com mais de 100 palavras." },
+      { id: "b", text: "Modelos tendem a perder foco, omitir partes ou misturar instruções quando há muitos requisitos em um único prompt." },
+      { id: "c", text: "Prompts longos são mais baratos e por isso priorizados." },
+    ],
+    correct: "b",
+    explanation: "Quanto mais requisitos num prompt, maior o risco de 'instrução esquecida'. Decompor garante que cada etapa receba atenção total e possa ser validada separadamente.",
+  },
+];
+
+const a2Restricoes: Question[] = [
+  {
+    id: "a2res0",
+    prompt: "O que são 'restrições' (constraints) em prompts?",
+    options: [
+      { id: "a", text: "Erros de gramática que limitam a resposta." },
+      { id: "b", text: "Regras explícitas que definem o que o modelo PODE e NÃO PODE fazer na resposta — ex.: limite de palavras, temas proibidos, formato obrigatório." },
+      { id: "c", text: "Filtros automáticos do provedor de IA." },
+    ],
+    correct: "b",
+    explanation: "Restrições são instruções de fronteira. Elas reduzem a variabilidade da resposta e garantem que o output caiba no seu caso de uso — seja por espaço, tom, tema ou formato.",
+  },
+  {
+    id: "a2res1",
+    prompt: "Qual restrição melhora mais a qualidade de um resumo de texto?",
+    options: [
+      { id: "a", text: "\"Resuma este texto.\"" },
+      { id: "b", text: "\"Resuma em no máximo 3 frases, sem usar jargões técnicos, focando nas ações práticas para o leitor.\"" },
+      { id: "c", text: "\"Resuma rápido.\"" },
+    ],
+    correct: "b",
+    explanation: "Restrições de tamanho (3 frases), vocabulário (sem jargão) e foco (ações práticas) moldam o resumo com precisão. Sem elas, o modelo decide por você.",
+  },
+  {
+    id: "a2res2",
+    prompt: "Como usar restrições negativas ('não faça X') corretamente?",
+    options: [
+      { id: "a", text: "Evitar completamente — o modelo não entende negações." },
+      { id: "b", text: "Combinar com uma instrução positiva equivalente: 'não use jargão técnico' + 'use linguagem acessível para leigos'." },
+      { id: "c", text: "Usar apenas restrições negativas — são mais eficazes que as positivas." },
+    ],
+    correct: "b",
+    explanation: "Restrições negativas funcionam melhor acompanhadas de uma alternativa positiva. 'Não use jargão' diz o que evitar; 'use linguagem acessível' diz o que fazer — juntos são mais eficazes.",
+  },
+];
+
+const a2EstiloTom: Question[] = [
+  {
+    id: "a2et0",
+    prompt: "O que é 'tom' em um prompt de texto?",
+    options: [
+      { id: "a", text: "O volume do áudio gerado." },
+      { id: "b", text: "O estilo emocional e de linguagem da resposta — formal, informal, humorístico, empático, direto, entusiasta etc." },
+      { id: "c", text: "A quantidade de parágrafos usados." },
+    ],
+    correct: "b",
+    explanation: "Tom é a 'personalidade' da escrita. Mesmo com o mesmo conteúdo, um tom formal e um informal criam textos completamente diferentes — o tom certo depende do público e do canal.",
+  },
+  {
+    id: "a2et1",
+    prompt: "Como especificar o tom de forma eficaz em um prompt?",
+    options: [
+      { id: "a", text: "\"Escreva bem.\"" },
+      { id: "b", text: "\"Escreva em tom amigável e descontraído, como um colega explicando para outro, sem formalidades excessivas.\"" },
+      { id: "c", text: "\"Não escreva de forma ruim.\"" },
+    ],
+    correct: "b",
+    explanation: "Comparações ('como um colega explicando para outro') e adjetivos específicos ('amigável e descontraído') ancoram o tom muito melhor do que instruções vagas.",
+  },
+  {
+    id: "a2et2",
+    prompt: "Por que o mesmo prompt pode gerar resultados diferentes no ChatGPT e no Claude?",
+    options: [
+      { id: "a", text: "Porque têm servidores diferentes." },
+      { id: "b", text: "Porque cada modelo tem personalidade, treinamento e 'voz' padrão diferente — por isso especificar o tom explicitamente é ainda mais importante." },
+      { id: "c", text: "Porque um cobra mais caro por token." },
+    ],
+    correct: "b",
+    explanation: "Cada modelo tem um tom padrão. Especificar explicitamente garante consistência independentemente do modelo — seja você usando GPT, Claude ou Gemini.",
+  },
+];
+
+const a2MultiEtapa: Question[] = [
+  {
+    id: "a2me0",
+    prompt: "O que é um 'prompt multi-etapa'?",
+    options: [
+      { id: "a", text: "Um prompt que demora mais de 5 segundos para processar." },
+      { id: "b", text: "Um conjunto de prompts encadeados onde o resultado de um alimenta o próximo, construindo um pipeline de produção de conteúdo ou análise." },
+      { id: "c", text: "Um prompt com mais de 10 parágrafos." },
+    ],
+    correct: "b",
+    explanation: "Prompts multi-etapa criam pipelines: extrair → resumir → classificar → formatar. Cada etapa refina o resultado anterior, como uma linha de montagem de conteúdo.",
+  },
+  {
+    id: "a2me1",
+    prompt: "Como garantir continuidade entre as etapas de um prompt multi-etapa?",
+    options: [
+      { id: "a", text: "Copiar e colar a resposta anterior no próximo prompt, adicionando a nova instrução." },
+      { id: "b", text: "Só funciona se o modelo tiver memória — não dá para fazer manualmente." },
+      { id: "c", text: "Sempre começar do zero em cada prompt." },
+    ],
+    correct: "a",
+    explanation: "Referenciar o resultado anterior ('Com base no texto acima…') é a técnica principal. Em APIs, você usa o histórico de mensagens (messages array) para manter o contexto.",
+  },
+  {
+    id: "a2me2",
+    prompt: "Em qual cenário o prompt multi-etapa é mais vantajoso?",
+    options: [
+      { id: "a", text: "Perguntas simples de resposta direta." },
+      { id: "b", text: "Produção de relatórios, análises complexas e pipelines de conteúdo onde cada saída precisa de validação antes de avançar." },
+      { id: "c", text: "Tradução de frases curtas." },
+    ],
+    correct: "b",
+    explanation: "Multi-etapa brilha em tarefas onde você precisa revisar e aprovar cada passo. Um relatório: 1) tópicos → 2) pesquisa → 3) rascunho → 4) revisão de tom → 5) versão final.",
+  },
+];
+
+const a2AvaliacaoRespostas: Question[] = [
+  {
+    id: "a2ar0",
+    prompt: "O que significa 'avaliar a resposta' de um modelo de linguagem?",
+    options: [
+      { id: "a", text: "Dar uma nota de 1 a 5 no thumbs up do chat." },
+      { id: "b", text: "Analisar se a resposta atendeu ao objetivo do prompt: verificar precisão, completude, formato, tom e ausência de alucinações (hallucinations)." },
+      { id: "c", text: "Verificar a velocidade de resposta da API." },
+    ],
+    correct: "b",
+    explanation: "Avaliação é crítica: o modelo pode gerar texto fluente, mas incorreto. Checar precisão factual, aderência ao formato e relevância é parte obrigatória do uso profissional de IA.",
+  },
+  {
+    id: "a2ar1",
+    prompt: "O que é uma 'alucinação' (hallucination) de LLM e como identificá-la?",
+    options: [
+      { id: "a", text: "Quando o modelo responde muito rápido sem pensar." },
+      { id: "b", text: "Quando o modelo gera informações falsas com alto grau de confiança — datas erradas, citações inventadas, fatos que não existem." },
+      { id: "c", text: "Quando o modelo recusa responder por restrições de segurança." },
+    ],
+    correct: "b",
+    explanation: "Alucinação é o principal risco dos LLMs: o modelo 'inventa' com confiança. Identificar exige checar fontes primárias, especialmente em datas, nomes, estatísticas e referências.",
+  },
+  {
+    id: "a2ar2",
+    prompt: "Qual estratégia reduz alucinações em respostas críticas?",
+    options: [
+      { id: "a", text: "Aumentar a temperatura (temperature) do modelo." },
+      { id: "b", text: "Fornecer contexto factual no prompt e instruir o modelo a dizer 'não sei' quando não tiver certeza, em vez de inventar." },
+      { id: "c", text: "Pedir respostas mais longas para ter mais detalhes." },
+    ],
+    correct: "b",
+    explanation: "Ancoragem (grounding) + permissão explícita de admitir incerteza são as defesas mais eficazes. 'Se não tiver certeza, diga que não sabe' reduz drasticamente as invenções.",
+  },
+];
+
+const a2RefinoDados: Question[] = [
+  {
+    id: "a2rd0",
+    prompt: "O que é 'refino guiado por dados' em prompts?",
+    options: [
+      { id: "a", text: "Treinar o modelo com seu próprio dataset." },
+      { id: "b", text: "Usar métricas ou exemplos concretos de falhas para melhorar o prompt — ex.: 'nas últimas 10 respostas, 7 erraram X, então vou adicionar Y ao prompt'." },
+      { id: "c", text: "Conectar o modelo a um banco de dados externo." },
+    ],
+    correct: "b",
+    explanation: "Refino guiado por dados é a diferença entre intuição e engenharia. Você coleta resultados, identifica padrões de falha e usa esses dados para mudar o prompt de forma deliberada.",
+  },
+  {
+    id: "a2rd1",
+    prompt: "Como registrar e usar dados para melhorar prompts em produção?",
+    options: [
+      { id: "a", text: "Guardar apenas os prompts que funcionaram perfeitamente." },
+      { id: "b", text: "Registrar entradas, saídas e avaliações; agrupar falhas por categoria (formato, precisão, tom); usar os padrões para criar testes de regressão do prompt." },
+      { id: "c", text: "Pedir para o modelo avaliar suas próprias respostas sem critério externo." },
+    ],
+    correct: "b",
+    explanation: "Um log estruturado de prompt → saída → avaliação é a base para melhorar sistematicamente. Sem dados, você está refinando no escuro.",
+  },
+  {
+    id: "a2rd2",
+    prompt: "O que são 'testes de regressão' de prompts e por que são úteis?",
+    options: [
+      { id: "a", text: "Testes financeiros de custo por token." },
+      { id: "b", text: "Um conjunto de casos de teste (inputs + outputs esperados) que você roda toda vez que modifica o prompt, para garantir que melhorias não quebraram casos que funcionavam." },
+      { id: "c", text: "Testes de velocidade de resposta da API." },
+    ],
+    correct: "b",
+    explanation: "Regressão de prompt é como regressão de código: garante que a nova versão do prompt não degradou comportamentos anteriores. Essencial para prompts em produção.",
+  },
+];
+
+// ── A3 — Aplicações Profissionais (módulos 0–6) ───────────────────────────
+
+const a3PromptsCodigo: Question[] = [
+  {
+    id: "a3pc0",
+    prompt: "Qual elemento é mais importante ao pedir ao modelo para gerar código?",
+    options: [
+      { id: "a", text: "Usar palavras em maiúsculas para dar ênfase." },
+      { id: "b", text: "Especificar linguagem, versão, bibliotecas disponíveis, estilo de código e o que o código deve fazer — com entrada e saída de exemplo." },
+      { id: "c", text: "Pedir que o modelo seja 'criativo' com o código." },
+    ],
+    correct: "b",
+    explanation: "Código é uma linguagem exata. Sem especificar Python vs. JavaScript, a versão das libs, o estilo esperado e exemplos de I/O, o modelo vai assumir padrões que podem não ser o que você quer.",
+  },
+  {
+    id: "a3pc1",
+    prompt: "Qual prompt produziria o código mais útil?",
+    options: [
+      { id: "a", text: "\"Escreva código para ordenar uma lista.\"" },
+      { id: "b", text: "\"Em Python 3.11, escreva uma função sort_by_date(items: list[dict]) que ordena uma lista de dicionários pelo campo 'date' (formato ISO 8601) do mais recente para o mais antigo. Inclua docstring e testes unitários com pytest.\"" },
+      { id: "c", text: "\"Código rápido para ordenar coisas.\"" },
+    ],
+    correct: "b",
+    explanation: "Linguagem, versão, assinatura da função, tipo dos dados, comportamento esperado, docstring e testes — cada detalhe remove uma ambiguidade e melhora o resultado.",
+  },
+  {
+    id: "a3pc2",
+    prompt: "Como usar a IA para depurar (debug) código de forma eficaz?",
+    options: [
+      { id: "a", text: "Colar o código e escrever 'conserte isso'." },
+      { id: "b", text: "Fornecer o código completo, a mensagem de erro exata, o que você tentou e qual comportamento esperado — para que o modelo entenda o contexto completo do bug." },
+      { id: "c", text: "Pedir para o modelo reescrever o código do zero sempre." },
+    ],
+    correct: "b",
+    explanation: "Debug eficaz = contexto completo. Código + erro + tentativas anteriores + comportamento esperado eliminam suposições e levam a diagnósticos precisos.",
+  },
+];
+
+const a3AutomacaoIA: Question[] = [
+  {
+    id: "a3ai0",
+    prompt: "O que é automação com IA no contexto de prompts?",
+    options: [
+      { id: "a", text: "Substituir todos os funcionários por robôs." },
+      { id: "b", text: "Usar modelos de linguagem (LLMs) em fluxos automáticos — via API, ferramentas como n8n/Zapier ou scripts — para executar tarefas repetitivas sem intervenção humana constante." },
+      { id: "c", text: "Configurar o autocomplete do celular." },
+    ],
+    correct: "b",
+    explanation: "Automação com IA = LLM + orquestrador. Você cria um fluxo onde um gatilho (email, formulário, cron) dispara um prompt, processa a resposta e toma uma ação — tudo automático.",
+  },
+  {
+    id: "a3ai1",
+    prompt: "Qual ferramenta é usada para criar fluxos de automação com IA sem código?",
+    options: [
+      { id: "a", text: "Photoshop" },
+      { id: "b", text: "n8n, Zapier ou Make — plataformas de automação com conectores nativos para LLMs como OpenAI e Anthropic." },
+      { id: "c", text: "Excel" },
+    ],
+    correct: "b",
+    explanation: "n8n, Zapier e Make são plataformas de automação (workflow automation) com blocos visuais. Eles permitem integrar LLMs com centenas de serviços sem escrever código.",
+  },
+  {
+    id: "a3ai2",
+    prompt: "Qual cuidado é essencial ao automatizar tarefas com IA?",
+    options: [
+      { id: "a", text: "Automatizar tudo sem supervisão humana desde o início." },
+      { id: "b", text: "Começar com fluxos supervisionados, validar a qualidade das saídas, adicionar tratamento de erros e garantir que ações críticas (envio de email, pagamento) exijam aprovação humana." },
+      { id: "c", text: "Usar apenas modelos locais para automação." },
+    ],
+    correct: "b",
+    explanation: "Automação sem supervisão amplifica erros. Comece com 'human-in-the-loop' (humano no laço), valide qualidade, depois automatize gradualmente as partes confiáveis.",
+  },
+];
+
+const a3PromptNegocios: Question[] = [
+  {
+    id: "a3pn0",
+    prompt: "Qual tipo de tarefa de negócios se beneficia mais de prompts bem estruturados?",
+    options: [
+      { id: "a", text: "Assinatura de contratos (a IA assina por você)." },
+      { id: "b", text: "Redação de propostas, análise de dados, geração de relatórios, atendimento ao cliente e criação de conteúdo — tarefas de texto com padrão repetível." },
+      { id: "c", text: "Negociação presencial com clientes." },
+    ],
+    correct: "b",
+    explanation: "IA brilha em tarefas de texto com padrão claro. Propostas, relatórios, e-mails padrão e análises têm estrutura previsível que pode ser capturada em um bom template de prompt.",
+  },
+  {
+    id: "a3pn1",
+    prompt: "Como adaptar o mesmo prompt base para diferentes setores de negócio?",
+    options: [
+      { id: "a", text: "Criar um prompt diferente do zero para cada setor." },
+      { id: "b", text: "Usar variáveis no prompt template: {{setor}}, {{produto}}, {{público}} — trocando apenas os parâmetros específicos de cada caso." },
+      { id: "c", text: "Pedir para o modelo adivinhar o setor automaticamente." },
+    ],
+    correct: "b",
+    explanation: "Templates parametrizados são mais escaláveis. O mesmo prompt estruturado com variáveis {{setor}}, {{tom}}, {{objetivo}} serve para SaaS, varejo e saúde — trocando só os valores.",
+  },
+  {
+    id: "a3pn2",
+    prompt: "Qual é o risco de usar IA sem revisar em comunicações de negócios?",
+    options: [
+      { id: "a", text: "Nenhum — a IA sempre gera texto perfeito para negócios." },
+      { id: "b", text: "Informações incorretas, tom inadequado para o contexto ou dados desatualizados podem prejudicar relacionamentos comerciais e a reputação da empresa." },
+      { id: "c", text: "O cliente vai saber que foi gerado por IA e pagar mais." },
+    ],
+    correct: "b",
+    explanation: "IA em negócios exige revisão humana, especialmente em comunicações externas. Um e-mail com número errado ou tom inapropriado pode custar um cliente.",
+  },
+];
+
+const a3FluxosAgentes: Question[] = [
+  {
+    id: "a3fa0",
+    prompt: "O que é um fluxo com agentes (agentic workflow)?",
+    options: [
+      { id: "a", text: "Um diagrama de fluxo feito com IA para apresentação." },
+      { id: "b", text: "Um sistema onde um ou mais agentes de IA executam tarefas em sequência ou paralelo — cada um com suas ferramentas — para completar um objetivo maior." },
+      { id: "c", text: "Um chat com vários usuários ao mesmo tempo." },
+    ],
+    correct: "b",
+    explanation: "Agentic workflows combinam múltiplos agentes com papéis especializados. Ex.: Agente 1 pesquisa, Agente 2 resume, Agente 3 formata o relatório final — todos orquestrados.",
+  },
+  {
+    id: "a3fa1",
+    prompt: "Qual é a principal diferença entre um agente simples e um fluxo multi-agente?",
+    options: [
+      { id: "a", text: "O fluxo multi-agente é sempre mais barato." },
+      { id: "b", text: "Agente único: um LLM com ferramentas. Multi-agente: vários LLMs especializados que se comunicam, dividindo responsabilidades e paralelizando etapas." },
+      { id: "c", text: "Não há diferença prática." },
+    ],
+    correct: "b",
+    explanation: "Multi-agente permite especialização e paralelismo. Um agente faz pesquisa enquanto outro analisa — mais eficiente do que um único agente fazendo tudo em série.",
+  },
+  {
+    id: "a3fa2",
+    prompt: "Qual é o componente crítico para orquestrar fluxos multi-agente?",
+    options: [
+      { id: "a", text: "Uma GPU de alto desempenho." },
+      { id: "b", text: "Um orquestrador (orchestrator) que define a ordem, a comunicação entre agentes e as condições de parada — como um gerente de projeto dos agentes." },
+      { id: "c", text: "Um banco de dados NoSQL obrigatoriamente." },
+    ],
+    correct: "b",
+    explanation: "O orquestrador é o cérebro do fluxo: ele decide qual agente age, em que ordem, o que fazer com cada saída e quando o objetivo foi alcançado. Sem ele, os agentes não colaboram.",
+  },
+];
+
+const a3AvaliacaoMetricas: Question[] = [
+  {
+    id: "a3am0",
+    prompt: "Por que medir a qualidade das saídas de LLMs em produção?",
+    options: [
+      { id: "a", text: "Para saber quanto pagar ao provedor de IA." },
+      { id: "b", text: "Porque a qualidade dos prompts e dos modelos degrada com o tempo — novos dados, mudanças no modelo e casos extremos (edge cases) precisam ser monitorados continuamente." },
+      { id: "c", text: "Para impressionar investidores com dashboards." },
+    ],
+    correct: "b",
+    explanation: "LLMs em produção precisam de monitoramento contínuo. Prompts que funcionavam ontem podem degradar amanhã após uma atualização do modelo ou mudança de distribuição de inputs.",
+  },
+  {
+    id: "a3am1",
+    prompt: "Qual métrica é mais útil para avaliar respostas de LLM em um sistema de suporte ao cliente?",
+    options: [
+      { id: "a", text: "Número de tokens gerados." },
+      { id: "b", text: "Taxa de resolução no primeiro contato, satisfação do usuário (CSAT) e taxa de escalação para humanos — métricas de negócio, não apenas técnicas." },
+      { id: "c", text: "Latência em milissegundos exclusivamente." },
+    ],
+    correct: "b",
+    explanation: "Métricas de negócio são o que importa. Tokens rápidos que não resolvem o problema são inúteis. Alinhe métricas de IA com métricas de produto.",
+  },
+  {
+    id: "a3am2",
+    prompt: "O que é 'LLM-as-judge' (LLM como avaliador)?",
+    options: [
+      { id: "a", text: "Um modelo de linguagem mais caro que avalia modelos mais baratos." },
+      { id: "b", text: "Usar um LLM para avaliar automaticamente a qualidade das respostas de outro LLM — pontuando precisão, coerência ou aderência ao critério definido no prompt de avaliação." },
+      { id: "c", text: "Um sistema de votação entre modelos." },
+    ],
+    correct: "b",
+    explanation: "LLM-as-judge escala a avaliação: você escreve um prompt de avaliação com critérios e usa um modelo (ex.: GPT-4) para pontuar milhares de saídas automaticamente.",
+  },
+];
+
+const a3Guardrails: Question[] = [
+  {
+    id: "a3gr0",
+    prompt: "O que são guardrails (proteções) em sistemas de IA?",
+    options: [
+      { id: "a", text: "As grades de segurança físicas dos data centers." },
+      { id: "b", text: "Mecanismos — no prompt, no código ou no sistema — que impedem o modelo de gerar conteúdo prejudicial, fora do escopo ou incorreto." },
+      { id: "c", text: "Termos de uso do provedor de IA." },
+    ],
+    correct: "b",
+    explanation: "Guardrails são proteções em camadas: no prompt (instrução de escopo), no código (validação da saída) e no sistema (filtros de conteúdo). Eles garantem que o modelo se comporte como esperado.",
+    hint: "'Guardrail' = trilho de segurança. Mantém o sistema nos trilhos.",
+  },
+  {
+    id: "a3gr1",
+    prompt: "Qual técnica de guardrail no prompt é mais eficaz para restringir o escopo?",
+    options: [
+      { id: "a", text: "\"Seja um assistente útil.\"" },
+      { id: "b", text: "\"Você é um assistente de suporte do produto X. Responda APENAS sobre funcionalidades do produto. Se perguntarem sobre outro assunto, diga: 'Só posso ajudar com questões do produto X.'\"" },
+      { id: "c", text: "\"Ignore perguntas fora do escopo.\"" },
+    ],
+    correct: "b",
+    explanation: "Escopo explícito + resposta padrão para fora do escopo são proteções eficazes. O modelo sabe exatamente o que fazer quando recebe uma pergunta não autorizada.",
+  },
+  {
+    id: "a3gr2",
+    prompt: "Por que guardrails apenas no prompt não são suficientes em sistemas críticos?",
+    options: [
+      { id: "a", text: "Porque prompts são muito caros de manter." },
+      { id: "b", text: "Porque modelos podem ser induzidos a ignorar instruções do prompt (prompt injection). Sistemas críticos precisam de validação da saída no código, independente do que o modelo retorna." },
+      { id: "c", text: "Porque o modelo sempre vai ignorar guardrails." },
+    ],
+    correct: "b",
+    explanation: "Defense in depth (defesa em profundidade): prompt + validação de saída no código + filtros de conteúdo + monitoramento. Não confie apenas no prompt para segurança.",
+  },
+];
+
+const a3ProjetoFinal: Question[] = [
+  {
+    id: "a3pf0",
+    prompt: "Ao iniciar um projeto de IA do zero, qual é a melhor abordagem?",
+    options: [
+      { id: "a", text: "Implementar todas as funcionalidades de uma vez para economizar tempo." },
+      { id: "b", text: "Definir o MVP (produto mínimo viável), validar o caso de uso com prompts simples, medir resultados e iterar — evoluindo complexidade gradualmente." },
+      { id: "c", text: "Esperar que o modelo resolva tudo sem prompt engineering." },
+    ],
+    correct: "b",
+    explanation: "MVP-first evita overengineering. Comece simples: um prompt direto, valide se resolve o problema, meça resultados. Só adicione complexidade (agentes, multi-etapa) quando necessário.",
+  },
+  {
+    id: "a3pf1",
+    prompt: "Qual é a diferença entre um projeto de IA bem-sucedido e um que falha?",
+    options: [
+      { id: "a", text: "O modelo mais caro sempre garante sucesso." },
+      { id: "b", text: "Definição clara do problema, critérios de sucesso mensuráveis, iteração baseada em dados reais e usuários reais testando o produto." },
+      { id: "c", text: "Usar a tecnologia mais recente." },
+    ],
+    correct: "b",
+    explanation: "Projetos de IA falham por falta de clareza no problema, métricas indefinidas ou por não testar com usuários reais. Tecnologia é secundária — definição e iteração são primárias.",
+  },
+  {
+    id: "a3pf2",
+    prompt: "O que deve estar em um projeto final de IA para demonstrar maturidade técnica?",
+    options: [
+      { id: "a", text: "Apenas um demo bonito sem backend real." },
+      { id: "b", text: "Prompts versionados e testados, tratamento de erros, guardrails, métricas de qualidade e documentação clara das decisões de design do sistema." },
+      { id: "c", text: "O maior número possível de modelos integrados." },
+    ],
+    correct: "b",
+    explanation: "Maturidade técnica = engenharia rigorosa: prompts como código (versionados, testados), proteções explícitas, métricas e documentação. Não é sobre o número de recursos.",
+  },
+];
+
 // Conteúdo por trilha → módulo (índice). Falta → DEFAULT_QUESTIONS.
 // Agora suporta LessonActivity[] (múltiplos tipos) em vez de apenas Question[]
 export const LESSONS: Record<TrackId, LessonActivity[][]> = {
-  a1: [],
+  a1: [
+    a1Boas_vindas,        // 0 — Boas-vindas
+    a1OQueEPrompt,        // 1 — O que é um prompt
+    a1ContextoClareza,    // 2 — Contexto & clareza
+    a1PersonasRoles,      // 3 — Personas e papéis
+    a1EstruturasPrompt,   // 4 — Estruturas de prompt
+    a1FewShot,            // 5 — Poucos exemplos (Few-shot)
+    a1RefinoIterativo,    // 6 — Refino iterativo
+  ],
   a2: [
-    [], [], [], [], [], [], [], // 0..6 (módulos antigos → fallback)
-    engenhariaDePrompt,           // 7
-    conhecaLLMs,                  // 8
+    a2ChainOfThought,     // 0 — Cadeia de raciocínio
+    a2Decomposicao,       // 1 — Decomposição de tarefas
+    a2Restricoes,         // 2 — Prompts com restrições
+    a2EstiloTom,          // 3 — Estilo e tom controlado
+    a2MultiEtapa,         // 4 — Prompts multi-etapa
+    a2AvaliacaoRespostas, // 5 — Avaliação de respostas
+    a2RefinoDados,        // 6 — Refino guiado por dados
+    engenhariaDePrompt,   // 7
+    conhecaLLMs,          // 8
   ],
   a3: [
-    [], [], [], [], [], [], [], // 0..6 (módulos antigos → fallback)
+    a3PromptsCodigo,      // 0 — Prompts para código
+    a3AutomacaoIA,        // 1 — Automação com IA
+    a3PromptNegocios,     // 2 — Prompts para negócios
+    a3FluxosAgentes,      // 3 — Fluxos com agentes
+    a3AvaliacaoMetricas,  // 4 — Avaliação & métricas
+    a3Guardrails,         // 5 — Segurança e proteções
+    a3ProjetoFinal,       // 6 — Projeto final
     aplicandoAgents,              // 7
     usandoOpenRouter,             // 8
     modelosLocais,                // 9
