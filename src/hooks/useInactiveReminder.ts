@@ -123,9 +123,8 @@ function showNotification() {
           badge: "/assets/favicon.png",
           tag: "promptlabz-reminder",
           data: { url },
-          vibrate: [200, 100, 200],
           requireInteraction: true,
-        })
+        } as NotificationOptions)
       })
     } else {
       // Fallback: use the Notification API directly

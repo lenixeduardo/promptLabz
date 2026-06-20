@@ -66,7 +66,9 @@ export function ActivityRenderer({
         />
         <div className="relative rounded-2xl rounded-tl-none border-2 border-stroke-light bg-card px-4 py-3 shadow-sm">
           <p className="text-sm font-bold text-foreground-dark">
-            {isFillBlank(activity) || isMatch(activity) || isOrder(activity)
+            {isFillBlank(activity)
+              ? "Complete a frase abaixo:"
+              : isMatch(activity) || isOrder(activity)
               ? activity.instruction || "Complete a atividade abaixo:"
               : (activity as Question).prompt}
           </p>

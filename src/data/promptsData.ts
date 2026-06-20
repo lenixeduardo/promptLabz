@@ -1,4 +1,19 @@
-  },
+/**
+ * @deprecated Content is now served from Supabase. Kept as offline fallback only.
+ */
+
+export interface PromptCard {
+  title: string
+  difficulty: "Iniciante" | "Intermediario" | "Avancado"
+  color: "green" | "yellow" | "red"
+  category: "Criatividade" | "Marketing" | "Programacao" | "Educacao" | "Produtividade" | "Gestao de Produto" | "Comunicacao" | "Analise" | "Automacao"
+  promptText: string
+  description: string
+  exampleInput?: string
+  exampleOutput?: string
+}
+
+export const PROMPTS: PromptCard[] = [
   {
     title: "Roteiro de Video Curto",
     difficulty: "Avancado",
