@@ -57,7 +57,7 @@ export default function LessonPage() {
     if (isMatch(activity) || isOrder(activity)) {
       const pairs = matchOrderAnswers[i]
       if (!pairs) return acc
-      const correct = activity.correctPairs || {}
+      const correct = isOrder(activity) ? activity.correctPairs : {}
       const matchScore = Object.entries(pairs).filter(([k, v]) => correct[k] === v).length
       return acc + (matchScore === Object.keys(correct).length ? 1 : 0)
     }

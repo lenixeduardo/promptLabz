@@ -49,13 +49,13 @@ export type LessonActivity = Question | FillBlankActivity | MatchActivity | Orde
 
 // ── Guards ─────────────────────────────────────────────────────────────
 export function isFillBlank(a: LessonActivity): a is FillBlankActivity {
-  return a.type === "fill-blank";
+  return (a as FillBlankActivity).type === "fill-blank";
 }
 export function isMatch(a: LessonActivity): a is MatchActivity {
-  return a.type === "match";
+  return (a as MatchActivity).type === "match";
 }
 export function isOrder(a: LessonActivity): a is OrderActivity {
-  return a.type === "order";
+  return (a as OrderActivity).type === "order";
 }
 // ── Atividades dos novos tipos ─────────────────────────────────────────
 

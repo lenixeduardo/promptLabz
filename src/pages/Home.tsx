@@ -212,7 +212,7 @@ export default function HomePage() {
                 className="h-full rounded-full bg-luxury transition-all"
                 style={{ width: `${xpPct}%` }}
               />
-            </div
+            </div>
             <p className="mt-2 text-xs opacity-90">
               {currentXPInLevel} / {targetXPInLevel} XP para o próximo nível
               </p>
