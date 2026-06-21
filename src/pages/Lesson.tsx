@@ -121,6 +121,7 @@ export default function LessonPage() {
   const needsProof = !!proofTask;
   const proofDone = !!proofDataUrl;
   const lessonComplete = perfect && (!needsProof || proofDone);
+  const isLastLesson = module === TRACK_TOTALS[track] - 1;
 
   useEffect(() => {
     if (lessonComplete) advanceModule(TRACK_TOTALS[track], track);
@@ -249,13 +250,23 @@ export default function LessonPage() {
           </div>
 
           <div className="mt-6 flex w-full max-w-xs flex-col gap-3">
-            <Link
-              to="/module-exam"
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-luxury py-4 text-sm font-extrabold uppercase tracking-wide text-luxury-foreground shadow-lg shadow-luxury/30 transition-transform active:scale-[0.98]"
-            >
-              Fazer prova final do módulo
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            {isLastLesson ? (
+              <Link
+                to="/module-exam"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-luxury py-4 text-sm font-extrabold uppercase tracking-wide text-luxury-foreground shadow-lg shadow-luxury/30 transition-transform active:scale-[0.98]"
+              >
+                Fazer prova final do módulo
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : (
+              <Link
+                to={`/lesson?track=${track}&module=${module + 1}`}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-emerald/30 transition-transform active:scale-[0.98]"
+              >
+                Próxima aula
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
             <Link
               to="/learn"
               className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-emerald bg-card py-3 text-sm font-bold text-emerald hover:bg-surface-success"

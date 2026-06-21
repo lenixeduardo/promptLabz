@@ -1614,37 +1614,375 @@ const a3ProjetoFinal: Question[] = [
   },
 ];
 
+// ── Atividades extras (fill-blank / match / order) para os módulos novos ──
+
+// A1
+const a1OQueEPromptExtra: LessonActivity[] = [
+  {
+    id: "a1oqp-fb",
+    type: "fill-blank",
+    sentence: "Um {___} é a instrução que você envia para um modelo de linguagem (LLM) para obter uma resposta.",
+    options: [
+      { id: "a", text: "prompt" },
+      { id: "b", text: "cookie" },
+      { id: "c", text: "endpoint" },
+    ],
+    correct: "a",
+    explanation: "Prompt é o termo técnico para a entrada que você fornece à IA — seja uma pergunta, um comando ou um texto para continuar.",
+  },
+]
+
+const a1ContextoClareza_extra: LessonActivity[] = [
+  {
+    id: "a1cc-match",
+    type: "match",
+    instruction: "Ligue cada elemento de um prompt ao que ele define:",
+    pairs: [
+      { word: "Contexto", definition: "Quem você é e por que está perguntando" },
+      { word: "Objetivo", definition: "O que você quer que a IA faça" },
+      { word: "Público-alvo", definition: "Para quem a resposta é destinada" },
+      { word: "Formato", definition: "Como a saída deve ser estruturada" },
+    ],
+    explanation: "Um prompt completo tem contexto (situação), objetivo (ação), público (receptor) e formato (estrutura). Cada elemento elimina uma possível ambiguidade.",
+  },
+]
+
+const a1PersonasExtra: LessonActivity[] = [
+  {
+    id: "a1pr-fb",
+    type: "fill-blank",
+    sentence: "Pedir 'Aja como um {___} especializado em X' é a técnica de role prompting que calibra o nível técnico e o tom da resposta.",
+    options: [
+      { id: "a", text: "especialista sênior" },
+      { id: "b", text: "arquivo de texto" },
+      { id: "c", text: "banco de dados" },
+    ],
+    correct: "a",
+    explanation: "Role prompting atribui uma persona ao modelo. 'Especialista sênior' calibra profundidade e vocabulário; definir a área de atuação torna a persona ainda mais precisa.",
+  },
+]
+
+const a1EstruturasExtra: LessonActivity[] = [
+  {
+    id: "a1ep-fb",
+    type: "fill-blank",
+    sentence: "No framework CRAFT, a letra 'F' representa {___} — o campo que define como a saída deve ser estruturada (lista, JSON, tabela etc.).",
+    options: [
+      { id: "a", text: "Formato (Format)" },
+      { id: "b", text: "Foco" },
+      { id: "c", text: "Fluxo" },
+    ],
+    correct: "a",
+    explanation: "Formato (Format) é o 'F' do CRAFT. Especificar o formato elimina a necessidade de reformatar a resposta manualmente — JSON, lista numerada, tabela, parágrafos.",
+  },
+]
+
+const a1FewShotExtra: LessonActivity[] = [
+  {
+    id: "a1fs-order",
+    type: "order",
+    instruction: "Conecte cada técnica de prompting ao número de exemplos que ela usa:",
+    leftItems: [
+      { id: "a", text: "Zero-shot" },
+      { id: "b", text: "One-shot" },
+      { id: "c", text: "Few-shot" },
+    ],
+    rightItems: [
+      { id: "x", text: "Nenhum exemplo fornecido" },
+      { id: "y", text: "Um único exemplo de input/output" },
+      { id: "z", text: "Dois ou mais exemplos" },
+    ],
+    correctPairs: { a: "x", b: "y", c: "z" },
+    explanation: "Zero = 0 exemplos. One = 1. Few = 2+. Mais exemplos ensinam o padrão melhor, mas aumentam o tamanho do prompt.",
+  },
+]
+
+const a1RefinoExtra: LessonActivity[] = [
+  {
+    id: "a1ri-match",
+    type: "match",
+    instruction: "Ligue cada etapa do ciclo de refino ao que ela representa:",
+    pairs: [
+      { word: "Testar", definition: "Rodar o prompt e coletar o resultado" },
+      { word: "Analisar", definition: "Identificar onde a resposta falhou" },
+      { word: "Melhorar", definition: "Editar o prompt com base na análise" },
+      { word: "Versionar", definition: "Salvar a nova versão como v2, v3…" },
+    ],
+    explanation: "Refino iterativo é um ciclo: testar → analisar → melhorar → versionar. Sem versionar, você perde o histórico do que funcionou.",
+  },
+]
+
+// A2
+const a2CotExtra: LessonActivity[] = [
+  {
+    id: "a2cot-fb",
+    type: "fill-blank",
+    sentence: "A frase '{___}' é a instrução mais simples para ativar o raciocínio explícito (chain-of-thought) em um prompt.",
+    options: [
+      { id: "a", text: "Pense passo a passo" },
+      { id: "b", text: "Seja criativo" },
+      { id: "c", text: "Responda rapidamente" },
+    ],
+    correct: "a",
+    explanation: "'Pense passo a passo' (Think step by step) instrui o modelo a externalizar o raciocínio antes da resposta final, reduzindo erros em tarefas de lógica.",
+  },
+]
+
+const a2DecomposicaoExtra: LessonActivity[] = [
+  {
+    id: "a2dec-order",
+    type: "order",
+    instruction: "Conecte cada etapa de decomposição ao seu papel no pipeline de criação de um artigo:",
+    leftItems: [
+      { id: "a", text: "Etapa 1 — Estrutura" },
+      { id: "b", text: "Etapa 2 — Rascunho" },
+      { id: "c", text: "Etapa 3 — Revisão" },
+      { id: "d", text: "Etapa 4 — Publicação" },
+    ],
+    rightItems: [
+      { id: "w", text: "Gerar outline com tópicos e subtópicos" },
+      { id: "x", text: "Desenvolver o conteúdo de cada seção" },
+      { id: "y", text: "Corrigir tom, erros e coerência" },
+      { id: "z", text: "Formatar e distribuir no canal certo" },
+    ],
+    correctPairs: { a: "w", b: "x", c: "y", d: "z" },
+    explanation: "Outline → conteúdo → revisão → publicação é o pipeline clássico. Cada etapa pode ser um prompt separado, com revisão humana entre elas.",
+  },
+]
+
+const a2RestricaoExtra: LessonActivity[] = [
+  {
+    id: "a2res-fb",
+    type: "fill-blank",
+    sentence: "Uma restrição negativa ('não faça X') funciona melhor combinada com uma instrução {___} equivalente ('faça Y em vez disso').",
+    options: [
+      { id: "a", text: "positiva" },
+      { id: "b", text: "inversa" },
+      { id: "c", text: "longa" },
+    ],
+    correct: "a",
+    explanation: "Restrições negativas dizem o que evitar; instruções positivas dizem o que fazer. Juntas, eliminam ambiguidade e dão ao modelo um caminho claro.",
+  },
+]
+
+const a2EstiloTomExtra: LessonActivity[] = [
+  {
+    id: "a2et-match",
+    type: "match",
+    instruction: "Ligue cada tom ao contexto mais adequado:",
+    pairs: [
+      { word: "Formal", definition: "Relatório executivo ou comunicação corporativa" },
+      { word: "Conversacional", definition: "Tutorial ou blog para iniciantes" },
+      { word: "Técnico", definition: "Documentação de API ou white paper" },
+      { word: "Empático", definition: "Mensagem de suporte ao cliente em crise" },
+    ],
+    explanation: "Tom errado no contexto certo quebra a comunicação. Um e-mail de suporte com tom técnico frio pode frustrar um cliente — mesmo com a resposta correta.",
+  },
+]
+
+const a2MultiEtapaExtra: LessonActivity[] = [
+  {
+    id: "a2me-order",
+    type: "order",
+    instruction: "Ordene as etapas de um pipeline multi-etapa para gerar um relatório de mercado:",
+    leftItems: [
+      { id: "a", text: "Passo 1" },
+      { id: "b", text: "Passo 2" },
+      { id: "c", text: "Passo 3" },
+      { id: "d", text: "Passo 4" },
+    ],
+    rightItems: [
+      { id: "w", text: "Definir escopo e perguntas-chave" },
+      { id: "x", text: "Coletar e resumir dados por seção" },
+      { id: "y", text: "Gerar análise e conclusões" },
+      { id: "z", text: "Formatar e revisar o documento final" },
+    ],
+    correctPairs: { a: "w", b: "x", c: "y", d: "z" },
+    explanation: "Escopo → coleta → análise → formato é o pipeline típico. Validar cada etapa antes de avançar garante que o resultado final tenha qualidade.",
+  },
+]
+
+const a2AvaliacaoExtra: LessonActivity[] = [
+  {
+    id: "a2ar-fb",
+    type: "fill-blank",
+    sentence: "Quando um modelo de linguagem gera informações falsas com alto grau de confiança, chamamos esse fenômeno de {___}.",
+    options: [
+      { id: "a", text: "alucinação (hallucination)" },
+      { id: "b", text: "sobrecarga (overload)" },
+      { id: "c", text: "truncagem (truncation)" },
+    ],
+    correct: "a",
+    explanation: "Alucinação (hallucination) é o principal risco dos LLMs: o modelo inventa fatos com confiança. Identificar exige verificar fontes primárias, especialmente datas, nomes e estatísticas.",
+  },
+]
+
+const a2RefinoDadosExtra: LessonActivity[] = [
+  {
+    id: "a2rd-match",
+    type: "match",
+    instruction: "Ligue cada conceito de melhoria de prompt ao seu significado:",
+    pairs: [
+      { word: "Teste A/B", definition: "Comparar duas versões do prompt com métricas objetivas" },
+      { word: "Regressão", definition: "Garantir que melhorias não quebraram casos anteriores" },
+      { word: "Log de erros", definition: "Registro de inputs que geraram respostas incorretas" },
+      { word: "Golden set", definition: "Conjunto de casos com respostas ideais para benchmark" },
+    ],
+    explanation: "Engenharia de prompt profissional usa as mesmas práticas de engenharia de software: testes, regressão e benchmarks para melhorar com dados.",
+  },
+]
+
+// A3
+const a3CodigoExtra: LessonActivity[] = [
+  {
+    id: "a3pc-fb",
+    type: "fill-blank",
+    sentence: "Ao pedir código, especificar a linguagem, a {___} das bibliotecas usadas e exemplos de entrada/saída elimina a maioria das ambiguidades.",
+    options: [
+      { id: "a", text: "versão" },
+      { id: "b", text: "cor" },
+      { id: "c", text: "localização geográfica" },
+    ],
+    correct: "a",
+    explanation: "Linguagem + versão + bibliotecas + I/O de exemplo é o combo mínimo para código reutilizável. Sem versão, o modelo pode gerar código incompatível com seu ambiente.",
+  },
+]
+
+const a3AutomacaoExtra: LessonActivity[] = [
+  {
+    id: "a3ai-match",
+    type: "match",
+    instruction: "Ligue cada ferramenta de automação ao seu perfil de uso:",
+    pairs: [
+      { word: "n8n", definition: "Fluxos visuais, código aberto, auto-hospedável" },
+      { word: "Zapier", definition: "Automações simples entre SaaS sem código" },
+      { word: "Make", definition: "Automações visuais de complexidade média" },
+      { word: "Python + API", definition: "Controle total com código customizado" },
+    ],
+    explanation: "Escolha a ferramenta pelo nível de controle necessário: Zapier para o simples, n8n para mais poder, Python quando precisar de lógica avançada ou privacidade total.",
+  },
+]
+
+const a3NegociosExtra: LessonActivity[] = [
+  {
+    id: "a3pn-order",
+    type: "order",
+    instruction: "Ordene o processo de usar IA para gerar uma proposta comercial:",
+    leftItems: [
+      { id: "a", text: "Passo 1" },
+      { id: "b", text: "Passo 2" },
+      { id: "c", text: "Passo 3" },
+      { id: "d", text: "Passo 4" },
+    ],
+    rightItems: [
+      { id: "w", text: "Definir o template e variáveis da proposta" },
+      { id: "x", text: "Preencher contexto (cliente, produto, objetivo)" },
+      { id: "y", text: "Gerar rascunho com IA" },
+      { id: "z", text: "Revisar e personalizar antes de enviar" },
+    ],
+    correctPairs: { a: "w", b: "x", c: "y", d: "z" },
+    explanation: "Template → contexto → geração → revisão humana. A revisão final é obrigatória: a IA pode acertar o tom mas errar um dado específico do cliente.",
+  },
+]
+
+const a3FluxosExtra: LessonActivity[] = [
+  {
+    id: "a3fa-fb",
+    type: "fill-blank",
+    sentence: "O componente que coordena múltiplos agentes, define a ordem de execução e as condições de parada é chamado de {___}.",
+    options: [
+      { id: "a", text: "orquestrador (orchestrator)" },
+      { id: "b", text: "compilador" },
+      { id: "c", text: "proxy reverso" },
+    ],
+    correct: "a",
+    explanation: "Orquestrador é o 'gerente' do fluxo multi-agente. Sem ele, os agentes não sabem quando agir, em que ordem, ou quando o objetivo foi atingido.",
+  },
+]
+
+const a3MetricasExtra: LessonActivity[] = [
+  {
+    id: "a3am-match",
+    type: "match",
+    instruction: "Ligue cada métrica ao que ela mede em sistemas de IA em produção:",
+    pairs: [
+      { word: "Taxa de alucinação", definition: "Frequência com que o modelo inventa informações" },
+      { word: "CSAT", definition: "Satisfação do usuário com a resposta recebida" },
+      { word: "Latência P95", definition: "Tempo de resposta no percentil 95 (pior caso frequente)" },
+      { word: "Taxa de escalação", definition: "Casos enviados para atendimento humano" },
+    ],
+    explanation: "Métricas de IA têm duas camadas: técnicas (latência, tokens) e de negócio (CSAT, escalação). As de negócio dizem se a IA está realmente resolvendo o problema.",
+  },
+]
+
+const a3GuardrailsExtra: LessonActivity[] = [
+  {
+    id: "a3gr-fb",
+    type: "fill-blank",
+    sentence: "A estratégia de usar múltiplas camadas de proteção — prompt + validação no código + filtros — é chamada de {___} em profundidade.",
+    options: [
+      { id: "a", text: "defesa" },
+      { id: "b", text: "ataque" },
+      { id: "c", text: "automação" },
+    ],
+    correct: "a",
+    explanation: "Defesa em profundidade (defense in depth) é o princípio de não depender de uma única proteção. Camadas independentes garantem que a falha de uma não comprometa o sistema.",
+  },
+]
+
+const a3ProjetoFinalExtra: LessonActivity[] = [
+  {
+    id: "a3pf-order",
+    type: "order",
+    instruction: "Ordene as etapas do ciclo de desenvolvimento de um produto com IA:",
+    leftItems: [
+      { id: "a", text: "Etapa 1" },
+      { id: "b", text: "Etapa 2" },
+      { id: "c", text: "Etapa 3" },
+      { id: "d", text: "Etapa 4" },
+    ],
+    rightItems: [
+      { id: "w", text: "Definir o problema e critérios de sucesso" },
+      { id: "x", text: "Prototipar com prompt simples (MVP)" },
+      { id: "y", text: "Testar com usuários reais e coletar feedback" },
+      { id: "z", text: "Medir métricas e iterar na próxima versão" },
+    ],
+    correctPairs: { a: "w", b: "x", c: "y", d: "z" },
+    explanation: "Definir → prototipar → testar → medir é o ciclo de produto aplicado à IA. Sem métricas claras na etapa 1, você não saberá se a IA está realmente resolvendo o problema.",
+  },
+]
+
 // Conteúdo por trilha → módulo (índice). Falta → DEFAULT_QUESTIONS.
 // Agora suporta LessonActivity[] (múltiplos tipos) em vez de apenas Question[]
 export const LESSONS: Record<TrackId, LessonActivity[][]> = {
   a1: [
-    a1Boas_vindas,        // 0 — Boas-vindas
-    a1OQueEPrompt,        // 1 — O que é um prompt
-    a1ContextoClareza,    // 2 — Contexto & clareza
-    a1PersonasRoles,      // 3 — Personas e papéis
-    a1EstruturasPrompt,   // 4 — Estruturas de prompt
-    a1FewShot,            // 5 — Poucos exemplos (Few-shot)
-    a1RefinoIterativo,    // 6 — Refino iterativo
+    a1Boas_vindas,                              // 0 — Boas-vindas
+    [...a1OQueEPrompt, ...a1OQueEPromptExtra],  // 1 — O que é um prompt (MC + fill-blank)
+    [...a1ContextoClareza, ...a1ContextoClareza_extra], // 2 — Contexto & clareza (MC + match)
+    [...a1PersonasRoles, ...a1PersonasExtra],   // 3 — Personas (MC + fill-blank)
+    [...a1EstruturasPrompt, ...a1EstruturasExtra], // 4 — Estruturas (MC + fill-blank)
+    [...a1FewShot, ...a1FewShotExtra],          // 5 — Few-shot (MC + order)
+    [...a1RefinoIterativo, ...a1RefinoExtra],   // 6 — Refino iterativo (MC + match)
   ],
   a2: [
-    a2ChainOfThought,     // 0 — Cadeia de raciocínio
-    a2Decomposicao,       // 1 — Decomposição de tarefas
-    a2Restricoes,         // 2 — Prompts com restrições
-    a2EstiloTom,          // 3 — Estilo e tom controlado
-    a2MultiEtapa,         // 4 — Prompts multi-etapa
-    a2AvaliacaoRespostas, // 5 — Avaliação de respostas
-    a2RefinoDados,        // 6 — Refino guiado por dados
-    engenhariaDePrompt,   // 7
-    conhecaLLMs,          // 8
+    [...a2ChainOfThought, ...a2CotExtra],       // 0 — Chain-of-thought (MC + fill-blank)
+    [...a2Decomposicao, ...a2DecomposicaoExtra], // 1 — Decomposição (MC + order)
+    [...a2Restricoes, ...a2RestricaoExtra],     // 2 — Restrições (MC + fill-blank)
+    [...a2EstiloTom, ...a2EstiloTomExtra],      // 3 — Estilo e tom (MC + match)
+    [...a2MultiEtapa, ...a2MultiEtapaExtra],    // 4 — Multi-etapa (MC + order)
+    [...a2AvaliacaoRespostas, ...a2AvaliacaoExtra], // 5 — Avaliação (MC + fill-blank)
+    [...a2RefinoDados, ...a2RefinoDadosExtra],  // 6 — Refino por dados (MC + match)
+    engenhariaDePrompt,                         // 7
+    conhecaLLMs,                                // 8
   ],
   a3: [
-    a3PromptsCodigo,      // 0 — Prompts para código
-    a3AutomacaoIA,        // 1 — Automação com IA
-    a3PromptNegocios,     // 2 — Prompts para negócios
-    a3FluxosAgentes,      // 3 — Fluxos com agentes
-    a3AvaliacaoMetricas,  // 4 — Avaliação & métricas
-    a3Guardrails,         // 5 — Segurança e proteções
-    a3ProjetoFinal,       // 6 — Projeto final
+    [...a3PromptsCodigo, ...a3CodigoExtra],     // 0 — Código (MC + fill-blank)
+    [...a3AutomacaoIA, ...a3AutomacaoExtra],    // 1 — Automação (MC + match)
+    [...a3PromptNegocios, ...a3NegociosExtra],  // 2 — Negócios (MC + order)
+    [...a3FluxosAgentes, ...a3FluxosExtra],     // 3 — Fluxos (MC + fill-blank)
+    [...a3AvaliacaoMetricas, ...a3MetricasExtra], // 4 — Métricas (MC + match)
+    [...a3Guardrails, ...a3GuardrailsExtra],    // 5 — Guardrails (MC + fill-blank)
+    [...a3ProjetoFinal, ...a3ProjetoFinalExtra], // 6 — Projeto final (MC + order)
     aplicandoAgents,              // 7
     usandoOpenRouter,             // 8
     modelosLocais,                // 9
