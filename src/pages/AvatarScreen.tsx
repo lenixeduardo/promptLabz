@@ -1,190 +1,169 @@
-import { useState, useEffect } from "react"
-import { useNavigate, Link } from "react-router-dom"
-import { Home, ShoppingBag, User, Heart, Check } from "lucide-react"
-import { useAuth } from "@/hooks/useAuth"
-import { updateUserAvatar, getUserProfile } from "@/lib/db"
-import { AVATARS, getAvatarById } from "@/data/avatarsData"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { ChevronLeft, Gem, Crown, Lock } from "lucide-react"
+import { useAvatar, AVATAR_OPTIONS, type AvatarOption, type AvatarTier } from "@/components/AvatarProvider"
+import { BottomNav } from "@/components/BottomNav"
+import { cn } from "@/lib/utils"
 import { sileo } from "sileo"
+
+type FilterValue = "Todos" | AvatarTier
+
+const FILTER_TABS: { label: string; value: FilterValue }[] = [
+  { label: "Todos",    value: "Todos" },
+  { label: "Grátis",  value: "Grátis" },
+  { label: "Raro",    value: "Raro" },
+  { label: "Épico",   value: "Épico" },
+  { label: "Lendário", value: "Lendário" },
+]
+
+const TIER_BADGE: Record<AvatarTier, { label: string; className: string }> = {
+  "Grátis":   { label: "GRÁTIS",   className: "bg-gray-800 text-white" },
+  "Raro":     { label: "RARO",     className: "bg-amber-500 text-white" },
+  "Épico":    { label: "ÉPICO",    className: "bg-purple-600 text-white" },
+  "Lendário": { label: "LENDÁRIO", className: "bg-yellow-500 text-white" },
+}
 
 export default function AvatarScreen() {
   const navigate = useNavigate()
-  const { user } = useAuth()
-  const [selectedAvatarId, setSelectedAvatarId] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [loadingAvatar, setLoadingAvatar] = useState(true)
-  const [userBalance, setUserBalance] = useState(0)
-  const [currentAvatar, setCurrentAvatar] = useState<string | null>(null)
+  const { equippedId, equipped, setEquipped, options } = useAvatar()
+  const [filter, setFilter] = useState<FilterValue>("Todos")
+  const [userBalance] = useState(142)
 
-  useEffect(() => {
-    const loadUserAvatar = async () => {
-      if (!user?.id) return
-      try {
-        const { data, error } = await getUserProfile(user.id)
-        if (!error && data?.avatar_url) {
-          setCurrentAvatar(data.avatar_url)
-          setSelectedAvatarId(data.avatar_url)
-        } else {
-          setSelectedAvatarId("cat-green")
-        }
-      } catch (err) {
-        console.error("Error loading avatar:", err)
-      } finally {
-        setLoadingAvatar(false)
-      }
-    }
-    loadUserAvatar()
-  }, [user])
+  const filtered = filter === "Todos" ? options : options.filter((a) => a.tier === filter)
 
-  useEffect(() => {
-    setUserBalance(35) // Placeholder
-  }, [])
-
-  const handleSelectAvatar = async (avatarId: string) => {
-    const avatar = getAvatarById(avatarId)
-    if (!avatar) return
-
-    if (avatar.price > 0 && userBalance < avatar.price) {
+  const handleSelect = (avatar: AvatarOption) => {
+    if (!avatar.owned && avatar.cost > userBalance) {
       sileo.error({
         title: "Diamantes insuficientes",
-        description: `Você precisa de ${avatar.price - userBalance} diamantes a mais.`,
+        description: `Você precisa de ${avatar.cost - userBalance} diamantes a mais.`,
       })
       return
     }
-
-    setSelectedAvatarId(avatarId)
-    setLoading(true)
-    try {
-      if (!user?.id) throw new Error("Usuário não encontrado")
-
-      const { error } = await updateUserAvatar(user.id, avatarId)
-      if (error) throw new Error(error)
-
-      setCurrentAvatar(avatarId)
-      sileo.success({
-        title: "Avatar selecionado!",
-        description: `Você agora está usando ${avatar.name}`,
-      })
-    } catch (err: any) {
-      sileo.error({ title: err?.message || "Erro ao selecionar avatar" })
-    } finally {
-      setLoading(false)
-    }
+    setEquipped(avatar.id)
+    sileo.success({
+      title: "Avatar equipado!",
+      description: `Você agora está usando ${avatar.name}`,
+    })
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
-      {/* Content */}
-      <div className="flex flex-1 flex-col px-4 pb-40 pt-6">
-        {/* Header */}
-        <div className="mb-1 flex items-center gap-3">
-          <img
-            src="/assets/avatar-cat.png"
-            alt="logo"
-            className="h-10 w-10 object-contain"
-          />
-          <h1 className="text-2xl font-extrabold text-foregroundDark">Avatares</h1>
-        </div>
-        <p className="mb-6 text-sm text-foregroundSecondary">
-          Escolha seu personagem. O primeiro é grátis!
-        </p>
-
-        {/* Avatar Grid — 5 columns */}
-        {loadingAvatar ? (
-          <div className="grid grid-cols-5 gap-2">
-            {[...Array(15)].map((_, i) => (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <div className="h-14 w-14 animate-pulse rounded-xl bg-stroke-muted/40" />
-                <div className="h-3 w-8 animate-pulse rounded bg-stroke-muted/30" />
-              </div>
-            ))}
+    <div className="flex min-h-screen flex-col bg-pageBg pb-28">
+      {/* Header */}
+      <div className="px-4 pt-6">
+        <div className="mb-2 flex items-center justify-between">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-soft text-foregroundSecondary"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <div className="flex items-center gap-1.5 rounded-full bg-surface-soft px-3 py-1.5">
+            <Gem className="h-4 w-4 fill-sky-400 text-sky-400" />
+            <span className="text-sm font-bold text-foregroundDark">{userBalance}</span>
           </div>
-        ) : (
-        <div className="grid grid-cols-5 gap-2">
-          {AVATARS.map((avatar) => {
-            const isSelected = selectedAvatarId === avatar.id
-            const isOwned = currentAvatar === avatar.id
-            const canAfford = avatar.price === 0 || userBalance >= avatar.price
+        </div>
+        <h1 className="text-2xl font-extrabold text-foregroundDark">Loja de Avatares</h1>
+        <p className="mb-5 mt-0.5 text-sm text-foregroundSecondary">Desbloqueie seu visual lendário</p>
+      </div>
 
-            return (
-              <button
-                key={avatar.id}
-                onClick={() => handleSelectAvatar(avatar.id)}
-                disabled={loading}
-                className="flex flex-col items-center gap-1"
+      {/* Featured: currently equipped avatar */}
+      <div className="mx-4 mb-5 overflow-hidden rounded-3xl bg-emerald p-6">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-white/30 bg-white/20">
+            <img
+              src={equipped.image}
+              alt={equipped.name}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="text-center">
+            <h2 className="text-xl font-extrabold text-white">{equipped.name}</h2>
+            <p className="text-sm text-white/80">{equipped.desc}</p>
+          </div>
+          <div className="flex items-center gap-1.5 rounded-full bg-amber-400 px-4 py-1.5">
+            <Crown className="h-3.5 w-3.5 text-white" />
+            <span className="text-xs font-bold text-white">{equipped.tier}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Filter tabs */}
+      <div className="mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
+        {FILTER_TABS.map(({ label, value }) => (
+          <button
+            key={value}
+            onClick={() => setFilter(value)}
+            className={cn(
+              "shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors",
+              filter === value
+                ? "bg-emerald text-white"
+                : "bg-surface-soft text-foregroundSecondary"
+            )}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* Avatar grid — 2 columns */}
+      <div className="grid grid-cols-2 gap-3 px-4">
+        {filtered.map((avatar) => {
+          const isEquipped = equippedId === avatar.id
+          const badge = TIER_BADGE[avatar.tier]
+          const locked = !avatar.owned
+
+          return (
+            <button
+              key={avatar.id}
+              onClick={() => handleSelect(avatar)}
+              className={cn(
+                "relative overflow-hidden rounded-2xl bg-[#E8F5E9] p-3 text-left transition-all active:scale-95",
+                isEquipped ? "ring-2 ring-emerald ring-offset-1" : ""
+              )}
+            >
+              {/* Rarity badge — top left */}
+              <span
+                className={cn(
+                  "absolute left-2.5 top-2.5 rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wide",
+                  badge.className
+                )}
               >
-                {/* Avatar tile */}
-                <div
-                  className={`relative h-14 w-14 overflow-hidden rounded-xl border-2 transition-all ${
-                    isSelected
-                      ? "border-emerald bg-[#D9F0E4]"
-                      : "border-neutral bg-surface-soft"
-                  } ${!canAfford && !isOwned ? "opacity-40" : ""}`}
-                >
-                  <img
-                    src={avatar.image}
-                    alt={avatar.name}
-                    className="h-full w-full object-contain p-1"
-                  />
-                  {/* Owned checkmark */}
-                  {isOwned && (
-                    <div className="absolute bottom-0.5 right-0.5 rounded-full bg-emerald p-0.5">
-                      <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />
-                    </div>
-                  )}
+                {badge.label}
+              </span>
+
+              {/* Lock icon — top right */}
+              {locked && (
+                <div className="absolute right-2.5 top-2.5 rounded-full bg-black/20 p-1">
+                  <Lock className="h-3 w-3 text-white" />
                 </div>
+              )}
 
-                {/* Price label */}
-                <span className="text-[10px] font-semibold text-primary-dark">
-                  {avatar.price === 0 ? (
-                    "Grátis"
-                  ) : (
-                    <span className="flex items-center gap-0.5">
-                      <Heart className="h-2.5 w-2.5 fill-emerald text-emerald" />
-                      {avatar.price}
-                    </span>
-                  )}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-        )}
+              {/* Avatar image */}
+              <div className="mt-7 flex justify-center">
+                <img
+                  src={avatar.image}
+                  alt={avatar.name}
+                  className={cn("h-28 w-28 object-contain", locked && "opacity-60")}
+                />
+              </div>
+
+              {/* Info */}
+              <div className="mt-2 space-y-0.5">
+                <p className="text-sm font-bold leading-tight text-foregroundDark">{avatar.name}</p>
+                <p className="text-[11px] leading-tight text-foregroundSecondary">{avatar.desc}</p>
+                {locked && avatar.cost > 0 && (
+                  <div className="mt-1 flex items-center gap-1">
+                    <Gem className="h-3 w-3 fill-sky-400 text-sky-400" />
+                    <span className="text-xs font-bold text-foregroundDark">{avatar.cost.toLocaleString("pt-BR")}</span>
+                  </div>
+                )}
+              </div>
+            </button>
+          )
+        })}
       </div>
 
-      {/* Diamond bar + Bottom nav — fixed */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white">
-        {/* Diamond balance */}
-        <div className="flex items-center justify-center gap-1.5 border-t border-neutral py-2">
-          <span className="text-xs font-medium text-foregroundSecondary">Seus diamantes:</span>
-          <Heart className="h-3.5 w-3.5 fill-emerald text-emerald" />
-          <span className="text-xs font-bold text-foregroundDark">{userBalance}</span>
-        </div>
-
-        {/* Bottom nav */}
-        <nav className="flex items-center justify-around border-t border-stroke-muted px-4 py-3">
-          <Link
-            to="/home"
-            className="flex flex-col items-center gap-0.5 text-foregroundSecondary hover:text-link"
-          >
-            <Home className="h-5 w-5" />
-            <span className="text-[10px] font-medium">Início</span>
-          </Link>
-          <Link
-            to="/avatars"
-            className="flex flex-col items-center gap-0.5 text-emerald"
-          >
-            <ShoppingBag className="h-5 w-5" />
-            <span className="text-[10px] font-medium">Loja</span>
-          </Link>
-          <Link
-            to="/profile"
-            className="flex flex-col items-center gap-0.5 text-foregroundSecondary hover:text-link"
-          >
-            <User className="h-5 w-5" />
-            <span className="text-[10px] font-medium">Perfil</span>
-          </Link>
-        </nav>
-      </div>
+      <BottomNav active="perfil" />
     </div>
   )
 }
