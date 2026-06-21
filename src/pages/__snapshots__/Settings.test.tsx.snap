@@ -461,7 +461,7 @@ exports[`Settings — snapshot > corresponde ao snapshot com lembrete diário de
             class="flex items-center gap-3 px-4 py-6"
           >
             <button
-              class="inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 rounded-full border border-stroke-light bg-white text-primary hover:bg-surface-soft h-12 px-6 text-base w-full"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold tracking-[0.8px] uppercase transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none rounded-[12px] border-2 border-[#e5e5e5] bg-white text-[#1cb0f6] hover:bg-[#f7f7f7] active:translate-y-[2px] h-12 px-6 text-[15px] w-full"
             >
               Avalie nosso projeto
             </button>
@@ -937,7 +937,7 @@ exports[`Settings — snapshot > corresponde ao snapshot com todos os toggles ha
             class="flex items-center gap-3 px-4 py-6"
           >
             <button
-              class="inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 rounded-full border border-stroke-light bg-white text-primary hover:bg-surface-soft h-12 px-6 text-base w-full"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold tracking-[0.8px] uppercase transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none rounded-[12px] border-2 border-[#e5e5e5] bg-white text-[#1cb0f6] hover:bg-[#f7f7f7] active:translate-y-[2px] h-12 px-6 text-[15px] w-full"
             >
               Avalie nosso projeto
             </button>
