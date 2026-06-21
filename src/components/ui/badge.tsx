@@ -4,16 +4,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  /* Duolingo badge: radius 2px (hairline corner), duolingo-sans bold 13px */
+  "inline-flex items-center rounded-[2px] border px-2.5 py-0.5 text-[13px] font-bold leading-[16px] tracking-[0.3px] transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
-        default: "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
+        default: "border-transparent bg-[#58cc02] text-white shadow hover:bg-[#58cc02]/80",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border-transparent bg-[#d7ffb8] text-[#3c3c3c] hover:bg-[#d7ffb8]/80",
         destructive:
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
-        outline: "text-foreground",
+        outline: "border-[#e5e5e5] text-[#4b4b4b]",
+        sky: "border-transparent bg-[#1cb0f6]/15 text-[#1cb0f6]",
       },
     },
     defaultVariants: {

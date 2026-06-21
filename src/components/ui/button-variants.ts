@@ -1,22 +1,30 @@
 import { cva } from "class-variance-authority"
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold tracking-[0.8px] uppercase transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none",
   {
     variants: {
       variant: {
+        /* Duolingo primary CTA — verde com sombra inferior pressionável */
         primary:
-          "rounded-full text-white shadow-lg shadow-primary/30 bg-gradient-to-b from-emerald to-emerald-dark hover:from-[#46996a] hover:to-[#327a52] active:translate-y-px",
+          "rounded-[12px] bg-[#58cc02] text-white shadow-[0_4px_0_0_#58a700] hover:bg-[#5ad002] active:shadow-none active:translate-y-[4px]",
+        /* Duolingo secondary — borda sutil, texto azul céu */
         outline:
-          "rounded-full border border-stroke-light bg-white text-primary hover:bg-surface-soft",
-        ghost: "rounded-full text-primary hover:bg-[#E3F3E9]",
+          "rounded-[12px] border-2 border-[#e5e5e5] bg-white text-[#1cb0f6] hover:bg-[#f7f7f7] active:translate-y-[2px]",
+        /* Ghost — sem borda, texto verde */
+        ghost: "rounded-[12px] text-[#58cc02] hover:bg-[#d7ffb8]/40 active:bg-[#d7ffb8]/60",
+        /* Social — branco com borda leve, usado em login Google/Apple */
         social:
-          "rounded-full border border-stroke-light bg-white shadow-sm hover:bg-surface-soft",
+          "rounded-[12px] border-2 border-[#e5e5e5] bg-white text-[#3c3c3c] shadow-sm hover:bg-[#f7f7f7] active:translate-y-[2px]",
+        /* Destructive */
+        destructive:
+          "rounded-[12px] bg-destructive text-destructive-foreground shadow-[0_4px_0_0_hsl(var(--destructive)/0.6)] hover:bg-destructive/90 active:shadow-none active:translate-y-[4px]",
       },
       size: {
-        default: "h-12 px-6 text-base",
-        lg: "h-14 px-8 text-lg",
-        icon: "h-14 w-14",
+        default: "h-12 px-6 text-[15px]",
+        lg: "h-14 px-8 text-[15px]",
+        sm: "h-10 px-4 text-[13px]",
+        icon: "h-12 w-12",
       },
     },
     defaultVariants: {
