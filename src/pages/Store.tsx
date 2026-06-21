@@ -134,7 +134,7 @@ export default function Store() {
                       className="h-full w-full object-cover"
                     />
                   </div>
-                  <p className="text-center text-xs font-bold text-foregroundDark">{avatar.name}</p>
+                  <p className="text-center text-xs font-bold text-foregroundDark dark:text-white">{avatar.name}</p>
                   {!owned && (
                     <div className="flex items-center gap-1">
                       <Icons.Diamond className="h-3 w-3 text-cyan-500" />
@@ -172,8 +172,8 @@ export default function Store() {
                     {Icon && <Icon className="h-6 w-6 text-primary-dark" />}
                   </div>
                   <div className="flex-1 text-left">
-                    <p className="text-sm font-bold text-foregroundDark">{pu.name}</p>
-                    <p className="text-xs text-foregroundMuted">{pu.description}</p>
+                    <p className="text-sm font-bold text-foregroundDark dark:text-white">{pu.name}</p>
+                    <p className="text-xs text-foregroundMuted dark:text-foregroundSecondary">{pu.description}</p>
                   </div>
                   <div className="flex items-center gap-1 rounded-full bg-pageBgLight px-3 py-1">
                     <Icons.Diamond className="h-3 w-3 text-cyan-500" />
