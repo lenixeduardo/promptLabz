@@ -15,7 +15,7 @@ vi.mock("@/lib/userScope", () => ({
   getUserId: vi.fn().mockReturnValue("user-1"),
 }))
 
-// a1Boas_vindas for track=a1, module=0: 3 questions, all correct = "b"
+// a1Boas_vindas for track=a1, module=0: 3 MC questions + 1 prompt-application = 4 activities, all MC correct = "b"
 const Q1_PROMPT = "O que é o PromptLabz?"
 const Q1_OPT_B = "Uma trilha de aprendizado prática para você dominar a arte de escrever prompts"
 
@@ -86,28 +86,28 @@ describe("Lesson — fluxo de aprendizado", () => {
     )
     fireEvent.click(optionB!)
     fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
-    expect(screen.getByText(/^\s*2\s+de\s+3\s*$/)).toBeInTheDocument()
+    expect(screen.getByText(/^\s*2\s+de\s+4\s*$/)).toBeInTheDocument()
   })
 
   it("exibe tela de resultado após completar todas as perguntas", async () => {
     renderLesson()
-    // Answer all 3 questions correctly (a1Boas_vindas — all correct = option "b")
-    const answers = [
+    // Answer all 3 MC questions correctly (a1Boas_vindas — all correct = option "b")
+    const mcAnswers = [
       Q1_OPT_B,
       "Escrever prompts claros, específicos e eficazes",
       "prompts bem escritos multiplicam sua produtividade",
     ]
-    for (let i = 0; i < answers.length; i++) {
-      const btn = screen.getAllByRole("button").find((el) => el.textContent?.includes(answers[i]))
+    for (let i = 0; i < mcAnswers.length; i++) {
+      const btn = screen.getAllByRole("button").find((el) => el.textContent?.includes(mcAnswers[i]))
       fireEvent.click(btn!)
-      const nextBtn = screen.queryByRole("button", { name: /Próxima atividade/i })
-      const finishBtn = screen.queryByRole("button", { name: /Ver resultado/i })
-      if (i < answers.length - 1) {
-        fireEvent.click(nextBtn!)
-      } else if (finishBtn) {
-        fireEvent.click(finishBtn)
-      }
+      fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
     }
+
+    // Answer the 4th activity (prompt-application) by typing in textarea
+    const textarea = screen.getByRole("textbox")
+    fireEvent.change(textarea, { target: { value: "Sou designer e quero dicas de IA para meu trabalho" } })
+    fireEvent.click(screen.getByRole("button", { name: /Enviar meu prompt/i }))
+    fireEvent.click(screen.getByRole("button", { name: /Ver resultado/i }))
 
     await waitFor(() => {
       expect(screen.getByText(/Perfeito!/i)).toBeInTheDocument()
@@ -122,13 +122,19 @@ describe("Lesson — fluxo de aprendizado", () => {
     fireEvent.click(wrongBtn!)
     fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
 
-    // Answer rest correctly (a1bv1 and a1bv2)
+    // Answer rest of MC questions correctly (a1bv1 and a1bv2)
     let btn = screen.getAllByRole("button").find((el) => el.textContent?.includes("Escrever prompts claros, específicos e eficazes"))
     fireEvent.click(btn!)
     fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
 
     btn = screen.getAllByRole("button").find((el) => el.textContent?.includes("prompts bem escritos multiplicam sua produtividade"))
     fireEvent.click(btn!)
+    fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
+
+    // Answer prompt-application activity
+    const textarea = screen.getByRole("textbox")
+    fireEvent.change(textarea, { target: { value: "Sou designer e quero dicas de IA para meu trabalho" } })
+    fireEvent.click(screen.getByRole("button", { name: /Enviar meu prompt/i }))
     fireEvent.click(screen.getByRole("button", { name: /Ver resultado/i }))
 
     await waitFor(() => {

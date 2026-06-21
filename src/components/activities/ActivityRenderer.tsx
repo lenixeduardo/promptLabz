@@ -1,11 +1,12 @@
 import { Lightbulb } from "lucide-react"
 import { cn } from "@/lib/utils"
-import type { LessonActivity, FillBlankActivity, MatchActivity, OrderActivity, Question } from "@/lib/lessonContent"
-import { isFillBlank, isMatch, isOrder, isEssay } from "@/lib/lessonContent"
+import type { LessonActivity, FillBlankActivity, MatchActivity, OrderActivity, Question, PromptApplicationActivity } from "@/lib/lessonContent"
+import { isFillBlank, isMatch, isOrder, isEssay, isPromptApplication } from "@/lib/lessonContent"
 import { FillBlankCard } from "./FillBlankCard"
 import { MatchCard } from "./MatchCard"
 import { OrderCard } from "./OrderCard"
 import { EssayCard, EssayBadge } from "./EssayCard"
+import { PromptApplicationCard, PromptApplicationBadge } from "./PromptApplicationCard"
 
 interface Props {
   activity: LessonActivity
@@ -50,6 +51,34 @@ export function ActivityRenderer({
           </div>
         </div>
         <EssayCard activity={activity} answered={answered} onAnswer={onEssayAnswer} />
+      </div>
+    )
+  }
+
+  if (isPromptApplication(activity)) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="mb-1 flex items-center gap-2">
+          <PromptApplicationBadge />
+          <span className="text-[11px] font-semibold text-foreground-tertiary">
+            {step + 1} de {total}
+          </span>
+        </div>
+        <div className="mb-2 flex items-start gap-3">
+          <img
+            src="/assets/mascot-teacher.png"
+            alt=""
+            className="h-14 w-14 shrink-0 object-contain"
+          />
+          <div className="relative rounded-2xl rounded-tl-none border-2 border-purple-200 bg-purple-50 px-4 py-3 shadow-sm">
+            <p className="text-sm font-bold text-foreground-dark whitespace-pre-line">{activity.prompt}</p>
+          </div>
+        </div>
+        <PromptApplicationCard
+          activity={activity as PromptApplicationActivity}
+          answered={answered}
+          onAnswer={onEssayAnswer}
+        />
       </div>
     )
   }

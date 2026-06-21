@@ -2,7 +2,7 @@ import type { TrackId } from "@/lib/moduleProgress";
 
 // ── Tipos de atividade ─────────────────────────────────────────────────
 
-export type ActivityType = "multiple-choice" | "fill-blank" | "match" | "order" | "essay";
+export type ActivityType = "multiple-choice" | "fill-blank" | "match" | "order" | "essay" | "prompt-application";
 
 /** Questão dissertativa — resposta livre com gabarito de referência */
 export type EssayActivity = {
@@ -11,6 +11,15 @@ export type EssayActivity = {
   prompt: string;
   placeholder?: string;
   referenceAnswer: string;
+};
+
+/** Aplicação prática — o aluno escreve um prompt que aplica o conteúdo da aula */
+export type PromptApplicationActivity = {
+  id: string;
+  type: "prompt-application";
+  prompt: string;         // desafio / cenário
+  placeholder?: string;
+  examplePrompt: string;  // prompt de referência para comparação
 };
 
 /** Multiple choice (existente) */
@@ -54,7 +63,7 @@ export type OrderActivity = {
   explanation: string;
 };
 
-export type LessonActivity = Question | FillBlankActivity | MatchActivity | OrderActivity | EssayActivity;
+export type LessonActivity = Question | FillBlankActivity | MatchActivity | OrderActivity | EssayActivity | PromptApplicationActivity;
 
 // ── Guards ─────────────────────────────────────────────────────────────
 export function isFillBlank(a: LessonActivity): a is FillBlankActivity {
@@ -68,6 +77,9 @@ export function isOrder(a: LessonActivity): a is OrderActivity {
 }
 export function isEssay(a: LessonActivity): a is EssayActivity {
   return (a as EssayActivity).type === "essay";
+}
+export function isPromptApplication(a: LessonActivity): a is PromptApplicationActivity {
+  return (a as PromptApplicationActivity).type === "prompt-application";
 }
 // ── Atividades dos novos tipos ─────────────────────────────────────────
 
@@ -2149,37 +2161,256 @@ const a3ProjetoFinalExtra: LessonActivity[] = [
   },
 ]
 
+// ── Questões de Aplicação de Prompt (por aula) ───────────────────────────────
+// Uma por módulo: o aluno escreve um prompt que aplica o conteúdo da aula.
+
+const promptAppA1: PromptApplicationActivity[] = [
+  {
+    // A1/0 — Boas-vindas
+    id: "pa-a1-0",
+    type: "prompt-application",
+    prompt: "Hora de praticar! Escreva um prompt pedindo à IA dicas práticas de como ela pode ajudar na sua profissão ou área de estudos.",
+    placeholder: "Ex.: Sou [profissão] e trabalho com [área]. Me dê 5 formas práticas de usar IA no meu dia a dia...",
+    examplePrompt:
+      "Sou designer gráfico e trabalho com identidade visual para pequenas empresas. Me dê 5 formas práticas e específicas de usar IA no meu dia a dia profissional, com um exemplo concreto para cada uma e indicando qual ferramenta de IA usar em cada caso.",
+  },
+  {
+    // A1/1 — O que é Prompt
+    id: "pa-a1-1",
+    type: "prompt-application",
+    prompt: "Reescreva o prompt vago abaixo em uma versão específica e eficaz, adicionando objetivo, contexto e público:\n\n❌ Prompt vago: \"Fala sobre marketing.\"",
+    placeholder: "Escreva aqui sua versão melhorada do prompt...",
+    examplePrompt:
+      "Sou dono de uma padaria artesanal em São Paulo. Liste 5 estratégias de marketing digital com custo mensal abaixo de R$500 que eu possa aplicar esta semana para aumentar os pedidos de encomendas de bolo. Seja específico e prático, com exemplos reais para cada estratégia.",
+  },
+  {
+    // A1/2 — Contexto e Clareza
+    id: "pa-a1-2",
+    type: "prompt-application",
+    prompt: "Adicione contexto, objetivo e público-alvo a este prompt básico para torná-lo eficaz:\n\n❌ Prompt básico: \"Escreva um texto sobre saúde.\"",
+    placeholder: "Escreva aqui o prompt com contexto, objetivo e público definidos...",
+    examplePrompt:
+      "Contexto: Sou nutricionista e quero educar meus clientes sobre alimentação saudável. Objetivo: Criar um post informativo para o Instagram sobre os benefícios de beber água. Público: Adultos entre 25-40 anos, sedentários e com rotina agitada. Escreva um texto de 3-4 frases com tom amigável e prático, incluindo uma dica fácil de aplicar ainda hoje.",
+  },
+  {
+    // A1/3 — Personas e Roles
+    id: "pa-a1-3",
+    type: "prompt-application",
+    prompt: "Escreva um prompt com uma persona específica (role prompting) para revisar ou dar feedback sobre um texto, projeto ou ideia da sua área.",
+    placeholder: "Ex.: Você é um [cargo] com X anos de experiência em [área]. Revise o seguinte texto...",
+    examplePrompt:
+      "Você é um editor editorial sênior com 15 anos de experiência em textos corporativos. Revise o texto abaixo com foco em: clareza, coesão e tom profissional. Aponte 3 problemas específicos com citação direta do trecho problemático e sugira como corrigir cada um.\n\n[SEU TEXTO AQUI]",
+  },
+  {
+    // A1/4 — Estruturas de Prompt (CRAFT)
+    id: "pa-a1-4",
+    type: "prompt-application",
+    prompt: "Escreva um prompt completo usando o framework CRAFT (Contexto, Papel, Ação, Formato, Tom) para criar conteúdo de redes sociais para um negócio que você conhece.",
+    placeholder: "Contexto: ...\nPapel: ...\nAção: ...\nFormato: ...\nTom: ...",
+    examplePrompt:
+      "Contexto: Tenho uma academia de yoga no Rio de Janeiro voltada para iniciantes adultos.\nPapel: Você é um copywriter especializado em bem-estar e saúde.\nAção: Crie 3 legendas para posts do Instagram sobre os benefícios do yoga para reduzir o estresse.\nFormato: Cada legenda com até 150 palavras, 3 hashtags relevantes e uma pergunta engajadora no final.\nTom: Acolhedor, motivador e acessível para quem nunca fez yoga.",
+  },
+  {
+    // A1/5 — Few-Shot
+    id: "pa-a1-5",
+    type: "prompt-application",
+    prompt: "Crie um prompt few-shot com pelo menos 2 exemplos de entrada/saída para classificar mensagens de clientes como 'Elogio', 'Reclamação' ou 'Dúvida'.",
+    placeholder: "Classifique cada mensagem de cliente em: ELOGIO, RECLAMAÇÃO ou DÚVIDA.\n\nExemplos:\nMensagem: '...' → ...",
+    examplePrompt:
+      "Classifique cada mensagem de cliente como: ELOGIO, RECLAMAÇÃO ou DÚVIDA.\n\nExemplos:\nMensagem: 'Adorei o atendimento, voltarei com certeza!' → ELOGIO\nMensagem: 'Meu pedido chegou errado e ninguém me ajudou.' → RECLAMAÇÃO\nMensagem: 'Vocês aceitam pagamento em boleto?' → DÚVIDA\n\nAgora classifique:\nMensagem: '[MENSAGEM DO CLIENTE]'",
+  },
+  {
+    // A1/6 — Refino Iterativo
+    id: "pa-a1-6",
+    type: "prompt-application",
+    prompt: "Pegue um prompt vago que você já usaria no trabalho ou estudos e escreva uma versão melhorada, aplicando o que aprendeu sobre refino iterativo.",
+    placeholder: "❌ Versão original: ...\n\n✅ Versão melhorada: ...\n\nO que mudou: ...",
+    examplePrompt:
+      "❌ Versão original: 'Me dá ideias para meu negócio.'\n\n✅ Versão melhorada: 'Sou dono de um petshop em bairro residencial com 200 clientes ativos. Sugira 5 ideias de novos serviços ou produtos que eu poderia adicionar para aumentar o ticket médio dos clientes existentes. Priorize ideias com investimento inicial abaixo de R$2.000 e implementáveis em até 30 dias.'\n\nO que mudou: adicionei contexto (tipo de negócio, tamanho), objetivo específico (aumentar ticket médio), restrições (orçamento e prazo) e quantidade definida de ideias.",
+  },
+];
+
+const promptAppA2: PromptApplicationActivity[] = [
+  {
+    // A2/0 — Chain-of-Thought
+    id: "pa-a2-0",
+    type: "prompt-application",
+    prompt: "Escreva um prompt com instrução explícita de cadeia de raciocínio (chain-of-thought) para tomar uma decisão ou resolver um problema da sua vida real.",
+    placeholder: "Ex.: Preciso decidir entre X e Y. Pense passo a passo, considerando...",
+    examplePrompt:
+      "Preciso decidir se devo contratar um funcionário CLT ou um freelancer para um projeto de 3 meses de desenvolvimento web. Pense passo a passo, considerando: 1) custos totais de cada opção (salário/honorários + encargos + ferramentas), 2) controle e vínculo, 3) flexibilidade para encerrar, 4) riscos jurídicos. Ao final, apresente uma recomendação clara com justificativa baseada nos critérios analisados.",
+  },
+  {
+    // A2/1 — Decomposição
+    id: "pa-a2-1",
+    type: "prompt-application",
+    prompt: "Escreva a sequência de prompts decompostos para executar uma tarefa complexa da sua área (ex.: criar um relatório, um artigo, uma apresentação). Use pelo menos 3 prompts encadeados.",
+    placeholder: "Prompt 1 - [etapa]: ...\nPrompt 2 - [etapa]: ...\nPrompt 3 - [etapa]: ...",
+    examplePrompt:
+      "Prompt 1 - Estrutura: 'Crie um outline para um e-book de 20 páginas sobre produtividade para profissionais remotos. Liste 5 capítulos com 3 tópicos cada e um exercício prático por capítulo.'\n\nPrompt 2 - Desenvolvimento: 'Com base no outline acima, escreva o Capítulo 1 completo. Tom: direto e prático. Inclua o exercício proposto e termine com um resumo de 3 pontos.'\n\nPrompt 3 - Revisão: 'Revise o Capítulo 1 abaixo verificando: coerência com o público-alvo (profissional remoto iniciante), presença do exercício prático e alinhamento com o tom proposto. Liste até 3 ajustes necessários.\n\n[CONTEÚDO DO CAPÍTULO 1]'",
+  },
+  {
+    // A2/2 — Restrições
+    id: "pa-a2-2",
+    type: "prompt-application",
+    prompt: "Adicione restrições eficazes (positivas e negativas) a este prompt básico:\n\n❌ \"Escreva uma bio profissional para o LinkedIn.\"",
+    placeholder: "Escreva o prompt com restrições de tamanho, tom, palavras proibidas, formato e contexto...",
+    examplePrompt:
+      "Escreva uma bio profissional para o LinkedIn. Restrições:\n- Tamanho: 150-200 caracteres (tagline)\n- Não use clichês como 'apaixonado por', 'multidisciplinar' ou 'dinâmico'\n- Linguagem direta, orientada a resultados\n- Comece com cargo atual e diferencial principal\n- Termine com uma chamada para ação\n\nContexto: Sou gerente de projetos com 8 anos de experiência em construção civil migrando para tecnologia.",
+  },
+  {
+    // A2/3 — Estilo e Tom
+    id: "pa-a2-3",
+    type: "prompt-application",
+    prompt: "Escreva um prompt que gere o mesmo conteúdo em dois tons diferentes: um formal e um conversacional. Use como tema um comunicado real do seu trabalho ou área.",
+    placeholder: "Escreva o prompt que pede as duas versões com os tons definidos...",
+    examplePrompt:
+      "Escreva o mesmo comunicado em dois tons distintos sobre o lançamento de uma nova funcionalidade do produto:\n\nVersão 1 — Tom formal: linguagem corporativa, terceira pessoa, verbos no infinitivo, sem emojis.\nVersão 2 — Tom conversacional: primeira pessoa do plural, linguagem acessível, pode incluir 1-2 emojis, mais direto e próximo.\n\nConteúdo: lançamento da funcionalidade de relatórios automáticos, disponível a partir de [data] para planos Pro e Enterprise.",
+  },
+  {
+    // A2/4 — Multi-etapa
+    id: "pa-a2-4",
+    type: "prompt-application",
+    prompt: "Crie um pipeline de 3 prompts encadeados para transformar notas brutas de uma reunião em um e-mail de follow-up profissional.",
+    placeholder: "Prompt 1 - Extração: ...\nPrompt 2 - Síntese: ...\nPrompt 3 - Formatação final: ...",
+    examplePrompt:
+      "Prompt 1 - Extração: 'Analise as notas brutas da reunião abaixo e extraia: 1) decisões tomadas, 2) ações com responsável e prazo, 3) pontos em aberto.\n\n[NOTAS BRUTAS]'\n\nPrompt 2 - Síntese: 'Com base na extração acima, escreva um parágrafo executivo de 3-4 frases resumindo o propósito da reunião e os principais resultados.'\n\nPrompt 3 - Formatação: 'Compile o parágrafo executivo e os itens extraídos em um e-mail de follow-up com assunto, saudação, corpo estruturado (resumo + decisões + ações + próximos passos) e assinatura. Tom: direto e profissional.'",
+  },
+  {
+    // A2/5 — Avaliação de Respostas
+    id: "pa-a2-5",
+    type: "prompt-application",
+    prompt: "Escreva um prompt que instrua o modelo a avaliar sua própria resposta antes de entregá-la, evitando alucinações e respostas incompletas.",
+    placeholder: "Inclua no prompt: critérios de autoavaliação, o que fazer em caso de incerteza e como estruturar a resposta final...",
+    examplePrompt:
+      "Responda à pergunta abaixo. Antes de dar a resposta final, avalie internamente:\n1. Tenho certeza dos fatos que vou incluir? Se não, identifique explicitamente o que é incerto.\n2. A resposta cobre os pontos pedidos em termos de formato e extensão?\n3. Existe informação importante que estou omitindo?\n\nApós a autoavaliação, entregue: [AUTOAVALIAÇÃO RESUMIDA EM 2 FRASES] e depois [RESPOSTA FINAL].\n\nPergunta: [SUA PERGUNTA AQUI]",
+  },
+  {
+    // A2/6 — Refino Guiado por Dados
+    id: "pa-a2-6",
+    type: "prompt-application",
+    prompt: "Escreva um prompt que peça ao modelo para otimizar um prompt que você fornecer, identificando falhas e reescrevendo uma versão melhorada.",
+    placeholder: "Instrua o modelo a identificar problemas, reescrever a versão melhorada e explicar as mudanças...",
+    examplePrompt:
+      "Você é um especialista em engenharia de prompts. Analise o prompt abaixo e reescreva uma versão melhorada:\n1. Identifique o que está ambíguo ou faltando (contexto, restrições, formato, persona)\n2. Reescreva a versão otimizada mantendo o objetivo original\n3. Explique em 3-5 pontos o que mudou e por quê\n\nFormato de resposta:\n❌ Problema identificado: ...\n✅ Versão melhorada: ...\n📝 O que mudou: ...\n\nPrompt para otimizar: [SEU PROMPT AQUI]",
+  },
+  {
+    // A2/7 — Engenharia de Prompt (geral)
+    id: "pa-a2-7",
+    type: "prompt-application",
+    prompt: "Escreva um prompt profissional completo para uma tarefa real da sua área, aplicando todas as boas práticas de engenharia de prompt aprendidas (persona, contexto, ação, formato, restrições).",
+    placeholder: "Escreva um prompt completo e bem estruturado para uma tarefa real...",
+    examplePrompt:
+      "Contexto: Sou coordenador de marketing em uma startup de SaaS B2B com 50 clientes ativos.\nPapel: Aja como especialista em marketing de conteúdo focado em geração de demanda.\nAção: Crie um plano de conteúdo mensal para o blog da empresa.\nEspecificações: 4 artigos por mês, temas sobre produtividade e gestão, público-alvo são gestores de empresas de médio porte.\nFormato: Tabela com colunas — título, palavra-chave principal, objetivo (educar/converter/reter), canal de distribuição.\nRestrições: Sem artigos genéricos. Todos os temas com ângulo diferenciado. Nenhum tema repetido em relação aos últimos 3 meses.",
+  },
+  {
+    // A2/8 — Conheça os LLMs
+    id: "pa-a2-8",
+    type: "prompt-application",
+    prompt: "Escreva um prompt para pedir uma comparação técnica entre dois modelos de IA (ex.: Claude vs GPT-4o) para uma tarefa específica que você tem no trabalho ou estudos.",
+    placeholder: "Defina a tarefa específica, os critérios de comparação e o formato de resposta esperado...",
+    examplePrompt:
+      "Atue como consultor especialista em modelos de linguagem. Quero escolher entre Claude e GPT-4o para automatizar triagem de currículos no meu RH.\n\nCompare os dois modelos para esse caso de uso específico, avaliando:\n1. Capacidade de seguir critérios estruturados de avaliação\n2. Consistência em avaliações repetidas do mesmo currículo\n3. Custo estimado por 1.000 avaliações\n4. Facilidade de integração via API\n\nFormato: Tabela comparativa para os 4 critérios e, ao final, uma recomendação clara com justificativa.",
+  },
+];
+
+const promptAppA3: PromptApplicationActivity[] = [
+  {
+    // A3/0 — Prompts para Código
+    id: "pa-a3-0",
+    type: "prompt-application",
+    prompt: "Escreva um prompt completo para gerar uma função na linguagem de programação que você usa, com todos os detalhes necessários: linguagem, versão, assinatura, comportamento, exemplos de I/O e testes.",
+    placeholder: "Em [linguagem] [versão], escreva uma função chamada [...] que...",
+    examplePrompt:
+      "Em Python 3.12, escreva uma função chamada `filter_active_users(users: list[dict]) -> list[dict]` que:\n- Filtra usuários onde `status == 'active'` e `last_login` é dos últimos 30 dias\n- `last_login` vem no formato ISO 8601 (ex.: '2024-01-15T10:30:00Z')\n- Retorna a lista ordenada do mais recente ao mais antigo por `last_login`\n- Inclui docstring com parâmetros, retorno e exemplo de uso\n- Inclui 3 casos de teste com pytest: lista normal, lista vazia e todos inativos",
+  },
+  {
+    // A3/1 — Automação com IA
+    id: "pa-a3-1",
+    type: "prompt-application",
+    prompt: "Escreva um prompt pedindo ao modelo para criar o roteiro detalhado de uma automação que resolva uma tarefa repetitiva do seu trabalho, especificando a ferramenta (n8n, Zapier, Python etc.).",
+    placeholder: "Atue como especialista em automação com [ferramenta]. Quero automatizar [tarefa]...",
+    examplePrompt:
+      "Atue como especialista em automação com n8n. Quero automatizar a compilação de relatórios semanais de vendas que faço manualmente toda segunda de manhã.\n\nCrie um roteiro detalhado para um fluxo n8n que:\n1. Seja acionado toda segunda às 08:00\n2. Busque dados de vendas da semana anterior via API do CRM (endpoint: GET /api/sales?period=last_week)\n3. Calcule: total vendido, top 5 produtos e variação vs. semana anterior\n4. Formate como relatório em Markdown\n5. Envie por e-mail para a equipe via SendGrid\n\nDescreva cada node necessário, suas configurações principais e os pontos de falha mais prováveis com tratamento de erro.",
+  },
+  {
+    // A3/2 — Prompt para Negócios
+    id: "pa-a3-2",
+    type: "prompt-application",
+    prompt: "Escreva um prompt para gerar uma proposta comercial ou e-mail de vendas para um produto ou serviço que você conhece, com persona, contexto do cliente, formato e tom definidos.",
+    placeholder: "Aja como [persona]. Crie uma proposta/e-mail para [cliente/contexto]...",
+    examplePrompt:
+      "Aja como um consultor de vendas B2B com expertise em software de gestão. Crie uma proposta comercial para uma empresa de logística com 50 funcionários que atualmente usa planilhas para controlar estoque.\n\nA proposta deve:\n- Começar identificando o problema do cliente (planilhas = erro humano, sem visibilidade em tempo real)\n- Apresentar nossa solução com 3 benefícios mensuráveis (ex.: redução de X% em erros de inventário)\n- Incluir uma tabela de planos (Starter/Pro/Enterprise) com preços e funcionalidades\n- Terminar com uma chamada para ação para agendar demo\n\nTom: profissional mas próximo. Extensão: máximo 1 página A4.",
+  },
+  {
+    // A3/3 — Fluxos de Agentes
+    id: "pa-a3-3",
+    type: "prompt-application",
+    prompt: "Escreva um prompt de system prompt para um agente de IA especializado em uma tarefa específica da sua área, incluindo as ferramentas que ele pode usar e as condições de parada.",
+    placeholder: "Você é um agente especializado em [área]. Seu objetivo é [objetivo]. Ferramentas disponíveis: [...]. Você deve parar quando [condição]...",
+    examplePrompt:
+      "Você é um agente de suporte ao cliente especializado em resolver dúvidas sobre faturas e cobranças. Seu objetivo é resolver o problema do cliente em até 3 etapas.\n\nFerramentas disponíveis:\n- `get_invoice(customer_id, invoice_id)`: busca detalhes da fatura\n- `apply_discount(customer_id, percent)`: aplica desconto (máx. 20%)\n- `escalate_to_human(reason)`: escala para atendente humano\n\nRegras:\n- Sempre verifique a fatura antes de sugerir qualquer ação\n- Nunca aplique desconto sem verificar o histórico do cliente\n- Escale para humano se a solicitação envolver estorno acima de R$500\n- Responda em português, tom cordial e direto\n\nPare quando o cliente confirmar que o problema foi resolvido ou quando escalar para humano.",
+  },
+  {
+    // A3/4 — Avaliação e Métricas
+    id: "pa-a3-4",
+    type: "prompt-application",
+    prompt: "Escreva um prompt para criar um conjunto de métricas e critérios de avaliação para um sistema de IA que você usa ou quer construir.",
+    placeholder: "Defina métricas técnicas e de negócio para avaliar [sistema de IA]...",
+    examplePrompt:
+      "Atue como arquiteto de sistemas de IA. Quero medir a qualidade do meu chatbot de suporte ao cliente.\n\nDefina um framework de avaliação com:\n1. 3 métricas técnicas (ex.: latência, taxa de erro, taxa de escalação) com valores-alvo realistas\n2. 3 métricas de negócio (ex.: CSAT, tempo médio de resolução, taxa de recontato em 24h)\n3. Para cada métrica: fórmula de cálculo, fonte dos dados e frequência de medição\n4. Critérios de alerta: quando cada métrica indica problema crítico\n\nFormato: Tabela por categoria (técnica / negócio) com colunas: métrica, fórmula, meta, alerta.",
+  },
+  {
+    // A3/5 — Guardrails
+    id: "pa-a3-5",
+    type: "prompt-application",
+    prompt: "Escreva um system prompt com guardrails para um assistente de IA da sua área, definindo o que ele pode e não pode fazer, como lidar com pedidos fora do escopo e como escalar.",
+    placeholder: "Você é [nome do assistente]. Seu escopo é [área]. Você NUNCA deve... Quando o usuário pedir X, você deve...",
+    examplePrompt:
+      "Você é Lara, assistente virtual de uma clínica odontológica. Seu escopo é exclusivamente: agendamento de consultas, informações sobre tratamentos oferecidos e dúvidas sobre convênios aceitos.\n\nGuardrails:\n- NUNCA forneça diagnósticos ou orientações médicas/odontológicas — redirecione para 'Isso é uma dúvida para o seu dentista na consulta.'\n- NUNCA discuta preços sem antes verificar o convênio do paciente\n- Se o paciente relatar dor aguda ou emergência, instrua a ligar imediatamente para [número]\n- Fora do escopo (ex.: receitas, outros assuntos): 'Não consigo ajudar com isso, mas posso agendar uma consulta para você!'\n\nTom: Sempre acolhedor, nunca técnico demais. Use 'você' e não 'senhor/senhora'.",
+  },
+  {
+    // A3/6 — Projeto Final
+    id: "pa-a3-6",
+    type: "prompt-application",
+    prompt: "Escreva um prompt completo para o projeto de IA que você gostaria de construir — incluindo o problema a resolver, as funcionalidades principais, a persona do sistema e os critérios de sucesso.",
+    placeholder: "Descreva o problema, o sistema de IA que vai resolvê-lo e o que significa sucesso para você...",
+    examplePrompt:
+      "Quero construir um assistente de IA para triagem de currículos de uma startup de tecnologia.\n\nProblema: Recebo 200+ currículos por vaga e gasto 4h por semana em triagem manual.\n\nSystem prompt do assistente: 'Você é um assistente de RH especializado em triagem de currículos para vagas de tecnologia. Para cada currículo fornecido, avalie:\n1. Aderência à vaga (nota 1-5) com justificativa\n2. Top 3 pontos fortes do candidato\n3. Top 2 lacunas em relação ao requisitos\n4. Recomendação: AVANÇAR / AGUARDAR / DESCARTAR com motivo\n\nSeja objetivo. Não tome decisões baseadas em nome, gênero ou origem. Foque em habilidades e experiência relevantes.'\n\nCritérios de sucesso: reduzir tempo de triagem para 30min/semana com taxa de acerto >80% validada pelo RH.",
+  },
+];
+
 // Conteúdo por trilha → módulo (índice). Falta → DEFAULT_QUESTIONS.
 // Agora suporta LessonActivity[] (múltiplos tipos) em vez de apenas Question[]
 export const LESSONS: Record<TrackId, LessonActivity[][]> = {
   a1: [
-    a1Boas_vindas,                                                           // 0
-    [essayA1[0], ...a1OQueEPrompt, ...a1OQueEPromptExtra],                  // 1 ← essay revisa módulo 0
-    [essayA1[1], ...a1ContextoClareza, ...a1ContextoClareza_extra],         // 2 ← essay revisa módulo 1
-    [essayA1[2], ...a1PersonasRoles, ...a1PersonasExtra],                   // 3 ← essay revisa módulo 2
-    [essayA1[3], ...a1EstruturasPrompt, ...a1EstruturasExtra],              // 4 ← essay revisa módulo 3
-    [essayA1[4], ...a1FewShot, ...a1FewShotExtra],                          // 5 ← essay revisa módulo 4
-    [essayA1[5], ...a1RefinoIterativo, ...a1RefinoExtra],                   // 6 ← essay revisa módulo 5
+    [...a1Boas_vindas, promptAppA1[0]],                                      // 0
+    [essayA1[0], ...a1OQueEPrompt, ...a1OQueEPromptExtra, promptAppA1[1]],   // 1 ← essay revisa módulo 0
+    [essayA1[1], ...a1ContextoClareza, ...a1ContextoClareza_extra, promptAppA1[2]],  // 2
+    [essayA1[2], ...a1PersonasRoles, ...a1PersonasExtra, promptAppA1[3]],    // 3
+    [essayA1[3], ...a1EstruturasPrompt, ...a1EstruturasExtra, promptAppA1[4]], // 4
+    [essayA1[4], ...a1FewShot, ...a1FewShotExtra, promptAppA1[5]],           // 5
+    [essayA1[5], ...a1RefinoIterativo, ...a1RefinoExtra, promptAppA1[6]],    // 6
   ],
   a2: [
-    [...a2ChainOfThought, ...a2CotExtra],                                   // 0
-    [essayA2[0], ...a2Decomposicao, ...a2DecomposicaoExtra],                // 1 ← essay revisa módulo 0
-    [essayA2[1], ...a2Restricoes, ...a2RestricaoExtra],                     // 2 ← essay revisa módulo 1
-    [essayA2[2], ...a2EstiloTom, ...a2EstiloTomExtra],                      // 3 ← essay revisa módulo 2
-    [essayA2[3], ...a2MultiEtapa, ...a2MultiEtapaExtra],                    // 4 ← essay revisa módulo 3
-    [essayA2[4], ...a2AvaliacaoRespostas, ...a2AvaliacaoExtra],             // 5 ← essay revisa módulo 4
-    [essayA2[5], ...a2RefinoDados, ...a2RefinoDadosExtra],                  // 6 ← essay revisa módulo 5
-    [essayA2[6], ...engenhariaDePrompt],                                    // 7 ← essay revisa módulo 6
-    [essayA2[7], ...conhecaLLMs],                                           // 8 ← essay revisa módulo 7
+    [...a2ChainOfThought, ...a2CotExtra, promptAppA2[0]],                    // 0
+    [essayA2[0], ...a2Decomposicao, ...a2DecomposicaoExtra, promptAppA2[1]], // 1
+    [essayA2[1], ...a2Restricoes, ...a2RestricaoExtra, promptAppA2[2]],      // 2
+    [essayA2[2], ...a2EstiloTom, ...a2EstiloTomExtra, promptAppA2[3]],       // 3
+    [essayA2[3], ...a2MultiEtapa, ...a2MultiEtapaExtra, promptAppA2[4]],     // 4
+    [essayA2[4], ...a2AvaliacaoRespostas, ...a2AvaliacaoExtra, promptAppA2[5]], // 5
+    [essayA2[5], ...a2RefinoDados, ...a2RefinoDadosExtra, promptAppA2[6]],   // 6
+    [essayA2[6], ...engenhariaDePrompt, promptAppA2[7]],                     // 7
+    [essayA2[7], ...conhecaLLMs, promptAppA2[8]],                            // 8
   ],
   a3: [
-    [...a3PromptsCodigo, ...a3CodigoExtra],                                 // 0
-    [essayA3[0], ...a3AutomacaoIA, ...a3AutomacaoExtra],                    // 1 ← essay revisa módulo 0
-    [essayA3[1], ...a3PromptNegocios, ...a3NegociosExtra],                  // 2 ← essay revisa módulo 1
-    [essayA3[2], ...a3FluxosAgentes, ...a3FluxosExtra],                     // 3 ← essay revisa módulo 2
-    [essayA3[3], ...a3AvaliacaoMetricas, ...a3MetricasExtra],               // 4 ← essay revisa módulo 3
-    [essayA3[4], ...a3Guardrails, ...a3GuardrailsExtra],                    // 5 ← essay revisa módulo 4
-    [essayA3[5], ...a3ProjetoFinal, ...a3ProjetoFinalExtra],                // 6 ← essay revisa módulo 5
+    [...a3PromptsCodigo, ...a3CodigoExtra, promptAppA3[0]],                  // 0
+    [essayA3[0], ...a3AutomacaoIA, ...a3AutomacaoExtra, promptAppA3[1]],     // 1
+    [essayA3[1], ...a3PromptNegocios, ...a3NegociosExtra, promptAppA3[2]],   // 2
+    [essayA3[2], ...a3FluxosAgentes, ...a3FluxosExtra, promptAppA3[3]],      // 3
+    [essayA3[3], ...a3AvaliacaoMetricas, ...a3MetricasExtra, promptAppA3[4]], // 4
+    [essayA3[4], ...a3Guardrails, ...a3GuardrailsExtra, promptAppA3[5]],     // 5
+    [essayA3[5], ...a3ProjetoFinal, ...a3ProjetoFinalExtra, promptAppA3[6]], // 6
     [essayA3[6], ...aplicandoAgents],                          // 7 ← essay revisa módulo 6
     [essayA3[7], ...usandoOpenRouter],                         // 8 ← essay revisa módulo 7
     [essayA3[8], ...modelosLocais],                            // 9 ← essay revisa módulo 8

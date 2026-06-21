@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { advanceModule, type TrackId } from "@/lib/moduleProgress";
-import { getActivities, getProofTask, TRACK_TOTALS, isMatch, isOrder, isEssay } from "@/lib/lessonContent";
+import { getActivities, getProofTask, TRACK_TOTALS, isMatch, isOrder, isEssay, isPromptApplication } from "@/lib/lessonContent";
 import type { LessonActivity } from "@/lib/lessonContent";
 import { ActivityRenderer } from "@/components/activities/ActivityRenderer";
 import { scopedKey } from "@/lib/userScope";
@@ -49,12 +49,12 @@ export default function LessonPage() {
   const finished = step >= ACTIVITIES.length;
   const currentActivity = ACTIVITIES[step] as LessonActivity | undefined;
   const answered = selected !== null || !!matchOrderAnswers[step];
-  const isCurrentEssay = currentActivity ? isEssay(currentActivity) : false;
+  const isCurrentEssay = currentActivity ? (isEssay(currentActivity) || isPromptApplication(currentActivity)) : false;
   const isLast = step === ACTIVITIES.length - 1;
 
-  // Score: essays sempre contam 1 se respondidas; match/order por pares; MC/fill-blank por correct
+  // Score: essays e prompt-application sempre contam 1 se respondidas; match/order por pares; MC/fill-blank por correct
   const score = ACTIVITIES.reduce((acc, activity, i) => {
-    if (isEssay(activity)) {
+    if (isEssay(activity) || isPromptApplication(activity)) {
       return answers[activity.id] ? acc + 1 : acc
     }
     if (isMatch(activity) || isOrder(activity)) {
@@ -339,7 +339,9 @@ export default function LessonPage() {
             </button>
           ) : (
             <div className="flex w-full items-center justify-center gap-2 rounded-2xl bg-stroke-light py-4 text-sm font-extrabold uppercase tracking-wide text-neutral pointer-events-none">
-              {isCurrentEssay
+              {currentActivity && isPromptApplication(currentActivity)
+                ? "Escreva seu prompt para continuar"
+                : isCurrentEssay
                 ? "Escreva sua resposta para continuar"
                 : isMatch(currentActivity!) || isOrder(currentActivity!)
                 ? "Conecte todos os itens para continuar"
