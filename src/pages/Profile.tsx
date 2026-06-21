@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
-import { Settings, ChevronRight, Zap, BookOpen, Edit2, Heart, Crown, Flame } from "lucide-react"
+import {
+  Settings, ChevronRight, Zap, BookOpen, Edit2, Heart, Crown, Flame,
+  Lock, Award, GraduationCap, Trophy, Target, Sparkles, Globe, Star,
+  Users, Map, User,
+} from "lucide-react"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { BottomNav } from "@/components/BottomNav"
 import { useAuth } from "@/hooks/useAuth"
@@ -12,6 +16,25 @@ import { getLocalXP, getLevel, getLevelProgress } from "@/lib/xp"
 import { getLevelTitle } from "@/lib/levelTitles"
 import { usePremium } from "@/components/PremiumProvider"
 import { cn } from "@/lib/utils"
+
+const ACHIEVEMENT_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  BookOpen, GraduationCap, Trophy, Target, Award, Zap, Sparkles, Heart, Globe, Star,
+}
+
+const CERTIFICATES = [
+  {
+    id: "a1",
+    title: "Engenharia de Prompts para Iniciantes",
+    hours: 4,
+    trailLabel: "Trilha A1",
+  },
+  {
+    id: "a2",
+    title: "Criatividade com IA",
+    hours: 3,
+    trailLabel: "Trilha A2",
+  },
+]
 
 function StatCard({
   value,
@@ -36,7 +59,7 @@ function StatCard({
 export default function Profile() {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { unlocked, data } = useAchievements()
+  const { allAchievements, unlocked, data } = useAchievements()
   const { isPremium, toggle } = usePremium()
 
   const [avatarImage, setAvatarImage] = useState("/assets/avatar-cat.png")
@@ -220,6 +243,101 @@ export default function Profile() {
           </div>
 
         </div>
+
+        {/* CONQUISTAS */}
+        <div className="flex flex-col gap-3 pt-2">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-extrabold uppercase tracking-wider text-primary-dark">
+              Conquistas
+            </h2>
+            <Link
+              to="/achievements"
+              className="text-xs font-bold text-emerald"
+            >
+              Ver tudo &rsaquo;
+            </Link>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {allAchievements.slice(0, 5).map((ach) => {
+              const isUnlocked = unlocked.includes(ach.id)
+              const IconComp = ACHIEVEMENT_ICON_MAP[ach.icon]
+              return (
+                <div key={ach.id} className="flex flex-shrink-0 flex-col items-center gap-1.5">
+                  <div
+                    className="flex h-14 w-14 items-center justify-center transition-opacity duration-200"
+                    style={{
+                      clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                      backgroundColor: isUnlocked ? "#1E5631" : "#D1D5DB",
+                    }}
+                  >
+                    {isUnlocked
+                      ? IconComp && <IconComp className="h-5 w-5 text-white" />
+                      : <Lock className="h-4 w-4 text-white/60" />
+                    }
+                  </div>
+                  <span className="w-16 text-center text-[10px] font-semibold leading-tight text-foregroundMuted line-clamp-2">
+                    {ach.title}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* CERTIFICADOS */}
+        <div className="flex flex-col gap-3 pt-2">
+          <h2 className="text-xs font-extrabold uppercase tracking-wider text-primary-dark">
+            Certificados
+          </h2>
+
+          <div className="flex flex-col gap-2">
+            {CERTIFICATES.map((cert) => (
+              <Link
+                key={cert.id}
+                to="/certificate"
+                state={{ courseName: cert.title, hours: cert.hours }}
+                className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 transition-all active:scale-[0.98] dark:border-amber-800 dark:bg-amber-950/30"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-400">
+                  <Award className="h-5 w-5 text-white" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold leading-snug text-primary-dark">{cert.title}</p>
+                  <p className="text-xs text-foregroundMuted">
+                    {cert.hours}h &middot; Conclua a {cert.trailLabel} para emitir
+                  </p>
+                </div>
+                <ChevronRight className="h-4 w-4 shrink-0 text-foregroundMuted" />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Quick links grid */}
+        <div className="grid grid-cols-2 gap-3 pt-2 pb-4">
+          {([
+            { label: "Avatares",   sub: "Customize",    icon: User,   href: "/avatars"   },
+            { label: "Comunidade", sub: "Conecte-se",   icon: Users,  href: "/community" },
+            { label: "Ranking",    sub: "Hall da Fama", icon: Trophy, href: "/ranking"   },
+            { label: "Roadmap",    sub: "O que vem aí", icon: Map,    href: "/roadmap"   },
+          ] as const).map(({ label, sub, icon: Icon, href }) => (
+            <Link
+              key={label}
+              to={href}
+              className="flex items-center gap-3 rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+            >
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-soft">
+                <Icon className="h-4 w-4 text-emerald" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-primary-dark">{label}</p>
+                <p className="text-xs text-foregroundMuted">{sub}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+
       </div>
 
       <BottomNav active="perfil" />
