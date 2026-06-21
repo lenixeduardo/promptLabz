@@ -7,7 +7,7 @@ export type NavTab = "home" | "trilha" | "lab" | "ranking" | "perfil"
 const NAV_ITEMS = [
   { key: "home" as const,    label: "Início",      icon: Icons.Home,         path: "/home" },
   { key: "trilha" as const,  label: "Trilha",      icon: Icons.Scissors,     path: "/learn" },
-  { key: "lab" as const,     label: "Laboratório", icon: Icons.FlaskConical, path: "/prompts" },
+  { key: "lab" as const,     label: "Laboratório", icon: Icons.FlaskConical, path: "/lab" },
   { key: "ranking" as const, label: "Ranking",     icon: Icons.Trophy,       path: "/ranking" },
   { key: "perfil" as const,  label: "Perfil",      icon: Icons.UserCircle,   path: "/profile" },
 ]
