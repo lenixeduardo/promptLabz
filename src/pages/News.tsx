@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { AppBottomNav } from "@/components/AppBottomNav"
 import {
   NEWS_ARTICLES,
@@ -43,69 +43,141 @@ function mapDbArticle(row: DbNewsArticle): NewsArticle {
   }
 }
 
-function NewsCard({ article }: { article: NewsArticle }) {
+function NewsCard({ article, onClick }: { article: NewsArticle; onClick: () => void }) {
   const [imgError, setImgError] = useState(false)
   const coverSrc = imgError ? CATEGORY_COVER_IMAGES[article.category] : article.imageUrl
 
-  const cardContent = (
-    <div className="overflow-hidden rounded-2xl border border-stroke-muted bg-white">
-      {/* Cover image */}
-      <div className="relative h-44 w-full overflow-hidden bg-pageBgLight">
-        <img
-          src={coverSrc}
-          alt={article.title}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          onError={() => setImgError(true)}
-          loading="lazy"
-        />
-        {/* Gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        {/* Category badge over image */}
-        <span
-          className={cn(
-            "absolute left-3 top-3 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide backdrop-blur-sm",
-            CATEGORY_STYLES[article.category],
-          )}
-        >
-          {article.category}
-        </span>
-      </div>
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group block w-full text-left"
+      aria-label={article.title}
+    >
+      <div className="overflow-hidden rounded-2xl border border-stroke-muted bg-white transition-shadow duration-200 group-hover:shadow-md group-active:scale-[0.99]">
+        {/* Cover image */}
+        <div className="relative h-44 w-full overflow-hidden bg-pageBgLight">
+          <img
+            src={coverSrc}
+            alt={article.title}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={() => setImgError(true)}
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+          <span
+            className={cn(
+              "absolute left-3 top-3 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide backdrop-blur-sm",
+              CATEGORY_STYLES[article.category],
+            )}
+          >
+            {article.category}
+          </span>
+        </div>
 
-      {/* Content */}
-      <div className="flex flex-col gap-1.5 p-4">
-        <p className="text-sm font-bold leading-snug text-foregroundDark line-clamp-2">
-          {article.title}
-        </p>
-        <p className="line-clamp-2 text-xs leading-relaxed text-foregroundTertiary">
-          {article.description}
-        </p>
-        <div className="mt-1 flex items-center justify-between">
-          <span className="text-[10px] text-foregroundPlaceholder">{article.date}</span>
-          {article.sourceUrl && (
+        {/* Content */}
+        <div className="flex flex-col gap-1.5 p-4">
+          <p className="text-sm font-bold leading-snug text-foregroundDark line-clamp-2">
+            {article.title}
+          </p>
+          <p className="line-clamp-2 text-xs leading-relaxed text-foregroundTertiary">
+            {article.description}
+          </p>
+          <div className="mt-1 flex items-center justify-between">
+            <span className="text-[10px] text-foregroundPlaceholder">{article.date}</span>
             <span className="text-[10px] font-medium text-emerald-600">
-              Ler artigo →
+              {article.sourceUrl ? "Ler artigo →" : "Ver mais →"}
             </span>
+          </div>
+        </div>
+      </div>
+    </button>
+  )
+}
+
+function NewsModal({ article, onClose }: { article: NewsArticle; onClose: () => void }) {
+  const [imgError, setImgError] = useState(false)
+  const coverSrc = imgError ? CATEGORY_COVER_IMAGES[article.category] : article.imageUrl
+
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.target === e.currentTarget) onClose()
+    },
+    [onClose],
+  )
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    document.addEventListener("keydown", handleKey)
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.removeEventListener("keydown", handleKey)
+      document.body.style.overflow = ""
+    }
+  }, [onClose])
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center"
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-label={article.title}
+    >
+      <div className="relative w-full max-w-lg overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:rounded-3xl">
+        {/* Close button */}
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition-opacity hover:bg-black/60"
+          aria-label="Fechar"
+        >
+          ✕
+        </button>
+
+        {/* Cover image */}
+        <div className="relative h-56 w-full overflow-hidden bg-pageBgLight">
+          <img
+            src={coverSrc}
+            alt={article.title}
+            className="h-full w-full object-cover"
+            onError={() => setImgError(true)}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+          <span
+            className={cn(
+              "absolute left-4 bottom-4 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide backdrop-blur-sm",
+              CATEGORY_STYLES[article.category],
+            )}
+          >
+            {article.category}
+          </span>
+        </div>
+
+        {/* Content */}
+        <div className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto p-5">
+          <p className="text-base font-bold leading-snug text-foregroundDark">
+            {article.title}
+          </p>
+          <span className="text-[11px] text-foregroundPlaceholder">{article.date}</span>
+          <p className="text-sm leading-relaxed text-foregroundTertiary">
+            {article.description}
+          </p>
+
+          {article.sourceUrl && (
+            <a
+              href={article.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 flex w-full items-center justify-center rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            >
+              Ler artigo completo →
+            </a>
           )}
         </div>
       </div>
     </div>
   )
-
-  if (article.sourceUrl) {
-    return (
-      <a
-        href={article.sourceUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block"
-        aria-label={article.title}
-      >
-        {cardContent}
-      </a>
-    )
-  }
-
-  return <div className="group">{cardContent}</div>
 }
 
 function NewsCardSkeleton() {
@@ -125,6 +197,7 @@ export default function News() {
   const [activeCategory, setActiveCategory] = useState<"Todos" | NewsCategory>("Todos")
   const [articles, setArticles] = useState<NewsArticle[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null)
 
   useEffect(() => {
     getNewsArticles().then(({ data }) => {
@@ -180,9 +253,19 @@ export default function News() {
             <p className="text-sm font-medium text-foregroundTertiary">Nenhuma notícia nessa categoria.</p>
           </div>
         ) : (
-          filtered.map((article) => <NewsCard key={article.id} article={article} />)
+          filtered.map((article) => (
+            <NewsCard
+              key={article.id}
+              article={article}
+              onClick={() => setSelectedArticle(article)}
+            />
+          ))
         )}
       </div>
+
+      {selectedArticle && (
+        <NewsModal article={selectedArticle} onClose={() => setSelectedArticle(null)} />
+      )}
 
       <AppBottomNav />
     </div>
