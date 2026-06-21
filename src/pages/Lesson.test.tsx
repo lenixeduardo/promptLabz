@@ -15,10 +15,9 @@ vi.mock("@/lib/userScope", () => ({
   getUserId: vi.fn().mockReturnValue("user-1"),
 }))
 
-// DEFAULT_QUESTIONS for a1, module 0: 3 questions
-// q1 correct = "b", q2 correct = "b", q3 correct = "b"
-const Q1_PROMPT = "Qual desses prompts daria o melhor resultado?"
-const Q1_OPT_B = "Atue como copywriter sênior e escreva um anúncio de Instagram"
+// a1Boas_vindas for track=a1, module=0: 3 questions, all correct = "b"
+const Q1_PROMPT = "O que é o PromptLabz?"
+const Q1_OPT_B = "Uma trilha de aprendizado prática para você dominar a arte de escrever prompts"
 
 function renderLesson(url = "/lesson?track=a1&module=0") {
   return render(
@@ -61,9 +60,9 @@ describe("Lesson — fluxo de aprendizado", () => {
 
   it("mostra feedback negativo ao errar a resposta", () => {
     renderLesson()
-    // Click on option A (wrong answer for q1)
+    // Click on option A (wrong answer for q1 — a1bv0)
     const optionA = screen.getAllByRole("button").find(
-      (el) => el.textContent?.includes("Escreva um texto sobre marketing")
+      (el) => el.textContent?.includes("Uma plataforma para treinar modelos de IA do zero")
     )
     expect(optionA).toBeTruthy()
     fireEvent.click(optionA!)
@@ -92,11 +91,11 @@ describe("Lesson — fluxo de aprendizado", () => {
 
   it("exibe tela de resultado após completar todas as perguntas", async () => {
     renderLesson()
-    // Answer all 3 questions correctly
+    // Answer all 3 questions correctly (a1Boas_vindas — all correct = option "b")
     const answers = [
       Q1_OPT_B,
-      "Aprendizado com poucos exemplos",
-      "Atribuição de papel",
+      "Escrever prompts claros, específicos e eficazes",
+      "prompts bem escritos multiplicam sua produtividade",
     ]
     for (let i = 0; i < answers.length; i++) {
       const btn = screen.getAllByRole("button").find((el) => el.textContent?.includes(answers[i]))
@@ -118,17 +117,17 @@ describe("Lesson — fluxo de aprendizado", () => {
 
   it("exibe 'Boa tentativa!' ao errar alguma pergunta", async () => {
     renderLesson()
-    // Answer q1 wrong (option A)
-    const wrongBtn = screen.getAllByRole("button").find((el) => el.textContent?.includes("Escreva um texto sobre marketing"))
+    // Answer q1 wrong (option A — a1bv0)
+    const wrongBtn = screen.getAllByRole("button").find((el) => el.textContent?.includes("Uma plataforma para treinar modelos de IA do zero"))
     fireEvent.click(wrongBtn!)
     fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
 
-    // Answer rest correctly
-    let btn = screen.getAllByRole("button").find((el) => el.textContent?.includes("Aprendizado com poucos exemplos"))
+    // Answer rest correctly (a1bv1 and a1bv2)
+    let btn = screen.getAllByRole("button").find((el) => el.textContent?.includes("Escrever prompts claros, específicos e eficazes"))
     fireEvent.click(btn!)
     fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
 
-    btn = screen.getAllByRole("button").find((el) => el.textContent?.includes("Atribuição de papel"))
+    btn = screen.getAllByRole("button").find((el) => el.textContent?.includes("prompts bem escritos multiplicam sua produtividade"))
     fireEvent.click(btn!)
     fireEvent.click(screen.getByRole("button", { name: /Ver resultado/i }))
 

@@ -10,25 +10,22 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  if (import.meta.env.VITE_PREVIEW_MODE === 'true') {
-    const mockUser = {
-      id: 'preview-user', aud: 'authenticated', role: 'authenticated',
-      email: 'preview@promptlabz.com', created_at: '', updated_at: '',
-      app_metadata: {}, user_metadata: { name: 'Aluno Preview' },
-    } as User
-    return (
-      <AuthContext.Provider value={{ user: mockUser, loading: false, error: null }}>
-        {children}
-      </AuthContext.Provider>
-    )
-  }
+const IS_PREVIEW = import.meta.env.VITE_PREVIEW_MODE === "true"
 
+const PREVIEW_USER = {
+  id: "preview-user", aud: "authenticated", role: "authenticated",
+  email: "preview@promptlabz.com", created_at: "", updated_at: "",
+  app_metadata: {}, user_metadata: { name: "Aluno Preview" },
+} as User
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(!IS_PREVIEW)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (IS_PREVIEW) return
+
     supabase.auth
       .getSession()
       .then(({ data: { session }, error: sessionError }) => {
@@ -55,7 +52,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, loading, error }}>
+    <AuthContext.Provider value={{
+      user: IS_PREVIEW ? PREVIEW_USER : user,
+      loading: IS_PREVIEW ? false : loading,
+      error: IS_PREVIEW ? null : error,
+    }}>
       {children}
     </AuthContext.Provider>
   )
