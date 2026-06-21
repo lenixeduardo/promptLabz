@@ -85,11 +85,7 @@ export function buildCertificateHtml(
 ">
   <img src="${frame}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:1;"/>
   <div style="position:absolute;top:110px;left:90px;right:90px;bottom:130px;display:flex;flex-direction:column;align-items:center;text-align:center;z-index:2;">
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div style="width:30px;height:30px;border-radius:7px;background:#0f3d24;color:#ffffff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;">AI</div>
-      <div style="font-weight:700;font-size:22px;color:#0f3d24;">PromptLabz</div>
-    </div>
-    <div style="margin-top:45px;font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:64px;line-height:1;color:#0f3d24;">Certificado</div>
+    <div style="margin-top:0px;font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:64px;line-height:1;color:#0f3d24;">Certificado</div>
     <div style="margin-top:4px;font-family:'Playfair Display',Georgia,serif;font-weight:500;font-style:italic;font-size:26px;color:#2e7d4e;">de Conquista</div>
     <div style="margin-top:28px;font-weight:500;font-size:15px;color:#6b7f72;">Parabéns,</div>
     <div style="margin-top:8px;font-weight:700;font-size:30px;color:#2e7d4e;">${escapeHtml(data.recipient)}</div>
@@ -110,21 +106,21 @@ export function buildCertificateHtml(
         <div style="margin-top:4px;font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:17px;color:#0f3d24;">${escapeHtml(data.hours)}</div>
       </div>
     </div>
-    <img src="${mascot}" alt="" style="margin-top:18px;width:290px;height:auto;object-fit:contain;"/>
+    <img src="${mascot}" alt="" style="margin-top:8px;width:280px;height:auto;object-fit:contain;"/>
     <div style="flex:1;"></div>
-    <div style="width:100%;display:flex;align-items:flex-end;justify-content:space-between;padding:0 6px;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <img src="${qr}" alt="" style="width:64px;height:64px;"/>
+    <div style="width:100%;display:flex;align-items:flex-end;justify-content:space-between;padding:0 6px;gap:12px;">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <img src="${qr}" alt="" style="width:58px;height:58px;"/>
         <div style="text-align:left;">
-          <div style="font-size:11px;color:#1f2a23;font-weight:600;">Verifique a autenticidade</div>
-          <div style="font-size:10px;color:#6b7f72;margin-top:2px;">ID: ${escapeHtml(data.id)}</div>
+          <div style="font-size:10px;color:#1f2a23;font-weight:600;">Verifique</div>
+          <div style="font-size:9px;color:#6b7f72;margin-top:1px;">ID: ${escapeHtml(data.id)}</div>
         </div>
       </div>
       <div style="text-align:right;">
-        <div style="font-family:'Dancing Script','Brush Script MT',cursive;font-weight:700;font-size:38px;color:#0f3d24;line-height:1;">PromptLabz</div>
-        <div style="margin-top:2px;width:170px;margin-left:auto;border-top:1px solid #2e7d4e;opacity:0.5;"></div>
-        <div style="margin-top:4px;font-weight:700;font-size:12px;color:#0f3d24;">PromptLabz</div>
-        <div style="font-size:10px;color:#6b7f72;margin-top:1px;">Seu laboratório de ideias com IA</div>
+        <div style="font-family:'Dancing Script','Brush Script MT',cursive;font-weight:700;font-size:32px;color:#0f3d24;line-height:1;">PromptLabz</div>
+        <div style="margin-top:1px;width:140px;margin-left:auto;border-top:1px solid #2e7d4e;opacity:0.5;"></div>
+        <div style="margin-top:2px;font-weight:700;font-size:11px;color:#0f3d24;">PromptLabz</div>
+        <div style="font-size:8px;color:#6b7f72;margin-top:0px;">Seu laboratório com IA</div>
       </div>
     </div>
   </div>
