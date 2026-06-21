@@ -289,13 +289,29 @@ export async function getLeaderboard(limit = 20): Promise<DbResult<LeaderboardEn
     const { data, error } = await supabase
       .from("users")
       .select("id,full_name,avatar_url,xp")
-      .not("xp", "is", null)
+      .gt("xp", 0)
       .order("xp", { ascending: false })
       .limit(limit)
     if (error) throw error
     return { data: data as LeaderboardEntry[], error: null }
   } catch (err) {
     return { data: null, error: getErrorMessage(err, "Erro ao carregar ranking") }
+  }
+}
+
+export async function updateUserXP(userId: string, xp: number, gems?: number): Promise<DbResult<void>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const payload: { xp: number; gems?: number } = { xp }
+    if (gems !== undefined) payload.gems = gems
+    const { error } = await supabase
+      .from("users")
+      .update(payload)
+      .eq("id", userId)
+    if (error) throw error
+    return { data: null, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao sincronizar XP") }
   }
 }
 
