@@ -1,10 +1,11 @@
 import { Lightbulb } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { LessonActivity, FillBlankActivity, MatchActivity, OrderActivity, Question } from "@/lib/lessonContent"
-import { isFillBlank, isMatch, isOrder } from "@/lib/lessonContent"
+import { isFillBlank, isMatch, isOrder, isEssay } from "@/lib/lessonContent"
 import { FillBlankCard } from "./FillBlankCard"
 import { MatchCard } from "./MatchCard"
 import { OrderCard } from "./OrderCard"
+import { EssayCard, EssayBadge } from "./EssayCard"
 
 interface Props {
   activity: LessonActivity
@@ -15,6 +16,7 @@ interface Props {
   onSelect: (id: string) => void
   onMatchAnswer: (pairs: Record<string, string>) => void
   onOrderAnswer: (pairs: Record<string, string>) => void
+  onEssayAnswer: (text: string) => void
 }
 
 export function ActivityRenderer({
@@ -26,7 +28,32 @@ export function ActivityRenderer({
   onSelect,
   onMatchAnswer,
   onOrderAnswer,
+  onEssayAnswer,
 }: Props) {
+  if (isEssay(activity)) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="mb-1 flex items-center gap-2">
+          <EssayBadge />
+          <span className="text-[11px] font-semibold text-foreground-tertiary">
+            {step + 1} de {total}
+          </span>
+        </div>
+        <div className="mb-2 flex items-start gap-3">
+          <img
+            src="/assets/mascot-teacher.png"
+            alt=""
+            className="h-14 w-14 shrink-0 object-contain"
+          />
+          <div className="relative rounded-2xl rounded-tl-none border-2 border-amber-200 bg-amber-50 px-4 py-3 shadow-sm">
+            <p className="text-sm font-bold text-foreground-dark">{activity.prompt}</p>
+          </div>
+        </div>
+        <EssayCard activity={activity} answered={answered} onAnswer={onEssayAnswer} />
+      </div>
+    )
+  }
+
   const activityType = isFillBlank(activity) ? "fill-blank"
     : isMatch(activity) ? "match"
     : isOrder(activity) ? "order"

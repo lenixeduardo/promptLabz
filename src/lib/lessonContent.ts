@@ -2,7 +2,16 @@ import type { TrackId } from "@/lib/moduleProgress";
 
 // ── Tipos de atividade ─────────────────────────────────────────────────
 
-export type ActivityType = "multiple-choice" | "fill-blank" | "match" | "order";
+export type ActivityType = "multiple-choice" | "fill-blank" | "match" | "order" | "essay";
+
+/** Questão dissertativa — resposta livre com gabarito de referência */
+export type EssayActivity = {
+  id: string;
+  type: "essay";
+  prompt: string;
+  placeholder?: string;
+  referenceAnswer: string;
+};
 
 /** Multiple choice (existente) */
 export type Question = {
@@ -45,7 +54,7 @@ export type OrderActivity = {
   explanation: string;
 };
 
-export type LessonActivity = Question | FillBlankActivity | MatchActivity | OrderActivity;
+export type LessonActivity = Question | FillBlankActivity | MatchActivity | OrderActivity | EssayActivity;
 
 // ── Guards ─────────────────────────────────────────────────────────────
 export function isFillBlank(a: LessonActivity): a is FillBlankActivity {
@@ -56,6 +65,9 @@ export function isMatch(a: LessonActivity): a is MatchActivity {
 }
 export function isOrder(a: LessonActivity): a is OrderActivity {
   return (a as OrderActivity).type === "order";
+}
+export function isEssay(a: LessonActivity): a is EssayActivity {
+  return (a as EssayActivity).type === "essay";
 }
 // ── Atividades dos novos tipos ─────────────────────────────────────────
 
@@ -1614,6 +1626,191 @@ const a3ProjetoFinal: Question[] = [
   },
 ];
 
+// ── Questões dissertativas — revisão da aula anterior ─────────────────────
+// Cada array contém 1 questão colocada no INÍCIO do módulo N que revisa o N-1.
+
+// A1
+const essayA1: EssayActivity[] = [
+  // [1] revisa boas-vindas (módulo 0)
+  { id: "essay-a1-1", type: "essay",
+    prompt: "Com base na aula de boas-vindas: por que a habilidade de escrever bons prompts é considerada valiosa hoje? Explique com suas palavras.",
+    placeholder: "Escreva pelo menos 2 frases com sua reflexão...",
+    referenceAnswer: "Prompts bem escritos multiplicam a produtividade porque permitem obter resultados precisos e úteis da IA sem precisar saber programar. Pequenas mudanças no prompt geram grandes diferenças na qualidade da resposta — é a habilidade mais acessível para usar IA no dia a dia de forma profissional." },
+  // [2] revisa "O que é um prompt" (módulo 1)
+  { id: "essay-a1-2", type: "essay",
+    prompt: "O que é um prompt? Descreva com suas palavras e explique a diferença entre um prompt vago e um prompt eficaz.",
+    placeholder: "Escreva sua definição e dê um exemplo de cada...",
+    referenceAnswer: "Um prompt é a instrução ou pergunta que você envia a um modelo de linguagem para obter uma resposta. Um prompt vago ('Escreva sobre marketing') gera respostas genéricas. Um eficaz tem objetivo claro, contexto relevante e instrução específica — isso elimina ambiguidade e guia o modelo ao resultado desejado." },
+  // [3] revisa "Contexto & clareza" (módulo 2)
+  { id: "essay-a1-3", type: "essay",
+    prompt: "Por que adicionar contexto a um prompt melhora a qualidade da resposta da IA? Dê um exemplo prático do seu contexto de trabalho ou estudo.",
+    placeholder: "Pense em uma situação real onde você usaria a IA...",
+    referenceAnswer: "O modelo não conhece você nem sua situação. Fornecer contexto (quem você é, para que serve, qual o público) personaliza a resposta para o seu cenário. Ex.: 'Contexto: sou professor do ensino médio, criei uma atividade de biologia. Resuma em linguagem acessível para alunos de 15 anos.' é muito mais eficaz do que 'Resuma este texto.'." },
+  // [4] revisa "Personas e papéis" (módulo 3)
+  { id: "essay-a1-4", type: "essay",
+    prompt: "O que é role prompting e como a atribuição de uma persona específica muda a qualidade da resposta? Dê um exemplo.",
+    placeholder: "Explique com um exemplo concreto de persona...",
+    referenceAnswer: "Role prompting é pedir ao modelo que assuma uma persona ('Aja como um médico pediatra'). Isso calibra vocabulário, nível técnico, tom e perspectiva. Ex.: 'Aja como um diretor de marketing de uma startup' gera conteúdo com linguagem de growth hacking, KPIs e funil de vendas — muito diferente de uma resposta genérica sobre marketing." },
+  // [5] revisa "Estruturas de prompt" (módulo 4)
+  { id: "essay-a1-5", type: "essay",
+    prompt: "Descreva o framework CRAFT com suas palavras. Qual elemento você considera mais importante e por quê?",
+    placeholder: "Explique cada letra do CRAFT e justifique sua escolha...",
+    referenceAnswer: "CRAFT = Contexto (situação), Role/Papel (persona), Ação (o que fazer), Formato (como estruturar a saída), Tom (estilo da escrita). O Formato costuma ser subestimado mas é crítico: especificar JSON, lista ou tabela elimina retrabalho de reformatação. Sem formato, o modelo decide por você — e quase nunca é o que você precisava." },
+  // [6] revisa "Few-shot" (módulo 5)
+  { id: "essay-a1-6", type: "essay",
+    prompt: "O que é few-shot prompting? Quando você o usaria em vez de apenas descrever o formato desejado em palavras?",
+    placeholder: "Explique a técnica e o cenário ideal de uso...",
+    referenceAnswer: "Few-shot prompting fornece ao modelo exemplos concretos de entrada/saída para que ele aprenda o padrão desejado. É preferível a uma descrição textual quando o formato é complexo ou sutil — como um estilo de escrita específico, uma estrutura de dados não-padrão ou um tom difícil de descrever. Mostrar é mais eficaz do que explicar em palavras." },
+]
+
+// A2
+const essayA2: EssayActivity[] = [
+  // [1] revisa "Chain-of-thought" (A2 módulo 0)
+  { id: "essay-a2-1", type: "essay",
+    prompt: "O que é chain-of-thought (cadeia de raciocínio)? Qual frase no prompt o ativa e em que tipo de tarefa ele tem mais impacto?",
+    placeholder: "Explique o conceito e dê um exemplo de tarefa...",
+    referenceAnswer: "Chain-of-thought é uma técnica que instrui o modelo a pensar passo a passo antes de responder. A frase 'Pense passo a passo' é a forma mais simples de ativá-lo. Tem mais impacto em tarefas que exigem raciocínio multietapa: matemática, lógica, análise de código e diagnósticos — onde pular etapas gera erros." },
+  // [2] revisa "Decomposição de tarefas" (A2 módulo 1)
+  { id: "essay-a2-2", type: "essay",
+    prompt: "Por que quebrar uma tarefa complexa em prompts menores produz resultados melhores? Dê um exemplo de como você decomporia uma tarefa grande.",
+    placeholder: "Pense em uma tarefa do seu dia a dia e como dividi-la...",
+    referenceAnswer: "Tarefas complexas em um único prompt causam 'instrução esquecida' — o modelo perde foco ou omite partes. Decomposição garante atenção total a cada etapa e permite revisão antes de avançar. Ex.: criar um artigo → Prompt 1: gere o outline. Prompt 2: escreva a introdução. Prompt 3-N: desenvolva cada seção." },
+  // [3] revisa "Prompts com restrições" (A2 módulo 2)
+  { id: "essay-a2-3", type: "essay",
+    prompt: "O que são restrições em prompts? Explique a diferença entre restrição negativa e positiva e por que combiná-las funciona melhor.",
+    placeholder: "Dê exemplos de restrição negativa e positiva...",
+    referenceAnswer: "Restrições definem o que o modelo PODE e NÃO PODE fazer: limite de palavras, temas proibidos, formato obrigatório. Restrição negativa diz o que evitar ('não use jargão técnico'); positiva diz o que fazer ('use linguagem acessível para leigos'). Combinadas são mais eficazes: a negativa elimina o comportamento indesejado, a positiva dá o caminho alternativo." },
+  // [4] revisa "Estilo e tom controlado" (A2 módulo 3)
+  { id: "essay-a2-4", type: "essay",
+    prompt: "Como você especificaria o tom de um e-mail de negócios para um cliente corporativo? Escreva a parte do prompt que define o tom.",
+    placeholder: "Escreva como você colocaria a instrução de tom no prompt...",
+    referenceAnswer: "Exemplo de instrução de tom: 'Escreva em tom formal e respeitoso, como uma carta corporativa de alto nível. Evite gírias, contrações e linguagem casual. Use terceira pessoa quando se referir à empresa.' Adjetivos específicos e comparações ('como uma carta corporativa') ancoram o tom muito melhor do que 'escreva profissionalmente'." },
+  // [5] revisa "Prompts multi-etapa" (A2 módulo 4)
+  { id: "essay-a2-5", type: "essay",
+    prompt: "Descreva o que é um prompt multi-etapa e qual é o principal benefício de validar cada etapa antes de avançar para a próxima.",
+    placeholder: "Explique o conceito e o motivo da validação entre etapas...",
+    referenceAnswer: "Prompts multi-etapa encadeiam resultados: a saída de um prompt alimenta o próximo. O benefício de validar cada etapa é garantir qualidade incremental — um outline ruim gera seções ruins. Revisar antes de avançar evita retrabalho em cascata e permite corrigir a direção cedo, quando o custo de ajuste ainda é baixo." },
+  // [6] revisa "Avaliação de respostas" (A2 módulo 5)
+  { id: "essay-a2-6", type: "essay",
+    prompt: "O que é alucinação em modelos de linguagem? Como você identificaria uma alucinação em uma resposta gerada pela IA?",
+    placeholder: "Descreva o fenômeno e como checá-lo...",
+    referenceAnswer: "Alucinação é quando o modelo gera informações falsas com alto grau de confiança: datas erradas, citações inventadas, fatos inexistentes. Identificar exige checar fontes primárias — nunca aceitar datas, nomes, estatísticas ou referências sem verificar. O modelo não avisa quando está inventando; ele escreve com a mesma fluência tanto para fatos reais quanto para ficções." },
+  // [7] revisa "Refino guiado por dados" (A2 módulo 6)
+  { id: "essay-a2-7", type: "essay",
+    prompt: "O que é refino guiado por dados em prompts? Como o conceito de 'teste de regressão' se aplica a prompts em produção?",
+    placeholder: "Explique o ciclo de melhoria baseado em dados...",
+    referenceAnswer: "Refino guiado por dados usa métricas e logs para identificar padrões de falha nos prompts e melhorá-los de forma deliberada. Teste de regressão de prompt é um conjunto de casos (inputs + outputs esperados) que você roda após cada mudança no prompt — para garantir que as melhorias não quebraram comportamentos que já funcionavam. Sem isso, você pode melhorar um caso e degradar dez." },
+  // [8] revisa "Engenharia de Prompt" (A2 módulo 7)
+  { id: "essay-a2-8", type: "essay",
+    prompt: "Com suas palavras, o que é Engenharia de Prompt (Prompt Engineering) e qual prática reduz alucinações em prompts críticos?",
+    placeholder: "Defina e explique a estratégia anti-alucinação...",
+    referenceAnswer: "Engenharia de Prompt é o design sistemático de instruções para maximizar a qualidade e previsibilidade das respostas do modelo — não envolve treinar o modelo, mas guiá-lo. Para reduzir alucinações em prompts críticos: forneça contexto factual no prompt (ancoragem/grounding) e instrua o modelo a responder 'não sei' quando faltar informação certa." },
+]
+
+// A3
+const essayA3: EssayActivity[] = [
+  // [1] revisa "Prompts para código" (A3 módulo 0)
+  { id: "essay-a3-1", type: "essay",
+    prompt: "Quais elementos você incluiria em um prompt para gerar código de qualidade? Por que especificar a versão das bibliotecas é importante?",
+    placeholder: "Liste os elementos essenciais e justifique a versão...",
+    referenceAnswer: "Um prompt de código deve incluir: linguagem e versão, bibliotecas disponíveis, assinatura da função (tipos de entrada/saída), comportamento esperado, exemplos de I/O e estilo (docstring, testes). A versão importa porque a mesma biblioteca muda API entre versões — uma função disponível no Python 3.11 pode não existir no 3.8, gerando código incompatível com o ambiente real." },
+  // [2] revisa "Automação com IA" (A3 módulo 1)
+  { id: "essay-a3-2", type: "essay",
+    prompt: "Descreva como funciona a automação com IA. Qual cuidado é essencial antes de automatizar completamente uma tarefa crítica?",
+    placeholder: "Explique o conceito e o cuidado necessário...",
+    referenceAnswer: "Automação com IA combina um LLM com um orquestrador (n8n, Zapier, script) que dispara prompts automaticamente em resposta a gatilhos (email, formulário, cron). O cuidado essencial é não automatizar completamente sem supervisão inicial: comece com 'human-in-the-loop' (humano revisando a saída), valide qualidade em cenários reais, e só automatize ações críticas (envio de email, pagamento) após provar confiabilidade." },
+  // [3] revisa "Prompts para negócios" (A3 módulo 2)
+  { id: "essay-a3-3", type: "essay",
+    prompt: "Como templates parametrizados (com variáveis como {{cliente}} e {{produto}}) tornam prompts de negócios mais escaláveis? Dê um exemplo.",
+    placeholder: "Explique o conceito e escreva um exemplo de template...",
+    referenceAnswer: "Templates parametrizados separam a estrutura (que não muda) dos valores específicos (que mudam por contexto). Ex.: 'Você é um especialista em {{setor}}. Escreva uma proposta para {{cliente}} com foco em {{objetivo}}, tom {{tom}}.' O mesmo template atende varejo, SaaS e saúde — trocando só as variáveis. Sem templates, você reescreve prompts do zero para cada caso." },
+  // [4] revisa "Fluxos com agentes" (A3 módulo 3)
+  { id: "essay-a3-4", type: "essay",
+    prompt: "O que é um orquestrador em um sistema multi-agente? Por que ele é o componente mais crítico do fluxo?",
+    placeholder: "Defina e explique a importância do orquestrador...",
+    referenceAnswer: "O orquestrador é o componente que coordena múltiplos agentes: define qual age, em que ordem, como a saída de um alimenta o próximo, e quando o objetivo foi atingido. É crítico porque sem ele os agentes não sabem quando agir — é como ter uma equipe especializada sem gerente: cada um pode ser excelente em sua área, mas o trabalho não converge para um resultado coeso." },
+  // [5] revisa "Avaliação & métricas" (A3 módulo 4)
+  { id: "essay-a3-5", type: "essay",
+    prompt: "Por que métricas de negócio (CSAT, taxa de escalação) são mais importantes que métricas técnicas (tokens gerados, latência) para avaliar IA em produção?",
+    placeholder: "Explique a diferença de perspectiva entre as métricas...",
+    referenceAnswer: "Métricas técnicas dizem se o sistema está funcionando; métricas de negócio dizem se está resolvendo o problema. Um sistema rápido que gera respostas erradas tem ótima latência e péssimo CSAT — o que importa para o produto. Taxa de escalação (quando o usuário precisa falar com humano) é o sinal mais direto de que a IA está falhando em resolver a demanda real." },
+  // [6] revisa "Segurança e guardrails" (A3 módulo 5)
+  { id: "essay-a3-6", type: "essay",
+    prompt: "O que é 'defesa em profundidade' em sistemas de IA? Por que depender apenas de instruções no prompt não é suficiente para segurança?",
+    placeholder: "Explique o princípio de camadas e o risco do prompt sozinho...",
+    referenceAnswer: "Defesa em profundidade usa múltiplas camadas independentes de proteção: guardrails no prompt, validação da saída no código e filtros de conteúdo externos. Depender só do prompt é arriscado porque modelos são vulneráveis a prompt injection — um usuário mal-intencionado pode enviar texto que instrui o modelo a ignorar as regras do sistema. Camadas adicionais no código e na infraestrutura protegem mesmo se o prompt for bypassado." },
+  // [7] revisa "Projeto final" (A3 módulo 6)
+  { id: "essay-a3-7", type: "essay",
+    prompt: "Descreva o ciclo MVP-first para projetos de IA. Por que definir critérios de sucesso mensuráveis na etapa 1 é fundamental?",
+    placeholder: "Explique o ciclo e o impacto dos critérios de sucesso...",
+    referenceAnswer: "MVP-first: definir o problema e critérios de sucesso → prototipar com prompt simples → testar com usuários reais → medir e iterar. Critérios mensuráveis (ex.: 'reduzir tempo de resposta de suporte em 30%') são fundamentais porque sem eles você não sabe se a IA está funcionando — pode gastar meses refinando algo que não resolve o problema certo." },
+  // [8] revisa "Agentes de IA" (A3 módulo 7)
+  { id: "essay-a3-8", type: "essay",
+    prompt: "O que diferencia um agente de IA de uma chamada simples a um LLM? Explique o papel das ferramentas (tools) nessa distinção.",
+    placeholder: "Compare agente vs chamada simples e explique as tools...",
+    referenceAnswer: "Uma chamada simples a um LLM gera uma resposta e encerra. Um agente tem LLM + ferramentas (tools) + laço de decisão (loop): ele recebe um objetivo, decide quais ferramentas chamar, executa ações e itera até concluir. As ferramentas são funções tipadas que o agente aciona — busca web, leitura de arquivo, chamada de API. Sem tools, o agente só conversa; com elas, age no mundo real." },
+  // [9] revisa "OpenRouter" (A3 módulo 8)
+  { id: "essay-a3-9", type: "essay",
+    prompt: "Qual é a principal proposta do OpenRouter e como ele ajuda no controle de custos de IA? Por que sua compatibilidade com a API da OpenAI é uma vantagem?",
+    placeholder: "Explique o que é e como ele resolve o problema de custo...",
+    referenceAnswer: "OpenRouter é um gateway que dá acesso a centenas de modelos (OpenAI, Anthropic, Google, Meta) por uma única API. Ajuda no controle de custos com fallbacks automáticos (tenta GPT-5, falha → usa Claude) e comparação de preço por 1M tokens. A compatibilidade com a API da OpenAI significa que qualquer SDK já escrito para GPT funciona com OpenRouter — basta trocar a URL base e a chave." },
+  // [10] revisa "Modelos locais" (A3 módulo 9)
+  { id: "essay-a3-10", type: "essay",
+    prompt: "Quando faz mais sentido usar um modelo local em vez de uma API na nuvem? O que é quantização e como ela viabiliza isso?",
+    placeholder: "Explique os casos de uso e o conceito de quantização...",
+    referenceAnswer: "Modelos locais fazem sentido quando você precisa de privacidade total (dados sensíveis que não podem sair da empresa), modo offline ou custo previsível em alto volume. Quantização comprime os pesos do modelo (de 16 para 4/5/8 bits), reduzindo drasticamente o uso de memória RAM/VRAM com leve perda de qualidade — tornando possível rodar modelos grandes em hardware convencional." },
+  // [11] revisa "Claude Code na prática" (A3 módulo 10)
+  { id: "essay-a3-11", type: "essay",
+    prompt: "O que é o Claude Code e para que serve o arquivo CLAUDE.md em um projeto? Como você o usaria no seu fluxo de trabalho?",
+    placeholder: "Descreva a ferramenta e como aplicaria no seu trabalho...",
+    referenceAnswer: "Claude Code é uma CLI agente da Anthropic que opera dentro do seu repositório: edita arquivos, roda comandos e mantém contexto do projeto. CLAUDE.md é lido automaticamente em cada sessão — funciona como um system prompt persistente do projeto, carregando convenções, scripts e regras específicas do repositório para que o Claude aja de forma consistente com as práticas do time." },
+  // [12] revisa "Skills no Claude Code" (A3 módulo 11)
+  { id: "essay-a3-12", type: "essay",
+    prompt: "O que é uma Skill no Claude Code? Qual campo do SKILL.md é mais importante para o Claude decidir quando ativá-la e por quê?",
+    placeholder: "Defina skill e explique o papel da description...",
+    referenceAnswer: "Uma Skill é um pacote de instruções e recursos que o Claude carrega quando a tarefa combina com sua descrição. O campo mais importante do SKILL.md é a 'description' (descrição): ela é o gancho de recuperação — o Claude compara a descrição da skill com o pedido do usuário para decidir se a ativa. Uma descrição vaga = skill nunca ativada, independente de quão boa seja a implementação." },
+  // [13] revisa "Personalizar Templates" (A3 módulo 12)
+  { id: "essay-a3-13", type: "essay",
+    prompt: "O que é um template de prompt e qual erro é mais comum ao customizá-lo? Como evitar esse erro?",
+    placeholder: "Defina template e explique o erro de customização...",
+    referenceAnswer: "Um template de prompt tem partes fixas e variáveis ({{publico}}, {{tom}}) que permitem reutilização em vários contextos. O erro mais comum é remover instruções de formato ou proteções (guardrails) sem entender por que estavam ali — o que degrada o resultado. Para evitar: leia o template inteiro, entenda o propósito de cada bloco antes de alterar, e teste após cada mudança." },
+  // [14] revisa "API Key" (A3 módulo 13)
+  { id: "essay-a3-14", type: "essay",
+    prompt: "Onde uma chave de API NUNCA deve ser armazenada? O que você faria se sua chave de API vazasse em um repositório público?",
+    placeholder: "Liste onde não guardar e descreva a resposta ao vazamento...",
+    referenceAnswer: "Uma API key jamais deve estar no código front-end (browser) ou commitada em repositório público — qualquer pessoa pode ver e usar. Se vazar: 1) Rotacione imediatamente no painel do provedor (revogue a chave antiga e gere uma nova). 2) Atualize todos os ambientes e segredos que usavam a chave antiga. 3) Verifique os logs do provedor por uso não autorizado. Apagar o commit não basta — o histórico do Git preserva o segredo." },
+  // [15] revisa "Migrations" (A3 módulo 14)
+  { id: "essay-a3-15", type: "essay",
+    prompt: "O que é uma migration de banco de dados e por que ela é preferível a alterar o banco diretamente pelo painel?",
+    placeholder: "Defina migration e explique as vantagens sobre o painel...",
+    referenceAnswer: "Uma migration é um arquivo versionado com instruções SQL que evolui o esquema do banco de forma reproduzível. É preferível ao painel porque: 1) fica no controle de versão (Git), 2) pode ser revisada em PR antes de ser aplicada, 3) garante que qualquer ambiente (dev, staging, prod) chegue ao mesmo estado ao rodar a migration. Mudanças pelo painel não ficam registradas e não são replicáveis." },
+  // [16] revisa "Health Check" (A3 módulo 15)
+  { id: "essay-a3-16", type: "essay",
+    prompt: "Qual é a diferença entre liveness e readiness em health checks? Como você verificaria a saúde do banco de dados de forma eficiente?",
+    placeholder: "Explique cada tipo e descreva a verificação de banco...",
+    referenceAnswer: "Liveness verifica se o processo está vivo — se falhar, o orquestrador reinicia o container. Readiness verifica se o serviço está pronto para receber tráfego (banco, cache e dependências OK) — se falhar, o balanceador para de enviar requisições sem matar o processo. Para verificar o banco: execute SELECT 1 com um timeout curto — prova que o pool de conexões funciona e o banco responde queries sem gerar carga desnecessária." },
+  // [17] revisa "Cron Jobs" (A3 módulo 16)
+  { id: "essay-a3-17", type: "essay",
+    prompt: "O que é um cron job e o que significa a expressão '0 9 * * 1'? Quais práticas evitam problemas em produção?",
+    placeholder: "Defina cron job, interprete a expressão e liste as práticas...",
+    referenceAnswer: "Cron job é uma tarefa agendada que roda automaticamente em horários definidos por uma expressão de 5 campos (min hora dia-mês mês dia-semana). '0 9 * * 1' = toda segunda-feira às 09:00. Práticas essenciais: tornar a tarefa idempotente (rodar duas vezes não estraga dados), registrar logs com horário e usar locks (mutex) para evitar execuções sobrepostas quando o job demora mais do que seu intervalo." },
+  // [18] revisa "Node.js" (A3 módulo 17)
+  { id: "essay-a3-18", type: "essay",
+    prompt: "O que é o Node.js e o que significa dizer que ele é um 'runtime'? Para quais tipos de tarefa ele é mais indicado?",
+    placeholder: "Defina Node.js e explique runtime com exemplos de uso...",
+    referenceAnswer: "Node.js é um ambiente de execução (runtime) que permite rodar JavaScript fora do navegador — no servidor, no terminal e em ferramentas de CLI. Runtime significa o motor que interpreta, compila e executa o código, fornecendo APIs nativas (fs, http, path). É mais indicado para: servidores web e APIs REST, ferramentas de linha de comando, scripts de build (Vite, Webpack) e automações de I/O assíncrono." },
+  // [19] revisa "Git Bash" (A3 módulo 18)
+  { id: "essay-a3-19", type: "essay",
+    prompt: "Explique a diferença entre 'git add', 'git commit' e 'git push'. Em que situação você usaria 'git clone'?",
+    placeholder: "Descreva cada comando e o caso de uso do clone...",
+    referenceAnswer: "git add prepara arquivos para o commit (staging area). git commit salva as alterações no histórico local com uma mensagem descritiva. git push envia os commits locais para o repositório remoto (GitHub). git clone faz uma cópia completa de um repositório remoto para a máquina local — usado quando você quer trabalhar em um projeto existente pela primeira vez." },
+  // [20] revisa "npm" (A3 módulo 19)
+  { id: "essay-a3-20", type: "essay",
+    prompt: "O que é o npm e o que faz o comando 'npm install'? Qual a diferença entre 'dependencies' e 'devDependencies' no package.json?",
+    placeholder: "Defina npm, descreva npm install e explique as dependências...",
+    referenceAnswer: "npm (Node Package Manager) é o gerenciador de pacotes do Node.js — instala, atualiza e remove bibliotecas. 'npm install' lê o package.json, resolve versões compatíveis e baixa tudo para node_modules. 'dependencies' são pacotes necessários em produção (ex.: React, Express). 'devDependencies' são usados apenas no desenvolvimento (ex.: Vitest, ESLint) e não são incluídos no build de produção." },
+]
+
 // ── Atividades extras (fill-blank / match / order) para os módulos novos ──
 
 // A1
@@ -1956,47 +2153,47 @@ const a3ProjetoFinalExtra: LessonActivity[] = [
 // Agora suporta LessonActivity[] (múltiplos tipos) em vez de apenas Question[]
 export const LESSONS: Record<TrackId, LessonActivity[][]> = {
   a1: [
-    a1Boas_vindas,                              // 0 — Boas-vindas
-    [...a1OQueEPrompt, ...a1OQueEPromptExtra],  // 1 — O que é um prompt (MC + fill-blank)
-    [...a1ContextoClareza, ...a1ContextoClareza_extra], // 2 — Contexto & clareza (MC + match)
-    [...a1PersonasRoles, ...a1PersonasExtra],   // 3 — Personas (MC + fill-blank)
-    [...a1EstruturasPrompt, ...a1EstruturasExtra], // 4 — Estruturas (MC + fill-blank)
-    [...a1FewShot, ...a1FewShotExtra],          // 5 — Few-shot (MC + order)
-    [...a1RefinoIterativo, ...a1RefinoExtra],   // 6 — Refino iterativo (MC + match)
+    a1Boas_vindas,                                                           // 0
+    [essayA1[0], ...a1OQueEPrompt, ...a1OQueEPromptExtra],                  // 1 ← essay revisa módulo 0
+    [essayA1[1], ...a1ContextoClareza, ...a1ContextoClareza_extra],         // 2 ← essay revisa módulo 1
+    [essayA1[2], ...a1PersonasRoles, ...a1PersonasExtra],                   // 3 ← essay revisa módulo 2
+    [essayA1[3], ...a1EstruturasPrompt, ...a1EstruturasExtra],              // 4 ← essay revisa módulo 3
+    [essayA1[4], ...a1FewShot, ...a1FewShotExtra],                          // 5 ← essay revisa módulo 4
+    [essayA1[5], ...a1RefinoIterativo, ...a1RefinoExtra],                   // 6 ← essay revisa módulo 5
   ],
   a2: [
-    [...a2ChainOfThought, ...a2CotExtra],       // 0 — Chain-of-thought (MC + fill-blank)
-    [...a2Decomposicao, ...a2DecomposicaoExtra], // 1 — Decomposição (MC + order)
-    [...a2Restricoes, ...a2RestricaoExtra],     // 2 — Restrições (MC + fill-blank)
-    [...a2EstiloTom, ...a2EstiloTomExtra],      // 3 — Estilo e tom (MC + match)
-    [...a2MultiEtapa, ...a2MultiEtapaExtra],    // 4 — Multi-etapa (MC + order)
-    [...a2AvaliacaoRespostas, ...a2AvaliacaoExtra], // 5 — Avaliação (MC + fill-blank)
-    [...a2RefinoDados, ...a2RefinoDadosExtra],  // 6 — Refino por dados (MC + match)
-    engenhariaDePrompt,                         // 7
-    conhecaLLMs,                                // 8
+    [...a2ChainOfThought, ...a2CotExtra],                                   // 0
+    [essayA2[0], ...a2Decomposicao, ...a2DecomposicaoExtra],                // 1 ← essay revisa módulo 0
+    [essayA2[1], ...a2Restricoes, ...a2RestricaoExtra],                     // 2 ← essay revisa módulo 1
+    [essayA2[2], ...a2EstiloTom, ...a2EstiloTomExtra],                      // 3 ← essay revisa módulo 2
+    [essayA2[3], ...a2MultiEtapa, ...a2MultiEtapaExtra],                    // 4 ← essay revisa módulo 3
+    [essayA2[4], ...a2AvaliacaoRespostas, ...a2AvaliacaoExtra],             // 5 ← essay revisa módulo 4
+    [essayA2[5], ...a2RefinoDados, ...a2RefinoDadosExtra],                  // 6 ← essay revisa módulo 5
+    [essayA2[6], ...engenhariaDePrompt],                                    // 7 ← essay revisa módulo 6
+    [essayA2[7], ...conhecaLLMs],                                           // 8 ← essay revisa módulo 7
   ],
   a3: [
-    [...a3PromptsCodigo, ...a3CodigoExtra],     // 0 — Código (MC + fill-blank)
-    [...a3AutomacaoIA, ...a3AutomacaoExtra],    // 1 — Automação (MC + match)
-    [...a3PromptNegocios, ...a3NegociosExtra],  // 2 — Negócios (MC + order)
-    [...a3FluxosAgentes, ...a3FluxosExtra],     // 3 — Fluxos (MC + fill-blank)
-    [...a3AvaliacaoMetricas, ...a3MetricasExtra], // 4 — Métricas (MC + match)
-    [...a3Guardrails, ...a3GuardrailsExtra],    // 5 — Guardrails (MC + fill-blank)
-    [...a3ProjetoFinal, ...a3ProjetoFinalExtra], // 6 — Projeto final (MC + order)
-    aplicandoAgents,              // 7
-    usandoOpenRouter,             // 8
-    modelosLocais,                // 9
-    claudeCodePratica,            // 10
-    skillsClaudeCode,             // 11
-    personalizarTemplates,        // 12
-    [...apiKeyBasico, ...apiKeyFillBlank], // 13 — API Key (MC + FillBlank)
-    migrationsBasico,             // 14
-    [...healthCheckBasico, ...healthOrder], // 15 — Health (MC + Order)
-    [...cronJobsBasico, ...cronMatch],   // 16 — Cron (MC + Match)
-    nodeBasico,                   // 17
-    [...gitBashBasico, ...gitOrder],   // 18 — Git (MC + Order)
-    npmBasico,                    // 19
-    [...skillsLLMBasico, ...llmMatch],  // 20 — Skills (MC + Match)
+    [...a3PromptsCodigo, ...a3CodigoExtra],                                 // 0
+    [essayA3[0], ...a3AutomacaoIA, ...a3AutomacaoExtra],                    // 1 ← essay revisa módulo 0
+    [essayA3[1], ...a3PromptNegocios, ...a3NegociosExtra],                  // 2 ← essay revisa módulo 1
+    [essayA3[2], ...a3FluxosAgentes, ...a3FluxosExtra],                     // 3 ← essay revisa módulo 2
+    [essayA3[3], ...a3AvaliacaoMetricas, ...a3MetricasExtra],               // 4 ← essay revisa módulo 3
+    [essayA3[4], ...a3Guardrails, ...a3GuardrailsExtra],                    // 5 ← essay revisa módulo 4
+    [essayA3[5], ...a3ProjetoFinal, ...a3ProjetoFinalExtra],                // 6 ← essay revisa módulo 5
+    [essayA3[6], ...aplicandoAgents],                          // 7 ← essay revisa módulo 6
+    [essayA3[7], ...usandoOpenRouter],                         // 8 ← essay revisa módulo 7
+    [essayA3[8], ...modelosLocais],                            // 9 ← essay revisa módulo 8
+    [essayA3[9], ...claudeCodePratica],                        // 10 ← essay revisa módulo 9
+    [essayA3[10], ...skillsClaudeCode],                        // 11 ← essay revisa módulo 10
+    [essayA3[11], ...personalizarTemplates],                   // 12 ← essay revisa módulo 11
+    [essayA3[12], ...apiKeyBasico, ...apiKeyFillBlank],        // 13 ← essay revisa módulo 12
+    [essayA3[13], ...migrationsBasico],                        // 14 ← essay revisa módulo 13
+    [essayA3[14], ...healthCheckBasico, ...healthOrder],       // 15 ← essay revisa módulo 14
+    [essayA3[15], ...cronJobsBasico, ...cronMatch],            // 16 ← essay revisa módulo 15
+    [essayA3[16], ...nodeBasico],                              // 17 ← essay revisa módulo 16
+    [essayA3[17], ...gitBashBasico, ...gitOrder],              // 18 ← essay revisa módulo 17
+    [essayA3[18], ...npmBasico],                               // 19 ← essay revisa módulo 18
+    [essayA3[19], ...skillsLLMBasico, ...llmMatch],            // 20 ← essay revisa módulo 19
   ],
 };
 
