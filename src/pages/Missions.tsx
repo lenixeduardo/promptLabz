@@ -4,7 +4,8 @@ import { CheckCircle2, Circle, Zap, Flame, BookOpen, Target, Heart, Gift, Sparkl
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { AppPageHeader } from "@/components/AppPageHeader";
 import { cn } from "@/lib/utils";
-import { scopedKey, USER_SCOPE_EVENT } from "@/lib/userScope";
+import { scopedKey, USER_SCOPE_EVENT, getUserId } from "@/lib/userScope";
+import { getLocalGems, saveLocalGems, GEMS_UPDATE_EVENT } from "@/lib/xp";
 
 const MISSIONS = [
   { id: "visit",  title: "Faça login hoje",             desc: "Mantenha sua sequência viva",   xp: 10, icon: Flame,    initial: true  },
@@ -83,6 +84,16 @@ export default function MissionsPage() {
   const toggle = (id: string) =>
     setCompleted((prev) => ({ ...prev, [id]: !prev[id] }));
 
+  const handleOpenChest = () => {
+    const uid = getUserId();
+    if (uid) {
+      const current = getLocalGems(uid);
+      saveLocalGems(uid, current + CHEST_REWARD_GEMS);
+      window.dispatchEvent(new CustomEvent(GEMS_UPDATE_EVENT));
+    }
+    setChestOpened(true);
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
       <AppPageHeader
@@ -154,7 +165,7 @@ export default function MissionsPage() {
           </div>
           {chestUnlocked && (
             <button
-              onClick={() => setChestOpened(true)}
+              onClick={handleOpenChest}
               disabled={chestOpened}
               className={cn(
                 "mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-colors",
