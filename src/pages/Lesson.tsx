@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { advanceModule, type TrackId } from "@/lib/moduleProgress";
-import { getActivities, getProofTask, TRACK_TOTALS, isMatch, isOrder } from "@/lib/lessonContent";
+import { getActivities, getProofTask, TRACK_TOTALS, isMatch, isOrder, isEssay } from "@/lib/lessonContent";
 import type { LessonActivity } from "@/lib/lessonContent";
 import { ActivityRenderer } from "@/components/activities/ActivityRenderer";
 import { scopedKey } from "@/lib/userScope";
@@ -49,11 +49,14 @@ export default function LessonPage() {
   const finished = step >= ACTIVITIES.length;
   const currentActivity = ACTIVITIES[step] as LessonActivity | undefined;
   const answered = selected !== null || !!matchOrderAnswers[step];
+  const isCurrentEssay = currentActivity ? isEssay(currentActivity) : false;
   const isLast = step === ACTIVITIES.length - 1;
 
-  // Score: multiple-choice e fill-blank usam selected === correct
-  // match e order usam o número de pares corretos
+  // Score: essays sempre contam 1 se respondidas; match/order por pares; MC/fill-blank por correct
   const score = ACTIVITIES.reduce((acc, activity, i) => {
+    if (isEssay(activity)) {
+      return answers[activity.id] ? acc + 1 : acc
+    }
     if (isMatch(activity) || isOrder(activity)) {
       const pairs = matchOrderAnswers[i]
       if (!pairs) return acc
@@ -82,6 +85,12 @@ export default function LessonPage() {
     if (answered || !currentActivity) return
     setMatchOrderAnswers((prev) => ({ ...prev, [step]: pairs }))
     setSelected("__order_done__")
+  }
+
+  function handleEssayAnswer(text: string) {
+    if (answered || !currentActivity) return
+    setAnswers((prev) => ({ ...prev, [currentActivity.id]: text }))
+    setSelected("__essay_done__")
   }
 
   function next() {
@@ -121,6 +130,7 @@ export default function LessonPage() {
   const needsProof = !!proofTask;
   const proofDone = !!proofDataUrl;
   const lessonComplete = perfect && (!needsProof || proofDone);
+  const isLastLesson = module === TRACK_TOTALS[track] - 1;
 
   useEffect(() => {
     if (lessonComplete) advanceModule(TRACK_TOTALS[track], track);
@@ -249,13 +259,23 @@ export default function LessonPage() {
           </div>
 
           <div className="mt-6 flex w-full max-w-xs flex-col gap-3">
-            <Link
-              to="/module-exam"
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-luxury py-4 text-sm font-extrabold uppercase tracking-wide text-luxury-foreground shadow-lg shadow-luxury/30 transition-transform active:scale-[0.98]"
-            >
-              Fazer prova final do módulo
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            {isLastLesson ? (
+              <Link
+                to="/module-exam"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-luxury py-4 text-sm font-extrabold uppercase tracking-wide text-luxury-foreground shadow-lg shadow-luxury/30 transition-transform active:scale-[0.98]"
+              >
+                Fazer prova final do módulo
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : (
+              <Link
+                to={`/lesson?track=${track}&module=${module + 1}`}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-emerald/30 transition-transform active:scale-[0.98]"
+              >
+                Próxima aula
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
             <Link
               to="/learn"
               className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-emerald bg-card py-3 text-sm font-bold text-emerald hover:bg-surface-success"
@@ -305,6 +325,7 @@ export default function LessonPage() {
           onSelect={pick}
           onMatchAnswer={handleMatchAnswer}
           onOrderAnswer={handleOrderAnswer}
+          onEssayAnswer={handleEssayAnswer}
         />
 
         <div className="mt-auto pt-6">
@@ -318,7 +339,9 @@ export default function LessonPage() {
             </button>
           ) : (
             <div className="flex w-full items-center justify-center gap-2 rounded-2xl bg-stroke-light py-4 text-sm font-extrabold uppercase tracking-wide text-neutral pointer-events-none">
-              {isMatch(currentActivity!) || isOrder(currentActivity!)
+              {isCurrentEssay
+                ? "Escreva sua resposta para continuar"
+                : isMatch(currentActivity!) || isOrder(currentActivity!)
                 ? "Conecte todos os itens para continuar"
                 : "Selecione uma opção"}
               <Send className="h-4 w-4" />
