@@ -89,7 +89,7 @@ export function buildCertificateHtml(
       <div style="width:30px;height:30px;border-radius:7px;background:#0f3d24;color:#ffffff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;">AI</div>
       <div style="font-weight:700;font-size:22px;color:#0f3d24;">PromptLabz</div>
     </div>
-    <div style="margin-top:18px;font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:64px;line-height:1;color:#0f3d24;">Certificado</div>
+    <div style="margin-top:45px;font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:64px;line-height:1;color:#0f3d24;">Certificado</div>
     <div style="margin-top:4px;font-family:'Playfair Display',Georgia,serif;font-weight:500;font-style:italic;font-size:26px;color:#2e7d4e;">de Conquista</div>
     <div style="margin-top:28px;font-weight:500;font-size:15px;color:#6b7f72;">Parabéns,</div>
     <div style="margin-top:8px;font-weight:700;font-size:30px;color:#2e7d4e;">${escapeHtml(data.recipient)}</div>
