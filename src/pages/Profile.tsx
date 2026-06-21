@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { Settings, ChevronRight, Zap, BookOpen, Edit2, Heart, Crown, Flame } from "lucide-react"
@@ -6,8 +5,7 @@ import { ThemeToggle } from "@/components/ThemeToggle"
 import { BottomNav } from "@/components/BottomNav"
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
-import { getUserProfile } from "@/lib/db"
-import { getAvatarById } from "@/data/avatarsData"
+import { useAvatar } from "@/components/AvatarProvider"
 import { getLocalXP, getLevel, getLevelProgress } from "@/lib/xp"
 import { getLevelTitle } from "@/lib/levelTitles"
 import { usePremium } from "@/components/PremiumProvider"
@@ -38,9 +36,7 @@ export default function Profile() {
   const { user } = useAuth()
   const { unlocked, data } = useAchievements()
   const { isPremium, toggle } = usePremium()
-
-  const [avatarImage, setAvatarImage] = useState("/assets/avatar-cat.png")
-  const [loadingAvatar, setLoadingAvatar] = useState(true)
+  const { equipped } = useAvatar()
 
   const xp = user?.id ? getLocalXP(user.id) : 0
   const level = getLevel(xp)
@@ -49,20 +45,6 @@ export default function Profile() {
   const xpToNext = targetXP - currentXP
   const xpPct = Math.round((currentXP / targetXP) * 100)
   const skillsCount = unlocked.length
-
-  useEffect(() => {
-    if (!user?.id) {
-      setLoadingAvatar(false)
-      return
-    }
-    getUserProfile(user.id).then(({ data: profile }) => {
-      if (profile?.avatar_url) {
-        const found = getAvatarById(profile.avatar_url)
-        if (found) setAvatarImage(found.image)
-      }
-      setLoadingAvatar(false)
-    })
-  }, [user?.id])
 
   return (
     <div className="min-h-screen bg-pageBg pb-28">
@@ -91,22 +73,16 @@ export default function Profile() {
             <div className="mb-4 flex items-center gap-4">
               {/* Avatar */}
               <div className="relative shrink-0">
-                {loadingAvatar ? (
-                  <div className="h-16 w-16 animate-pulse rounded-full bg-white/30" />
-                ) : (
-                  <>
-                    <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-white/40 shadow-md">
-                      <img src={avatarImage} alt="Avatar" className="h-full w-full object-cover" />
-                    </div>
-                    <button
-                      onClick={() => navigate("/avatars")}
-                      className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-emerald-dark shadow"
-                      aria-label="Trocar avatar"
-                    >
-                      <Edit2 className="h-3 w-3 text-white" />
-                    </button>
-                  </>
-                )}
+                <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-white/40 shadow-md">
+                  <img src={equipped.image} alt={equipped.name} className="h-full w-full object-cover" />
+                </div>
+                <button
+                  onClick={() => navigate("/avatars")}
+                  className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-emerald-dark shadow"
+                  aria-label="Trocar avatar"
+                >
+                  <Edit2 className="h-3 w-3 text-white" />
+                </button>
               </div>
 
               {/* Dados do usuário */}
