@@ -97,38 +97,38 @@ function PopularCard({
   return (
     <button
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] bg-white p-4 shadow-sm transition-all active:scale-[0.98] hover:bg-[#F7FCF8] text-left"
+      className="flex w-full items-center gap-3 rounded-2xl border border-[#CDEAD8] dark:border-stroke-light bg-white p-4 shadow-sm transition-all active:scale-[0.98] hover:bg-[#F7FCF8] dark:hover:bg-surface-soft text-left"
     >
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF]">
-        <Icon className="h-5 w-5 text-[#2B5D3A]" strokeWidth={1.8} />
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EAF7EF] dark:bg-surface-soft">
+        <Icon className="h-5 w-5 text-[#2B5D3A] dark:text-emerald" strokeWidth={1.8} />
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-bold leading-snug text-[#1F2A24]">{template.name}</p>
-        <p className="mt-0.5 line-clamp-1 text-xs text-[#4A5E52]">{template.description}</p>
+        <p className="text-sm font-bold leading-snug text-[#1F2A24] dark:text-foregroundDark">{template.name}</p>
+        <p className="mt-0.5 line-clamp-1 text-xs text-[#4A5E52] dark:text-foregroundMuted">{template.description}</p>
       </div>
 
       <div className="flex shrink-0 flex-col items-end gap-1">
-        <div className="flex items-center gap-1 text-[10px] text-[#6B9E7E]">
+        <div className="flex items-center gap-1 text-[10px] text-[#6B9E7E] dark:text-foregroundMuted">
           <Users className="h-3 w-3" />
           <span>{formatCount(template.usageCount)}</span>
         </div>
         {template.isPremium ? (
-          <Bookmark className="h-4 w-4 fill-[#2B5D3A] text-[#2B5D3A]" />
+          <Bookmark className="h-4 w-4 fill-[#2B5D3A] text-[#2B5D3A] dark:fill-emerald dark:text-emerald" />
         ) : (
-          <Bookmark className="h-4 w-4 text-[#CDEAD8]" />
+          <Bookmark className="h-4 w-4 text-[#CDEAD8] dark:text-stroke-light" />
         )}
       </div>
 
-      <ChevronRight className="h-4 w-4 shrink-0 text-[#6B9E7E]" />
+      <ChevronRight className="h-4 w-4 shrink-0 text-[#6B9E7E] dark:text-foregroundMuted" />
     </button>
   )
 }
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center gap-3 py-16 text-[#6B9E7E]">
-      <Search className="h-14 w-14 text-[#CDEAD8]" />
+    <div className="flex flex-col items-center gap-3 py-16 text-[#6B9E7E] dark:text-foregroundMuted">
+      <Search className="h-14 w-14 text-[#CDEAD8] dark:text-stroke-light" />
       <p className="text-base font-semibold">Nenhum template encontrado</p>
       <p className="text-sm opacity-70">Tente ajustar o filtro ou a busca.</p>
     </div>
@@ -161,21 +161,21 @@ export default function Templates() {
   const isSearching = search.trim().length > 0
 
   return (
-    <div className="min-h-screen bg-[#F0FAF3] pb-24">
+    <div className="min-h-screen bg-[#F0FAF3] dark:bg-pageBg pb-24">
       {/* Header */}
       <div className="bg-white px-4 pb-3 pt-12 shadow-sm">
         <div className="mb-1 flex items-start justify-between">
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate(-1)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[#2B5D3A] transition-colors hover:bg-[#EAF7EF]"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-[#2B5D3A] dark:text-emerald transition-colors hover:bg-[#EAF7EF] dark:hover:bg-surface-soft"
               aria-label="Voltar"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <div>
-              <h1 className="text-xl font-extrabold text-[#1F2A24]">Templates</h1>
-              <p className="text-xs text-[#4A5E52]">Explore e use templates prontos e otimizados.</p>
+              <h1 className="text-xl font-extrabold text-[#1F2A24] dark:text-foregroundDark">Templates</h1>
+              <p className="text-xs text-[#4A5E52] dark:text-foregroundMuted">Explore e use templates prontos e otimizados.</p>
             </div>
           </div>
           <img
@@ -187,25 +187,25 @@ export default function Templates() {
 
         {/* Search + Filtros */}
         <div className="mt-3 flex gap-2">
-          <div className="flex flex-1 items-center gap-2 rounded-full border border-[#BFE3CC] bg-[#F4F9F5] px-4 py-2.5">
-            <Search className="h-4 w-4 shrink-0 text-[#6B9E7E]" />
+          <div className="flex flex-1 items-center gap-2 rounded-full border border-[#BFE3CC] dark:border-stroke-light bg-[#F4F9F5] dark:bg-surface-soft px-4 py-2.5">
+            <Search className="h-4 w-4 shrink-0 text-[#6B9E7E] dark:text-foregroundMuted" />
             <input
               type="text"
               placeholder="Buscar templates..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 bg-transparent text-sm text-[#1F2A24] placeholder:text-[#8A998F] focus:outline-none"
+              className="flex-1 bg-transparent text-sm text-[#1F2A24] dark:text-foregroundDark placeholder:text-[#8A998F] dark:placeholder:text-foregroundPlaceholder focus:outline-none"
             />
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="rounded-full p-0.5 text-[#6B9E7E]"
+                className="rounded-full p-0.5 text-[#6B9E7E] dark:text-foregroundMuted"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
-          <button className="flex items-center gap-1.5 rounded-full border border-[#BFE3CC] bg-white px-3 py-2 text-xs font-semibold text-[#2B5D3A] transition-colors hover:bg-[#EAF7EF]">
+          <button className="flex items-center gap-1.5 rounded-full border border-[#BFE3CC] dark:border-stroke-light bg-white px-3 py-2 text-xs font-semibold text-[#2B5D3A] dark:text-emerald transition-colors hover:bg-[#EAF7EF] dark:hover:bg-surface-soft">
             <SlidersHorizontal className="h-3.5 w-3.5" />
             Filtros
           </button>
@@ -219,8 +219,8 @@ export default function Templates() {
               onClick={() => setActiveCategory(cat.id)}
               className={`inline-flex shrink-0 items-center rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors ${
                 activeCategory === cat.id
-                  ? "border-[#2B5D3A] bg-[#2B5D3A] text-white"
-                  : "border-[#BFE3CC] bg-white text-[#2B5D3A] hover:bg-[#EAF7EF]"
+                  ? "border-[#2B5D3A] bg-[#2B5D3A] text-white dark:border-emerald dark:bg-emerald dark:text-[#0A1F12]"
+                  : "border-[#BFE3CC] dark:border-stroke-light bg-white text-[#2B5D3A] dark:text-emerald hover:bg-[#EAF7EF] dark:hover:bg-surface-soft"
               }`}
             >
               {cat.label}
@@ -252,8 +252,8 @@ export default function Templates() {
         {featured.length > 0 && !isSearching && (
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-base font-bold text-[#1F2A24]">Destaques</h2>
-              <button className="text-xs font-semibold text-[#2B5D3A]">Ver todos</button>
+              <h2 className="text-base font-bold text-[#1F2A24] dark:text-foregroundDark">Destaques</h2>
+              <button className="text-xs font-semibold text-[#2B5D3A] dark:text-emerald">Ver todos</button>
             </div>
             <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1">
               {featured.map((t) => (
@@ -271,11 +271,11 @@ export default function Templates() {
         {popular.length > 0 ? (
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-base font-bold text-[#1F2A24]">
+              <h2 className="text-base font-bold text-[#1F2A24] dark:text-foregroundDark">
                 {isSearching ? "Resultados" : "Mais usados"}
               </h2>
               {!isSearching && (
-                <button className="text-xs font-semibold text-[#2B5D3A]">Ver todos</button>
+                <button className="text-xs font-semibold text-[#2B5D3A] dark:text-emerald">Ver todos</button>
               )}
             </div>
             <div className="flex flex-col gap-3">

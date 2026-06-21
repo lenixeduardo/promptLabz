@@ -229,7 +229,7 @@ export default function TemplateDetail() {
         </p>
         <button
           onClick={() => navigate("/templates")}
-          className="rounded-xl bg-primary-dark px-6 py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
+          className="rounded-xl bg-primary-dark dark:bg-emerald-dark px-6 py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
         >
           Ver todos os templates
         </button>
@@ -325,7 +325,7 @@ export default function TemplateDetail() {
           </button>
           <button
             onClick={() => navigate(`/prompt/${template.promptId}`)}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary-dark dark:bg-emerald-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
           >
             Usar este template
             <ArrowRight className="h-4 w-4" />
