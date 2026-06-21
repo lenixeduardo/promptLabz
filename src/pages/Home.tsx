@@ -21,7 +21,7 @@ import { useState, useEffect } from "react";
 import { useModuleProgress, type TrackId } from "@/lib/moduleProgress";
 import { scopedKey, USER_SCOPE_EVENT } from "@/lib/userScope";
 import { useAuth } from "@/hooks/useAuth";
-import { getLocalXP, getLocalGems } from "@/lib/xp";
+import { getLocalXP, getLocalGems, GEMS_UPDATE_EVENT, XP_UPDATE_EVENT } from "@/lib/xp";
 import { getLevelTitle } from "@/lib/levelTitles";
 
 type TrackInfo = { id: TrackId; label: string; modules: string[] };
@@ -137,8 +137,28 @@ export default function HomePage() {
 
   const { user } = useAuth();
   const userId = user?.id ?? null;
-  const xp = userId ? getLocalXP(userId) : 0;
-  const gems = userId ? getLocalGems(userId) : 0;
+  const [xp, setXp] = useState(0);
+  useEffect(() => {
+    const readXP = () => setXp(userId ? getLocalXP(userId) : 0);
+    readXP();
+    window.addEventListener(XP_UPDATE_EVENT, readXP);
+    window.addEventListener("storage", readXP);
+    return () => {
+      window.removeEventListener(XP_UPDATE_EVENT, readXP);
+      window.removeEventListener("storage", readXP);
+    };
+  }, [userId]);
+  const [gems, setGems] = useState(0);
+  useEffect(() => {
+    const readGems = () => setGems(userId ? getLocalGems(userId) : 0);
+    readGems();
+    window.addEventListener(GEMS_UPDATE_EVENT, readGems);
+    window.addEventListener("storage", readGems);
+    return () => {
+      window.removeEventListener(GEMS_UPDATE_EVENT, readGems);
+      window.removeEventListener("storage", readGems);
+    };
+  }, [userId]);
   const { count: streak, longest: longestStreak } = useStreak();
   const [streakCelebration, setStreakCelebration] = useState(false);
 
