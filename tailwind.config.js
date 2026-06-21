@@ -16,19 +16,25 @@ module.exports = {
 			},
 		},		extend: {
 			fontFamily: {
+				/* duolingo-sans é servido via @font-face em index.css (Nunito como base) */
 				sans: [
+					'duolingo-sans',
+					'Nunito',
 					'-apple-system',
 					'BlinkMacSystemFont',
-					'SF Pro Display',
-					'SF Pro Text',
 					'Helvetica Neue',
 					'Arial',
 					'sans-serif',
 				],
 				display: [
-					'Playfair Display',
-					'Georgia',
-					'serif',
+					'duolingo-sans',
+					'Nunito',
+					'sans-serif',
+				],
+				'duolingo-sans': [
+					'duolingo-sans',
+					'Nunito',
+					'sans-serif',
 				],
 			},
 			colors: {
@@ -130,11 +136,27 @@ module.exports = {
 					bgBasic: 'var(--tag-bg-basic)',
 					textBasic: 'var(--tag-text-basic)',
 				},
+				/* Duolingo design tokens */
+				duo: {
+					green: 'var(--duo-brand-green)',
+					'green-press': 'var(--duo-green-press)',
+					'green-tint': 'var(--duo-pale-green-tint)',
+					'green-light': 'var(--duo-light-green-tint)',
+					blue: 'var(--duo-sky-blue)',
+					'text-primary': 'var(--duo-primary-text)',
+					'text-muted': 'var(--duo-muted-text)',
+					'text-secondary': 'var(--duo-secondary-text)',
+					border: 'var(--duo-border-subtle)',
+					placeholder: 'var(--duo-disabled-placeholder)',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)',
+				/* Duolingo radius tokens */
+				'duo-btn': '12px',
+				'duo-badge': '2px',
 			},
 			keyframes: {
 				'accordion-down': {

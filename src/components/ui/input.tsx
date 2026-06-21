@@ -20,7 +20,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           ref={ref}
           className={cn(
-            "h-14 w-full rounded-full border border-stroke-light bg-white text-base text-foreground placeholder:text-foregroundPlaceholder shadow-sm transition-colors focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20",
+            /* Duolingo input: rounded 12px, border-subtle, text duolingo-sans 17px/500 */
+            "h-14 w-full rounded-[12px] border-2 border-[#e5e5e5] bg-white text-[17px] font-medium leading-[20px] text-[#3c3c3c] placeholder:text-[#afafaf] shadow-sm transition-colors focus-visible:outline-none focus-visible:border-[#58cc02] focus-visible:ring-2 focus-visible:ring-[#58cc02]/20",
             icon ? "pl-14 pr-5" : "px-5",
             className
           )}
