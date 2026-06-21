@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Circle, Zap, Flame, BookOpen, Target, Heart, Gift, Sparkles } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { AppPageHeader } from "@/components/AppPageHeader";
 import { cn } from "@/lib/utils";
 import { scopedKey, USER_SCOPE_EVENT, getUserId } from "@/lib/userScope";
-import { getLocalGems, saveLocalGems, GEMS_UPDATE_EVENT } from "@/lib/xp";
+import { getLocalGems, saveLocalGems, GEMS_UPDATE_EVENT, getLocalXP, saveLocalXP, XP_UPDATE_EVENT } from "@/lib/xp";
 
 const MISSIONS = [
   { id: "visit",  title: "Faça login hoje",             desc: "Mantenha sua sequência viva",   xp: 10, icon: Flame,    initial: true  },
@@ -17,6 +17,7 @@ const MISSIONS = [
 
 const CHEST_THRESHOLD = 5;
 const CHEST_REWARD_GEMS = 50;
+const CHEST_REWARD_XP = 100;
 const STORAGE_BASE = "promptlabz:dailyMissions";
 
 const todayKey = () => {
@@ -75,10 +76,7 @@ export default function MissionsPage() {
     return () => window.removeEventListener(USER_SCOPE_EVENT, onUserScope);
   }, []);
 
-  const total = useMemo(() => MISSIONS.reduce((s, m) => s + m.xp, 0), []);
-  const earned = MISSIONS.filter((m) => completed[m.id]).reduce((s, m) => s + m.xp, 0);
   const doneCount = MISSIONS.filter((m) => completed[m.id]).length;
-  const pct = Math.round((doneCount / MISSIONS.length) * 100);
   const chestUnlocked = doneCount >= CHEST_THRESHOLD;
 
   const toggle = (id: string) =>
@@ -87,9 +85,10 @@ export default function MissionsPage() {
   const handleOpenChest = () => {
     const uid = getUserId();
     if (uid) {
-      const current = getLocalGems(uid);
-      saveLocalGems(uid, current + CHEST_REWARD_GEMS);
+      saveLocalGems(uid, getLocalGems(uid) + CHEST_REWARD_GEMS);
       window.dispatchEvent(new CustomEvent(GEMS_UPDATE_EVENT));
+      saveLocalXP(uid, getLocalXP(uid) + CHEST_REWARD_XP);
+      window.dispatchEvent(new CustomEvent(XP_UPDATE_EVENT));
     }
     setChestOpened(true);
   };
@@ -98,36 +97,11 @@ export default function MissionsPage() {
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
       <AppPageHeader
         title="Missões Diárias"
-        subtitle={`Complete todas para ganhar +${total} XP`}
+        subtitle={`Complete as ${MISSIONS.length} missões para ganhar +${CHEST_REWARD_XP} XP e +${CHEST_REWARD_GEMS} 💎`}
         back="/home"
       />
 
       <div className="mx-auto w-full max-w-lg px-4 py-4">
-        <div className="mb-5 rounded-2xl border border-stroke-muted bg-card p-4 shadow-sm">
-          <div className="mb-3 flex items-center justify-between">
-            <div>
-              <p className="text-sm font-bold text-primary-dark">
-                {doneCount} de {MISSIONS.length} missões
-              </p>
-              <p className="text-xs text-foreground-tertiary">
-                Renovam todo dia à meia-noite
-              </p>
-            </div>
-            <div className="flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-bold text-amber-600">
-              <Zap className="h-4 w-4" /> +{earned} XP
-            </div>
-          </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-stroke-muted/40">
-            <div
-              className="h-full rounded-full bg-primary-dark transition-all"
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-          <p className="mt-1 text-right text-[10px] font-semibold text-foreground-muted">
-            {pct}% completo
-          </p>
-        </div>
-
         <div
           className={cn(
             "mb-5 overflow-hidden rounded-2xl border-2 p-4 transition-colors",
@@ -150,7 +124,7 @@ export default function MissionsPage() {
                 Baú diário {chestOpened ? "aberto!" : chestUnlocked ? "disponível" : "em progresso"}
               </p>
               <p className="text-[11px] text-foreground-tertiary">
-                Conclua {CHEST_THRESHOLD} missões para ganhar +{CHEST_REWARD_GEMS} 💎
+                Conclua {CHEST_THRESHOLD} missões para ganhar +{CHEST_REWARD_XP} XP e +{CHEST_REWARD_GEMS} 💎
               </p>
             </div>
             <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-600">
@@ -176,7 +150,7 @@ export default function MissionsPage() {
             >
               {chestOpened ? (
                 <>
-                  <Sparkles className="h-4 w-4" /> +{CHEST_REWARD_GEMS} 💎 coletadas
+                  <Sparkles className="h-4 w-4" /> +{CHEST_REWARD_XP} XP e +{CHEST_REWARD_GEMS} 💎 coletados
                 </>
               ) : (
                 <>

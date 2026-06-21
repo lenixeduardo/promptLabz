@@ -1,4 +1,5 @@
 export const GEMS_UPDATE_EVENT = "promptlabz:gems-updated";
+export const XP_UPDATE_EVENT = "promptlabz:xp-updated";
 
 const XP_PER_LEVEL = 500
 
