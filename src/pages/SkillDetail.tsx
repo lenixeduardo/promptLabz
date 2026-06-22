@@ -54,11 +54,11 @@ export default function SkillDetail() {
       <div className="bg-gradient-to-r from-stroke-light to-stroke-muted px-4 pb-12 pt-6">
         <div className="mx-auto w-full max-w-3xl">
           <button
-            onClick={() => navigate("/skills")}
+            onClick={() => navigate(-1)}
             className="mb-4 flex items-center gap-1.5 text-sm font-semibold text-forest transition-colors hover:text-foregroundDark"
           >
             <Icons.ChevronLeft className="h-5 w-5" />
-            Voltar para Skills
+            Voltar
           </button>
 
           <div className="flex items-center gap-4">
@@ -171,14 +171,14 @@ export default function SkillDetail() {
           {/* Actions */}
           <div className="flex gap-3">
             <Button
-              onClick={() => navigate("/skills")}
+              onClick={() => navigate(-1)}
               variant="outline"
               className="flex-1 border-stroke-muted text-forest"
             >
               <Icons.ArrowLeft className="h-4 w-4" /> Voltar
             </Button>
             <Button
-              onClick={() => navigate("/skills")}
+              onClick={() => navigate("/lab")}
               className="flex-1 bg-link hover:bg-[#236b43]"
             >
               <Icons.Grid3x3 className="h-4 w-4" /> Explorar Skills
