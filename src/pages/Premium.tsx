@@ -16,12 +16,14 @@ import { AppBottomNav } from "@/components/AppBottomNav"
 import { useEffect } from "react"
 import { sileo } from "sileo"
 import { trackPremiumViewed } from "@/lib/analytics"
+import { tryCompleteSpecialQuest } from "@/lib/missions"
 
 export default function Premium() {
   const navigate = useNavigate()
 
   useEffect(() => {
     trackPremiumViewed()
+    tryCompleteSpecialQuest("try-premium")
   }, [])
   const [billingCycle, setBillingCycle] = useState<BillingCycle>("yearly")
 

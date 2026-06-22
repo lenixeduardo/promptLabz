@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { ArrowLeft, Linkedin } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -5,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { getLocalXP } from "@/lib/xp"
 import { getLevel } from "@/lib/xp"
 import { getLevelTitle } from "@/lib/levelTitles"
+import { tryCompleteSpecialQuest } from "@/lib/missions"
 
 interface CertificateState {
   courseName?: string
@@ -48,6 +50,10 @@ export default function Certificate() {
   const navigate = useNavigate()
   const location = useLocation()
   const { user } = useAuth()
+
+  useEffect(() => {
+    tryCompleteSpecialQuest("certificate")
+  }, [])
 
   const state = location.state as CertificateState | null
   const courseName = state?.courseName ?? "Engenharia de Prompts para Iniciantes"

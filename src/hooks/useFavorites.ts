@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react"
+import { completeMission } from "@/lib/missions"
 
 const STORAGE_KEY = "promptlabz_favorite_skills"
+const SKILL_MISSION_THRESHOLD = 3
 
 function readFavorites(): string[] {
   try {
@@ -22,10 +24,12 @@ export function useFavorites() {
 
   const toggleFavorite = useCallback((skillName: string) => {
     setFavorites((prev) => {
-      const next = prev.includes(skillName)
-        ? prev.filter((n) => n !== skillName)
-        : [...prev, skillName]
+      const isAdding = !prev.includes(skillName)
+      const next = isAdding ? [...prev, skillName] : prev.filter((n) => n !== skillName)
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      if (isAdding && next.length >= SKILL_MISSION_THRESHOLD) {
+        completeMission("skill")
+      }
       return next
     })
   }, [])

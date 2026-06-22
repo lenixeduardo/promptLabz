@@ -12,6 +12,7 @@ import "sileo/styles.css"
 import { initAnalytics, pageView, identify, reset } from "@/lib/analytics"
 import { initUserScope } from "@/lib/userScope"
 import { useAuth } from "@/hooks/useAuth"
+import { completeMission } from "@/lib/missions"
 import { useUTM } from "@/hooks/useUTM"
 import { useInactiveReminder } from "@/hooks/useInactiveReminder"
 
@@ -118,6 +119,15 @@ function ActivityTracker() {
   return null
 }
 
+// ── Mission Tracker ───────────────────────────────────────────────────────
+function MissionTracker() {
+  const { user } = useAuth()
+  useEffect(() => {
+    if (user?.id) completeMission("visit")
+  }, [user?.id])
+  return null
+}
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -128,6 +138,7 @@ export default function App() {
           <AchievementsProvider>
           <AnalyticsTracker />
           <ActivityTracker />
+          <MissionTracker />
           <Toaster position="top-right" />
           <Suspense fallback={<PageLoading />}>
             <Routes>
