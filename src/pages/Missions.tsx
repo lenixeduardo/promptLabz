@@ -1,107 +1,37 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { CheckCircle2, Circle, Zap, Flame, BookOpen, Target, Heart, Gift, Sparkles } from "lucide-react";
+import { CheckCircle2, Circle, Gift, Sparkles, ArrowRight, Star } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { AppPageHeader } from "@/components/AppPageHeader";
 import { cn } from "@/lib/utils";
-import { scopedKey, USER_SCOPE_EVENT, getUserId } from "@/lib/userScope";
-import { getLocalGems, saveLocalGems, GEMS_UPDATE_EVENT, getLocalXP, saveLocalXP, XP_UPDATE_EVENT } from "@/lib/xp";
-
-const MISSIONS = [
-  { id: "visit",  title: "Faça login hoje",             desc: "Mantenha sua sequência viva",   xp: 10, icon: Flame,    initial: true  },
-  { id: "lesson", title: "Conclua 1 lição",             desc: "Pratique pelo menos 5 minutos", xp: 30, icon: BookOpen, initial: true  },
-  { id: "skill",  title: "Favorite uma skill",          desc: "Explore o laboratório",         xp: 20, icon: Zap,      initial: false },
-  { id: "quiz",   title: "Acerte 3 perguntas seguidas", desc: "Modo desafio relâmpago",        xp: 25, icon: Target,   initial: false },
-  { id: "share",  title: "Favorite um prompt",          desc: "Salve para usar depois",        xp: 15, icon: Heart,    initial: false },
-] as const;
-
-const CHEST_THRESHOLD = 5;
-const CHEST_REWARD_GEMS = 50;
-const CHEST_REWARD_XP = 100;
-const STORAGE_BASE = "promptlabz:dailyMissions";
-
-const todayKey = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-};
-
-const defaultState = () =>
-  Object.fromEntries(MISSIONS.map((m) => [m.id, m.initial])) as Record<string, boolean>;
-
-const readStored = () => {
-  if (typeof window === "undefined") return { completed: defaultState(), chestOpened: false };
-  try {
-    const raw = window.localStorage.getItem(scopedKey(STORAGE_BASE));
-    if (!raw) return { completed: defaultState(), chestOpened: false, day: todayKey() };
-    const parsed = JSON.parse(raw) as { day: string; completed: Record<string, boolean>; chestOpened: boolean };
-    if (parsed.day !== todayKey()) {
-      return { completed: defaultState(), chestOpened: false, day: todayKey() };
-    }
-    return { completed: { ...defaultState(), ...parsed.completed }, chestOpened: !!parsed.chestOpened, day: parsed.day };
-  } catch {
-    return { completed: defaultState(), chestOpened: false, day: todayKey() };
-  }
-};
+import { useDailyMissions } from "@/hooks/useDailyMissions";
 
 export default function MissionsPage() {
-  const initial = readStored();
-  const [completed, setCompleted] = useState<Record<string, boolean>>(initial.completed);
-  const [chestOpened, setChestOpened] = useState(initial.chestOpened);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    window.localStorage.setItem(
-      scopedKey(STORAGE_BASE),
-      JSON.stringify({ day: todayKey(), completed, chestOpened }),
-    );
-  }, [completed, chestOpened]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const stored = readStored();
-      if (stored.day === todayKey()) return;
-      setCompleted(defaultState());
-      setChestOpened(false);
-    }, 60_000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const onUserScope = () => {
-      const stored = readStored();
-      setCompleted(stored.completed);
-      setChestOpened(stored.chestOpened);
-    };
-    window.addEventListener(USER_SCOPE_EVENT, onUserScope);
-    return () => window.removeEventListener(USER_SCOPE_EVENT, onUserScope);
-  }, []);
-
-  const doneCount = MISSIONS.filter((m) => completed[m.id]).length;
-  const chestUnlocked = doneCount >= CHEST_THRESHOLD;
-
-  const toggle = (id: string) =>
-    setCompleted((prev) => ({ ...prev, [id]: !prev[id] }));
-
-  const handleOpenChest = () => {
-    const uid = getUserId();
-    if (uid) {
-      saveLocalGems(uid, getLocalGems(uid) + CHEST_REWARD_GEMS);
-      window.dispatchEvent(new CustomEvent(GEMS_UPDATE_EVENT));
-      saveLocalXP(uid, getLocalXP(uid) + CHEST_REWARD_XP);
-      window.dispatchEvent(new CustomEvent(XP_UPDATE_EVENT));
-    }
-    setChestOpened(true);
-  };
+  const {
+    missions,
+    completed,
+    doneCount,
+    chestUnlocked,
+    chestOpened,
+    handleOpenChest,
+    specialQuest,
+    questCompleted,
+    questAvailable,
+    CHEST_THRESHOLD,
+    CHEST_REWARD_GEMS,
+    CHEST_REWARD_XP,
+    SPECIAL_QUEST_COOLDOWN_DAYS,
+  } = useDailyMissions();
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
       <AppPageHeader
         title="Missões Diárias"
-        subtitle={`Complete as ${MISSIONS.length} missões para ganhar +${CHEST_REWARD_XP} XP e +${CHEST_REWARD_GEMS} 💎`}
+        subtitle={`Complete ${CHEST_THRESHOLD} missões para ganhar +${CHEST_REWARD_XP} XP e +${CHEST_REWARD_GEMS} 💎`}
         back="/home"
       />
 
       <div className="mx-auto w-full max-w-lg px-4 py-4">
+        {/* Daily chest */}
         <div
           className={cn(
             "mb-5 overflow-hidden rounded-2xl border-2 p-4 transition-colors",
@@ -114,17 +44,21 @@ export default function MissionsPage() {
             <div
               className={cn(
                 "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl",
-                chestUnlocked ? "bg-luxury text-luxury-foreground animate-pulse" : "bg-page-bg-light text-foreground-tertiary",
+                chestUnlocked
+                  ? "bg-luxury text-luxury-foreground animate-pulse"
+                  : "bg-page-bg-light text-foreground-tertiary",
               )}
             >
               <Gift className="h-6 w-6" strokeWidth={2.4} />
             </div>
             <div className="flex-1">
               <p className="text-sm font-extrabold text-foreground-dark">
-                Baú diário {chestOpened ? "aberto!" : chestUnlocked ? "disponível" : "em progresso"}
+                Baú diário{" "}
+                {chestOpened ? "aberto!" : chestUnlocked ? "disponível" : "em progresso"}
               </p>
               <p className="text-[11px] text-foreground-tertiary">
-                Conclua {CHEST_THRESHOLD} missões para ganhar +{CHEST_REWARD_XP} XP e +{CHEST_REWARD_GEMS} 💎
+                Conclua {CHEST_THRESHOLD} missões para ganhar +{CHEST_REWARD_XP} XP e +
+                {CHEST_REWARD_GEMS} 💎
               </p>
             </div>
             <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-600">
@@ -150,7 +84,8 @@ export default function MissionsPage() {
             >
               {chestOpened ? (
                 <>
-                  <Sparkles className="h-4 w-4" /> +{CHEST_REWARD_XP} XP e +{CHEST_REWARD_GEMS} 💎 coletados
+                  <Sparkles className="h-4 w-4" /> +{CHEST_REWARD_XP} XP e +{CHEST_REWARD_GEMS}{" "}
+                  💎 coletados
                 </>
               ) : (
                 <>
@@ -161,19 +96,84 @@ export default function MissionsPage() {
           )}
         </div>
 
+        {/* Special quest */}
+        <div
+          className={cn(
+            "mb-5 rounded-2xl border-2 p-4 transition-colors",
+            questCompleted
+              ? "border-luxury/40 bg-luxury/5"
+              : questAvailable
+              ? "border-amber-400/60 bg-amber-50/50"
+              : "border-stroke-light bg-card",
+          )}
+        >
+          <div className="mb-2 flex items-center gap-2">
+            <Star
+              className={cn(
+                "h-4 w-4",
+                questCompleted
+                  ? "fill-luxury text-luxury"
+                  : questAvailable
+                  ? "text-amber-500"
+                  : "text-foreground-tertiary",
+              )}
+            />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-foreground-tertiary">
+              Quest especial do baú
+            </span>
+            {!questAvailable && !questCompleted && (
+              <span className="ml-auto rounded-full bg-stroke-light px-2 py-0.5 text-[10px] font-bold text-foreground-tertiary">
+                Cooldown {SPECIAL_QUEST_COOLDOWN_DAYS} dias
+              </span>
+            )}
+            {questCompleted && (
+              <span className="ml-auto rounded-full bg-luxury/20 px-2 py-0.5 text-[10px] font-bold text-luxury">
+                +{specialQuest.gems} 💎 coletados
+              </span>
+            )}
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="flex-1">
+              <p
+                className={cn(
+                  "text-sm font-bold",
+                  questCompleted
+                    ? "line-through text-foreground-tertiary"
+                    : "text-foreground-dark",
+                )}
+              >
+                {specialQuest.title}
+              </p>
+              <p className="mt-0.5 text-[11px] text-foreground-tertiary">{specialQuest.desc}</p>
+            </div>
+            <span className="shrink-0 rounded-full bg-luxury/15 px-2 py-0.5 text-[11px] font-bold text-luxury">
+              +{specialQuest.gems} 💎
+            </span>
+          </div>
+          {questAvailable && !questCompleted && (
+            <Link
+              to={specialQuest.link}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 py-2.5 text-sm font-bold text-white transition-colors hover:bg-amber-500"
+            >
+              {specialQuest.linkLabel}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          )}
+        </div>
+
+        {/* Mission list — read-only, no click-to-complete */}
         <div className="flex flex-col gap-3">
-          {MISSIONS.map((m) => {
+          {missions.map((m) => {
             const Icon = m.icon;
             const isDone = completed[m.id];
             return (
-              <button
+              <div
                 key={m.id}
-                onClick={() => toggle(m.id)}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-2xl border-2 p-4 text-left transition-colors",
+                  "flex w-full items-center gap-3 rounded-2xl border-2 p-4",
                   isDone
                     ? "border-emerald/40 bg-surface-success/60"
-                    : "border-stroke-light bg-card hover:border-emerald/30",
+                    : "border-stroke-light bg-card",
                 )}
               >
                 <div
@@ -185,10 +185,19 @@ export default function MissionsPage() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1">
-                  <p className={cn("text-sm font-bold", isDone ? "text-emerald-dark line-through decoration-2" : "text-foreground-dark")}>
+                  <p
+                    className={cn(
+                      "text-sm font-bold",
+                      isDone
+                        ? "text-emerald-dark line-through decoration-2"
+                        : "text-foreground-dark",
+                    )}
+                  >
                     {m.title}
                   </p>
-                  <p className="text-[11px] text-foreground-tertiary">{m.desc}</p>
+                  <p className="text-[11px] text-foreground-tertiary">
+                    {isDone ? m.desc : m.hint}
+                  </p>
                 </div>
                 <div className="flex flex-col items-end gap-1">
                   <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-600">
@@ -196,11 +205,15 @@ export default function MissionsPage() {
                   </span>
                   {isDone ? (
                     <CheckCircle2 className="h-5 w-5 text-emerald" />
+                  ) : m.link ? (
+                    <Link to={m.link} aria-label={`Ir para ${m.title}`}>
+                      <ArrowRight className="h-5 w-5 text-forest transition-colors hover:text-emerald" />
+                    </Link>
                   ) : (
                     <Circle className="h-5 w-5 text-stroke-light" />
                   )}
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>

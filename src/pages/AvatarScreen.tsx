@@ -5,6 +5,7 @@ import { useAvatar, AVATAR_OPTIONS, type AvatarOption, type AvatarTier } from "@
 import { BottomNav } from "@/components/BottomNav"
 import { cn } from "@/lib/utils"
 import { sileo } from "sileo"
+import { tryCompleteSpecialQuest } from "@/lib/missions"
 
 type FilterValue = "Todos" | AvatarTier
 
@@ -40,6 +41,7 @@ export default function AvatarScreen() {
       return
     }
     setEquipped(avatar.id)
+    tryCompleteSpecialQuest("buy-avatar")
     sileo.success({
       title: "Avatar equipado!",
       description: `Você agora está usando ${avatar.name}`,

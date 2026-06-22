@@ -1,5 +1,6 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
+import { completeMission } from "@/lib/missions"
 import { X, Zap, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MascotGlow } from "@/components/MascotGlow"
@@ -155,6 +156,7 @@ export default function QuickQuiz() {
     if (isLast) {
       const finalScore = score + (confirmed && selected === currentQuestion.correct ? 1 : 0)
       const timeElapsed = Math.round((Date.now() - startTime.current) / 1000)
+      completeMission("quiz")
       navigate("/quiz-result", {
         state: { score: finalScore, total, timeElapsed, xpEarned: finalScore * 50 },
       })

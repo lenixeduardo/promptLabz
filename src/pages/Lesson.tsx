@@ -15,6 +15,7 @@ import { getActivities, getProofTask, TRACK_TOTALS, isMatch, isOrder, isEssay } 
 import type { LessonActivity } from "@/lib/lessonContent";
 import { ActivityRenderer } from "@/components/activities/ActivityRenderer";
 import { scopedKey } from "@/lib/userScope";
+import { completeMission } from "@/lib/missions";
 
 const proofKey = (track: TrackId, module: number) =>
   scopedKey(`promptlabz:proof:${track}:${module}`);
@@ -133,7 +134,10 @@ export default function LessonPage() {
   const isLastLesson = module === TRACK_TOTALS[track] - 1;
 
   useEffect(() => {
-    if (lessonComplete) advanceModule(TRACK_TOTALS[track], track);
+    if (lessonComplete) {
+      advanceModule(TRACK_TOTALS[track], track);
+      completeMission("lesson");
+    }
   }, [lessonComplete, track]);
 
   if (finished && needsProof && !proofDone) {

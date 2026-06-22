@@ -18,6 +18,7 @@ const SCOPED_PREFIXES = [
   "promptlabz:dailyMissions",
   "promptlabz:proof:",
   "promptlabz:lastStreakCelebrated",
+  "promptlabz:specialQuestV2",
 ];
 
 const EVENT = "promptlabz:user-scope-change";

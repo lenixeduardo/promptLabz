@@ -1,9 +1,10 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { ChevronDown, ChevronUp, Copy, ArrowRight } from "lucide-react"
+import { ChevronDown, ChevronUp, Copy, ArrowRight, Heart } from "lucide-react"
 import { BottomNav } from "@/components/BottomNav"
 import { cn } from "@/lib/utils"
 import { trackPromptUsed } from "@/lib/analytics"
+import { useFavoritePrompts } from "@/hooks/useFavoritePrompts"
 
 const PROMPT_DATA = {
   id: "1",
@@ -88,6 +89,8 @@ export default function PromptDetail() {
   const navigate = useNavigate()
   const [openItem, setOpenItem] = useState<string | null>("1")
   const [copied, setCopied] = useState(false)
+  const { toggleFavoritePrompt, isFavoritePrompt } = useFavoritePrompts()
+  const isFav = isFavoritePrompt(PROMPT_DATA.id)
 
   function handleCopy() {
     navigator.clipboard.writeText(PROMPT_DATA.text).then(() => {
@@ -109,6 +112,15 @@ export default function PromptDetail() {
             <ArrowRight className="h-4 w-4 rotate-180 text-primary-dark" />
           </button>
           <span className="text-xs font-semibold text-[#3E6B50]">{PROMPT_DATA.category}</span>
+          <button
+            onClick={() => toggleFavoritePrompt(PROMPT_DATA.id)}
+            className="ml-auto flex h-9 w-9 items-center justify-center rounded-full border border-stroke-muted bg-white shadow-sm transition-all active:scale-95"
+            aria-label={isFav ? "Remover dos favoritos" : "Salvar nos favoritos"}
+          >
+            <Heart
+              className={cn("h-4 w-4 transition-colors", isFav ? "fill-red-500 text-red-500" : "text-foreground-tertiary")}
+            />
+          </button>
         </div>
         <div className="flex items-start justify-between">
           <div className="flex-1 pr-2">
