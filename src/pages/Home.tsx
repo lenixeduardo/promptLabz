@@ -10,6 +10,8 @@ import {
   Check,
   Zap,
   Gift,
+  Search,
+  Wand2,
 } from "lucide-react";
 import { NotificationsBell } from "@/components/NotificationsBell";
 import { AppBottomNav } from "@/components/AppBottomNav";
@@ -242,6 +244,49 @@ export default function HomePage() {
               {currentXPInLevel} / {targetXPInLevel} XP para o próximo nível
               </p>
           </div>
+
+          {/* ── Analisador de Prompts card ── */}            <Link
+            to="/prompt-analyzer"
+            className="group flex items-center gap-3 rounded-2xl border-2 border-emerald/30 bg-gradient-to-br from-emerald/[0.08] to-card p-4 transition-all hover:border-emerald/60 hover:shadow-md active:scale-[0.98]"
+          >
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-emerald/10 text-emerald">
+              <Search className="h-7 w-7" strokeWidth={1.5} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-extrabold text-foreground-dark">Analisador de Prompts</p>
+                <span className="inline-flex items-center rounded-full bg-emerald/15 px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-emerald shrink-0">
+                  Novo
+                </span>
+              </div>
+              <p className="text-[11px] text-foreground-tertiary mt-0.5">
+                Envie seu histórico e descubra como melhorar seus prompts.
+              </p>
+            </div>
+            <ArrowRight className="h-5 w-5 text-emerald transition-transform group-hover:translate-x-0.5" />
+          </Link>
+
+          {/* ── Prompt Enhancer card ── */}
+          <Link
+            to="/prompt-enhancer"
+            className="group flex items-center gap-3 rounded-2xl border-2 border-luxury/30 bg-gradient-to-br from-luxury/[0.08] to-card p-4 transition-all hover:border-luxury/60 hover:shadow-md active:scale-[0.98]"
+          >
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-luxury/10 text-luxury">
+              <Wand2 className="h-7 w-7" strokeWidth={1.5} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-extrabold text-foreground-dark">Prompt Enhancer</p>
+                <span className="inline-flex items-center rounded-full bg-emerald/15 px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-emerald shrink-0">
+                  Novo
+                </span>
+              </div>
+              <p className="text-[11px] text-foreground-tertiary mt-0.5">
+                Cole seu prompt e receba uma versão melhorada em segundos.
+              </p>
+            </div>
+            <ArrowRight className="h-5 w-5 text-luxury transition-transform group-hover:translate-x-0.5" />
+          </Link>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-2xl border-2 border-stroke-light bg-card px-4 py-3">

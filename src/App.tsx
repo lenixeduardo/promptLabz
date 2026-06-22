@@ -62,6 +62,8 @@ const Lab = lazy(() => import("@/pages/Lab"))
 const Missions = lazy(() => import("@/pages/Missions"))
 const ModuleExam = lazy(() => import("@/pages/ModuleExam"))
 const PromptWars = lazy(() => import("@/pages/PromptWars"))
+const PromptAnalyzer = lazy(() => import("@/pages/PromptAnalyzer"))
+const PromptEnhancer = lazy(() => import("@/pages/PromptEnhancer"))
 const Roadmap = lazy(() => import("@/pages/Roadmap"))
 const Settings = lazy(() => import("@/pages/Settings"))
 const Community = lazy(() => import("@/pages/Community"))
@@ -429,12 +431,26 @@ export default function App() {
                     <ModuleExam />
                   </PrivateRoute>
                 }
-              />
-              <Route
-                path="/prompt-wars"
+              />              <Route path="/prompt-wars"
                 element={
                   <PrivateRoute>
                     <PromptWars />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/prompt-analyzer"
+                element={
+                  <PrivateRoute>
+                    <PromptAnalyzer />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/prompt-enhancer"
+                element={
+                  <PrivateRoute>
+                    <PromptEnhancer />
                   </PrivateRoute>
                 }
               />
