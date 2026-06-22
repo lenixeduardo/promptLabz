@@ -111,6 +111,8 @@
     --duo-sky-blue: #1cb0f6;
     --duo-border-subtle: #e5e5e5;
     --duo-disabled-placeholder: #afafaf;
+    --duo-input-bg: #ffffff;
+    --duo-social-btn-bg: #ffffff;
   }
 
   .dark {
@@ -172,6 +174,14 @@
     --secondary: #3B82F6;
     --accent: #F5A623;
     --muted-default: #14201B;
+    /* ── Duolingo design tokens (dark) ── */
+    --duo-muted-text: #c2c2c2;
+    --duo-primary-text: #f0f0f0;
+    --duo-secondary-text: #a0a0a0;
+    --duo-border-subtle: #3a3a3a;
+    --duo-disabled-placeholder: #666666;
+    --duo-input-bg: #1c1c1c;
+    --duo-social-btn-bg: #2a2a2a;
     /* Semantic design tokens */
     --bg-primary: #05080A;
     --bg-secondary: #0E1513;
