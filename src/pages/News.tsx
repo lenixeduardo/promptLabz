@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react"
+import * as Dialog from "@radix-ui/react-dialog"
+import { ExternalLink, X } from "lucide-react"
 import { AppBottomNav } from "@/components/AppBottomNav"
 import {
   NEWS_ARTICLES,
@@ -43,12 +45,23 @@ function mapDbArticle(row: DbNewsArticle): NewsArticle {
   }
 }
 
-function NewsCard({ article }: { article: NewsArticle }) {
+function NewsCard({
+  article,
+  onOpen,
+}: {
+  article: NewsArticle
+  onOpen: (article: NewsArticle) => void
+}) {
   const [imgError, setImgError] = useState(false)
   const coverSrc = imgError ? CATEGORY_COVER_IMAGES[article.category] : article.imageUrl
 
-  const cardContent = (
-    <div className="overflow-hidden rounded-2xl border border-stroke-muted bg-white">
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(article)}
+      aria-label={article.title}
+      className="group w-full overflow-hidden rounded-2xl border border-stroke-muted bg-white text-left transition-colors hover:border-emerald focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald focus-visible:ring-offset-2"
+    >
       {/* Cover image */}
       <div className="relative h-44 w-full overflow-hidden bg-pageBgLight">
         <img
@@ -88,24 +101,8 @@ function NewsCard({ article }: { article: NewsArticle }) {
           )}
         </div>
       </div>
-    </div>
+    </button>
   )
-
-  if (article.sourceUrl) {
-    return (
-      <a
-        href={article.sourceUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block"
-        aria-label={article.title}
-      >
-        {cardContent}
-      </a>
-    )
-  }
-
-  return <div className="group">{cardContent}</div>
 }
 
 function NewsCardSkeleton() {
@@ -125,6 +122,7 @@ export default function News() {
   const [activeCategory, setActiveCategory] = useState<"Todos" | NewsCategory>("Todos")
   const [articles, setArticles] = useState<NewsArticle[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null)
 
   useEffect(() => {
     getNewsArticles().then(({ data }) => {
@@ -180,9 +178,67 @@ export default function News() {
             <p className="text-sm font-medium text-foregroundTertiary">Nenhuma notícia nessa categoria.</p>
           </div>
         ) : (
-          filtered.map((article) => <NewsCard key={article.id} article={article} />)
+          filtered.map((article) => (
+            <NewsCard key={article.id} article={article} onOpen={setSelectedArticle} />
+          ))
         )}
       </div>
+
+      <Dialog.Root
+        open={selectedArticle !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedArticle(null)
+        }}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50" />
+          {selectedArticle && (
+            <Dialog.Content className="fixed inset-x-4 top-1/2 z-50 mx-auto max-h-[85vh] max-w-md -translate-y-1/2 overflow-y-auto rounded-2xl border border-stroke-muted bg-white p-5 shadow-xl focus:outline-none">
+              <div className="relative -mx-5 -mt-5 mb-5 h-48 overflow-hidden rounded-t-2xl bg-pageBgLight">
+                <img
+                  src={selectedArticle.imageUrl}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <Dialog.Close
+                  aria-label="Fechar noticia"
+                  className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-primary-dark shadow-sm transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald"
+                >
+                  <X className="h-5 w-5" />
+                </Dialog.Close>
+                <span
+                  className={cn(
+                    "absolute bottom-3 left-4 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide",
+                    CATEGORY_STYLES[selectedArticle.category],
+                  )}
+                >
+                  {selectedArticle.category}
+                </span>
+              </div>
+
+              <p className="text-[10px] text-foregroundPlaceholder">{selectedArticle.date}</p>
+              <Dialog.Title className="mt-2 text-xl font-bold leading-tight text-foregroundDark">
+                {selectedArticle.title}
+              </Dialog.Title>
+              <Dialog.Description className="mt-3 text-sm leading-relaxed text-foregroundSecondary">
+                {selectedArticle.description}
+              </Dialog.Description>
+              {selectedArticle.sourceUrl && (
+                <a
+                  href={selectedArticle.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-primary-dark px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald focus-visible:ring-offset-2"
+                >
+                  Ler artigo completo
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              )}
+            </Dialog.Content>
+          )}
+        </Dialog.Portal>
+      </Dialog.Root>
 
       <AppBottomNav />
     </div>
