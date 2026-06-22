@@ -18,7 +18,7 @@ export function DailyTipCard({ tip }: DailyTipCardProps) {
           <img
             src="/assets/mascot-teacher.png"
             alt="Gatinha professora dando a dica do dia"
-            className="h-full w-full object-contain"
+            className="h-full w-full object-cover object-center"
           />
         </div>
 
