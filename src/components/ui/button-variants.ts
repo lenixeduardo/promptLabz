@@ -10,12 +10,12 @@ export const buttonVariants = cva(
           "rounded-[12px] bg-[#58cc02] text-white shadow-[0_4px_0_0_#58a700] hover:bg-[#5ad002] active:shadow-none active:translate-y-[4px]",
         /* Duolingo secondary — borda sutil, texto azul céu */
         outline:
-          "rounded-[12px] border-2 border-[#e5e5e5] bg-white text-[#1cb0f6] hover:bg-[#f7f7f7] active:translate-y-[2px]",
+          "rounded-[12px] border-2 border-[#e5e5e5] dark:border-[#3a3a3a] bg-white text-[#1cb0f6] hover:bg-[#f7f7f7] dark:hover:bg-[#2a2a2a] active:translate-y-[2px]",
         /* Ghost — sem borda, texto verde */
-        ghost: "rounded-[12px] text-[#58cc02] hover:bg-[#d7ffb8]/40 active:bg-[#d7ffb8]/60",
+        ghost: "rounded-[12px] text-[#58cc02] hover:bg-[#d7ffb8]/40 dark:hover:bg-[#58cc02]/10 active:bg-[#d7ffb8]/60 dark:active:bg-[#58cc02]/20",
         /* Social — branco com borda leve, usado em login Google/Apple */
         social:
-          "rounded-[12px] border-2 border-[#e5e5e5] bg-white text-[#3c3c3c] shadow-sm hover:bg-[#f7f7f7] active:translate-y-[2px]",
+          "rounded-[12px] border-2 border-[#e5e5e5] dark:border-[#3a3a3a] bg-white text-[#3c3c3c] dark:text-foreground shadow-sm hover:bg-[#f7f7f7] dark:hover:bg-[#2a2a2a] active:translate-y-[2px]",
         /* Destructive */
         destructive:
           "rounded-[12px] bg-destructive text-destructive-foreground shadow-[0_4px_0_0_hsl(var(--destructive)/0.6)] hover:bg-destructive/90 active:shadow-none active:translate-y-[4px]",
