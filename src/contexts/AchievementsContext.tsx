@@ -105,14 +105,26 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
   // ── Methods ──────────────────────────────────────────────────────────────
 
   const checkLessonComplete = useCallback(
-    (wasPerfect: boolean): Achievement[] => {
+    (wasPerfect: boolean, lessonId?: string): Achievement[] => {
       const prev = dataRef.current
+
+      // Deduplicate: if we already have this lessonId recorded, don't increment counters
+      const completedIds: string[] = (prev as any).completedLessonIds ?? []
+      const alreadyCompleted = lessonId ? completedIds.includes(lessonId) : false
+
+      if (alreadyCompleted) return []
+
+      const nextCompletedIds = lessonId ? [...completedIds, lessonId] : completedIds
+
       const { newUnlocks, data: next } = checkAchievements(prev, {
         totalLessonsCompleted: prev.totalLessonsCompleted + 1,
         perfectCount: prev.perfectCount + (wasPerfect ? 1 : 0),
       })
-      if (newUnlocks.length > 0) {
-        setData(next)
+
+      const nextData = { ...next, completedLessonIds: nextCompletedIds } as typeof next
+
+      if (newUnlocks.length > 0 || lessonId) {
+        setData(nextData)
         const uid = userIdRef.current
         if (uid) {
           newUnlocks.forEach((achievement) => {

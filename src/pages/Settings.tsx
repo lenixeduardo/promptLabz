@@ -47,6 +47,7 @@ export default function SettingsPage() {
     await logout();
     navigate("/login");
   }
+
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   useEffect(() => {

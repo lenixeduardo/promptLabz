@@ -76,7 +76,9 @@ export function useStreak(): StreakState {
   useEffect(() => {
     setState(markStreakActivity());
 
-    const onFocus = () => setState(markStreakActivity());
+    // On focus, only read the streak — don't mark activity again to avoid
+    // unnecessary re-renders and multiple streak updates within the same day.
+    const onFocus = () => setState(getStreak());
     const onStorage = (e: StorageEvent) => {
       if (e.key && e.key.includes(STREAK_BASE)) setState(getStreak());
     };

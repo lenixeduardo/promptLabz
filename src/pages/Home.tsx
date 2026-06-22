@@ -204,12 +204,13 @@ export default function HomePage() {
             <p className="text-xs text-foreground-tertiary">Pronto para mais um desafio?</p>
           </div>
           <div className="flex items-center gap-2">
-            <button
+            <Link
+              to="/favorites"
               className="flex items-center justify-center rounded-full border border-stroke-light bg-card/70 p-2 shadow-sm text-forest hover:bg-surface-soft transition-colors"
               aria-label="Favoritos"
             >
               <Heart className="h-5 w-5" strokeWidth={2.2} />
-            </button>
+            </Link>
             <NotificationsBell />
             <img
               src={equipped.image}

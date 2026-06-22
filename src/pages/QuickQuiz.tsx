@@ -129,6 +129,7 @@ export default function QuickQuiz() {
   const [selected, setSelected] = useState<string | null>(null)
   const [confirmed, setConfirmed] = useState(false)
   const [score, setScore] = useState(0)
+  const scoreRef = useRef(0)
   const startTime = useRef(Date.now())
 
   const currentQuestion = questions[currentIndex]
@@ -144,7 +145,9 @@ export default function QuickQuiz() {
     if (!selected) return
     const isCorrect = selected === currentQuestion.correct
     if (isCorrect) {
-      setScore((s) => s + 1)
+      const newScore = scoreRef.current + 1
+      scoreRef.current = newScore
+      setScore(newScore)
       sileo.success({ title: "Correto!", description: "Muito bem! 🎉" })
     } else {
       sileo.error({ title: "Incorreto", description: "Verifique a resposta correta abaixo." })
@@ -154,7 +157,7 @@ export default function QuickQuiz() {
 
   function advance() {
     if (isLast) {
-      const finalScore = score + (confirmed && selected === currentQuestion.correct ? 1 : 0)
+      const finalScore = scoreRef.current
       const timeElapsed = Math.round((Date.now() - startTime.current) / 1000)
       completeMission("quiz")
       navigate("/quiz-result", {

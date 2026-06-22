@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { supabase } from "@/lib/supabase";
 import { getErrorMessage } from "@/lib/utils";
@@ -64,7 +62,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         setComment("");
       }
     } catch (err) {
-      setError(getErrorMessage(err, "Failed to load review"));
+      setError(getErrorMessage(err, "Erro ao carregar avaliação"));
     } finally {
       setLoading(false);
     }
@@ -84,12 +82,12 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
   const handleSubmit = async () => {
     if (rating < 1 || rating > 5) {
-      setError("Please select a rating between 1 and 5 stars");
+      setError("Selecione uma avaliação entre 1 e 5 estrelas");
       return;
     }
 
     if (!user) {
-      setError("User not authenticated");
+      setError("Usuário não autenticado");
       return;
     }
 
@@ -115,7 +113,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
       if (result.error) throw new Error(result.error);
 
-      setSuccess("Thank you for your feedback!");
+      setSuccess("Obrigado pelo seu feedback!");
       setUserReview(result.data);
 
       // Reset form after successful submission
@@ -125,7 +123,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         setSuccess(null);
       }, 2000);
     } catch (err) {
-      setError(getErrorMessage(err, "Failed to save review"));
+      setError(getErrorMessage(err, "Erro ao salvar avaliação"));
     } finally {
       setLoading(false);
     }
@@ -139,7 +137,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
       return;
     }
 
-    if (!window.confirm("Are you sure you want to delete your review?")) {
+    if (!window.confirm("Tem certeza que deseja excluir sua avaliação?")) {
       return;
     }
 
@@ -151,7 +149,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
       const result = await deleteReview(userReview.id, user.id);
       if (result.error) throw new Error(result.error);
 
-      setSuccess("Review deleted successfully");
+      setSuccess("Avaliação excluída com sucesso");
       setUserReview(null);
       setRating(0);
       setComment("");
@@ -162,7 +160,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         onOpenChange(false);
       }, 2000);
     } catch (err) {
-      setError(getErrorMessage(err, "Failed to delete review"));
+      setError(getErrorMessage(err, "Erro ao excluir avaliação"));
     } finally {
       setLoading(false);
     }
@@ -227,6 +225,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
               placeholder="O que você achou do PromptLabz? Como podemos melhorar?"
               className="min-h-[80px]"
               disabled={loading}
+              maxLength={1000}
             />
           </div>
         </div>

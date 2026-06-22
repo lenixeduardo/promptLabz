@@ -88,6 +88,8 @@ async function fetchHackerNews(): Promise<ArticleInsert[]> {
       (s) =>
         s?.type === "story" &&
         s.url &&
+        typeof s.url === "string" &&
+        (s.url.startsWith("https://") || s.url.startsWith("http://")) &&
         s.title &&
         matchesAiFilter(s.title),
     )
@@ -137,7 +139,7 @@ async function fetchDevTo(): Promise<ArticleInsert[]> {
         category,
         image_emoji: emoji,
         image_url: coverImage,
-        source_url: a.url as string,
+        source_url: (a.url as string).startsWith("https://") || (a.url as string).startsWith("http://") ? a.url as string : "",
         external_id: `devto_${a.id}`,
         published_at: (a.published_at as string) || new Date().toISOString(),
       }

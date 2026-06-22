@@ -624,7 +624,7 @@ export async function getUserReview(userId: string): Promise<DbResult<DbReview>>
     if (error) throw error
     return { data: data as DbReview | null, error: null }
   } catch (err) {
-    return { data: null, error: getErrorMessage(err, "Failed to load user review") }
+    return { data: null, error: getErrorMessage(err, "Erro ao carregar avaliação do usuário") }
   }
 }
 
