@@ -72,7 +72,7 @@ function TabContent({ tab, template }: { tab: Tab; template: Template }) {
           <p className="mb-2 text-xs font-bold uppercase tracking-wider text-foregroundMuted">
             Prompt do Template
           </p>
-          <div className="rounded-xl bg-[#F5FBF7] p-3">
+          <div className="rounded-xl bg-[#F5FBF7] dark:bg-surface-soft p-3">
             <p className="text-xs leading-relaxed text-foregroundDark">
               {template.promptContent}
             </p>
@@ -168,7 +168,7 @@ function LivePreview({ template }: { template: Template }) {
 
             <div className="grid grid-cols-2 gap-2">
               {template.webSections.slice(4, 7).map((section) => (
-                <div key={section} className="rounded-xl border border-stroke-light bg-[#F5FBF7] p-3">
+                <div key={section} className="rounded-xl border border-stroke-light bg-[#F5FBF7] dark:bg-surface-soft p-3">
                   <div className="mb-2 h-2 w-20 rounded-full bg-primary-dark/20" />
                   <div className="space-y-1.5">
                     <div className="h-1.5 w-full rounded-full bg-stroke-light/80" />
@@ -240,7 +240,7 @@ export default function TemplateDetail() {
   return (
     <div className="min-h-screen bg-surface-soft pb-32">
       {/* Top header */}
-      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-pageBgLight bg-white px-4 pt-10 pb-3">
+      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-pageBgLight bg-white dark:bg-card dark:border-stroke-light px-4 pt-10 pb-3">
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(-1)}
@@ -263,7 +263,7 @@ export default function TemplateDetail() {
       </div>
 
       {/* Tabs */}
-      <div className="no-scrollbar flex gap-1 overflow-x-auto border-b border-pageBgLight bg-white px-4 pb-0">
+      <div className="no-scrollbar flex gap-1 overflow-x-auto border-b border-pageBgLight dark:border-stroke-light bg-white dark:bg-card px-4 pb-0">
         {TABS.map(({ key, label }) => (
           <button
             key={key}
@@ -271,8 +271,8 @@ export default function TemplateDetail() {
             className={cn(
               "shrink-0 border-b-2 px-4 py-2.5 text-xs font-semibold transition-colors",
               activeTab === key
-                ? "border-primary-dark text-primary-dark"
-                : "border-transparent text-foregroundMuted hover:text-primary-dark"
+                ? "border-primary-dark dark:border-emerald text-primary-dark dark:text-emerald"
+                : "border-transparent text-foregroundMuted hover:text-primary-dark dark:hover:text-emerald"
             )}
           >
             {label}
@@ -280,8 +280,8 @@ export default function TemplateDetail() {
         ))}
       </div>
 
-      {/* Hero banner */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary-dark via-emerald to-[#46996a] px-5 py-6">
+      {/* Hero banner — hardcoded dark-green gradient so it never becomes white in dark mode */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#0A1F12] via-[#22C55E] to-[#46996a] px-5 py-6">
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <h1 className="text-xl font-extrabold leading-tight text-white">
@@ -314,11 +314,11 @@ export default function TemplateDetail() {
       <TabContent tab={activeTab} template={template} />
 
       {/* Fixed bottom actions */}
-      <div className="fixed bottom-[72px] left-0 right-0 z-30 border-t border-pageBgLight bg-white px-4 py-3">
+      <div className="fixed bottom-[72px] left-0 right-0 z-30 border-t border-pageBgLight dark:border-stroke-light bg-white dark:bg-card px-4 py-3">
         <div className="mx-auto flex max-w-[460px] gap-3">
           <button
-            onClick={() => setActiveTab("live-preview")}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-primary-dark py-3 text-sm font-semibold text-primary-dark transition-all active:scale-95 hover:bg-pageBgLight"
+            onClick={() => window.open(`/template/${template.id}/preview`, "_blank")}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-primary-dark dark:border-emerald py-3 text-sm font-semibold text-primary-dark dark:text-emerald transition-all active:scale-95 hover:bg-pageBgLight dark:hover:bg-surface-soft"
           >
             <ExternalLink className="h-4 w-4" />
             Visualizar ao vivo

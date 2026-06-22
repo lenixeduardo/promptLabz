@@ -20,31 +20,94 @@ function formatCount(n: number): string {
   return String(n)
 }
 
-function MiniPreview({ color }: { color: string }) {
+function MiniPreview({ color, category }: { color: string; category: string }) {
+  const isDashboard = category === "Dashboards"
+  const isPlanner = category === "Planilhas"
+  const isReport = category === "Relatorios"
+  const isPresentation = category === "Apresentacoes"
+
   return (
     <div
       className="relative h-28 w-full overflow-hidden rounded-xl"
-      style={{ background: `linear-gradient(135deg, ${color}ee, ${color})` }}
+      style={{ background: `linear-gradient(135deg, ${color}f0, ${color}cc)` }}
     >
-      <div className="absolute inset-0 p-3 opacity-40">
-        <div className="mb-2 h-2 w-20 rounded-full bg-white/70" />
-        <div className="mb-3 h-1.5 w-28 rounded-full bg-white/50" />
-        <div className="flex gap-1.5">
-          <div className="flex-1 rounded-lg bg-white/30 p-1.5">
-            <div className="mb-1 h-1 rounded-full bg-white/60" />
-            <div className="h-4 rounded bg-white/40" />
+      {isDashboard ? (
+        <div className="absolute inset-0 p-3">
+          <div className="mb-2 h-2 w-24 rounded-full bg-white/80" />
+          <div className="grid grid-cols-3 gap-1.5 mb-2">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="rounded-lg bg-white/20 p-1.5 border border-white/30">
+                <div className="mb-1 h-1 rounded-full bg-white/50" />
+                <div className="h-3 rounded bg-white/60" />
+              </div>
+            ))}
           </div>
-          <div className="flex-1 rounded-lg bg-white/30 p-1.5">
-            <div className="mb-1 h-1 rounded-full bg-white/60" />
-            <div className="h-4 rounded bg-white/40" />
-          </div>
-          <div className="flex-1 rounded-lg bg-white/30 p-1.5">
-            <div className="mb-1 h-1 rounded-full bg-white/60" />
-            <div className="h-4 rounded bg-white/40" />
+          <div className="flex gap-1.5">
+            <div className="flex-1 h-6 rounded-lg bg-white/20 border border-white/30" />
+            <div className="w-10 h-6 rounded-lg bg-white/40" />
           </div>
         </div>
-        <div className="mt-2 h-1.5 w-16 rounded-full bg-white/50" />
-      </div>
+      ) : isPlanner ? (
+        <div className="absolute inset-0 p-3">
+          <div className="mb-2 flex items-center gap-2">
+            <div className="h-2 w-16 rounded-full bg-white/80" />
+            <div className="h-4 w-10 rounded-md bg-white/30 ml-auto" />
+          </div>
+          <div className="grid grid-cols-5 gap-1">
+            {["S", "T", "Q", "Q", "S"].map((d, i) => (
+              <div key={i} className="flex flex-col items-center gap-0.5">
+                <div className="text-[6px] font-bold text-white/60">{d}</div>
+                <div className={`h-5 w-full rounded ${i === 2 ? "bg-white/60" : "bg-white/20 border border-white/30"}`} />
+              </div>
+            ))}
+          </div>
+          <div className="mt-2 h-1.5 w-20 rounded-full bg-white/50" />
+        </div>
+      ) : isReport ? (
+        <div className="absolute inset-0 p-3">
+          <div className="mb-2 h-2 w-20 rounded-full bg-white/80" />
+          <div className="flex gap-1 mb-2 items-end">
+            {[3, 5, 4, 6, 4, 7, 5].map((h, i) => (
+              <div key={i} className="flex-1 rounded-sm bg-white/50" style={{ height: `${h * 3}px` }} />
+            ))}
+          </div>
+          <div className="space-y-1">
+            <div className="h-1 rounded-full bg-white/40 w-full" />
+            <div className="h-1 rounded-full bg-white/30 w-3/4" />
+          </div>
+        </div>
+      ) : isPresentation ? (
+        <div className="absolute inset-0 p-3">
+          <div className="h-16 rounded-xl border-2 border-white/40 bg-white/10 p-2 flex flex-col justify-center items-center gap-1">
+            <div className="h-2 w-20 rounded-full bg-white/80" />
+            <div className="h-1.5 w-14 rounded-full bg-white/50" />
+          </div>
+          <div className="mt-2 flex gap-1">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className={`flex-1 h-4 rounded border ${i === 1 ? "bg-white/40 border-white/60" : "bg-white/15 border-white/30"}`} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* Paginas Web default */
+        <div className="absolute inset-0 p-3">
+          <div className="mb-2 flex items-center gap-1.5">
+            <div className="h-1.5 w-8 rounded-full bg-white/80" />
+            <div className="h-1.5 flex-1 rounded-full bg-white/20" />
+            <div className="h-4 w-10 rounded-md bg-white/40" />
+          </div>
+          <div className="mb-2 h-2 w-28 rounded-full bg-white/80" />
+          <div className="mb-2 h-1.5 w-20 rounded-full bg-white/50" />
+          <div className="flex gap-1.5">
+            {[1, 2].map((i) => (
+              <div key={i} className="flex-1 rounded-lg bg-white/20 border border-white/30 p-1.5">
+                <div className="mb-1 h-3 rounded bg-white/30" />
+                <div className="h-1 rounded-full bg-white/40 w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -62,7 +125,7 @@ function FeaturedCard({
       className="w-44 shrink-0 overflow-hidden rounded-2xl transition-all active:scale-95"
       style={{ background: template.previewColor }}
     >
-      <MiniPreview color={template.previewColor} />
+      <MiniPreview color={template.previewColor} category={template.category} />
       <div className="px-3 pb-3 pt-2 text-left">
         <p className="line-clamp-1 text-xs font-bold text-white">{template.name}</p>
         <p className="mt-0.5 line-clamp-2 text-[10px] leading-relaxed text-white/70">

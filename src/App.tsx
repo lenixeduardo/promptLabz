@@ -50,6 +50,7 @@ const Store = lazy(() => import("@/pages/Store"))
 const Ranking = lazy(() => import("@/pages/Ranking"))
 const PromptDetail = lazy(() => import("@/pages/PromptDetail"))
 const TemplateDetail = lazy(() => import("@/pages/TemplateDetail"))
+const TemplatePreview = lazy(() => import("@/pages/TemplatePreview"))
 const Templates = lazy(() => import("@/pages/Templates"))
 const LabResult = lazy(() => import("@/pages/LabResult"))
 const QuizResult = lazy(() => import("@/pages/QuizResult"))
@@ -369,6 +370,7 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
+              <Route path="/template/:templateId/preview" element={<TemplatePreview />} />
               <Route
                 path="/lab-result"
                 element={
