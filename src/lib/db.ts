@@ -620,9 +620,9 @@ export async function getUserReview(userId: string): Promise<DbResult<DbReview>>
       .from("reviews")
       .select("id,user_id,rating,comment,created_at,updated_at")
       .eq("user_id", userId)
-      .single()
+      .maybeSingle()
     if (error) throw error
-    return { data: data as DbReview, error: null }
+    return { data: data as DbReview | null, error: null }
   } catch (err) {
     return { data: null, error: getErrorMessage(err, "Failed to load user review") }
   }

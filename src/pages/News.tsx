@@ -224,7 +224,7 @@ export default function News() {
               <Dialog.Description className="mt-3 text-sm leading-relaxed text-foregroundSecondary">
                 {selectedArticle.description}
               </Dialog.Description>
-              {selectedArticle.sourceUrl && (
+              {selectedArticle.sourceUrl && /^https?:\/\//i.test(selectedArticle.sourceUrl) && (
                 <a
                   href={selectedArticle.sourceUrl}
                   target="_blank"
