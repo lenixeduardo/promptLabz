@@ -21,7 +21,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           className={cn(
             /* Duolingo input: rounded 12px, border-subtle, text duolingo-sans 17px/500 */
-            "h-14 w-full rounded-[12px] border-2 border-[#e5e5e5] dark:border-[#3a3a3a] bg-white text-[17px] font-medium leading-[20px] text-[#3c3c3c] dark:text-foreground placeholder:text-[#afafaf] dark:placeholder:text-[#666666] shadow-sm transition-colors focus-visible:outline-none focus-visible:border-[#58cc02] focus-visible:ring-2 focus-visible:ring-[#58cc02]/20",
+            "h-14 w-full rounded-[12px] border-2 border-[#e5e5e5] dark:border-[#3a3a3a] bg-white text-[17px] font-medium leading-[20px] text-[#3c3c3c] dark:text-foreground placeholder:text-[#afafaf] shadow-sm transition-colors focus-visible:outline-none focus-visible:border-[#58cc02] focus-visible:ring-2 focus-visible:ring-[#58cc02]/20",
             icon ? "pl-14 pr-5" : "px-5",
             className
           )}
