@@ -6,6 +6,15 @@ import sourceIdentifierPlugin from 'vite-plugin-source-identifier'
 
 const isProd = process.env.BUILD_MODE === 'prod'
 const isTest = process.env.VITEST === "true" || process.env.NODE_ENV === "test"
+
+// Guard: VITE_PREVIEW_MODE must never be enabled in a production build.
+if (isProd && process.env.VITE_PREVIEW_MODE === 'true') {
+  throw new Error(
+    '[security] VITE_PREVIEW_MODE=true is not allowed in production builds. ' +
+    'Unset this variable before running a prod build.'
+  )
+}
+
 export default defineConfig({
   plugins: [
     react(),

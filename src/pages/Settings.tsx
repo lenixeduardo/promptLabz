@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Bell,
   Globe,
@@ -19,11 +19,34 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { getReminderEnabled, setReminderEnabled } from "@/hooks/useInactiveReminder";
 import { ReviewModal } from "@/components/ReviewModal";
+import { useAuth } from "@/hooks/useAuth";
+
+const NOTIF_KEY = "promptlabz:settings:notif";
+const SOUND_KEY = "promptlabz:settings:sound";
 
 export default function SettingsPage() {
-  const [notif, setNotif] = useState(true);
-  const [sound, setSound] = useState(true);
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const [notif, setNotifState] = useState(() => localStorage.getItem(NOTIF_KEY) !== "false");
+  const [sound, setSoundState] = useState(() => localStorage.getItem(SOUND_KEY) !== "false");
   const [reminders, setReminders] = useState(() => getReminderEnabled());
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  function setNotif(value: boolean) {
+    setNotifState(value);
+    localStorage.setItem(NOTIF_KEY, String(value));
+  }
+
+  function setSound(value: boolean) {
+    setSoundState(value);
+    localStorage.setItem(SOUND_KEY, String(value));
+  }
+
+  async function handleLogout() {
+    setLoggingOut(true);
+    await logout();
+    navigate("/login");
+  }
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   useEffect(() => {
@@ -124,12 +147,14 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        <Link
-          to="/login"
-          className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-red-500/30 bg-card py-3 text-sm font-bold text-red-500 hover:bg-red-500/5"
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-red-500/30 bg-card py-3 text-sm font-bold text-red-500 hover:bg-red-500/5 disabled:opacity-60"
         >
-          <LogOut className="h-4 w-4" /> Sair da conta
-        </Link>
+          <LogOut className="h-4 w-4" /> {loggingOut ? "Saindo..." : "Sair da conta"}
+        </button>
 
         <p className="text-center text-[11px] text-foreground-tertiary">
           PromptLabz · v0.3 MVP

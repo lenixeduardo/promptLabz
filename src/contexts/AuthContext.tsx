@@ -26,22 +26,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (IS_PREVIEW) return
 
-    supabase.auth
-      .getSession()
-      .then(({ data: { session }, error: sessionError }) => {
-        if (sessionError) {
-          setError(sessionError.message)
-        }
-        setUser(session?.user ?? null)
-      })
-      .catch((err) => {
-        setError(err instanceof Error ? err.message : "Erro ao carregar sessão")
-        setUser(null)
-      })
-      .finally(() => setLoading(false))
-
+    // onAuthStateChange fires INITIAL_SESSION synchronously with the current
+    // session on the first call, so no separate getSession() is needed.
+    // This avoids a race condition where getSession() and the listener
+    // could resolve in different orders and briefly show a wrong auth state.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         setUser(session?.user ?? null)
         setError(null)
         setLoading(false)
