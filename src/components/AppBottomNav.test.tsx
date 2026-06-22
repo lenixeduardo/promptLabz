@@ -14,8 +14,8 @@ vi.mock("@/lib/icons", () => {
     GraduationCap: (props: Record<string, unknown>) => (
       <svg data-testid="icon-GraduationCap" {...props} />
     ),
-    Code2: (props: Record<string, unknown>) => (
-      <svg data-testid="icon-Code2" {...props} />
+    FlaskConical: (props: Record<string, unknown>) => (
+      <svg data-testid="icon-FlaskConical" {...props} />
     ),
     Target: (props: Record<string, unknown>) => (
       <svg data-testid="icon-Target" {...props} />
