@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { NotificationsBell } from "@/components/NotificationsBell";
 import { AppBottomNav } from "@/components/AppBottomNav";
+import { DailyTipCard } from "@/components/DailyTipCard";
 import { useAvatar } from "@/components/AvatarProvider";
 import { StreakFlame } from "@/components/StreakFlame";
 import { StreakCelebration } from "@/components/StreakCelebration";
@@ -23,6 +24,7 @@ import { scopedKey, USER_SCOPE_EVENT } from "@/lib/userScope";
 import { useAuth } from "@/hooks/useAuth";
 import { getLocalXP, getLocalGems, GEMS_UPDATE_EVENT, XP_UPDATE_EVENT } from "@/lib/xp";
 import { getLevelTitle } from "@/lib/levelTitles";
+import { getDailyTip } from "@/lib/dailyTip";
 
 type TrackInfo = { id: TrackId; label: string; modules: string[] };
 
@@ -167,6 +169,7 @@ export default function HomePage() {
   const currentXPInLevel = xp % XP_PER_LEVEL;
   const targetXPInLevel = XP_PER_LEVEL;
   const xpPct = Math.round((currentXPInLevel / targetXPInLevel) * 100);
+  const dailyTip = getDailyTip();
 
   useEffect(() => {
     if (streak < 7) return;
@@ -215,6 +218,8 @@ export default function HomePage() {
         </div>
 
         <div className="flex-1 px-4 py-5 flex flex-col gap-5">
+          <DailyTipCard tip={dailyTip.text} />
+
           <div className="rounded-2xl bg-gradient-to-br from-forest to-emerald-dark p-5 text-white shadow-lg shadow-forest/20">
             <div className="flex items-center justify-between mb-3">
               <div>
