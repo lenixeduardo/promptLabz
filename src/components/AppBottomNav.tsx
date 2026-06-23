@@ -52,7 +52,7 @@ export function AppBottomNav({ items = BOTTOM_NAV_ITEMS }: AppBottomNavProps) {
               key={item.key}
               to={item.href}
               className={cn(
-                "flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors",
+                "flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-primary-dark focus-visible:outline-none",
                 isActive
                   ? "text-primary-dark"
                   : "text-foreground-muted hover:text-forest",

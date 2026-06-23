@@ -410,9 +410,9 @@ exports[`Settings — snapshot > corresponde ao snapshot com lembrete diário de
           </button>
         </div>
       </section>
-      <a
-        class="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-red-500/30 bg-card py-3 text-sm font-bold text-red-500 hover:bg-red-500/5"
-        href="/login"
+      <button
+        class="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-red-500/30 bg-card py-3 text-sm font-bold text-red-500 hover:bg-red-500/5 disabled:opacity-60"
+        type="button"
       >
         <svg
           class="lucide lucide-log-out h-4 w-4"
@@ -439,8 +439,9 @@ exports[`Settings — snapshot > corresponde ao snapshot com lembrete diário de
             y2="12"
           />
         </svg>
-         Sair da conta
-      </a>
+         
+        Sair da conta
+      </button>
       <p
         class="text-center text-[11px] text-foreground-tertiary"
       >
@@ -886,9 +887,9 @@ exports[`Settings — snapshot > corresponde ao snapshot com todos os toggles ha
           </button>
         </div>
       </section>
-      <a
-        class="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-red-500/30 bg-card py-3 text-sm font-bold text-red-500 hover:bg-red-500/5"
-        href="/login"
+      <button
+        class="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-red-500/30 bg-card py-3 text-sm font-bold text-red-500 hover:bg-red-500/5 disabled:opacity-60"
+        type="button"
       >
         <svg
           class="lucide lucide-log-out h-4 w-4"
@@ -915,8 +916,9 @@ exports[`Settings — snapshot > corresponde ao snapshot com todos os toggles ha
             y2="12"
           />
         </svg>
-         Sair da conta
-      </a>
+         
+        Sair da conta
+      </button>
       <p
         class="text-center text-[11px] text-foreground-tertiary"
       >

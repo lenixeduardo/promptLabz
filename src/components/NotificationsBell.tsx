@@ -47,10 +47,18 @@ export function NotificationsBell() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="relative" aria-label="Notificações">
+        <button
+          className="relative"
+          aria-label={`Notificações${unreadCount > 0 ? ` - ${unreadCount} não lida${unreadCount !== 1 ? "s" : ""}` : ""}`}
+          aria-badge={unreadCount > 0 ? unreadCount.toString() : undefined}
+        >
           <Bell className="h-6 w-6 text-primary-dark" strokeWidth={2} />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
+            <span
+              className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white"
+              aria-live="polite"
+              aria-label={`${unreadCount} notificação${unreadCount !== 1 ? "ões" : ""} não lida${unreadCount !== 1 ? "s" : ""}`}
+            >
               {unreadCount}
             </span>
           )}
@@ -60,12 +68,19 @@ export function NotificationsBell() {
         align="end"
         sideOffset={10}
         className="w-[340px] rounded-2xl border border-stroke-light bg-card p-0 shadow-xl"
+        role="dialog"
+        aria-label="Painel de notificações"
+        aria-describedby="notifications-header"
       >
-        <div className="flex items-center justify-between px-4 pt-4 pb-2">
-          <h3 className="text-base font-extrabold text-primary-dark">Notificações</h3>
+        <div className="flex items-center justify-between px-4 pt-4 pb-2" id="notifications-header">
+          <h3 className="text-base font-extrabold text-primary-dark">
+            Notificações {unreadCount > 0 && <span aria-live="polite">({unreadCount} não lida{unreadCount !== 1 ? "s" : ""})</span>}
+          </h3>
           <button
             onClick={handleMarkAllRead}
             className="text-xs font-bold text-emerald hover:text-emerald-dark"
+            aria-label="Marcar todas as notificações como lidas"
+            disabled={unreadCount === 0}
           >
             Marcar todas como lidas
           </button>

@@ -278,29 +278,39 @@ export default function PromptEnhancerPage() {
               onChange={(e) => setPromptText(e.target.value.slice(0, MAX_CHARS))}
               placeholder="Cole ou digite seu prompt aqui…"
               className="w-full min-h-[120px] rounded-xl border-2 border-stroke-light bg-surface-soft p-3.5 text-sm text-foreground-dark placeholder-foreground-placeholder resize-none focus:border-emerald focus:outline-none focus:ring-2 focus:ring-emerald/20 transition-colors"
+              id="prompt-enhancer-input"
               aria-label="Digite ou cole o prompt que deseja melhorar"
+              aria-describedby="prompt-enhancer-help char-limit-status"
+              aria-required="true"
               rows={4}
             />
             <div className="mt-2 flex items-center justify-between px-0.5">
               <span
+                id="char-limit-status"
                 className={cn(
                   "text-[11px] font-semibold",
                   promptText.length > MAX_CHARS * 0.9
                     ? "text-red-400"
                     : "text-foreground-placeholder",
                 )}
+                role="status"
+                aria-live="polite"
               >
-                {promptText.length}/{MAX_CHARS}
+                {promptText.length}/{MAX_CHARS} caracteres
               </span>
               {promptText.length > 0 && (
                 <button
                   onClick={() => setPromptText("")}
                   className="text-[11px] font-semibold text-red-400 hover:text-red-500 transition-colors"
+                  aria-label="Limpar texto do prompt"
                 >
                   Limpar
                 </button>
               )}
             </div>
+            <p id="prompt-enhancer-help" className="sr-only">
+              Digite ou cole um prompt existente. Você pode colar prompts de até {MAX_CHARS} caracteres. Use qualquer idioma.
+            </p>
           </div>
         </div>
 

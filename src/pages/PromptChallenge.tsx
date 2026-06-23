@@ -141,19 +141,25 @@ export default function PromptChallenge() {
         </div>
 
         {/* Prompt textarea */}
-        <p className="mb-2 text-base font-bold text-foregroundDark">Seu prompt</p>
+        <label htmlFor="prompt-input" className="mb-2 text-base font-bold text-foregroundDark">Seu prompt</label>
         <div className="relative mb-4">
           <textarea
+            id="prompt-input"
             value={promptText}
             onChange={(e) => {
               if (e.target.value.length <= MAX_CHARS) setPromptText(e.target.value)
             }}
             placeholder="Digite aqui seu prompt..."
             rows={6}
+            aria-label="Campo de entrada para seu prompt"
+            aria-describedby="prompt-description char-count"
             className="w-full resize-none rounded-2xl border border-stroke-muted bg-white px-4 py-3 pb-7 text-sm leading-relaxed text-foregroundDark placeholder:text-[#B0C0B5] focus:border-emerald focus:outline-none focus:ring-2 focus:ring-emerald/20"
           />
-          <span className="absolute bottom-3 right-4 text-xs text-foregroundPlaceholder">
-            {promptText.length}/{MAX_CHARS}
+          <span id="char-count" className="absolute bottom-3 right-4 text-xs text-foregroundPlaceholder" aria-live="polite">
+            {promptText.length}/{MAX_CHARS} caracteres
+          </span>
+          <span id="prompt-description" className="sr-only">
+            Digite seu prompt com contexto claro, objetivo bem definido e especificações de saída. Mínimo {MIN_CHARS} caracteres, máximo {MAX_CHARS} caracteres.
           </span>
         </div>
 

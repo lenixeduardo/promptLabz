@@ -41,10 +41,15 @@ export function LivesProvider({ children }: { children: React.ReactNode }) {
   // Load from localStorage and apply any offline recharge
   useEffect(() => {
     if (!user) return
+    let parsed: Stored = { lives: MAX_LIVES, lastRechargeTime: Date.now(), lastPerfectDate: null }
     const raw = localStorage.getItem(storageKey(user.id))
-    const parsed: Stored = raw
-      ? JSON.parse(raw)
-      : { lives: MAX_LIVES, lastRechargeTime: Date.now(), lastPerfectDate: null }
+    if (raw) {
+      try {
+        parsed = JSON.parse(raw)
+      } catch (e) {
+        console.error("Falha ao parsear lives do localStorage:", e)
+      }
+    }
     setStored(applyPassiveRecharge(parsed))
   }, [user])
 

@@ -1,6 +1,11 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { getLabCategories, getLabConfig, DbLabCategory, DbLabConfig } from "@/lib/db"
 import { LAB_CATEGORIES, PROMPT_OF_THE_DAY, LabCategory } from "@/data/labCategoriesData"
+import { errorLogger } from "@/lib/errorLogging"
+
+const MAX_RETRIES = 3
+const INITIAL_DELAY_MS = 1000
+const isTestEnvironment = import.meta.env.VITEST
 
 type PromptOfTheDay = typeof PROMPT_OF_THE_DAY
 
@@ -26,15 +31,68 @@ export function useLabCategories() {
   const [promptOfTheDay, setPromptOfTheDay] = useState<PromptOfTheDay>(PROMPT_OF_THE_DAY)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const fetchDataWithRetry = async (attemptNum = 0): Promise<void> => {
+    try {
+      const [catRes, cfgRes] = await Promise.all([getLabCategories(), getLabConfig()])
+      if (catRes.data && catRes.data.length > 0) {
+        setCategories(catRes.data.map(mapDbCategory))
+      }
+      if (cfgRes.data) {
+        setPromptOfTheDay(mapDbConfig(cfgRes.data))
+      }
+      if (catRes.error || cfgRes.error) {
+        // Disable automatic retry in test environment
+        if (attemptNum < MAX_RETRIES && !isTestEnvironment) {
+          const delay = INITIAL_DELAY_MS * Math.pow(2, attemptNum)
+          timeoutRef.current = setTimeout(() => {
+            fetchDataWithRetry(attemptNum + 1)
+          }, delay)
+          return
+        } else {
+          const errorMsg = catRes.error || cfgRes.error || "Falha ao carregar dados"
+          setError(errorMsg)
+          if (catRes.error) {
+            errorLogger.logApiError("/db/getLabCategories", 500, catRes.error)
+          }
+          if (cfgRes.error) {
+            errorLogger.logApiError("/db/getLabConfig", 500, cfgRes.error)
+          }
+        }
+      } else {
+        setError(null)
+      }
+    } catch (err) {
+      if (attemptNum < MAX_RETRIES && !isTestEnvironment) {
+        const delay = INITIAL_DELAY_MS * Math.pow(2, attemptNum)
+        timeoutRef.current = setTimeout(() => {
+          fetchDataWithRetry(attemptNum + 1)
+        }, delay)
+        return
+      } else {
+        const errorMsg = err instanceof Error ? err.message : "Falha ao carregar categorias"
+        setError(errorMsg)
+        errorLogger.logError(err, "useLabCategories.fetchData")
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchData = async () => {
+    setLoading(true)
+    setError(null)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    await fetchDataWithRetry(0)
+  }
 
   useEffect(() => {
-    Promise.all([getLabCategories(), getLabConfig()]).then(([catRes, cfgRes]) => {
-      if (catRes.data && catRes.data.length > 0) setCategories(catRes.data.map(mapDbCategory))
-      if (cfgRes.data) setPromptOfTheDay(mapDbConfig(cfgRes.data))
-      if (catRes.error) setError(catRes.error)
-      setLoading(false)
-    })
+    fetchData()
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
   }, [])
 
-  return { categories, promptOfTheDay, loading, error }
+  return { categories, promptOfTheDay, loading, error, refetch: fetchData }
 }

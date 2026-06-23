@@ -1,6 +1,9 @@
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { AlertCircle, RotateCw, Loader2 } from "lucide-react"
 import * as Icons from "@/lib/icons"
+import { sileo } from "sileo"
+import { Button } from "@/components/ui/button"
 import { type TrendingSkill, type SkillCategory } from "@/data/trendingSkillsData"
 import { useTrendingSkills } from "@/hooks/useTrendingSkills"
 import { useFavorites } from "@/hooks/useFavorites"
@@ -95,12 +98,25 @@ function RankingView({
 // ─── Main Component ───────────────────────────────────────────────────────
 export default function Skills() {
   const navigate = useNavigate()
-  const { skills: allSkills, loading } = useTrendingSkills()
+  const { skills: allSkills, loading, error, refetch } = useTrendingSkills()
   const { favorites, toggleFavorite, isFavorite } = useFavorites()
   const achievements = useAchievements()
   const [viewMode, setViewMode] = useState<ViewMode>("all")
   const [activeSkillCat, setActiveSkillCat] = useState<SkillCategory | "Todas">("Todas")
   const [searchQuery, setSearchQuery] = useState("")
+  const [isRetrying, setIsRetrying] = useState(false)
+
+  useEffect(() => {
+    if (error) {
+      sileo.error({ title: `Erro ao carregar skills: ${error}` })
+    }
+  }, [error])
+
+  const handleRetry = async () => {
+    setIsRetrying(true)
+    await refetch()
+    setIsRetrying(false)
+  }
 
   const filteredByCat =
     activeSkillCat === "Todas"
@@ -241,6 +257,32 @@ export default function Skills() {
             />
           ))}
         </div>
+
+        {/* Error recovery UI */}
+        {error && allSkills.length === 0 && (
+          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
+            <AlertCircle className="mx-auto mb-3 h-12 w-12 text-red-500" />
+            <h3 className="mb-1 text-base font-bold text-red-900">Erro ao carregar skills</h3>
+            <p className="mb-4 text-sm text-red-700">{error}</p>
+            <Button
+              onClick={handleRetry}
+              disabled={isRetrying}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isRetrying ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Tentando novamente...
+                </>
+              ) : (
+                <>
+                  <RotateCw className="mr-2 h-4 w-4" />
+                  Tentar novamente
+                </>
+              )}
+            </Button>
+          </div>
+        )}
 
         {/* Category filter — only show in "all" mode */}
         {viewMode === "all" && (

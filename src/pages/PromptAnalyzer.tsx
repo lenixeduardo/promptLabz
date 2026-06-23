@@ -429,6 +429,7 @@ export default function PromptAnalyzerPage() {
               className="hidden"
               onChange={handleFileChange}
               aria-hidden="true"
+              aria-label="Selecione um arquivo de conversação em formato .txt ou .md"
             />
 
             {/* ── Dica ── */}

@@ -164,7 +164,7 @@ export default function Signup() {
 
         {/* Form card */}
         <Card className="w-full border-stroke-muted bg-surface-success p-6 shadow-md sm:p-7">
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit} role="form" aria-label="Formulário de cadastro">
             <Input
               type="text"
               placeholder="Nome completo"
@@ -173,6 +173,8 @@ export default function Signup() {
               icon={<User className="h-5 w-5" strokeWidth={2.2} />}
               autoComplete="name"
               disabled={loading}
+              aria-label="Nome completo"
+              aria-required="false"
             />
             <Input
               type="email"
@@ -183,7 +185,13 @@ export default function Signup() {
               autoComplete="email"
               required
               disabled={loading}
+              aria-label="Endereço de e-mail"
+              aria-required="true"
+              aria-describedby="email-help"
             />
+            <small id="email-help" className="sr-only">
+              Você usará este e-mail para fazer login
+            </small>
             <Input
               type="password"
               placeholder="Senha"
@@ -193,7 +201,13 @@ export default function Signup() {
               autoComplete="new-password"
               required
               disabled={loading}
+              aria-label="Senha"
+              aria-required="true"
+              aria-describedby="password-help"
             />
+            <small id="password-help" className="sr-only">
+              Mínimo 8 caracteres, pelo menos uma letra maiúscula e um número
+            </small>
             <Input
               type="password"
               placeholder="Confirmar senha"
@@ -203,7 +217,13 @@ export default function Signup() {
               autoComplete="new-password"
               required
               disabled={loading}
+              aria-label="Confirmar senha"
+              aria-required="true"
+              aria-describedby="confirm-help"
             />
+            <small id="confirm-help" className="sr-only">
+              Deve ser idêntica à senha inserida acima
+            </small>
 
             <p className="text-center text-xs text-foregroundSecondary">
               Ao criar a conta, você concorda com os{" "}

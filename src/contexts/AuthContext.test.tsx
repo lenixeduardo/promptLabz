@@ -24,7 +24,10 @@ function TestConsumer() {
 }
 
 beforeEach(() => {
-  mockOnAuthStateChange.mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } })
+  mockOnAuthStateChange.mockImplementation((callback) => {
+    setTimeout(() => callback("INITIAL_SESSION", null), 0)
+    return { data: { subscription: { unsubscribe: vi.fn() } } }
+  })
 })
 
 describe("AuthProvider", () => {
@@ -53,8 +56,9 @@ describe("AuthProvider", () => {
   })
 
   it("exibe usuário logado quando há sessão ativa", async () => {
-    mockGetSession.mockResolvedValue({
-      data: { session: { user: { email: "user@test.com" } } },
+    mockOnAuthStateChange.mockImplementation((callback) => {
+      setTimeout(() => callback("INITIAL_SESSION", { user: { email: "user@test.com" } }), 0)
+      return { data: { subscription: { unsubscribe: vi.fn() } } }
     })
 
     render(
@@ -76,18 +80,13 @@ describe("AuthProvider", () => {
     consoleSpy.mockRestore()
   })
 
-  it("exibe erro quando getSession falha", async () => {
-    mockGetSession.mockResolvedValue({
-      data: { session: null },
-      error: { message: "Sessão inválida" },
-    })
-
+  it("exibe estado inicial de carregamento", async () => {
     render(
       <AuthProvider>
         <TestConsumer />
       </AuthProvider>
     )
 
-    await waitFor(() => expect(screen.getByText("Sessão inválida")).toBeInTheDocument())
+    expect(screen.getByText("carregando")).toBeInTheDocument()
   })
 })

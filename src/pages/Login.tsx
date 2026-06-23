@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
 import { trackLogin } from "@/lib/analytics"
 import { PageSEO } from "@/components/PageSEO"
+import { errorLogger } from "@/lib/errorLogging"
 
 function GoogleIcon() {
   return (
@@ -43,6 +44,7 @@ export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const [rateLimitCooldown, setRateLimitCooldown] = useState(0)
   const isReturning =
     typeof window !== "undefined" && localStorage.getItem(HAS_ACCOUNT_KEY) === "true"
 
@@ -52,29 +54,61 @@ export default function Login() {
     }
   }, [user, navigate])
 
+  useEffect(() => {
+    if (rateLimitCooldown > 0) {
+      const timer = setTimeout(() => setRateLimitCooldown(c => c - 1), 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [rateLimitCooldown])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (rateLimitCooldown > 0) {
+      errorLogger.logRateLimit("/auth/login", rateLimitCooldown)
+      sileo.error({
+        title: `Aguarde ${rateLimitCooldown}s`,
+        description: "Você tentou fazer login muitas vezes. Por favor, tente novamente em alguns segundos."
+      })
+      return
+    }
+
     setLoading(true)
+    setRateLimitCooldown(3)
 
     const result = await login(email, password)
     if (result.success) {
+      errorLogger.logAuthEvent("login", user?.id || "unknown", true)
       trackLogin("email")
       sileo.success({ title: "Login realizado com sucesso!" })
       navigate("/home")
     } else {
+      errorLogger.logAuthEvent("login", email, false)
       sileo.error({ title: result.error || "Erro ao fazer login" })
     }
     setLoading(false)
   }
 
   const handleGoogleLogin = async () => {
+    if (rateLimitCooldown > 0) {
+      errorLogger.logRateLimit("/auth/google", rateLimitCooldown)
+      sileo.error({
+        title: `Aguarde ${rateLimitCooldown}s`,
+        description: "Você tentou fazer login muitas vezes. Por favor, tente novamente em alguns segundos."
+      })
+      return
+    }
+
     setLoading(true)
+    setRateLimitCooldown(3)
+
     const result = await loginWithGoogle()
     if (result.success) {
+      errorLogger.logAuthEvent("login", user?.id || "unknown", true)
       trackLogin("google")
       sileo.success({ title: "Login com Google realizado!" })
       navigate("/home")
     } else {
+      errorLogger.logAuthEvent("login", "google-user", false)
       sileo.error({ title: result.error || "Erro ao fazer login com Google" })
     }
     setLoading(false)
@@ -110,7 +144,7 @@ export default function Login() {
 
         {/* Login card */}
         <Card className="mt-7 w-full border-stroke-muted bg-surface-success p-6 shadow-md sm:p-7">
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit} role="form" aria-label="Formulário de login">
             <Input
               type="email"
               placeholder="Seu e-mail"
@@ -120,7 +154,13 @@ export default function Login() {
               autoComplete="email"
               required
               disabled={loading}
+              aria-label="Endereço de e-mail para login"
+              aria-required="true"
+              aria-describedby="email-help-login"
             />
+            <small id="email-help-login" className="sr-only">
+              Insira o e-mail da sua conta
+            </small>
             <Input
               type="password"
               placeholder="Sua senha"
@@ -130,7 +170,13 @@ export default function Login() {
               autoComplete="current-password"
               required
               disabled={loading}
+              aria-label="Sua senha de acesso"
+              aria-required="true"
+              aria-describedby="password-help-login"
             />
+            <small id="password-help-login" className="sr-only">
+              Insira sua senha de acesso segura
+            </small>
 
             <Link
               to="/forgot-password"
@@ -139,9 +185,9 @@ export default function Login() {
               Esqueci minha senha
             </Link>
 
-            <Button type="submit" size="lg" className="mt-1 w-full gap-2" disabled={loading}>
+            <Button type="submit" size="lg" className="mt-1 w-full gap-2" disabled={loading || rateLimitCooldown > 0}>
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? "Entrando..." : rateLimitCooldown > 0 ? `Tente em ${rateLimitCooldown}s` : "Entrar"}
             </Button>
 
             {/* Divider */}
@@ -159,7 +205,7 @@ export default function Login() {
                 size="icon"
                 aria-label="Google"
                 onClick={handleGoogleLogin}
-                disabled={loading}
+                disabled={loading || rateLimitCooldown > 0}
               >
                 <GoogleIcon />
               </Button>
