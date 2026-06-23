@@ -243,8 +243,8 @@ export default function PromptEnhancerPage() {
       <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-5 space-y-4 pb-32">
 
         {/* ── Hero Banner ── */}
-        <div className="flex items-center justify-between rounded-2xl border border-emerald/20 bg-gradient-to-r from-emerald/5 to-emerald/10 px-5 py-4">
-          <div className="flex-1 pr-3">
+        <div className="flex items-center justify-between rounded-2xl border border-emerald/20 bg-gradient-to-r from-emerald/5 to-emerald/10 px-5 py-5">
+          <div className="flex-1 pr-2">
             <p className="text-sm leading-relaxed text-foreground-dark">
               Transforme seu prompt em instruções{" "}
               <strong className="text-foreground-dark">claras, detalhadas e otimizadas</strong>{" "}
@@ -254,7 +254,7 @@ export default function PromptEnhancerPage() {
           <img
             src="/prompt-asset.png"
             alt="Gatinha engenheira"
-            className="h-32 w-32 shrink-0 object-contain"
+            className="h-52 w-52 shrink-0 object-contain -mb-5 -mr-3"
           />
         </div>
 
