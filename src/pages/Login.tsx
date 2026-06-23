@@ -43,6 +43,7 @@ export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const [rateLimitCooldown, setRateLimitCooldown] = useState(0)
   const isReturning =
     typeof window !== "undefined" && localStorage.getItem(HAS_ACCOUNT_KEY) === "true"
 
@@ -52,9 +53,22 @@ export default function Login() {
     }
   }, [user, navigate])
 
+  useEffect(() => {
+    if (rateLimitCooldown > 0) {
+      const timer = setTimeout(() => setRateLimitCooldown(c => c - 1), 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [rateLimitCooldown])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (rateLimitCooldown > 0) {
+      sileo.error({ title: `Aguarde ${rateLimitCooldown}s antes de tentar novamente` })
+      return
+    }
+
     setLoading(true)
+    setRateLimitCooldown(3)
 
     const result = await login(email, password)
     if (result.success) {
@@ -68,7 +82,14 @@ export default function Login() {
   }
 
   const handleGoogleLogin = async () => {
+    if (rateLimitCooldown > 0) {
+      sileo.error({ title: `Aguarde ${rateLimitCooldown}s antes de tentar novamente` })
+      return
+    }
+
     setLoading(true)
+    setRateLimitCooldown(3)
+
     const result = await loginWithGoogle()
     if (result.success) {
       trackLogin("google")
@@ -139,9 +160,9 @@ export default function Login() {
               Esqueci minha senha
             </Link>
 
-            <Button type="submit" size="lg" className="mt-1 w-full gap-2" disabled={loading}>
+            <Button type="submit" size="lg" className="mt-1 w-full gap-2" disabled={loading || rateLimitCooldown > 0}>
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? "Entrando..." : rateLimitCooldown > 0 ? `Tente em ${rateLimitCooldown}s` : "Entrar"}
             </Button>
 
             {/* Divider */}
@@ -159,7 +180,7 @@ export default function Login() {
                 size="icon"
                 aria-label="Google"
                 onClick={handleGoogleLogin}
-                disabled={loading}
+                disabled={loading || rateLimitCooldown > 0}
               >
                 <GoogleIcon />
               </Button>
