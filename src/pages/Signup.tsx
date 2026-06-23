@@ -41,6 +41,7 @@ export default function Signup() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const [pendingEmail, setPendingEmail] = useState("")
 
   useEffect(() => {
     if (user) {
@@ -81,8 +82,12 @@ export default function Signup() {
     if (result.success) {
       trackSignUp("email")
       localStorage.setItem("promptlabz:hasAccount", "true")
-      sileo.success({ title: "Conta criada com sucesso!" })
-      navigate("/home")
+      if (result.needsConfirmation) {
+        setPendingEmail(email)
+      } else {
+        sileo.success({ title: "Conta criada com sucesso!" })
+        navigate("/home")
+      }
     } else {
       sileo.error({ title: result.error || "Erro ao criar conta" })
     }
@@ -102,6 +107,30 @@ export default function Signup() {
       sileo.error({ title: result.error || "Erro ao criar conta com Google" })
     }
     setLoading(false)
+  }
+
+  if (pendingEmail) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-6 text-center">
+        <img
+          src="/assets/mascot-login-new.png"
+          alt="Mascot"
+          className="h-36 w-auto drop-shadow-md"
+        />
+        <h2 className="text-2xl font-bold text-primary-dark">Verifique seu e-mail</h2>
+        <p className="max-w-sm text-base text-foregroundSecondary">
+          Enviamos um link de confirmação para{" "}
+          <strong className="text-foregroundDark">{pendingEmail}</strong>.
+          Acesse seu e-mail e clique no link para ativar sua conta.
+        </p>
+        <Link
+          to="/login"
+          className="font-semibold text-link underline underline-offset-2 hover:text-primary"
+        >
+          Voltar ao login
+        </Link>
+      </div>
+    )
   }
 
   return (

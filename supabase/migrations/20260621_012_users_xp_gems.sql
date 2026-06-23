@@ -1,8 +1,8 @@
 -- Add XP and gems columns to the users table for experience-based ranking.
 
 ALTER TABLE public.users
-  ADD COLUMN IF NOT EXISTS xp INTEGER NOT NULL DEFAULT 0,
-  ADD COLUMN IF NOT EXISTS gems INTEGER NOT NULL DEFAULT 0;
+  ADD COLUMN IF NOT EXISTS xp INTEGER NOT NULL DEFAULT 0 CHECK (xp >= 0 AND xp <= 10000000),
+  ADD COLUMN IF NOT EXISTS gems INTEGER NOT NULL DEFAULT 0 CHECK (gems >= 0 AND gems <= 1000000);
 
 -- Efficient index for leaderboard ordering.
 CREATE INDEX IF NOT EXISTS idx_users_xp ON public.users(xp DESC);
