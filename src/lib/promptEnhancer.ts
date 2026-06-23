@@ -240,8 +240,8 @@ export function enhancePrompt(
   const originalScore = calculateScore(trimmed);
 
   const { enhanced, enhancedMain, audience, tone } = assembleEnhanced(trimmed, focusMode);
-  const enhancedScore = Math.min(10, calculateScore(enhanced) + 0.5);
-  const presentFields = detectCriteria(enhanced);
+  const enhancedScore = Math.min(10, calculateScore(enhancedMain) + 0.5);
+  const presentFields = detectCriteria(enhancedMain);
   const jump = Math.round(Math.max(0, enhancedScore - originalScore) * 10) / 10;
 
   return {

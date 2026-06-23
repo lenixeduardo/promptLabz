@@ -289,7 +289,7 @@ export async function getLeaderboard(limit = 20): Promise<DbResult<LeaderboardEn
     const { data, error } = await supabase
       .from("users")
       .select("id,full_name,avatar_url,xp")
-      .gt("xp", 0)
+      .gte("xp", 0)
       .order("xp", { ascending: false })
       .limit(limit)
     if (error) throw error

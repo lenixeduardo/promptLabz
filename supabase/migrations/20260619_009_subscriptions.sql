@@ -10,7 +10,7 @@ create table public.subscriptions (
   current_period_start timestamptz,
   current_period_end timestamptz,
   cancel_at_period_end boolean default false,
-  environment text not null default 'sandbox',
+  environment text not null default 'live',
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );

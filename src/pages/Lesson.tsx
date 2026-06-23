@@ -58,13 +58,21 @@ export default function LessonPage() {
     if (isEssay(activity)) {
       return answers[activity.id] ? acc + 1 : acc
     }
-    if (isMatch(activity) || isOrder(activity)) {
-      const pairs = matchOrderAnswers[i]
-      if (!pairs) return acc
+    if (isMatch(activity)) {
+      const connections = matchOrderAnswers[i]
+      if (!connections) return acc
+      const total = activity.pairs.length
+      if (total === 0) return acc
+      const matchScore = activity.pairs.filter((p) => connections[p.word] === p.definition).length
+      return acc + (matchScore === total ? 1 : 0)
+    }
+    if (isOrder(activity)) {
+      const connections = matchOrderAnswers[i]
+      if (!connections) return acc
       const correct = activity.correctPairs
       const total = Object.keys(correct).length
       if (total === 0) return acc
-      const matchScore = Object.entries(pairs).filter(([k, v]) => correct[k] === v).length
+      const matchScore = Object.entries(connections).filter(([k, v]) => correct[k] === v).length
       return acc + (matchScore === total ? 1 : 0)
     }
     const answer = answers[activity.id]

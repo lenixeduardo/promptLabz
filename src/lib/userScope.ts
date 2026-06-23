@@ -19,6 +19,8 @@ const SCOPED_PREFIXES = [
   "promptlabz:proof:",
   "promptlabz:lastStreakCelebrated",
   "promptlabz:specialQuestV2",
+  "promptlabz:favorite_prompts",
+  "promptlabz:favorite_skills",
 ];
 
 const EVENT = "promptlabz:user-scope-change";

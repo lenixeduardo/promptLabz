@@ -29,10 +29,10 @@ export function useAuth() {
         },
       })
       if (err) throw err
-      return { success: true, user: data.user }
+      return { success: true, user: data.user, needsConfirmation: !data.session }
     } catch (err: any) {
       const errorMsg = err?.message || "Erro ao criar conta"
-      return { success: false, error: errorMsg }
+      return { success: false, error: errorMsg, needsConfirmation: false }
     }
   }
 
