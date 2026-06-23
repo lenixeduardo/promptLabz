@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { getTrendingSkills, DbTrendingSkill } from "@/lib/db"
 import { TRENDING_SKILLS, TrendingSkill } from "@/data/trendingSkillsData"
+import { errorLogger } from "@/lib/errorLogging"
 
 function mapDbSkill(s: DbTrendingSkill): TrendingSkill {
   return {
@@ -30,9 +31,12 @@ export function useTrendingSkills(category?: string) {
       }
       if (result.error) {
         setError(result.error)
+        errorLogger.logApiError("/db/getTrendingSkills", 500, result.error)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Falha ao carregar habilidades em trending")
+      const errorMsg = err instanceof Error ? err.message : "Falha ao carregar habilidades em trending"
+      setError(errorMsg)
+      errorLogger.logError(err, "useTrendingSkills.fetchSkills")
     } finally {
       setLoading(false)
     }

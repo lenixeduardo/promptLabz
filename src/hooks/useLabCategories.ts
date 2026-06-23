@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { getLabCategories, getLabConfig, DbLabCategory, DbLabConfig } from "@/lib/db"
 import { LAB_CATEGORIES, PROMPT_OF_THE_DAY, LabCategory } from "@/data/labCategoriesData"
+import { errorLogger } from "@/lib/errorLogging"
 
 type PromptOfTheDay = typeof PROMPT_OF_THE_DAY
 
@@ -39,10 +40,19 @@ export function useLabCategories() {
         setPromptOfTheDay(mapDbConfig(cfgRes.data))
       }
       if (catRes.error || cfgRes.error) {
-        setError(catRes.error || cfgRes.error || "Falha ao carregar dados")
+        const errorMsg = catRes.error || cfgRes.error || "Falha ao carregar dados"
+        setError(errorMsg)
+        if (catRes.error) {
+          errorLogger.logApiError("/db/getLabCategories", 500, catRes.error)
+        }
+        if (cfgRes.error) {
+          errorLogger.logApiError("/db/getLabConfig", 500, cfgRes.error)
+        }
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Falha ao carregar categorias")
+      const errorMsg = err instanceof Error ? err.message : "Falha ao carregar categorias"
+      setError(errorMsg)
+      errorLogger.logError(err, "useLabCategories.fetchData")
     } finally {
       setLoading(false)
     }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { getPrompts, DbPrompt } from "@/lib/db"
 import { PROMPTS, PromptCard } from "@/data/promptsData"
+import { errorLogger } from "@/lib/errorLogging"
 
 function mapDbPrompt(p: DbPrompt): PromptCard {
   return {
@@ -33,9 +34,12 @@ export function usePrompts(category?: string, difficulty?: string) {
       }
       if (result.error) {
         setError(result.error)
+        errorLogger.logApiError("/db/getPrompts", 500, result.error)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Falha ao carregar prompts")
+      const errorMsg = err instanceof Error ? err.message : "Falha ao carregar prompts"
+      setError(errorMsg)
+      errorLogger.logError(err, "usePrompts.fetchPrompts")
     } finally {
       setLoading(false)
     }

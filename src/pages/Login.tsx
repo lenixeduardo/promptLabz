@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
 import { trackLogin } from "@/lib/analytics"
 import { PageSEO } from "@/components/PageSEO"
+import { errorLogger } from "@/lib/errorLogging"
 
 function GoogleIcon() {
   return (
@@ -63,7 +64,11 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (rateLimitCooldown > 0) {
-      sileo.error({ title: `Aguarde ${rateLimitCooldown}s antes de tentar novamente` })
+      errorLogger.logRateLimit("/auth/login", rateLimitCooldown)
+      sileo.error({
+        title: `Aguarde ${rateLimitCooldown}s`,
+        description: "Você tentou fazer login muitas vezes. Por favor, tente novamente em alguns segundos."
+      })
       return
     }
 
@@ -72,10 +77,12 @@ export default function Login() {
 
     const result = await login(email, password)
     if (result.success) {
+      errorLogger.logAuthEvent("login", user?.id || "unknown", true)
       trackLogin("email")
       sileo.success({ title: "Login realizado com sucesso!" })
       navigate("/home")
     } else {
+      errorLogger.logAuthEvent("login", email, false)
       sileo.error({ title: result.error || "Erro ao fazer login" })
     }
     setLoading(false)
@@ -83,7 +90,11 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     if (rateLimitCooldown > 0) {
-      sileo.error({ title: `Aguarde ${rateLimitCooldown}s antes de tentar novamente` })
+      errorLogger.logRateLimit("/auth/google", rateLimitCooldown)
+      sileo.error({
+        title: `Aguarde ${rateLimitCooldown}s`,
+        description: "Você tentou fazer login muitas vezes. Por favor, tente novamente em alguns segundos."
+      })
       return
     }
 
@@ -92,10 +103,12 @@ export default function Login() {
 
     const result = await loginWithGoogle()
     if (result.success) {
+      errorLogger.logAuthEvent("login", user?.id || "unknown", true)
       trackLogin("google")
       sileo.success({ title: "Login com Google realizado!" })
       navigate("/home")
     } else {
+      errorLogger.logAuthEvent("login", "google-user", false)
       sileo.error({ title: result.error || "Erro ao fazer login com Google" })
     }
     setLoading(false)
