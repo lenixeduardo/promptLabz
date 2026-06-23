@@ -73,7 +73,6 @@ function extractUserMessages(content: string): string[] {
   }
 
   if (inUser && buffer.length > 0) messages.push(buffer.join("\n").trim())
-
   const filtered = messages.filter((m) => m.trim().length > 5)
   if (filtered.length === 0) {
     return content
@@ -91,8 +90,7 @@ function analyzeMessage(text: string): MessageAnalysis {
   const wordCount = trimmed.split(/\s+/).filter(Boolean).length
   const hasContext =
     /contexto|context|você é|you are|atue como|act as|especialista|expert/i.test(trimmed)
-  const hasExamples =
-    /exemplo|example|por exemplo|e\.g\.|such as|como por/i.test(trimmed)
+  const hasExamples = /exemplo|example|por exemplo|e\.g\.|such as/i.test(trimmed)
   const hasGoal =
     /quero|preciso|gere|crie|escreva|want|need|generate|create|write|faça|elabore|liste|explique|analise/i.test(
       trimmed,
@@ -118,7 +116,8 @@ function analyzeMessage(text: string): MessageAnalysis {
   if (!hasGoal) suggestions.push("Descreva claramente o que quer que a IA faça.")
   if (!hasContext) suggestions.push("Adicione contexto: 'Você é um especialista em…'")
   if (!hasExamples) suggestions.push("Inclua exemplos do resultado esperado.")
-  if (issues.length === 0) suggestions.push("Ótimo prompt! Considere adicionar restrições de formato.")
+  if (issues.length === 0)
+    suggestions.push("Ótimo prompt! Considere adicionar restrições de formato.")
 
   const snippet = trimmed.length > 70 ? trimmed.slice(0, 70) + "…" : trimmed
   return { text: trimmed, snippet, clarity, specificity, context, score, issues, suggestions }
@@ -132,40 +131,52 @@ function analyzeConversation(messages: string[]): ConversationAnalysis {
 
   const positives: string[] = []
   const improvements: string[] = []
-
   if (analyzed.some((m) => m.context >= 70)) positives.push("Bom uso de contexto e papel definido.")
-  if (analyzed.some((m) => m.specificity >= 70)) positives.push("Boa especificidade nas solicitações.")
+  if (analyzed.some((m) => m.specificity >= 70))
+    positives.push("Boa especificidade nas solicitações.")
   if (analyzed.every((m) => m.issues.length === 0))
     positives.push("Todos os prompts têm objetivo claro e bem definido.")
   if (positives.length === 0)
     positives.push("Os prompts foram identificados e analisados com sucesso.")
-
   const uniqueImprovements = [...new Set(analyzed.flatMap((m) => m.suggestions))].slice(0, 3)
   improvements.push(...uniqueImprovements)
 
   return { messages: analyzed, overallScore, positives, improvements }
 }
 
-// ── Static example data ────────────────────────────────────────────────────
+// ── Static example data (matches mockup exactly) ───────────────────────────
 
 const EXAMPLE_TURNS = [
   {
     text: "Crie um texto sobre marketing",
     score: 59,
-    label: null,
-    issues: ["Prompt muito vago", "Ausência de objetivo", "Ausência de exemplos"],
+    analysisType: "error" as const,
+    analysisTitle: "Prompt muito vago",
+    analysisDetail: "Ausência de objetivo, público, formato, tom e exemplos detalhados.",
+    solutionLabel: "Solução sugerida",
+    solution:
+      "Crie um texto persuasivo sobre marketing digital para pequenas empresas em tom profissional com foco em atrair clientes.",
   },
   {
     text: "Explique como funciona o marketing de conteúdo para iniciantes",
     score: 82,
-    label: "Solução sugerida",
-    issues: [],
+    analysisType: "warning" as const,
+    analysisTitle: "Bom descrição, mas poderia melhorar!",
+    analysisDetail:
+      "Inclua mais detalhes sobre o formato e o contexto para tornar ainda mais eficaz.",
+    solutionLabel: "Excelente prompt!",
+    solution:
+      "Com base no contexto e no bom prompt, a resposta da IA será mais precisa e relevante.",
   },
   {
     text: "Quais são as melhores estratégias de SEO para 2024 e como aplicá-las no meu site?",
     score: 91,
-    label: "Excelente prompt!",
-    issues: [],
+    analysisType: "success" as const,
+    analysisTitle: "Excelente prompt!",
+    analysisDetail:
+      "Com base no contexto e no bom prompt, a resposta da IA terá contexto suficiente para gerar uma ótima resposta.",
+    solutionLabel: null,
+    solution: null,
   },
 ]
 
@@ -197,8 +208,31 @@ function ScoreBadge({ score }: { score: number }) {
         ? "bg-amber-50 text-amber-600 border-amber-200"
         : "bg-red-50 text-red-500 border-red-200"
   return (
-    <span className={cn("inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-extrabold", cls)}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-extrabold",
+        cls,
+      )}
+    >
       {score.toFixed(1)}/10
+    </span>
+  )
+}
+
+// score badge used inside example (integer, no /10)
+function ExScoreBadge({ score }: { score: number }) {
+  const cls =
+    score >= 70
+      ? "bg-emerald/10 text-emerald border-emerald/20"
+      : "bg-red-50 text-red-500 border-red-200"
+  return (
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center rounded-full border px-1.5 py-0.5 text-[10px] font-extrabold",
+        cls,
+      )}
+    >
+      {score}
     </span>
   )
 }
@@ -286,6 +320,7 @@ export default function PromptAnalyzerPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-28">
+
       {/* ── Header ── */}
       <div className="sticky top-0 z-20 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
         <Link
@@ -300,8 +335,8 @@ export default function PromptAnalyzerPage() {
             <h1 className="text-base font-extrabold text-primary-dark truncate">
               Analisador de Prompts
             </h1>
-            <span className="inline-flex shrink-0 items-center rounded-full bg-amber-400/15 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-600">
-              Beta
+            <span className="inline-flex shrink-0 items-center rounded-full bg-emerald/15 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-emerald">
+              Novo
             </span>
           </div>
           <p className="text-[11px] text-foreground-tertiary">Receba uma análise completa</p>
@@ -312,41 +347,40 @@ export default function PromptAnalyzerPage() {
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-lg px-4 py-5 space-y-4">
+      <div className="mx-auto w-full max-w-lg px-4 py-4 space-y-4">
 
         {/* ══════════════════════════════════════════
             UPLOAD STATE
         ══════════════════════════════════════════ */}
         {pageState === "upload" && (
           <>
-            {/* Upload card — mascote + texto + botão */}
+            {/* ── Upload card ── */}
             <div
               className={cn(
-                "rounded-2xl border-2 bg-card p-4 transition-colors",
+                "rounded-2xl border-2 bg-card overflow-hidden transition-colors",
                 file ? "border-emerald/40" : "border-stroke-light",
               )}
               onDrop={handleDrop}
               onDragOver={(e) => e.preventDefault()}
             >
-              {/* Row: mascote | info + botão */}
-              <div className="flex items-center gap-3">
-                {/* Mascote — tamanho de asset real */}
-                <div className="shrink-0 w-[160px]">
+              <div className="flex items-stretch">
+                {/* Mascote — coluna esquerda */}
+                <div className="flex shrink-0 items-end justify-center bg-emerald/5 px-3 pt-3 w-[148px]">
                   <img
                     src="/assets/mascot-analyzer.png"
                     alt="Mascote analisadora"
-                    className="w-full h-auto object-contain"
+                    className="w-full h-auto object-contain max-h-[148px]"
                   />
                 </div>
 
-                {/* Info + botão */}
-                <div className="flex flex-1 min-w-0 flex-col gap-2">
+                {/* Info + botão — coluna direita */}
+                <div className="flex flex-1 flex-col justify-center gap-3 p-4">
                   <div>
                     <p className="text-sm font-bold text-foreground-dark leading-snug">
                       Anexe seu histórico de conversa
                     </p>
-                    <p className="mt-1 text-[11px] text-foreground-tertiary">
-                      Formatos: .txt, .md, .pdf, docs
+                    <p className="mt-1.5 text-[11px] text-foreground-tertiary leading-relaxed">
+                      Formatos aceitos: .txt, .md, .pdf, docs
                     </p>
                     <p className="text-[11px] text-foreground-tertiary">Tamanho máximo: 10MB</p>
                     {file && (
@@ -358,30 +392,32 @@ export default function PromptAnalyzerPage() {
                   </div>
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full rounded-xl border-2 border-stroke-light bg-card py-2 text-[11px] font-bold text-foreground-secondary transition-colors hover:bg-surface-soft"
+                    className="w-full rounded-xl border-2 border-foreground-dark/20 bg-card py-2 text-[11px] font-bold text-foreground-dark transition-colors hover:bg-surface-soft"
                   >
                     {file ? "Trocar arquivo" : "Escolher arquivo"}
                   </button>
                 </div>
               </div>
 
-              {/* Erro */}
-              {fileError && (
-                <p className="mt-3 flex items-center gap-1.5 text-xs text-red-500" role="alert">
-                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                  {fileError}
-                </p>
-              )}
-
-              {/* Analisar (aparece após selecionar) */}
-              {file && (
-                <button
-                  onClick={handleAnalyze}
-                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald py-2.5 text-sm font-bold text-white transition-all hover:bg-emerald-dark active:scale-[0.98]"
-                >
-                  <Zap className="h-4 w-4" />
-                  Analisar conversa
-                </button>
+              {/* Erro + botão analisar */}
+              {(fileError || file) && (
+                <div className="border-t border-stroke-muted px-4 py-3 space-y-2">
+                  {fileError && (
+                    <p className="flex items-center gap-1.5 text-xs text-red-500" role="alert">
+                      <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                      {fileError}
+                    </p>
+                  )}
+                  {file && (
+                    <button
+                      onClick={handleAnalyze}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald py-2.5 text-sm font-bold text-white transition-all hover:bg-emerald-dark active:scale-[0.98]"
+                    >
+                      <Zap className="h-4 w-4" />
+                      Analisar conversa
+                    </button>
+                  )}
+                </div>
               )}
             </div>
 
@@ -394,28 +430,30 @@ export default function PromptAnalyzerPage() {
               aria-hidden="true"
             />
 
-            {/* Dica */}
-            <div className="flex items-start gap-2 rounded-xl border border-stroke-muted bg-surface-soft px-4 py-3">
+            {/* ── Dica ── */}
+            <div className="flex items-start gap-2.5 rounded-xl border border-stroke-muted bg-surface-soft px-4 py-3">
               <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" strokeWidth={2} />
               <p className="text-xs text-foreground-secondary leading-relaxed">
                 <span className="font-bold">Dica:</span> Exporte suas conversas do ChatGPT, Gemini,
-                Claude ou outro IA em formato .txt ou .md para facilitar a análise.
+                Claude ou outra IA em formato .txt ou .md para facilitar a análise.
               </p>
             </div>
 
-            {/* Como funciona — 4 itens em linha */}
+            {/* ── Como funciona — 4 cards em linha ── */}
             <div>
               <h2 className="mb-3 text-sm font-extrabold text-foreground-dark">Como funciona</h2>
               <div className="grid grid-cols-4 gap-2">
-                {[
-                  { n: 1, label: "Envie seu arquivo", icon: <Upload className="h-4 w-4" /> },
-                  { n: 2, label: "Analisamos tudo", icon: <BarChart2 className="h-4 w-4" /> },
-                  { n: 3, label: "Você recebe o feedback", icon: <MessageSquare className="h-4 w-4" /> },
-                  { n: 4, label: "Nota final", icon: <Star className="h-4 w-4" /> },
-                ].map((item) => (
+                {(
+                  [
+                    { n: 1, label: "Envie seu arquivo com a IA", icon: <Upload className="h-4 w-4" /> },
+                    { n: 2, label: "Analisamos tudo", icon: <BarChart2 className="h-4 w-4" /> },
+                    { n: 3, label: "Você recebe o feedback", icon: <MessageSquare className="h-4 w-4" /> },
+                    { n: 4, label: "Nota final", icon: <Star className="h-4 w-4" /> },
+                  ] as const
+                ).map((item) => (
                   <div
                     key={item.n}
-                    className="flex flex-col items-center gap-1.5 rounded-xl border-2 border-stroke-light bg-card px-2 py-3 text-center"
+                    className="flex flex-col items-center gap-2 rounded-xl border-2 border-stroke-light bg-card px-1.5 py-3 text-center"
                   >
                     <div className="relative">
                       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald/10 text-emerald">
@@ -433,97 +471,135 @@ export default function PromptAnalyzerPage() {
               </div>
             </div>
 
-            {/* Exemplo de análise */}
+            {/* ── Exemplo de análise ── */}
             <div>
               <h2 className="mb-3 text-sm font-extrabold text-foreground-dark">
                 Exemplo de análise
               </h2>
+
+              {/* 3 turnos em layout 2 colunas: prompt | análise */}
               <div className="space-y-2">
                 {EXAMPLE_TURNS.map((turn, i) => (
-                  <div
-                    key={i}
-                    className="rounded-xl border-2 border-stroke-light bg-card p-3"
-                  >
-                    {/* Header da virada */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-1.5">
-                        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald/10">
-                          <span className="text-[9px] font-extrabold text-emerald">V</span>
-                        </div>
-                        <span className="text-[11px] font-bold text-foreground-tertiary">Você</span>
-                      </div>
-                      <span
-                        className={cn(
-                          "inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-[10px] font-extrabold",
-                          turn.score >= 70
-                            ? "border-emerald/20 bg-emerald/10 text-emerald"
-                            : "border-red-200 bg-red-50 text-red-500",
-                        )}
-                      >
-                        {turn.score}
-                      </span>
-                    </div>
+                  <div key={i} className="grid grid-cols-[2fr_3fr] gap-2">
 
-                    {/* Texto do prompt */}
-                    <p className="mt-1.5 text-xs text-foreground-dark">{turn.text}</p>
-
-                    {/* Issues ou label positivo */}
-                    <div className="mt-2 space-y-1">
-                      {turn.issues.length > 0 ? (
-                        turn.issues.map((issue, j) => (
-                          <div key={j} className="flex items-center gap-1.5">
-                            <X className="h-3 w-3 shrink-0 text-red-500" />
-                            <span className="text-[11px] text-red-500">{issue}</span>
+                    {/* Coluna esquerda — prompt do usuário */}
+                    <div className="rounded-xl border-2 border-stroke-light bg-card p-2.5">
+                      <div className="flex items-center justify-between gap-1 mb-1.5">
+                        <div className="flex items-center gap-1">
+                          <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald/15">
+                            <span className="text-[8px] font-extrabold text-emerald">V</span>
                           </div>
-                        ))
-                      ) : (
-                        <div className="flex items-center gap-1.5">
-                          <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald" />
-                          <span className="text-[11px] font-semibold text-emerald">
-                            {turn.label}
+                          <span className="text-[10px] font-bold text-foreground-tertiary">
+                            Você
                           </span>
                         </div>
+                        <ExScoreBadge score={turn.score} />
+                      </div>
+                      <p className="text-[10px] leading-snug text-foreground-dark line-clamp-4">
+                        {turn.text}
+                      </p>
+                    </div>
+
+                    {/* Coluna direita — análise */}
+                    <div className="rounded-xl border-2 border-stroke-light bg-card p-2.5">
+                      {turn.analysisType === "error" && (
+                        <>
+                          <div className="flex items-center gap-1 mb-1">
+                            <X className="h-3 w-3 shrink-0 text-red-500" />
+                            <p className="text-[10px] font-bold text-red-500 leading-tight">
+                              {turn.analysisTitle}
+                            </p>
+                          </div>
+                          <p className="text-[9px] text-foreground-tertiary leading-snug mb-2">
+                            {turn.analysisDetail}
+                          </p>
+                          <div className="flex items-center gap-1 mb-1">
+                            <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald" />
+                            <p className="text-[10px] font-bold text-emerald">{turn.solutionLabel}</p>
+                          </div>
+                          <p className="text-[9px] text-foreground-secondary leading-snug">
+                            {turn.solution}
+                          </p>
+                        </>
+                      )}
+
+                      {turn.analysisType === "warning" && (
+                        <>
+                          <p className="text-[10px] font-bold text-amber-600 leading-tight mb-1">
+                            {turn.analysisTitle}
+                          </p>
+                          <p className="text-[9px] text-foreground-tertiary leading-snug mb-2">
+                            {turn.analysisDetail}
+                          </p>
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald/10 px-2 py-0.5 text-[9px] font-bold text-emerald">
+                            <CheckCircle2 className="h-2.5 w-2.5" />
+                            {turn.solutionLabel}
+                          </span>
+                        </>
+                      )}
+
+                      {turn.analysisType === "success" && (
+                        <>
+                          <div className="flex items-center gap-1 mb-1">
+                            <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald" />
+                            <p className="text-[10px] font-bold text-emerald">
+                              {turn.analysisTitle}
+                            </p>
+                          </div>
+                          <p className="text-[9px] text-foreground-tertiary leading-snug">
+                            {turn.analysisDetail}
+                          </p>
+                        </>
                       )}
                     </div>
                   </div>
                 ))}
+              </div>
 
-                {/* Nota final do exemplo */}
-                <div className="rounded-xl border-2 border-stroke-light bg-card p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
+              {/* ── Nota final da conversa (exemplo) ── */}
+              <div className="mt-2 rounded-xl border-2 border-stroke-light bg-card p-4">
+                <div className="flex items-start justify-between gap-4">
+                  {/* Score + label + resumo */}
+                  <div className="flex-1">
+                    <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                      Nota final da conversa
+                    </p>
+                    <p className="mt-0.5 text-[42px] font-extrabold leading-none text-foreground-dark">
+                      8.2
+                      <span className="text-base font-semibold text-foreground-tertiary">/10</span>
+                    </p>
+                    <p className="mt-0.5 text-xs font-bold text-emerald">Muito bom!</p>
+
+                    <div className="mt-3 space-y-1">
                       <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
-                        Nota final da conversa
+                        Resumo da análise
                       </p>
-                      <p className="mt-0.5 text-4xl font-extrabold text-foreground-dark">
-                        8.2
-                        <span className="ml-0.5 text-base font-semibold text-foreground-tertiary">
-                          /10
-                        </span>
-                      </p>
-                      <p className="mt-0.5 text-xs font-bold text-emerald">Muito bom!</p>
-                    </div>
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-emerald">
-                      <span className="text-base font-extrabold text-emerald">82%</span>
+                      {["3 prompts analisados", "2 pontos de melhoria", "1 excelente prompt"].map(
+                        (item, i) => (
+                          <div key={i} className="flex items-center gap-1.5">
+                            <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald" />
+                            <span className="text-[11px] text-foreground-secondary">{item}</span>
+                          </div>
+                        ),
+                      )}
                     </div>
                   </div>
-                  {/* Resumo mini */}
-                  <div className="mt-3 space-y-1 border-t border-stroke-muted pt-3">
-                    <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
-                      Resumo da análise
-                    </p>
-                    {[
-                      "3 prompts analisados",
-                      "2 pontos de melhoria",
-                      "1 excelente prompt",
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-1.5">
-                        <div className="h-1.5 w-1.5 rounded-full bg-emerald" />
-                        <span className="text-[11px] text-foreground-secondary">{item}</span>
-                      </div>
-                    ))}
+
+                  {/* Círculo de score */}
+                  <div className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full border-[5px] border-emerald">
+                    <span className="text-lg font-extrabold text-emerald">82%</span>
                   </div>
                 </div>
+              </div>
+
+              {/* ── Botões de ação (exemplo) ── */}
+              <div className="mt-2 flex gap-2">
+                <button className="flex flex-1 items-center justify-center rounded-xl border-2 border-stroke-light bg-card py-3 text-xs font-bold text-foreground-secondary transition-colors hover:bg-surface-soft">
+                  Ver análise anterior
+                </button>
+                <button className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-emerald py-3 text-xs font-bold text-white transition-all hover:bg-emerald-dark active:scale-[0.98]">
+                  Nova análise →
+                </button>
               </div>
             </div>
           </>
@@ -537,7 +613,7 @@ export default function PromptAnalyzerPage() {
             <img
               src="/assets/mascot-analyzer.png"
               alt="Analisando"
-              className="mx-auto h-36 w-36 object-contain animate-pulse"
+              className="mx-auto w-36 h-auto object-contain animate-pulse"
             />
             <h2 className="mt-4 text-base font-extrabold text-foreground-dark">
               Analisando seus prompts…
@@ -585,7 +661,10 @@ export default function PromptAnalyzerPage() {
               </p>
               <div className="space-y-4">
                 {result.messages.map((msg, i) => (
-                  <div key={i} className="rounded-2xl border-2 border-stroke-light bg-card p-4 space-y-3">
+                  <div
+                    key={i}
+                    className="rounded-2xl border-2 border-stroke-light bg-card p-4 space-y-3"
+                  >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald/10">
@@ -635,72 +714,87 @@ export default function PromptAnalyzerPage() {
             </div>
 
             {/* Nota final */}
-            <div className="rounded-2xl border-2 border-emerald/30 bg-card p-4">
-              <div className="flex items-center justify-between">
-                <div>
+            <div className="rounded-2xl border-2 border-stroke-light bg-card p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
                   <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
                     Nota final da conversa
                   </p>
-                  <p className="mt-0.5 text-4xl font-extrabold text-foreground-dark">
+                  <p className="mt-0.5 text-[42px] font-extrabold leading-none text-foreground-dark">
                     {result.overallScore.toFixed(1)}
-                    <span className="ml-0.5 text-base font-semibold text-foreground-tertiary">/10</span>
+                    <span className="text-base font-semibold text-foreground-tertiary">/10</span>
                   </p>
+                  <p
+                    className={cn(
+                      "mt-0.5 text-xs font-bold",
+                      result.overallScore >= 7
+                        ? "text-emerald"
+                        : result.overallScore >= 4
+                          ? "text-amber-500"
+                          : "text-red-500",
+                    )}
+                  >
+                    {result.overallScore >= 7
+                      ? "Muito bom!"
+                      : result.overallScore >= 4
+                        ? "Pode melhorar!"
+                        : "Precisa de atenção!"}
+                  </p>
+                  <div className="mt-3 space-y-1">
+                    <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                      Resumo da análise
+                    </p>
+                    {result.positives.map((p, i) => (
+                      <div key={i} className="flex items-start gap-1.5">
+                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald" />
+                        <span className="text-[11px] text-foreground-secondary">{p}</span>
+                      </div>
+                    ))}
+                    {result.improvements.slice(0, 2).map((imp, i) => (
+                      <div key={i} className="flex items-start gap-1.5">
+                        <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
+                        <span className="text-[11px] text-foreground-secondary">{imp}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div
                   className={cn(
-                    "flex h-16 w-16 items-center justify-center rounded-full border-4",
-                    overallColor,
+                    "flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full border-[5px]",
+                    result.overallScore >= 7
+                      ? "border-emerald"
+                      : result.overallScore >= 4
+                        ? "border-amber-400"
+                        : "border-red-400",
                   )}
                 >
-                  <span className={cn("text-base font-extrabold", overallColor.split(" ")[0])}>
+                  <span
+                    className={cn(
+                      "text-lg font-extrabold",
+                      result.overallScore >= 7
+                        ? "text-emerald"
+                        : result.overallScore >= 4
+                          ? "text-amber-500"
+                          : "text-red-500",
+                    )}
+                  >
                     {Math.round(result.overallScore * 10)}%
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Resumo */}
-            <div className="rounded-2xl border-2 border-stroke-light bg-card p-4 space-y-3">
-              <h2 className="text-sm font-extrabold text-foreground-dark">Resumo da análise</h2>
-              {result.positives.length > 0 && (
-                <div className="space-y-1.5">
-                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald">
-                    Pontos positivos
-                  </p>
-                  {result.positives.map((p, i) => (
-                    <div key={i} className="flex items-start gap-1.5">
-                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald" />
-                      <span className="text-xs text-foreground-secondary">{p}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {result.improvements.length > 0 && (
-                <div className="space-y-1.5">
-                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-amber-500">
-                    Oportunidades de melhoria
-                  </p>
-                  {result.improvements.map((imp, i) => (
-                    <div key={i} className="flex items-start gap-1.5">
-                      <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
-                      <span className="text-xs text-foreground-secondary">{imp}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Ações */}
+            {/* Botões */}
             <div className="flex gap-2">
               <button
                 onClick={handleReset}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-stroke-light bg-card py-3 text-sm font-bold text-foreground-secondary transition-colors hover:bg-surface-soft"
+                className="flex flex-1 items-center justify-center rounded-xl border-2 border-stroke-light bg-card py-3 text-xs font-bold text-foreground-secondary transition-colors hover:bg-surface-soft"
               >
                 Ver análise anterior
               </button>
               <button
                 onClick={handleReset}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald py-3 text-sm font-bold text-white transition-all hover:bg-emerald-dark active:scale-[0.98]"
+                className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-emerald py-3 text-xs font-bold text-white transition-all hover:bg-emerald-dark active:scale-[0.98]"
               >
                 Nova análise →
               </button>
