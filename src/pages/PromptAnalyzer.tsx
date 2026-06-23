@@ -1,16 +1,17 @@
 import { useState, useRef, useEffect } from "react"
 import {
   ArrowLeft,
-  Upload,
+  FileUp,
   FileText,
   Lightbulb,
   AlertCircle,
   CheckCircle2,
   X,
   Zap,
-  MessageSquare,
+  MessageCircle,
   BarChart2,
-  Star,
+  Trophy,
+  User,
 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { AppBottomNav } from "@/components/AppBottomNav"
@@ -445,10 +446,10 @@ export default function PromptAnalyzerPage() {
               <div className="grid grid-cols-4 gap-2">
                 {(
                   [
-                    { n: 1, label: "Envie seu arquivo com a IA", icon: <Upload className="h-4 w-4" /> },
+                    { n: 1, label: "Envie seu arquivo com a IA", icon: <FileUp className="h-4 w-4" /> },
                     { n: 2, label: "Analisamos tudo", icon: <BarChart2 className="h-4 w-4" /> },
-                    { n: 3, label: "Você recebe o feedback", icon: <MessageSquare className="h-4 w-4" /> },
-                    { n: 4, label: "Nota final", icon: <Star className="h-4 w-4" /> },
+                    { n: 3, label: "Você recebe o feedback", icon: <MessageCircle className="h-4 w-4" /> },
+                    { n: 4, label: "Nota final", icon: <Trophy className="h-4 w-4" /> },
                   ] as const
                 ).map((item) => (
                   <div
@@ -487,7 +488,7 @@ export default function PromptAnalyzerPage() {
                       <div className="flex items-center justify-between gap-1 mb-1.5">
                         <div className="flex items-center gap-1">
                           <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald/15">
-                            <span className="text-[8px] font-extrabold text-emerald">V</span>
+                            <User className="h-2.5 w-2.5 text-emerald" />
                           </div>
                           <span className="text-[10px] font-bold text-foreground-tertiary">
                             Você
