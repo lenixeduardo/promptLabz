@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import {
   ArrowLeft,
   Upload,
@@ -16,7 +16,6 @@ import { Link } from "react-router-dom"
 import { AppBottomNav } from "@/components/AppBottomNav"
 import { useAuth } from "@/hooks/useAuth"
 import { getLocalGems } from "@/lib/xp"
-import { useEffect } from "react"
 import { cn } from "@/lib/utils"
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -43,12 +42,10 @@ interface ConversationAnalysis {
 
 // ── Conversation parser ────────────────────────────────────────────────────
 
-const USER_ROLE_RE =
-  /^(\s*#{1,6}\s*)?(Você|Eu|Human|User|You|Usuario)\s*:?\s*$/i
+const USER_ROLE_RE = /^(\s*#{1,6}\s*)?(Você|Eu|Human|User|You|Usuario)\s*:?\s*$/i
 const AI_ROLE_RE =
   /^(\s*#{1,6}\s*)?(Assistant|Assistente|Model|Modelo|Claude|ChatGPT|Gemini|IA|AI|GPT)\s*:?\s*$/i
-const INLINE_USER_RE =
-  /^\s*\*\*(Você|Eu|Human|User|You|Usuario)\s*:\*\*\s*(.*)/i
+const INLINE_USER_RE = /^\s*\*\*(Você|Eu|Human|User|You|Usuario)\s*:\*\*\s*(.*)/i
 
 function extractUserMessages(content: string): string[] {
   const lines = content.split("\n")
@@ -78,15 +75,12 @@ function extractUserMessages(content: string): string[] {
   if (inUser && buffer.length > 0) messages.push(buffer.join("\n").trim())
 
   const filtered = messages.filter((m) => m.trim().length > 5)
-
-  // If no conversation structure detected, treat each non-empty paragraph as a message
   if (filtered.length === 0) {
     return content
       .split(/\n\n+/)
       .map((p) => p.trim())
       .filter((p) => p.length > 10)
   }
-
   return filtered
 }
 
@@ -95,13 +89,16 @@ function extractUserMessages(content: string): string[] {
 function analyzeMessage(text: string): MessageAnalysis {
   const trimmed = text.trim()
   const wordCount = trimmed.split(/\s+/).filter(Boolean).length
-  const hasContext = /contexto|context|você é|you are|atue como|act as|especialista|expert/i.test(trimmed)
-  const hasExamples = /exemplo|example|por exemplo|e\.g\.|such as|como por/i.test(trimmed)
+  const hasContext =
+    /contexto|context|você é|you are|atue como|act as|especialista|expert/i.test(trimmed)
+  const hasExamples =
+    /exemplo|example|por exemplo|e\.g\.|such as|como por/i.test(trimmed)
   const hasGoal =
     /quero|preciso|gere|crie|escreva|want|need|generate|create|write|faça|elabore|liste|explique|analise/i.test(
       trimmed,
     )
-  const hasFormat = /formato|format|lista|list|tabela|table|json|markdown|bullet|parágrafo/i.test(trimmed)
+  const hasFormat =
+    /formato|format|lista|list|tabela|table|json|markdown|bullet|parágrafo/i.test(trimmed)
 
   const clarity = Math.min(100, Math.round((wordCount / 30) * 50 + (hasGoal ? 50 : 0)))
   const specificity = Math.min(
@@ -109,12 +106,10 @@ function analyzeMessage(text: string): MessageAnalysis {
     Math.round((wordCount / 50) * 60 + (hasExamples ? 25 : 0) + (hasFormat ? 15 : 0)),
   )
   const context = Math.min(100, Math.round((hasContext ? 70 : 0) + (wordCount > 20 ? 30 : 0)))
-
   const score = Math.round(((clarity + specificity + context) / 3 / 10) * 10) / 10
 
   const issues: string[] = []
   const suggestions: string[] = []
-
   if (wordCount < 5) issues.push("Prompt muito curto")
   if (!hasGoal) issues.push("Ausência de objetivo claro")
   if (!hasContext) issues.push("Sem contexto ou papel definido")
@@ -126,7 +121,6 @@ function analyzeMessage(text: string): MessageAnalysis {
   if (issues.length === 0) suggestions.push("Ótimo prompt! Considere adicionar restrições de formato.")
 
   const snippet = trimmed.length > 70 ? trimmed.slice(0, 70) + "…" : trimmed
-
   return { text: trimmed, snippet, clarity, specificity, context, score, issues, suggestions }
 }
 
@@ -139,20 +133,41 @@ function analyzeConversation(messages: string[]): ConversationAnalysis {
   const positives: string[] = []
   const improvements: string[] = []
 
-  const allIssues = analyzed.flatMap((m) => m.issues)
-  const allSuggestions = analyzed.flatMap((m) => m.suggestions)
-
-  if (allIssues.length === 0) positives.push("Todos os prompts têm objetivo claro e bem definido.")
   if (analyzed.some((m) => m.context >= 70)) positives.push("Bom uso de contexto e papel definido.")
   if (analyzed.some((m) => m.specificity >= 70)) positives.push("Boa especificidade nas solicitações.")
+  if (analyzed.every((m) => m.issues.length === 0))
+    positives.push("Todos os prompts têm objetivo claro e bem definido.")
+  if (positives.length === 0)
+    positives.push("Os prompts foram identificados e analisados com sucesso.")
 
-  const uniqueImprovements = [...new Set(allSuggestions)].slice(0, 3)
+  const uniqueImprovements = [...new Set(analyzed.flatMap((m) => m.suggestions))].slice(0, 3)
   improvements.push(...uniqueImprovements)
-
-  if (positives.length === 0) positives.push("Os prompts foram identificados e analisados com sucesso.")
 
   return { messages: analyzed, overallScore, positives, improvements }
 }
+
+// ── Static example data ────────────────────────────────────────────────────
+
+const EXAMPLE_TURNS = [
+  {
+    text: "Crie um texto sobre marketing",
+    score: 59,
+    label: null,
+    issues: ["Prompt muito vago", "Ausência de objetivo", "Ausência de exemplos"],
+  },
+  {
+    text: "Explique como funciona o marketing de conteúdo para iniciantes",
+    score: 82,
+    label: "Solução sugerida",
+    issues: [],
+  },
+  {
+    text: "Quais são as melhores estratégias de SEO para 2024 e como aplicá-las no meu site?",
+    score: 91,
+    label: "Excelente prompt!",
+    issues: [],
+  },
+]
 
 // ── Sub-components ─────────────────────────────────────────────────────────
 
@@ -175,32 +190,18 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
 }
 
 function ScoreBadge({ score }: { score: number }) {
-  const color =
-    score >= 7 ? "bg-emerald/10 text-emerald border-emerald/20" : score >= 4 ? "bg-amber-50 text-amber-600 border-amber-200" : "bg-red-50 text-red-500 border-red-200"
+  const cls =
+    score >= 7
+      ? "bg-emerald/10 text-emerald border-emerald/20"
+      : score >= 4
+        ? "bg-amber-50 text-amber-600 border-amber-200"
+        : "bg-red-50 text-red-500 border-red-200"
   return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-extrabold",
-        color,
-      )}
-    >
+    <span className={cn("inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-extrabold", cls)}>
       {score.toFixed(1)}/10
     </span>
   )
 }
-
-const EXAMPLE_MESSAGES = [
-  {
-    text: "Crie um texto sobre marketing",
-    score: 3.2,
-    issues: ["Prompt muito vago", "Ausência de objetivo", "Ausência de exemplos"],
-  },
-  {
-    text: "Explique como funciona o marketing de conteúdo para pequenas empresas, com exemplos práticos e dicas acionáveis",
-    score: 8.1,
-    issues: [],
-  },
-]
 
 // ── Main Page ──────────────────────────────────────────────────────────────
 
@@ -219,26 +220,10 @@ export default function PromptAnalyzerPage() {
     if (userId) setGems(getLocalGems(userId))
   }, [userId])
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0]
-    if (!f) return
-    processFile(f)
-  }
-
-  function handleDrop(e: React.DragEvent) {
-    e.preventDefault()
-    const f = e.dataTransfer.files?.[0]
-    if (!f) return
-    processFile(f)
-  }
-
   function processFile(f: File) {
     setFileError(null)
-    const allowed = ["text/plain", "text/markdown", "application/pdf"]
     const ext = f.name.split(".").pop()?.toLowerCase()
-    const allowedExts = ["txt", "md", "pdf"]
-
-    if (!allowedExts.includes(ext ?? "")) {
+    if (!["txt", "md", "pdf"].includes(ext ?? "")) {
       setFileError("Formato não suportado. Use .txt ou .md.")
       return
     }
@@ -247,30 +232,37 @@ export default function PromptAnalyzerPage() {
       return
     }
     if (ext === "pdf") {
-      setFileError("PDF ainda não suportado. Por favor use .txt ou .md.")
+      setFileError("PDF ainda não suportado. Use .txt ou .md.")
       return
     }
-
     setFile(f)
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0]
+    if (f) processFile(f)
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+    const f = e.dataTransfer.files?.[0]
+    if (f) processFile(f)
   }
 
   function handleAnalyze() {
     if (!file) return
     setPageState("analyzing")
-
     const reader = new FileReader()
     reader.onload = (e) => {
       const content = (e.target?.result as string) ?? ""
       const messages = extractUserMessages(content)
-
       setTimeout(() => {
         if (messages.length === 0) {
           setFileError("Nenhuma mensagem de usuário encontrada no arquivo.")
           setPageState("upload")
           return
         }
-        const analysis = analyzeConversation(messages)
-        setResult(analysis)
+        setResult(analyzeConversation(messages))
         setPageState("result")
       }, 800)
     }
@@ -287,14 +279,14 @@ export default function PromptAnalyzerPage() {
 
   const overallColor =
     (result?.overallScore ?? 0) >= 7
-      ? "text-emerald"
+      ? "text-emerald border-emerald"
       : (result?.overallScore ?? 0) >= 4
-        ? "text-amber-500"
-        : "text-red-500"
+        ? "text-amber-500 border-amber-400"
+        : "text-red-500 border-red-400"
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-28">
-      {/* Header */}
+      {/* ── Header ── */}
       <div className="sticky top-0 z-20 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
         <Link
           to="/home"
@@ -308,146 +300,133 @@ export default function PromptAnalyzerPage() {
             <h1 className="text-base font-extrabold text-primary-dark truncate">
               Analisador de Prompts
             </h1>
-            <span className="inline-flex items-center rounded-full bg-amber-400/15 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-600 shrink-0">
+            <span className="inline-flex shrink-0 items-center rounded-full bg-amber-400/15 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-600">
               Beta
             </span>
           </div>
-          <p className="text-[11px] text-foreground-tertiary truncate">
-            Receba uma análise completa
-          </p>
+          <p className="text-[11px] text-foreground-tertiary">Receba uma análise completa</p>
         </div>
-        <div
-          className="flex shrink-0 items-center gap-1 rounded-full bg-luxury/15 px-2.5 py-1.5"
-          aria-label={`Saldo de gemas: ${gems}`}
-        >
+        <div className="flex shrink-0 items-center gap-1 rounded-full bg-luxury/15 px-2.5 py-1.5">
           <span className="text-sm">💎</span>
           <span className="text-xs font-extrabold text-luxury">{gems.toLocaleString()}</span>
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-lg px-4 py-5 space-y-5">
-        {/* ── UPLOAD STATE ── */}
+      <div className="mx-auto w-full max-w-lg px-4 py-5 space-y-4">
+
+        {/* ══════════════════════════════════════════
+            UPLOAD STATE
+        ══════════════════════════════════════════ */}
         {pageState === "upload" && (
           <>
-            {/* Upload card */}
-            <div className="rounded-2xl border-2 border-stroke-light bg-card p-4">
-              <h2 className="mb-3 text-sm font-bold text-foreground-dark">
-                Anexe seu histórico de conversa
-              </h2>
+            {/* Upload card — mascote + texto + botão */}
+            <div
+              className={cn(
+                "rounded-2xl border-2 bg-card p-4 transition-colors",
+                file ? "border-emerald/40" : "border-stroke-light",
+              )}
+              onDrop={handleDrop}
+              onDragOver={(e) => e.preventDefault()}
+            >
+              {/* Row: mascote | info | botão */}
+              <div className="flex items-center gap-3">
+                {/* Mascote */}
+                <div className="shrink-0">
+                  <img
+                    src="/assets/mascot-analyzer.png"
+                    alt="Mascote analisadora"
+                    className="h-[72px] w-[72px] object-contain drop-shadow-sm"
+                  />
+                </div>
 
-              {/* Drop zone */}
-              <div
-                role="button"
-                tabIndex={0}
-                aria-label="Escolher arquivo para análise"
-                onClick={() => fileInputRef.current?.click()}
-                onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
-                onDrop={handleDrop}
-                onDragOver={(e) => e.preventDefault()}
-                className={cn(
-                  "flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-6 text-center transition-colors cursor-pointer",
-                  file
-                    ? "border-emerald/40 bg-emerald/5"
-                    : "border-stroke-muted bg-surface-soft hover:border-emerald/40 hover:bg-emerald/5",
-                )}
-              >
-                {file ? (
-                  <>
-                    <FileText className="h-8 w-8 text-emerald" strokeWidth={1.5} />
-                    <p className="text-sm font-bold text-emerald">{file.name}</p>
-                    <p className="text-[11px] text-foreground-tertiary">
-                      {(file.size / 1024).toFixed(0)} KB
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-foreground-dark leading-tight">
+                    Anexe seu histórico de conversa
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-foreground-tertiary">
+                    Formatos aceitos: .txt, .md, .pdf, docs
+                  </p>
+                  <p className="text-[11px] text-foreground-tertiary">Tamanho máximo: 10MB</p>
+                  {file && (
+                    <p className="mt-1 flex items-center gap-1 text-[11px] font-semibold text-emerald">
+                      <FileText className="h-3 w-3" />
+                      {file.name}
                     </p>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald/10">
-                      <Upload className="h-6 w-6 text-emerald" strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-foreground-secondary">
-                        Formatos: .txt, .md, .pdf
-                      </p>
-                      <p className="text-[11px] text-foreground-tertiary">Tamanho máximo: 10MB</p>
-                    </div>
-                  </>
-                )}
+                  )}
+                </div>
+
+                {/* Botão */}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="shrink-0 rounded-xl border-2 border-stroke-light bg-card px-3 py-2 text-[11px] font-bold text-foreground-secondary transition-colors hover:bg-surface-soft whitespace-nowrap"
+                >
+                  {file ? "Trocar" : "Escolher arquivo"}
+                </button>
               </div>
 
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".txt,.md,.pdf,text/plain,text/markdown"
-                className="hidden"
-                onChange={handleFileChange}
-                aria-hidden="true"
-              />
-
+              {/* Erro */}
               {fileError && (
-                <p className="mt-2 flex items-center gap-1.5 text-xs text-red-500" role="alert">
+                <p className="mt-3 flex items-center gap-1.5 text-xs text-red-500" role="alert">
                   <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                   {fileError}
                 </p>
               )}
 
-              <div className="mt-3 flex gap-2">
+              {/* Analisar (aparece após selecionar) */}
+              {file && (
                 <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex-1 rounded-xl border-2 border-stroke-light bg-card py-2.5 text-sm font-bold text-foreground-secondary transition-colors hover:bg-surface-soft"
+                  onClick={handleAnalyze}
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald py-2.5 text-sm font-bold text-white transition-all hover:bg-emerald-dark active:scale-[0.98]"
                 >
-                  {file ? "Trocar arquivo" : "Escolher arquivo"}
+                  <Zap className="h-4 w-4" />
+                  Analisar conversa
                 </button>
-                {file && (
-                  <button
-                    onClick={handleAnalyze}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald py-2.5 text-sm font-bold text-white transition-all hover:bg-emerald-dark active:scale-[0.98]"
-                  >
-                    <Zap className="h-4 w-4" />
-                    Analisar
-                  </button>
-                )}
-              </div>
+              )}
             </div>
 
-            {/* Tip */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".txt,.md,.pdf,text/plain,text/markdown"
+              className="hidden"
+              onChange={handleFileChange}
+              aria-hidden="true"
+            />
+
+            {/* Dica */}
             <div className="flex items-start gap-2 rounded-xl border border-stroke-muted bg-surface-soft px-4 py-3">
               <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" strokeWidth={2} />
               <p className="text-xs text-foreground-secondary leading-relaxed">
-                <span className="font-bold">Dica:</span> Exporte seu histórico do ChatGPT, Gemini,
-                Claude ou outro IA em formato .txt ou .md para facilitar a análise. Serão
-                considerados apenas as <span className="font-bold">2 últimas solicitações</span> da
-                conversa.
+                <span className="font-bold">Dica:</span> Exporte suas conversas do ChatGPT, Gemini,
+                Claude ou outro IA em formato .txt ou .md para facilitar a análise.
               </p>
             </div>
 
-            {/* Como funciona */}
+            {/* Como funciona — 4 itens em linha */}
             <div>
               <h2 className="mb-3 text-sm font-extrabold text-foreground-dark">Como funciona</h2>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="grid grid-cols-4 gap-2">
                 {[
-                  { step: 1, title: "Envie seu arquivo", icon: <Upload className="h-5 w-5" /> },
-                  { step: 2, title: "Analisamos tudo", icon: <BarChart2 className="h-5 w-5" /> },
-                  {
-                    step: 3,
-                    title: "Você recebe o feedback",
-                    icon: <MessageSquare className="h-5 w-5" />,
-                  },
-                  { step: 4, title: "Hora de evoluir!", icon: <Star className="h-5 w-5" /> },
+                  { n: 1, label: "Envie seu arquivo", icon: <Upload className="h-4 w-4" /> },
+                  { n: 2, label: "Analisamos tudo", icon: <BarChart2 className="h-4 w-4" /> },
+                  { n: 3, label: "Você recebe o feedback", icon: <MessageSquare className="h-4 w-4" /> },
+                  { n: 4, label: "Nota final", icon: <Star className="h-4 w-4" /> },
                 ].map((item) => (
                   <div
-                    key={item.step}
-                    className="flex flex-col items-center gap-2 rounded-xl border-2 border-stroke-light bg-card p-3 text-center"
+                    key={item.n}
+                    className="flex flex-col items-center gap-1.5 rounded-xl border-2 border-stroke-light bg-card px-2 py-3 text-center"
                   >
                     <div className="relative">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald/10 text-emerald">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald/10 text-emerald">
                         {item.icon}
                       </div>
                       <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald text-[9px] font-extrabold text-white">
-                        {item.step}
+                        {item.n}
                       </span>
                     </div>
-                    <p className="text-[11px] font-bold text-foreground-dark leading-tight">
-                      {item.title}
+                    <p className="text-[10px] font-bold text-foreground-dark leading-tight">
+                      {item.label}
                     </p>
                   </div>
                 ))}
@@ -459,12 +438,13 @@ export default function PromptAnalyzerPage() {
               <h2 className="mb-3 text-sm font-extrabold text-foreground-dark">
                 Exemplo de análise
               </h2>
-              <div className="space-y-3">
-                {EXAMPLE_MESSAGES.map((msg, i) => (
+              <div className="space-y-2">
+                {EXAMPLE_TURNS.map((turn, i) => (
                   <div
                     key={i}
-                    className="rounded-xl border-2 border-stroke-light bg-card p-3 space-y-2"
+                    className="rounded-xl border-2 border-stroke-light bg-card p-3"
                   >
+                    {/* Header da virada */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-1.5">
                         <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald/10">
@@ -474,51 +454,74 @@ export default function PromptAnalyzerPage() {
                       </div>
                       <span
                         className={cn(
-                          "inline-flex rounded-full px-2 py-0.5 text-[10px] font-extrabold border",
-                          msg.score >= 7
-                            ? "bg-emerald/10 text-emerald border-emerald/20"
-                            : "bg-red-50 text-red-500 border-red-200",
+                          "inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-[10px] font-extrabold",
+                          turn.score >= 70
+                            ? "border-emerald/20 bg-emerald/10 text-emerald"
+                            : "border-red-200 bg-red-50 text-red-500",
                         )}
                       >
-                        {msg.score.toFixed(1)}/10
+                        {turn.score}
                       </span>
                     </div>
-                    <p className="text-xs text-foreground-dark">{msg.text}</p>
-                    {msg.issues.length > 0 ? (
-                      <div className="space-y-1">
-                        {msg.issues.map((issue, j) => (
+
+                    {/* Texto do prompt */}
+                    <p className="mt-1.5 text-xs text-foreground-dark">{turn.text}</p>
+
+                    {/* Issues ou label positivo */}
+                    <div className="mt-2 space-y-1">
+                      {turn.issues.length > 0 ? (
+                        turn.issues.map((issue, j) => (
                           <div key={j} className="flex items-center gap-1.5">
                             <X className="h-3 w-3 shrink-0 text-red-500" />
                             <span className="text-[11px] text-red-500">{issue}</span>
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-1.5">
-                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald" />
-                        <span className="text-[11px] font-semibold text-emerald">
-                          Solução excelente!
-                        </span>
-                      </div>
-                    )}
+                        ))
+                      ) : (
+                        <div className="flex items-center gap-1.5">
+                          <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald" />
+                          <span className="text-[11px] font-semibold text-emerald">
+                            {turn.label}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
 
-                {/* Example final score */}
+                {/* Nota final do exemplo */}
                 <div className="rounded-xl border-2 border-stroke-light bg-card p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                      <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
                         Nota final da conversa
                       </p>
-                      <p className="mt-0.5 text-3xl font-extrabold text-foreground-dark">
+                      <p className="mt-0.5 text-4xl font-extrabold text-foreground-dark">
                         8.2
-                        <span className="text-base font-semibold text-foreground-tertiary">/10</span>
+                        <span className="ml-0.5 text-base font-semibold text-foreground-tertiary">
+                          /10
+                        </span>
                       </p>
+                      <p className="mt-0.5 text-xs font-bold text-emerald">Muito bom!</p>
                     </div>
-                    <div className="h-14 w-14 rounded-full border-4 border-emerald flex items-center justify-center">
-                      <span className="text-lg font-extrabold text-emerald">82%</span>
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-emerald">
+                      <span className="text-base font-extrabold text-emerald">82%</span>
                     </div>
+                  </div>
+                  {/* Resumo mini */}
+                  <div className="mt-3 space-y-1 border-t border-stroke-muted pt-3">
+                    <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                      Resumo da análise
+                    </p>
+                    {[
+                      "3 prompts analisados",
+                      "2 pontos de melhoria",
+                      "1 excelente prompt",
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-1.5">
+                        <div className="h-1.5 w-1.5 rounded-full bg-emerald" />
+                        <span className="text-[11px] text-foreground-secondary">{item}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -526,32 +529,38 @@ export default function PromptAnalyzerPage() {
           </>
         )}
 
-        {/* ── ANALYZING STATE ── */}
+        {/* ══════════════════════════════════════════
+            ANALYZING STATE
+        ══════════════════════════════════════════ */}
         {pageState === "analyzing" && (
           <div className="rounded-2xl border-2 border-emerald/30 bg-card p-8 text-center">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald/10 animate-pulse">
-              <BarChart2 className="h-10 w-10 text-emerald" strokeWidth={1.5} />
-            </div>
+            <img
+              src="/assets/mascot-analyzer.png"
+              alt="Analisando"
+              className="mx-auto h-24 w-24 object-contain animate-pulse"
+            />
             <h2 className="mt-4 text-base font-extrabold text-foreground-dark">
               Analisando seus prompts…
             </h2>
             <p className="mt-1 text-sm text-foreground-tertiary">
               Identificando as 2 últimas solicitações e avaliando qualidade.
             </p>
-            <div className="mt-6 mx-auto h-2 w-48 overflow-hidden rounded-full bg-surface-soft">
+            <div className="mt-5 mx-auto h-2 w-48 overflow-hidden rounded-full bg-surface-soft">
               <div className="h-full w-2/3 rounded-full bg-emerald animate-pulse" />
             </div>
           </div>
         )}
 
-        {/* ── RESULT STATE ── */}
+        {/* ══════════════════════════════════════════
+            RESULT STATE
+        ══════════════════════════════════════════ */}
         {pageState === "result" && result && (
           <>
-            {/* File info */}
+            {/* Arquivo selecionado */}
             <div className="flex items-center justify-between rounded-xl border-2 border-stroke-light bg-card px-4 py-3">
               <div className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-emerald" />
-                <span className="text-xs font-bold text-foreground-dark truncate max-w-[180px]">
+                <span className="text-xs font-bold text-foreground-dark truncate max-w-[200px]">
                   {file?.name}
                 </span>
               </div>
@@ -564,9 +573,9 @@ export default function PromptAnalyzerPage() {
               </button>
             </div>
 
-            {/* Messages analysis */}
+            {/* Análise por mensagem */}
             <div>
-              <h2 className="mb-3 text-sm font-extrabold text-foreground-dark">
+              <h2 className="mb-1 text-sm font-extrabold text-foreground-dark">
                 Análise das solicitações
               </h2>
               <p className="mb-3 text-[11px] text-foreground-tertiary">
@@ -576,17 +585,11 @@ export default function PromptAnalyzerPage() {
               </p>
               <div className="space-y-4">
                 {result.messages.map((msg, i) => (
-                  <div
-                    key={i}
-                    className="rounded-2xl border-2 border-stroke-light bg-card p-4 space-y-3"
-                  >
-                    {/* Message header */}
+                  <div key={i} className="rounded-2xl border-2 border-stroke-light bg-card p-4 space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald/10">
-                          <span className="text-[10px] font-extrabold text-emerald">
-                            {i + 1}
-                          </span>
+                          <span className="text-[10px] font-extrabold text-emerald">{i + 1}</span>
                         </div>
                         <span className="text-xs font-bold text-foreground-tertiary">
                           Solicitação {i + 1}
@@ -594,20 +597,14 @@ export default function PromptAnalyzerPage() {
                       </div>
                       <ScoreBadge score={msg.score} />
                     </div>
-
-                    {/* Message snippet */}
                     <p className="rounded-lg bg-surface-soft px-3 py-2 text-xs text-foreground-secondary leading-relaxed">
                       "{msg.snippet}"
                     </p>
-
-                    {/* Scores */}
                     <div className="space-y-2">
                       <ScoreBar label="Clareza" value={msg.clarity} />
                       <ScoreBar label="Especificidade" value={msg.specificity} />
                       <ScoreBar label="Contexto" value={msg.context} />
                     </div>
-
-                    {/* Issues */}
                     {msg.issues.length > 0 && (
                       <div className="space-y-1.5">
                         <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
@@ -621,8 +618,6 @@ export default function PromptAnalyzerPage() {
                         ))}
                       </div>
                     )}
-
-                    {/* Suggestions */}
                     <div className="space-y-1.5">
                       <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
                         Sugestões
@@ -639,39 +634,34 @@ export default function PromptAnalyzerPage() {
               </div>
             </div>
 
-            {/* Final score */}
+            {/* Nota final */}
             <div className="rounded-2xl border-2 border-emerald/30 bg-card p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
                     Nota final da conversa
                   </p>
                   <p className="mt-0.5 text-4xl font-extrabold text-foreground-dark">
                     {result.overallScore.toFixed(1)}
-                    <span className="text-base font-semibold text-foreground-tertiary">/10</span>
+                    <span className="ml-0.5 text-base font-semibold text-foreground-tertiary">/10</span>
                   </p>
                 </div>
                 <div
                   className={cn(
                     "flex h-16 w-16 items-center justify-center rounded-full border-4",
-                    result.overallScore >= 7
-                      ? "border-emerald"
-                      : result.overallScore >= 4
-                        ? "border-amber-400"
-                        : "border-red-400",
+                    overallColor,
                   )}
                 >
-                  <span className={cn("text-lg font-extrabold", overallColor)}>
+                  <span className={cn("text-base font-extrabold", overallColor.split(" ")[0])}>
                     {Math.round(result.overallScore * 10)}%
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Summary */}
+            {/* Resumo */}
             <div className="rounded-2xl border-2 border-stroke-light bg-card p-4 space-y-3">
               <h2 className="text-sm font-extrabold text-foreground-dark">Resumo da análise</h2>
-
               {result.positives.length > 0 && (
                 <div className="space-y-1.5">
                   <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald">
@@ -685,7 +675,6 @@ export default function PromptAnalyzerPage() {
                   ))}
                 </div>
               )}
-
               {result.improvements.length > 0 && (
                 <div className="space-y-1.5">
                   <p className="text-[10px] font-extrabold uppercase tracking-wider text-amber-500">
@@ -701,14 +690,21 @@ export default function PromptAnalyzerPage() {
               )}
             </div>
 
-            {/* Actions */}
-            <button
-              onClick={handleReset}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-stroke-light bg-card py-3 text-sm font-bold text-foreground-secondary transition-colors hover:bg-surface-soft"
-            >
-              <Upload className="h-4 w-4" />
-              Fazer nova análise
-            </button>
+            {/* Ações */}
+            <div className="flex gap-2">
+              <button
+                onClick={handleReset}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-stroke-light bg-card py-3 text-sm font-bold text-foreground-secondary transition-colors hover:bg-surface-soft"
+              >
+                Ver análise anterior
+              </button>
+              <button
+                onClick={handleReset}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald py-3 text-sm font-bold text-white transition-all hover:bg-emerald-dark active:scale-[0.98]"
+              >
+                Nova análise →
+              </button>
+            </div>
           </>
         )}
       </div>
