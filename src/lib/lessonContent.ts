@@ -40,6 +40,7 @@ export type MatchActivity = {
   type: "match";
   instruction: string;
   pairs: { word: string; definition: string }[];
+  correctPairs: Record<string, string>;
   explanation: string;
 };
 
@@ -109,6 +110,7 @@ const llmMatch: LessonActivity[] = [
       { word: "Gemini", definition: "Google" },
       { word: "Qwen", definition: "Alibaba" },
     ],
+    correctPairs: { "Claude": "Anthropic", "GPT-4": "OpenAI", "Gemini": "Google", "Qwen": "Alibaba" },
     explanation: "Cada modelo é desenvolvido por uma organização diferente. Claude = Anthropic, GPT = OpenAI, Gemini = Google, Qwen = Alibaba.",
   },
 ]
@@ -146,6 +148,7 @@ const cronMatch: LessonActivity[] = [
       { word: "0 0 * * *", definition: "Todo dia à meia-noite" },
       { word: "0 0 1 * *", definition: "Primeiro dia de cada mês" },
     ],
+    correctPairs: { "0 9 * * 1": "Toda segunda às 09:00", "*/15 * * * *": "A cada 15 minutos", "0 0 * * *": "Todo dia à meia-noite", "0 0 1 * *": "Primeiro dia de cada mês" },
     explanation: "Os 5 campos do cron são: minuto, hora, dia-do-mês, mês, dia-da-semana. * = qualquer valor, */N = a cada N.",
   },
 ]
@@ -1840,6 +1843,7 @@ const a1ContextoClareza_extra: LessonActivity[] = [
       { word: "Público-alvo", definition: "Para quem a resposta é destinada" },
       { word: "Formato", definition: "Como a saída deve ser estruturada" },
     ],
+    correctPairs: { "Contexto": "Quem você é e por que está perguntando", "Objetivo": "O que você quer que a IA faça", "Público-alvo": "Para quem a resposta é destinada", "Formato": "Como a saída deve ser estruturada" },
     explanation: "Um prompt completo tem contexto (situação), objetivo (ação), público (receptor) e formato (estrutura). Cada elemento elimina uma possível ambiguidade.",
   },
 ]
@@ -1905,6 +1909,7 @@ const a1RefinoExtra: LessonActivity[] = [
       { word: "Melhorar", definition: "Editar o prompt com base na análise" },
       { word: "Versionar", definition: "Salvar a nova versão como v2, v3…" },
     ],
+    correctPairs: { "Testar": "Rodar o prompt e coletar o resultado", "Analisar": "Identificar onde a resposta falhou", "Melhorar": "Editar o prompt com base na análise", "Versionar": "Salvar a nova versão como v2, v3…" },
     explanation: "Refino iterativo é um ciclo: testar → analisar → melhorar → versionar. Sem versionar, você perde o histórico do que funcionou.",
   },
 ]
@@ -1973,6 +1978,7 @@ const a2EstiloTomExtra: LessonActivity[] = [
       { word: "Técnico", definition: "Documentação de API ou white paper" },
       { word: "Empático", definition: "Mensagem de suporte ao cliente em crise" },
     ],
+    correctPairs: { "Formal": "Relatório executivo ou comunicação corporativa", "Conversacional": "Tutorial ou blog para iniciantes", "Técnico": "Documentação de API ou white paper", "Empático": "Mensagem de suporte ao cliente em crise" },
     explanation: "Tom errado no contexto certo quebra a comunicação. Um e-mail de suporte com tom técnico frio pode frustrar um cliente — mesmo com a resposta correta.",
   },
 ]
@@ -2025,6 +2031,7 @@ const a2RefinoDadosExtra: LessonActivity[] = [
       { word: "Log de erros", definition: "Registro de inputs que geraram respostas incorretas" },
       { word: "Golden set", definition: "Conjunto de casos com respostas ideais para benchmark" },
     ],
+    correctPairs: { "Teste A/B": "Comparar duas versões do prompt com métricas objetivas", "Regressão": "Garantir que melhorias não quebraram casos anteriores", "Log de erros": "Registro de inputs que geraram respostas incorretas", "Golden set": "Conjunto de casos com respostas ideais para benchmark" },
     explanation: "Engenharia de prompt profissional usa as mesmas práticas de engenharia de software: testes, regressão e benchmarks para melhorar com dados.",
   },
 ]
@@ -2056,6 +2063,7 @@ const a3AutomacaoExtra: LessonActivity[] = [
       { word: "Make", definition: "Automações visuais de complexidade média" },
       { word: "Python + API", definition: "Controle total com código customizado" },
     ],
+    correctPairs: { "n8n": "Fluxos visuais, código aberto, auto-hospedável", "Zapier": "Automações simples entre SaaS sem código", "Make": "Automações visuais de complexidade média", "Python + API": "Controle total com código customizado" },
     explanation: "Escolha a ferramenta pelo nível de controle necessário: Zapier para o simples, n8n para mais poder, Python quando precisar de lógica avançada ou privacidade total.",
   },
 ]
@@ -2108,6 +2116,7 @@ const a3MetricasExtra: LessonActivity[] = [
       { word: "Latência P95", definition: "Tempo de resposta no percentil 95 (pior caso frequente)" },
       { word: "Taxa de escalação", definition: "Casos enviados para atendimento humano" },
     ],
+    correctPairs: { "Taxa de alucinação": "Frequência com que o modelo inventa informações", "CSAT": "Satisfação do usuário com a resposta recebida", "Latência P95": "Tempo de resposta no percentil 95 (pior caso frequente)", "Taxa de escalação": "Casos enviados para atendimento humano" },
     explanation: "Métricas de IA têm duas camadas: técnicas (latência, tokens) e de negócio (CSAT, escalação). As de negócio dizem se a IA está realmente resolvendo o problema.",
   },
 ]
