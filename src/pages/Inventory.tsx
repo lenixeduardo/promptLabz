@@ -24,9 +24,13 @@ export default function Inventory() {
     setOwnedAvatarIds(inv.ownedAvatarIds)
     setXp(getLocalXP(user.id))
 
-    getUserProfile(user.id).then(({ data: profile }) => {
-      if (profile?.avatar_url) setActiveAvatarId(profile.avatar_url)
-    })
+    getUserProfile(user.id)
+      .then(({ data: profile }) => {
+        if (profile?.avatar_url) setActiveAvatarId(profile.avatar_url)
+      })
+      .catch((err) => {
+        console.error("Falha ao carregar perfil do usuário:", err)
+      })
   }, [user?.id])
 
   const ownedAvatars = ownedAvatarIds

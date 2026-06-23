@@ -28,12 +28,17 @@ export function useLabCategories() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    Promise.all([getLabCategories(), getLabConfig()]).then(([catRes, cfgRes]) => {
-      if (catRes.data && catRes.data.length > 0) setCategories(catRes.data.map(mapDbCategory))
-      if (cfgRes.data) setPromptOfTheDay(mapDbConfig(cfgRes.data))
-      if (catRes.error) setError(catRes.error)
-      setLoading(false)
-    })
+    Promise.all([getLabCategories(), getLabConfig()])
+      .then(([catRes, cfgRes]) => {
+        if (catRes.data && catRes.data.length > 0) setCategories(catRes.data.map(mapDbCategory))
+        if (cfgRes.data) setPromptOfTheDay(mapDbConfig(cfgRes.data))
+        if (catRes.error) setError(catRes.error)
+        setLoading(false)
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Falha ao carregar categorias")
+        setLoading(false)
+      })
   }, [])
 
   return { categories, promptOfTheDay, loading, error }

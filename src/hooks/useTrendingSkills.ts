@@ -22,11 +22,16 @@ export function useTrendingSkills(category?: string) {
 
   useEffect(() => {
     setLoading(true)
-    getTrendingSkills(category).then(({ data, error }) => {
-      if (data && data.length > 0) setSkills(data.map(mapDbSkill))
-      if (error) setError(error)
-      setLoading(false)
-    })
+    getTrendingSkills(category)
+      .then(({ data, error }) => {
+        if (data && data.length > 0) setSkills(data.map(mapDbSkill))
+        if (error) setError(error)
+        setLoading(false)
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Falha ao carregar habilidades em trending")
+        setLoading(false)
+      })
   }, [category])
 
   return { skills, loading, error }
