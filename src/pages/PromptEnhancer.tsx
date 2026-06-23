@@ -254,7 +254,7 @@ export default function PromptEnhancerPage() {
           <img
             src="/prompt-asset.png"
             alt="Gatinha engenheira"
-            className="h-20 w-20 shrink-0 object-contain"
+            className="h-32 w-32 shrink-0 object-contain"
           />
         </div>
 
