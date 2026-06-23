@@ -1,48 +1,170 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
+import {
+  ArrowLeft,
+  Upload,
+  FileText,
+  Lightbulb,
+  AlertCircle,
+  CheckCircle2,
+  X,
+  Zap,
+  MessageSquare,
+  BarChart2,
+  Star,
+} from "lucide-react"
 import { Link } from "react-router-dom"
-import { ArrowLeft, Zap, AlertCircle } from "lucide-react"
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppPageHeader } from "@/components/AppPageHeader"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
+import { useAuth } from "@/hooks/useAuth"
+import { getLocalGems } from "@/lib/xp"
+import { useEffect } from "react"
+import { cn } from "@/lib/utils"
 
-type AnalysisResult = {
+// ── Types ──────────────────────────────────────────────────────────────────
+
+type PageState = "upload" | "analyzing" | "result"
+
+interface MessageAnalysis {
+  text: string
+  snippet: string
   clarity: number
   specificity: number
   context: number
+  score: number
+  issues: string[]
   suggestions: string[]
 }
 
-function analyzePrompt(prompt: string): AnalysisResult {
-  const trimmed = prompt.trim()
+interface ConversationAnalysis {
+  messages: MessageAnalysis[]
+  overallScore: number
+  positives: string[]
+  improvements: string[]
+}
+
+// ── Conversation parser ────────────────────────────────────────────────────
+
+const USER_ROLE_RE =
+  /^(\s*#{1,6}\s*)?(Você|Eu|Human|User|You|Usuario)\s*:?\s*$/i
+const AI_ROLE_RE =
+  /^(\s*#{1,6}\s*)?(Assistant|Assistente|Model|Modelo|Claude|ChatGPT|Gemini|IA|AI|GPT)\s*:?\s*$/i
+const INLINE_USER_RE =
+  /^\s*\*\*(Você|Eu|Human|User|You|Usuario)\s*:\*\*\s*(.*)/i
+
+function extractUserMessages(content: string): string[] {
+  const lines = content.split("\n")
+  const messages: string[] = []
+  let buffer: string[] = []
+  let inUser = false
+
+  for (const line of lines) {
+    const inlineMatch = line.match(INLINE_USER_RE)
+    if (inlineMatch) {
+      if (buffer.length > 0 && inUser) messages.push(buffer.join("\n").trim())
+      buffer = inlineMatch[2] ? [inlineMatch[2]] : []
+      inUser = true
+    } else if (USER_ROLE_RE.test(line)) {
+      if (buffer.length > 0 && inUser) messages.push(buffer.join("\n").trim())
+      buffer = []
+      inUser = true
+    } else if (AI_ROLE_RE.test(line)) {
+      if (inUser && buffer.length > 0) messages.push(buffer.join("\n").trim())
+      buffer = []
+      inUser = false
+    } else if (inUser) {
+      buffer.push(line)
+    }
+  }
+
+  if (inUser && buffer.length > 0) messages.push(buffer.join("\n").trim())
+
+  const filtered = messages.filter((m) => m.trim().length > 5)
+
+  // If no conversation structure detected, treat each non-empty paragraph as a message
+  if (filtered.length === 0) {
+    return content
+      .split(/\n\n+/)
+      .map((p) => p.trim())
+      .filter((p) => p.length > 10)
+  }
+
+  return filtered
+}
+
+// ── Message analyzer ───────────────────────────────────────────────────────
+
+function analyzeMessage(text: string): MessageAnalysis {
+  const trimmed = text.trim()
   const wordCount = trimmed.split(/\s+/).filter(Boolean).length
-  const hasContext = /contexto|context|você é|you are|atue como|act as/i.test(trimmed)
-  const hasExamples = /exemplo|example|por exemplo|e\.g\.|such as/i.test(trimmed)
-  const hasGoal = /quero|preciso|gere|crie|escreva|want|need|generate|create|write/i.test(trimmed)
+  const hasContext = /contexto|context|você é|you are|atue como|act as|especialista|expert/i.test(trimmed)
+  const hasExamples = /exemplo|example|por exemplo|e\.g\.|such as|como por/i.test(trimmed)
+  const hasGoal =
+    /quero|preciso|gere|crie|escreva|want|need|generate|create|write|faça|elabore|liste|explique|analise/i.test(
+      trimmed,
+    )
+  const hasFormat = /formato|format|lista|list|tabela|table|json|markdown|bullet|parágrafo/i.test(trimmed)
 
   const clarity = Math.min(100, Math.round((wordCount / 30) * 50 + (hasGoal ? 50 : 0)))
-  const specificity = Math.min(100, Math.round((wordCount / 50) * 60 + (hasExamples ? 40 : 0)))
+  const specificity = Math.min(
+    100,
+    Math.round((wordCount / 50) * 60 + (hasExamples ? 25 : 0) + (hasFormat ? 15 : 0)),
+  )
   const context = Math.min(100, Math.round((hasContext ? 70 : 0) + (wordCount > 20 ? 30 : 0)))
 
-  const suggestions: string[] = []
-  if (!hasGoal) suggestions.push("Descreva claramente o que você quer que a IA faça.")
-  if (!hasContext) suggestions.push("Adicione contexto: 'Você é um especialista em...'")
-  if (!hasExamples) suggestions.push("Inclua exemplos do resultado esperado.")
-  if (wordCount < 10) suggestions.push("Expanda o prompt — seja mais detalhado.")
-  if (suggestions.length === 0) suggestions.push("Ótimo prompt! Considere adicionar restrições de formato.")
+  const score = Math.round(((clarity + specificity + context) / 3 / 10) * 10) / 10
 
-  return { clarity, specificity, context, suggestions }
+  const issues: string[] = []
+  const suggestions: string[] = []
+
+  if (wordCount < 5) issues.push("Prompt muito curto")
+  if (!hasGoal) issues.push("Ausência de objetivo claro")
+  if (!hasContext) issues.push("Sem contexto ou papel definido")
+  if (!hasExamples && wordCount < 20) issues.push("Ausência de exemplos")
+  if (wordCount < 10) suggestions.push("Expanda o prompt — seja mais detalhado.")
+  if (!hasGoal) suggestions.push("Descreva claramente o que quer que a IA faça.")
+  if (!hasContext) suggestions.push("Adicione contexto: 'Você é um especialista em…'")
+  if (!hasExamples) suggestions.push("Inclua exemplos do resultado esperado.")
+  if (issues.length === 0) suggestions.push("Ótimo prompt! Considere adicionar restrições de formato.")
+
+  const snippet = trimmed.length > 70 ? trimmed.slice(0, 70) + "…" : trimmed
+
+  return { text: trimmed, snippet, clarity, specificity, context, score, issues, suggestions }
 }
+
+function analyzeConversation(messages: string[]): ConversationAnalysis {
+  const last2 = messages.slice(-2)
+  const analyzed = last2.map(analyzeMessage)
+  const overallScore =
+    Math.round((analyzed.reduce((s, m) => s + m.score, 0) / analyzed.length) * 10) / 10
+
+  const positives: string[] = []
+  const improvements: string[] = []
+
+  const allIssues = analyzed.flatMap((m) => m.issues)
+  const allSuggestions = analyzed.flatMap((m) => m.suggestions)
+
+  if (allIssues.length === 0) positives.push("Todos os prompts têm objetivo claro e bem definido.")
+  if (analyzed.some((m) => m.context >= 70)) positives.push("Bom uso de contexto e papel definido.")
+  if (analyzed.some((m) => m.specificity >= 70)) positives.push("Boa especificidade nas solicitações.")
+
+  const uniqueImprovements = [...new Set(allSuggestions)].slice(0, 3)
+  improvements.push(...uniqueImprovements)
+
+  if (positives.length === 0) positives.push("Os prompts foram identificados e analisados com sucesso.")
+
+  return { messages: analyzed, overallScore, positives, improvements }
+}
+
+// ── Sub-components ─────────────────────────────────────────────────────────
 
 function ScoreBar({ label, value }: { label: string; value: number }) {
   const color = value >= 70 ? "bg-emerald" : value >= 40 ? "bg-amber-400" : "bg-red-400"
   return (
     <div>
       <div className="mb-1 flex items-center justify-between">
-        <span className="text-xs font-semibold text-foreground-dark">{label}</span>
-        <span className="text-xs font-bold text-foreground-tertiary">{value}%</span>
+        <span className="text-[11px] font-semibold text-foreground-secondary">{label}</span>
+        <span className="text-[11px] font-bold text-foreground-tertiary">{value}%</span>
       </div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-stroke-muted/40">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-stroke-muted/40">
         <div
           className={`h-full rounded-full transition-all duration-500 ${color}`}
           style={{ width: `${value}%` }}
@@ -52,65 +174,542 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
   )
 }
 
-export default function PromptAnalyzerPage() {
-  const [prompt, setPrompt] = useState("")
-  const [result, setResult] = useState<AnalysisResult | null>(null)
+function ScoreBadge({ score }: { score: number }) {
+  const color =
+    score >= 7 ? "bg-emerald/10 text-emerald border-emerald/20" : score >= 4 ? "bg-amber-50 text-amber-600 border-amber-200" : "bg-red-50 text-red-500 border-red-200"
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-extrabold",
+        color,
+      )}
+    >
+      {score.toFixed(1)}/10
+    </span>
+  )
+}
 
-  function handleAnalyze() {
-    if (!prompt.trim()) return
-    setResult(analyzePrompt(prompt))
+const EXAMPLE_MESSAGES = [
+  {
+    text: "Crie um texto sobre marketing",
+    score: 3.2,
+    issues: ["Prompt muito vago", "Ausência de objetivo", "Ausência de exemplos"],
+  },
+  {
+    text: "Explique como funciona o marketing de conteúdo para pequenas empresas, com exemplos práticos e dicas acionáveis",
+    score: 8.1,
+    issues: [],
+  },
+]
+
+// ── Main Page ──────────────────────────────────────────────────────────────
+
+export default function PromptAnalyzerPage() {
+  const { user } = useAuth()
+  const userId = user?.id ?? null
+  const [gems, setGems] = useState(0)
+
+  const [pageState, setPageState] = useState<PageState>("upload")
+  const [file, setFile] = useState<File | null>(null)
+  const [fileError, setFileError] = useState<string | null>(null)
+  const [result, setResult] = useState<ConversationAnalysis | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (userId) setGems(getLocalGems(userId))
+  }, [userId])
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0]
+    if (!f) return
+    processFile(f)
   }
 
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+    const f = e.dataTransfer.files?.[0]
+    if (!f) return
+    processFile(f)
+  }
+
+  function processFile(f: File) {
+    setFileError(null)
+    const allowed = ["text/plain", "text/markdown", "application/pdf"]
+    const ext = f.name.split(".").pop()?.toLowerCase()
+    const allowedExts = ["txt", "md", "pdf"]
+
+    if (!allowedExts.includes(ext ?? "")) {
+      setFileError("Formato não suportado. Use .txt ou .md.")
+      return
+    }
+    if (f.size > 10 * 1024 * 1024) {
+      setFileError("Arquivo muito grande. Máximo 10 MB.")
+      return
+    }
+    if (ext === "pdf") {
+      setFileError("PDF ainda não suportado. Por favor use .txt ou .md.")
+      return
+    }
+
+    setFile(f)
+  }
+
+  function handleAnalyze() {
+    if (!file) return
+    setPageState("analyzing")
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const content = (e.target?.result as string) ?? ""
+      const messages = extractUserMessages(content)
+
+      setTimeout(() => {
+        if (messages.length === 0) {
+          setFileError("Nenhuma mensagem de usuário encontrada no arquivo.")
+          setPageState("upload")
+          return
+        }
+        const analysis = analyzeConversation(messages)
+        setResult(analysis)
+        setPageState("result")
+      }, 800)
+    }
+    reader.readAsText(file, "utf-8")
+  }
+
+  function handleReset() {
+    setFile(null)
+    setFileError(null)
+    setResult(null)
+    setPageState("upload")
+    if (fileInputRef.current) fileInputRef.current.value = ""
+  }
+
+  const overallColor =
+    (result?.overallScore ?? 0) >= 7
+      ? "text-emerald"
+      : (result?.overallScore ?? 0) >= 4
+        ? "text-amber-500"
+        : "text-red-500"
+
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
-      <AppPageHeader title="Analisador de Prompts" back="/home" />
-
-      <div className="mx-auto w-full max-w-lg space-y-5 px-4 py-5">
-        <section className="rounded-2xl border-2 border-stroke-light bg-card p-4">
-          <div className="mb-3 flex items-center gap-2">
-            <Zap className="h-5 w-5 text-emerald" />
-            <h2 className="text-sm font-bold text-foreground-dark">Analise seu prompt</h2>
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-28">
+      {/* Header */}
+      <div className="sticky top-0 z-20 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
+        <Link
+          to="/home"
+          className="rounded-full p-1.5 text-forest transition-colors hover:bg-surface-success"
+          aria-label="Voltar"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Link>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <h1 className="text-base font-extrabold text-primary-dark truncate">
+              Analisador de Prompts
+            </h1>
+            <span className="inline-flex items-center rounded-full bg-amber-400/15 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-600 shrink-0">
+              Beta
+            </span>
           </div>
-          <Textarea
-            value={prompt}
-            onChange={(e) => {
-              setPrompt(e.target.value)
-              setResult(null)
-            }}
-            placeholder="Cole ou escreva seu prompt aqui..."
-            className="min-h-[120px] resize-none text-sm"
-          />
-          <Button
-            className="mt-3 w-full"
-            onClick={handleAnalyze}
-            disabled={!prompt.trim()}
-          >
-            Analisar prompt
-          </Button>
-        </section>
+          <p className="text-[11px] text-foreground-tertiary truncate">
+            Receba uma análise completa
+          </p>
+        </div>
+        <div
+          className="flex shrink-0 items-center gap-1 rounded-full bg-luxury/15 px-2.5 py-1.5"
+          aria-label={`Saldo de gemas: ${gems}`}
+        >
+          <span className="text-sm">💎</span>
+          <span className="text-xs font-extrabold text-luxury">{gems.toLocaleString()}</span>
+        </div>
+      </div>
 
-        {result && (
-          <section className="rounded-2xl border-2 border-stroke-light bg-card p-4 space-y-4">
-            <h2 className="text-sm font-bold text-foreground-dark">Resultado da análise</h2>
-            <div className="space-y-3">
-              <ScoreBar label="Clareza" value={result.clarity} />
-              <ScoreBar label="Especificidade" value={result.specificity} />
-              <ScoreBar label="Contexto" value={result.context} />
+      <div className="mx-auto w-full max-w-lg px-4 py-5 space-y-5">
+        {/* ── UPLOAD STATE ── */}
+        {pageState === "upload" && (
+          <>
+            {/* Upload card */}
+            <div className="rounded-2xl border-2 border-stroke-light bg-card p-4">
+              <h2 className="mb-3 text-sm font-bold text-foreground-dark">
+                Anexe seu histórico de conversa
+              </h2>
+
+              {/* Drop zone */}
+              <div
+                role="button"
+                tabIndex={0}
+                aria-label="Escolher arquivo para análise"
+                onClick={() => fileInputRef.current?.click()}
+                onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-6 text-center transition-colors cursor-pointer",
+                  file
+                    ? "border-emerald/40 bg-emerald/5"
+                    : "border-stroke-muted bg-surface-soft hover:border-emerald/40 hover:bg-emerald/5",
+                )}
+              >
+                {file ? (
+                  <>
+                    <FileText className="h-8 w-8 text-emerald" strokeWidth={1.5} />
+                    <p className="text-sm font-bold text-emerald">{file.name}</p>
+                    <p className="text-[11px] text-foreground-tertiary">
+                      {(file.size / 1024).toFixed(0)} KB
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald/10">
+                      <Upload className="h-6 w-6 text-emerald" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-foreground-secondary">
+                        Formatos: .txt, .md, .pdf
+                      </p>
+                      <p className="text-[11px] text-foreground-tertiary">Tamanho máximo: 10MB</p>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".txt,.md,.pdf,text/plain,text/markdown"
+                className="hidden"
+                onChange={handleFileChange}
+                aria-hidden="true"
+              />
+
+              {fileError && (
+                <p className="mt-2 flex items-center gap-1.5 text-xs text-red-500" role="alert">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  {fileError}
+                </p>
+              )}
+
+              <div className="mt-3 flex gap-2">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex-1 rounded-xl border-2 border-stroke-light bg-card py-2.5 text-sm font-bold text-foreground-secondary transition-colors hover:bg-surface-soft"
+                >
+                  {file ? "Trocar arquivo" : "Escolher arquivo"}
+                </button>
+                {file && (
+                  <button
+                    onClick={handleAnalyze}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald py-2.5 text-sm font-bold text-white transition-all hover:bg-emerald-dark active:scale-[0.98]"
+                  >
+                    <Zap className="h-4 w-4" />
+                    Analisar
+                  </button>
+                )}
+              </div>
             </div>
-            <div>
-              <p className="mb-2 text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
-                Sugestões
+
+            {/* Tip */}
+            <div className="flex items-start gap-2 rounded-xl border border-stroke-muted bg-surface-soft px-4 py-3">
+              <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" strokeWidth={2} />
+              <p className="text-xs text-foreground-secondary leading-relaxed">
+                <span className="font-bold">Dica:</span> Exporte seu histórico do ChatGPT, Gemini,
+                Claude ou outro IA em formato .txt ou .md para facilitar a análise. Serão
+                considerados apenas as <span className="font-bold">2 últimas solicitações</span> da
+                conversa.
               </p>
-              <ul className="space-y-2">
-                {result.suggestions.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-foreground-secondary">
-                    <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
-                    {s}
-                  </li>
-                ))}
-              </ul>
             </div>
-          </section>
+
+            {/* Como funciona */}
+            <div>
+              <h2 className="mb-3 text-sm font-extrabold text-foreground-dark">Como funciona</h2>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {[
+                  { step: 1, title: "Envie seu arquivo", icon: <Upload className="h-5 w-5" /> },
+                  { step: 2, title: "Analisamos tudo", icon: <BarChart2 className="h-5 w-5" /> },
+                  {
+                    step: 3,
+                    title: "Você recebe o feedback",
+                    icon: <MessageSquare className="h-5 w-5" />,
+                  },
+                  { step: 4, title: "Hora de evoluir!", icon: <Star className="h-5 w-5" /> },
+                ].map((item) => (
+                  <div
+                    key={item.step}
+                    className="flex flex-col items-center gap-2 rounded-xl border-2 border-stroke-light bg-card p-3 text-center"
+                  >
+                    <div className="relative">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald/10 text-emerald">
+                        {item.icon}
+                      </div>
+                      <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald text-[9px] font-extrabold text-white">
+                        {item.step}
+                      </span>
+                    </div>
+                    <p className="text-[11px] font-bold text-foreground-dark leading-tight">
+                      {item.title}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Exemplo de análise */}
+            <div>
+              <h2 className="mb-3 text-sm font-extrabold text-foreground-dark">
+                Exemplo de análise
+              </h2>
+              <div className="space-y-3">
+                {EXAMPLE_MESSAGES.map((msg, i) => (
+                  <div
+                    key={i}
+                    className="rounded-xl border-2 border-stroke-light bg-card p-3 space-y-2"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-1.5">
+                        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald/10">
+                          <span className="text-[9px] font-extrabold text-emerald">V</span>
+                        </div>
+                        <span className="text-[11px] font-bold text-foreground-tertiary">Você</span>
+                      </div>
+                      <span
+                        className={cn(
+                          "inline-flex rounded-full px-2 py-0.5 text-[10px] font-extrabold border",
+                          msg.score >= 7
+                            ? "bg-emerald/10 text-emerald border-emerald/20"
+                            : "bg-red-50 text-red-500 border-red-200",
+                        )}
+                      >
+                        {msg.score.toFixed(1)}/10
+                      </span>
+                    </div>
+                    <p className="text-xs text-foreground-dark">{msg.text}</p>
+                    {msg.issues.length > 0 ? (
+                      <div className="space-y-1">
+                        {msg.issues.map((issue, j) => (
+                          <div key={j} className="flex items-center gap-1.5">
+                            <X className="h-3 w-3 shrink-0 text-red-500" />
+                            <span className="text-[11px] text-red-500">{issue}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald" />
+                        <span className="text-[11px] font-semibold text-emerald">
+                          Solução excelente!
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {/* Example final score */}
+                <div className="rounded-xl border-2 border-stroke-light bg-card p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                        Nota final da conversa
+                      </p>
+                      <p className="mt-0.5 text-3xl font-extrabold text-foreground-dark">
+                        8.2
+                        <span className="text-base font-semibold text-foreground-tertiary">/10</span>
+                      </p>
+                    </div>
+                    <div className="h-14 w-14 rounded-full border-4 border-emerald flex items-center justify-center">
+                      <span className="text-lg font-extrabold text-emerald">82%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ── ANALYZING STATE ── */}
+        {pageState === "analyzing" && (
+          <div className="rounded-2xl border-2 border-emerald/30 bg-card p-8 text-center">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald/10 animate-pulse">
+              <BarChart2 className="h-10 w-10 text-emerald" strokeWidth={1.5} />
+            </div>
+            <h2 className="mt-4 text-base font-extrabold text-foreground-dark">
+              Analisando seus prompts…
+            </h2>
+            <p className="mt-1 text-sm text-foreground-tertiary">
+              Identificando as 2 últimas solicitações e avaliando qualidade.
+            </p>
+            <div className="mt-6 mx-auto h-2 w-48 overflow-hidden rounded-full bg-surface-soft">
+              <div className="h-full w-2/3 rounded-full bg-emerald animate-pulse" />
+            </div>
+          </div>
+        )}
+
+        {/* ── RESULT STATE ── */}
+        {pageState === "result" && result && (
+          <>
+            {/* File info */}
+            <div className="flex items-center justify-between rounded-xl border-2 border-stroke-light bg-card px-4 py-3">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-emerald" />
+                <span className="text-xs font-bold text-foreground-dark truncate max-w-[180px]">
+                  {file?.name}
+                </span>
+              </div>
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-1 rounded-lg bg-surface-soft px-2.5 py-1 text-[11px] font-bold text-foreground-tertiary transition-colors hover:bg-stroke-light"
+              >
+                <X className="h-3.5 w-3.5" />
+                Trocar
+              </button>
+            </div>
+
+            {/* Messages analysis */}
+            <div>
+              <h2 className="mb-3 text-sm font-extrabold text-foreground-dark">
+                Análise das solicitações
+              </h2>
+              <p className="mb-3 text-[11px] text-foreground-tertiary">
+                Considerando as {result.messages.length} última
+                {result.messages.length > 1 ? "s" : ""} solicitaç
+                {result.messages.length > 1 ? "ões" : "ão"} da conversa.
+              </p>
+              <div className="space-y-4">
+                {result.messages.map((msg, i) => (
+                  <div
+                    key={i}
+                    className="rounded-2xl border-2 border-stroke-light bg-card p-4 space-y-3"
+                  >
+                    {/* Message header */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald/10">
+                          <span className="text-[10px] font-extrabold text-emerald">
+                            {i + 1}
+                          </span>
+                        </div>
+                        <span className="text-xs font-bold text-foreground-tertiary">
+                          Solicitação {i + 1}
+                        </span>
+                      </div>
+                      <ScoreBadge score={msg.score} />
+                    </div>
+
+                    {/* Message snippet */}
+                    <p className="rounded-lg bg-surface-soft px-3 py-2 text-xs text-foreground-secondary leading-relaxed">
+                      "{msg.snippet}"
+                    </p>
+
+                    {/* Scores */}
+                    <div className="space-y-2">
+                      <ScoreBar label="Clareza" value={msg.clarity} />
+                      <ScoreBar label="Especificidade" value={msg.specificity} />
+                      <ScoreBar label="Contexto" value={msg.context} />
+                    </div>
+
+                    {/* Issues */}
+                    {msg.issues.length > 0 && (
+                      <div className="space-y-1.5">
+                        <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                          Problemas
+                        </p>
+                        {msg.issues.map((issue, j) => (
+                          <div key={j} className="flex items-center gap-1.5">
+                            <X className="h-3.5 w-3.5 shrink-0 text-red-500" />
+                            <span className="text-xs text-red-500">{issue}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Suggestions */}
+                    <div className="space-y-1.5">
+                      <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                        Sugestões
+                      </p>
+                      {msg.suggestions.map((s, j) => (
+                        <div key={j} className="flex items-start gap-1.5">
+                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald" />
+                          <span className="text-xs text-foreground-secondary">{s}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Final score */}
+            <div className="rounded-2xl border-2 border-emerald/30 bg-card p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                    Nota final da conversa
+                  </p>
+                  <p className="mt-0.5 text-4xl font-extrabold text-foreground-dark">
+                    {result.overallScore.toFixed(1)}
+                    <span className="text-base font-semibold text-foreground-tertiary">/10</span>
+                  </p>
+                </div>
+                <div
+                  className={cn(
+                    "flex h-16 w-16 items-center justify-center rounded-full border-4",
+                    result.overallScore >= 7
+                      ? "border-emerald"
+                      : result.overallScore >= 4
+                        ? "border-amber-400"
+                        : "border-red-400",
+                  )}
+                >
+                  <span className={cn("text-lg font-extrabold", overallColor)}>
+                    {Math.round(result.overallScore * 10)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Summary */}
+            <div className="rounded-2xl border-2 border-stroke-light bg-card p-4 space-y-3">
+              <h2 className="text-sm font-extrabold text-foreground-dark">Resumo da análise</h2>
+
+              {result.positives.length > 0 && (
+                <div className="space-y-1.5">
+                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald">
+                    Pontos positivos
+                  </p>
+                  {result.positives.map((p, i) => (
+                    <div key={i} className="flex items-start gap-1.5">
+                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald" />
+                      <span className="text-xs text-foreground-secondary">{p}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {result.improvements.length > 0 && (
+                <div className="space-y-1.5">
+                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-amber-500">
+                    Oportunidades de melhoria
+                  </p>
+                  {result.improvements.map((imp, i) => (
+                    <div key={i} className="flex items-start gap-1.5">
+                      <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
+                      <span className="text-xs text-foreground-secondary">{imp}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <button
+              onClick={handleReset}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-stroke-light bg-card py-3 text-sm font-bold text-foreground-secondary transition-colors hover:bg-surface-soft"
+            >
+              <Upload className="h-4 w-4" />
+              Fazer nova análise
+            </button>
+          </>
         )}
       </div>
 
