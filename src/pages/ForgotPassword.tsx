@@ -98,7 +98,7 @@ export default function ForgotPassword() {
               </p>
             </div>
           ) : (
-            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit} role="form" aria-label="Formulário de recuperação de senha">
               <Input
                 type="email"
                 placeholder="Digite seu e-mail cadastrado"
@@ -108,8 +108,11 @@ export default function ForgotPassword() {
                 autoComplete="email"
                 required
                 disabled={loading}
+                aria-label="E-mail para recuperação de senha"
+                aria-required="true"
+                aria-describedby="email-help-forgot"
               />
-              <p className="text-center text-sm text-foregroundSecondary">
+              <p id="email-help-forgot" className="text-center text-sm text-foregroundSecondary">
                 Enviaremos um link de redefinição de senha para o seu e-mail.
               </p>
               <Button type="submit" size="lg" className="mt-1 w-full gap-2" disabled={loading}>

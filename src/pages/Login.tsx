@@ -144,7 +144,7 @@ export default function Login() {
 
         {/* Login card */}
         <Card className="mt-7 w-full border-stroke-muted bg-surface-success p-6 shadow-md sm:p-7">
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit} role="form" aria-label="Formulário de login">
             <Input
               type="email"
               placeholder="Seu e-mail"
@@ -154,7 +154,13 @@ export default function Login() {
               autoComplete="email"
               required
               disabled={loading}
+              aria-label="Endereço de e-mail para login"
+              aria-required="true"
+              aria-describedby="email-help-login"
             />
+            <small id="email-help-login" className="sr-only">
+              Insira o e-mail da sua conta
+            </small>
             <Input
               type="password"
               placeholder="Sua senha"
@@ -164,7 +170,13 @@ export default function Login() {
               autoComplete="current-password"
               required
               disabled={loading}
+              aria-label="Sua senha de acesso"
+              aria-required="true"
+              aria-describedby="password-help-login"
             />
+            <small id="password-help-login" className="sr-only">
+              Insira sua senha de acesso segura
+            </small>
 
             <Link
               to="/forgot-password"
