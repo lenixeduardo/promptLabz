@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import * as Icons from "@/lib/icons"
+import { sileo } from "sileo"
 import { type TrendingSkill, type SkillCategory } from "@/data/trendingSkillsData"
 import { useTrendingSkills } from "@/hooks/useTrendingSkills"
 import { useFavorites } from "@/hooks/useFavorites"
@@ -95,12 +96,18 @@ function RankingView({
 // ─── Main Component ───────────────────────────────────────────────────────
 export default function Skills() {
   const navigate = useNavigate()
-  const { skills: allSkills, loading } = useTrendingSkills()
+  const { skills: allSkills, loading, error } = useTrendingSkills()
   const { favorites, toggleFavorite, isFavorite } = useFavorites()
   const achievements = useAchievements()
   const [viewMode, setViewMode] = useState<ViewMode>("all")
   const [activeSkillCat, setActiveSkillCat] = useState<SkillCategory | "Todas">("Todas")
   const [searchQuery, setSearchQuery] = useState("")
+
+  useEffect(() => {
+    if (error) {
+      sileo.error({ title: `Erro ao carregar skills: ${error}` })
+    }
+  }, [error])
 
   const filteredByCat =
     activeSkillCat === "Todas"

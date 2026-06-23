@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { sileo } from "sileo"
 import * as Icons from "@/lib/icons"
 import { useTrendingSkills } from "@/hooks/useTrendingSkills"
 import { usePrompts } from "@/hooks/usePrompts"
@@ -108,9 +109,15 @@ function BrowserPreview({ color }: { color: string }) {
 // ─── Skills Tab ──────────────────────────────────────────────────────────────
 function SkillsTab() {
   const navigate = useNavigate()
-  const { skills } = useTrendingSkills()
+  const { skills, error: skillsError } = useTrendingSkills()
   const [search, setSearch] = useState("")
   const [filter, setFilter] = useState<FilterMode>("todas")
+
+  useEffect(() => {
+    if (skillsError) {
+      sileo.error({ title: `Erro ao carregar skills: ${skillsError}` })
+    }
+  }, [skillsError])
 
   const superpowers = useMemo(
     () => [...skills].sort((a, b) => b.installsCount - a.installsCount).slice(0, 6),
@@ -248,9 +255,15 @@ function SkillsTab() {
 // ─── Prompts Tab ─────────────────────────────────────────────────────────────
 function PromptsTab() {
   const navigate = useNavigate()
-  const { prompts } = usePrompts()
+  const { prompts, error: promptsError } = usePrompts()
   const [search, setSearch] = useState("")
   const [copiedTitle, setCopiedTitle] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (promptsError) {
+      sileo.error({ title: `Erro ao carregar prompts: ${promptsError}` })
+    }
+  }, [promptsError])
 
   const filtered = useMemo(() => {
     if (!search.trim()) return prompts

@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import { sileo } from "sileo"
 import {
   ChevronLeft, ChevronRight, Search, SlidersHorizontal, X, Bookmark,
   Lightbulb, Megaphone, Code2, Apple, ClipboardList, BarChart3,
@@ -85,8 +86,20 @@ export default function PromptCategoryPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
 
-  const { categories, loading: labLoading } = useLabCategories()
-  const { prompts, loading: promptsLoading } = usePrompts(categoryId)
+  const { categories, loading: labLoading, error: catError } = useLabCategories()
+  const { prompts, loading: promptsLoading, error: promptsError } = usePrompts(categoryId)
+
+  useEffect(() => {
+    if (catError) {
+      sileo.error({ title: `Erro ao carregar categorias: ${catError}` })
+    }
+  }, [catError])
+
+  useEffect(() => {
+    if (promptsError) {
+      sileo.error({ title: `Erro ao carregar prompts: ${promptsError}` })
+    }
+  }, [promptsError])
 
   const catMeta = categories.find((c) => c.id === categoryId)
   const label = catMeta?.label.replace("\n", " ") ?? categoryId ?? "Categoria"
