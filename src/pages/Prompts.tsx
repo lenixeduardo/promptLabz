@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   ArrowRight, Briefcase,
@@ -6,6 +6,7 @@ import {
   MessageSquare, Settings, Palette, Headphones, Users,
   type LucideIcon,
 } from "lucide-react"
+import { sileo } from "sileo"
 import { type LabCategory } from "@/data/labCategoriesData"
 import { useLabCategories } from "@/hooks/useLabCategories"
 import { BottomNav } from "@/components/BottomNav"
@@ -44,7 +45,13 @@ function CategoryCard({ cat, onClick }: { cat: LabCategory; onClick: () => void 
 export default function Prompts() {
   const navigate = useNavigate()
   const [activeDiff, setActiveDiff] = useState<DiffFilter>("Todos")
-  const { categories, promptOfTheDay, loading } = useLabCategories()
+  const { categories, promptOfTheDay, loading, error } = useLabCategories()
+
+  useEffect(() => {
+    if (error) {
+      sileo.error({ title: `Erro ao carregar categorias: ${error}` })
+    }
+  }, [error])
 
   return (
     <div className="min-h-screen bg-surface-soft pb-24">
