@@ -328,41 +328,41 @@ export default function PromptAnalyzerPage() {
               onDrop={handleDrop}
               onDragOver={(e) => e.preventDefault()}
             >
-              {/* Row: mascote | info | botão */}
+              {/* Row: mascote | info + botão */}
               <div className="flex items-center gap-3">
-                {/* Mascote */}
-                <div className="shrink-0">
+                {/* Mascote — tamanho de asset real */}
+                <div className="shrink-0 w-[160px]">
                   <img
                     src="/assets/mascot-analyzer.png"
                     alt="Mascote analisadora"
-                    className="h-[72px] w-[72px] object-contain drop-shadow-sm"
+                    className="w-full h-auto object-contain"
                   />
                 </div>
 
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-foreground-dark leading-tight">
-                    Anexe seu histórico de conversa
-                  </p>
-                  <p className="mt-0.5 text-[11px] text-foreground-tertiary">
-                    Formatos aceitos: .txt, .md, .pdf, docs
-                  </p>
-                  <p className="text-[11px] text-foreground-tertiary">Tamanho máximo: 10MB</p>
-                  {file && (
-                    <p className="mt-1 flex items-center gap-1 text-[11px] font-semibold text-emerald">
-                      <FileText className="h-3 w-3" />
-                      {file.name}
+                {/* Info + botão */}
+                <div className="flex flex-1 min-w-0 flex-col gap-2">
+                  <div>
+                    <p className="text-sm font-bold text-foreground-dark leading-snug">
+                      Anexe seu histórico de conversa
                     </p>
-                  )}
+                    <p className="mt-1 text-[11px] text-foreground-tertiary">
+                      Formatos: .txt, .md, .pdf, docs
+                    </p>
+                    <p className="text-[11px] text-foreground-tertiary">Tamanho máximo: 10MB</p>
+                    {file && (
+                      <p className="mt-1 flex items-center gap-1 text-[11px] font-semibold text-emerald truncate">
+                        <FileText className="h-3 w-3 shrink-0" />
+                        {file.name}
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full rounded-xl border-2 border-stroke-light bg-card py-2 text-[11px] font-bold text-foreground-secondary transition-colors hover:bg-surface-soft"
+                  >
+                    {file ? "Trocar arquivo" : "Escolher arquivo"}
+                  </button>
                 </div>
-
-                {/* Botão */}
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="shrink-0 rounded-xl border-2 border-stroke-light bg-card px-3 py-2 text-[11px] font-bold text-foreground-secondary transition-colors hover:bg-surface-soft whitespace-nowrap"
-                >
-                  {file ? "Trocar" : "Escolher arquivo"}
-                </button>
               </div>
 
               {/* Erro */}
@@ -537,7 +537,7 @@ export default function PromptAnalyzerPage() {
             <img
               src="/assets/mascot-analyzer.png"
               alt="Analisando"
-              className="mx-auto h-24 w-24 object-contain animate-pulse"
+              className="mx-auto h-36 w-36 object-contain animate-pulse"
             />
             <h2 className="mt-4 text-base font-extrabold text-foreground-dark">
               Analisando seus prompts…
