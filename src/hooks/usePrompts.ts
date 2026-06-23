@@ -23,11 +23,16 @@ export function usePrompts(category?: string, difficulty?: string) {
 
   useEffect(() => {
     setLoading(true)
-    getPrompts(category, difficulty).then(({ data, error }) => {
-      if (data && data.length > 0) setPrompts(data.map(mapDbPrompt))
-      if (error) setError(error)
-      setLoading(false)
-    })
+    getPrompts(category, difficulty)
+      .then(({ data, error }) => {
+        if (data && data.length > 0) setPrompts(data.map(mapDbPrompt))
+        if (error) setError(error)
+        setLoading(false)
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Falha ao carregar prompts")
+        setLoading(false)
+      })
   }, [category, difficulty])
 
   return { prompts, loading, error }
