@@ -21,19 +21,29 @@ export function usePrompts(category?: string, difficulty?: string) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchPrompts = async () => {
     setLoading(true)
-    getPrompts(category, difficulty)
-      .then(({ data, error }) => {
-        if (data && data.length > 0) setPrompts(data.map(mapDbPrompt))
-        if (error) setError(error)
-        setLoading(false)
-      })
-      .catch((err) => {
-        setError(err instanceof Error ? err.message : "Falha ao carregar prompts")
-        setLoading(false)
-      })
+    setError(null)
+    try {
+      const result = await getPrompts(category, difficulty)
+      if (result.data && result.data.length > 0) {
+        setPrompts(result.data.map(mapDbPrompt))
+      } else if (result.data && result.data.length === 0) {
+        setPrompts(fallback)
+      }
+      if (result.error) {
+        setError(result.error)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha ao carregar prompts")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchPrompts()
   }, [category, difficulty])
 
-  return { prompts, loading, error }
+  return { prompts, loading, error, refetch: fetchPrompts }
 }

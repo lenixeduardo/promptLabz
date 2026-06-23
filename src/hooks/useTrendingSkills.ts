@@ -20,19 +20,27 @@ export function useTrendingSkills(category?: string) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchSkills = async () => {
     setLoading(true)
-    getTrendingSkills(category)
-      .then(({ data, error }) => {
-        if (data && data.length > 0) setSkills(data.map(mapDbSkill))
-        if (error) setError(error)
-        setLoading(false)
-      })
-      .catch((err) => {
-        setError(err instanceof Error ? err.message : "Falha ao carregar habilidades em trending")
-        setLoading(false)
-      })
+    setError(null)
+    try {
+      const result = await getTrendingSkills(category)
+      if (result.data && result.data.length > 0) {
+        setSkills(result.data.map(mapDbSkill))
+      }
+      if (result.error) {
+        setError(result.error)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha ao carregar habilidades em trending")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchSkills()
   }, [category])
 
-  return { skills, loading, error }
+  return { skills, loading, error, refetch: fetchSkills }
 }

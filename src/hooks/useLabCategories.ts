@@ -27,19 +27,30 @@ export function useLabCategories() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const fetchData = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const [catRes, cfgRes] = await Promise.all([getLabCategories(), getLabConfig()])
+      if (catRes.data && catRes.data.length > 0) {
+        setCategories(catRes.data.map(mapDbCategory))
+      }
+      if (cfgRes.data) {
+        setPromptOfTheDay(mapDbConfig(cfgRes.data))
+      }
+      if (catRes.error || cfgRes.error) {
+        setError(catRes.error || cfgRes.error || "Falha ao carregar dados")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha ao carregar categorias")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    Promise.all([getLabCategories(), getLabConfig()])
-      .then(([catRes, cfgRes]) => {
-        if (catRes.data && catRes.data.length > 0) setCategories(catRes.data.map(mapDbCategory))
-        if (cfgRes.data) setPromptOfTheDay(mapDbConfig(cfgRes.data))
-        if (catRes.error) setError(catRes.error)
-        setLoading(false)
-      })
-      .catch((err) => {
-        setError(err instanceof Error ? err.message : "Falha ao carregar categorias")
-        setLoading(false)
-      })
+    fetchData()
   }, [])
 
-  return { categories, promptOfTheDay, loading, error }
+  return { categories, promptOfTheDay, loading, error, refetch: fetchData }
 }
