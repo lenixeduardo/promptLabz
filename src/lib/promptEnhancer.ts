@@ -201,7 +201,7 @@ function assembleEnhanced(
 ): { enhanced: string; enhancedMain: string; audience: string; tone: string } {
   const config = FOCUS_CONFIGS[focusMode];
   const bulletLines = config.bullets.map((b) => `• ${b}`).join('\n');
-  const enhancedMain = `${raw} com foco em:\n${bulletLines}`;
+  const enhancedMain = `${raw} com foco em:\nInclua:\n${bulletLines}`;
   const enhanced = `${enhancedMain}\n\nPúblico-alvo: ${config.audience}\nTom de voz: ${config.tone}`;
 
   return { enhanced, enhancedMain, audience: config.audience, tone: config.tone };

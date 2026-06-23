@@ -42,25 +42,25 @@ const FOCUS_OPTIONS: FocusOption[] = [
     mode: "general",
     label: "Geral",
     description: "Melhora completa e balanceada",
-    icon: <LayoutGrid className="h-5 w-5" />,
+    icon: <LayoutGrid className="h-4 w-4" />,
   },
   {
     mode: "creativity",
     label: "Criatividade",
     description: "Aumenta a criatividade e originalidade",
-    icon: <Lightbulb className="h-5 w-5" />,
+    icon: <Lightbulb className="h-4 w-4" />,
   },
   {
     mode: "precision",
     label: "Precisão",
     description: "Adiciona clareza ao(s) CTA(s)",
-    icon: <Target className="h-5 w-5" />,
+    icon: <Target className="h-4 w-4" />,
   },
   {
     mode: "detail",
     label: "Detalhamento",
     description: "Gera mais detalhes e especificações",
-    icon: <AlignLeft className="h-5 w-5" />,
+    icon: <AlignLeft className="h-4 w-4" />,
   },
 ];
 
@@ -243,8 +243,8 @@ export default function PromptEnhancerPage() {
       <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-5 space-y-4 pb-32">
 
         {/* ── Hero Banner ── */}
-        <div className="flex items-center justify-between rounded-2xl border border-emerald/20 bg-gradient-to-r from-emerald/5 to-emerald/10 px-5 py-5">
-          <div className="flex-1 pr-2">
+        <div className="flex items-end justify-between rounded-2xl border border-emerald/20 bg-gradient-to-r from-emerald/5 to-emerald/10 pl-5 pr-0 pt-5">
+          <div className="flex-1 pb-5 pr-2">
             <p className="text-sm leading-relaxed text-foreground-dark">
               Transforme seu prompt em instruções{" "}
               <strong className="text-foreground-dark">claras, detalhadas e otimizadas</strong>{" "}
@@ -254,7 +254,7 @@ export default function PromptEnhancerPage() {
           <img
             src="/prompt-asset.png"
             alt="Gatinha engenheira"
-            className="h-52 w-52 shrink-0 object-contain -mb-5 -mr-3"
+            className="h-44 w-44 shrink-0 object-contain self-end -mb-1"
           />
         </div>
 
@@ -321,8 +321,8 @@ export default function PromptEnhancerPage() {
             </div>
           </div>
 
-          {/* Focus cards */}
-          <div className="grid grid-cols-2 gap-2.5 px-5 py-4">
+          {/* Focus cards — single row of 4 */}
+          <div className="grid grid-cols-4 gap-2 px-5 py-4">
             {FOCUS_OPTIONS.map((opt) => {
               const selected = focusMode === opt.mode;
               return (
@@ -330,7 +330,7 @@ export default function PromptEnhancerPage() {
                   key={opt.mode}
                   onClick={() => setFocusMode(opt.mode)}
                   className={cn(
-                    "flex flex-col items-center gap-2 rounded-xl border-2 px-3 py-3.5 text-center transition-all active:scale-[0.97]",
+                    "flex flex-col items-center gap-1.5 rounded-xl border-2 px-1.5 py-3 text-center transition-all active:scale-95",
                     selected
                       ? "border-emerald bg-emerald/5"
                       : "border-stroke-light bg-surface-soft hover:border-emerald/40",
@@ -338,7 +338,7 @@ export default function PromptEnhancerPage() {
                 >
                   <div
                     className={cn(
-                      "flex h-9 w-9 items-center justify-center rounded-xl transition-colors",
+                      "flex h-7 w-7 items-center justify-center rounded-lg transition-colors",
                       selected
                         ? "bg-emerald/20 text-emerald"
                         : "bg-surface-muted text-foreground-tertiary",
@@ -346,19 +346,17 @@ export default function PromptEnhancerPage() {
                   >
                     {opt.icon}
                   </div>
-                  <div>
-                    <p
-                      className={cn(
-                        "text-xs font-bold",
-                        selected ? "text-emerald" : "text-foreground-dark",
-                      )}
-                    >
-                      {opt.label}
-                    </p>
-                    <p className="mt-0.5 text-[10px] leading-tight text-foreground-tertiary">
-                      {opt.description}
-                    </p>
-                  </div>
+                  <p
+                    className={cn(
+                      "text-[10px] font-extrabold leading-tight",
+                      selected ? "text-emerald" : "text-foreground-dark",
+                    )}
+                  >
+                    {opt.label}
+                  </p>
+                  <p className="text-[8.5px] leading-tight text-foreground-tertiary line-clamp-3">
+                    {opt.description}
+                  </p>
                 </button>
               );
             })}
@@ -453,6 +451,9 @@ export default function PromptEnhancerPage() {
                 </p>
                 <CircularScore score={result.enhancedScore} />
                 <p className="mt-3 text-sm font-extrabold text-emerald">Excelente! ✨</p>
+                <p className="mt-1 px-1 text-[9px] leading-tight text-foreground-tertiary text-center">
+                  Seu prompt alcançou a pontuação máxima
+                </p>
               </div>
 
               {/* Techniques */}
