@@ -1,14 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Wand2, Copy, Check, ExternalLink, Sparkles, RotateCcw } from 'lucide-react'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerDescription,
-  DrawerFooter,
-} from '@/components/ui/drawer'
+import { Zap, Copy, Check, ExternalLink, RotateCcw, X } from 'lucide-react'
+import { Drawer as DrawerPrimitive } from 'vaul'
 import { enhancePrompt, type EnhancementResult } from '@/lib/promptEnhancer'
 import { useQuickEnhanceParam } from '@/hooks/useQuickEnhanceParam'
 import { cn } from '@/lib/utils'
@@ -29,7 +22,6 @@ export function QuickEnhanceModal() {
       setPromptText('')
       setResult(null)
       setCopied(false)
-      // slight delay so the drawer animation finishes before focusing
       timerRef.current = setTimeout(() => textareaRef.current?.focus(), 350)
     }
     return () => {
@@ -69,21 +61,41 @@ export function QuickEnhanceModal() {
   }
 
   return (
-    <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DrawerContent className="max-h-[92dvh] overflow-y-auto pb-safe">
-        <DrawerHeader className="pb-2">
-          <div className="flex items-center gap-2">
-            <Wand2 className="h-5 w-5 text-primary" />
-            <DrawerTitle>Aprimorar Prompt</DrawerTitle>
-          </div>
-          <DrawerDescription>
-            Cole seu prompt e deixe a IA melhorá-lo instantaneamente
-          </DrawerDescription>
-        </DrawerHeader>
+    <DrawerPrimitive.Root open={isOpen} onOpenChange={(open) => !open && handleClose()} shouldScaleBackground>
+      <DrawerPrimitive.Portal>
+        <DrawerPrimitive.Overlay className="fixed inset-0 z-50 bg-black/60" />
+        <DrawerPrimitive.Content className="fixed inset-x-0 bottom-0 z-50 flex flex-col rounded-t-3xl bg-white dark:bg-[#1a1f1a] max-h-[92dvh] shadow-2xl outline-none">
 
-        <div className="px-4 space-y-3">
-          {!result ? (
-            <>
+          {/* Handle bar — green pill */}
+          <div className="mx-auto mt-3 h-1.5 w-12 rounded-full bg-primary shrink-0" />
+
+          {/* Header */}
+          <div className="flex items-start justify-between px-5 pt-4 pb-1 shrink-0">
+            <div>
+              <div className="flex items-center gap-2">
+                <Zap className="h-5 w-5 fill-primary text-primary" />
+                <DrawerPrimitive.Title className="text-[17px] font-extrabold text-foreground leading-tight">
+                  Aprimorar Prompt
+                </DrawerPrimitive.Title>
+              </div>
+              <DrawerPrimitive.Description className="text-[13px] text-muted-foreground mt-0.5 leading-snug">
+                Cole seu prompt e melhore em segundos
+              </DrawerPrimitive.Description>
+            </div>
+            <button
+              onClick={handleClose}
+              className="mt-0.5 rounded-full p-1.5 text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors"
+              aria-label="Fechar"
+            >
+              <X className="h-4.5 w-4.5" />
+            </button>
+          </div>
+
+          {/* Scrollable body */}
+          <div className="flex-1 overflow-y-auto px-5 pt-3 pb-2 space-y-3">
+
+            {/* Textarea + counter */}
+            <div>
               <textarea
                 ref={textareaRef}
                 value={promptText}
@@ -93,99 +105,111 @@ export function QuickEnhanceModal() {
                 }}
                 placeholder="Cole ou escreva seu prompt aqui..."
                 maxLength={1000}
-                rows={6}
-                className="w-full resize-none rounded-xl border border-input bg-muted/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                rows={result ? 4 : 6}
+                className={cn(
+                  'w-full resize-none rounded-2xl border px-4 py-3 text-[14px] text-foreground leading-relaxed',
+                  'placeholder:text-muted-foreground bg-[#f9fff9] dark:bg-[#111a11]',
+                  'border-[#A3E4A1] dark:border-green-900',
+                  'focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow'
+                )}
               />
-              <p className="text-right text-xs text-muted-foreground">
+              <p className="text-right text-[11px] text-muted-foreground mt-1 pr-1">
                 {promptText.length}/1000
               </p>
-            </>
-          ) : (
-            <div className="space-y-3">
-              {/* Score comparison */}
-              <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 dark:border-emerald-900 dark:bg-emerald-950/30 px-4 py-3">
-                <div className="text-center min-w-[40px]">
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Antes</p>
-                  <p className="text-2xl font-extrabold text-foreground">{Math.round(result.originalScore)}</p>
-                </div>
-                <div className="flex flex-1 items-center gap-1">
-                  <div className="h-px flex-1 bg-border" />
-                  <Sparkles className="h-4 w-4 text-emerald-500 shrink-0" />
-                  <div className="h-px flex-1 bg-border" />
-                </div>
-                <div className="text-center min-w-[40px]">
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Depois</p>
-                  <p className="text-2xl font-extrabold text-emerald-600">{Math.round(result.enhancedScore)}</p>
-                </div>
-              </div>
-
-              {/* Enhanced text */}
-              <div className="rounded-xl border bg-muted/30 px-4 py-3 max-h-52 overflow-y-auto">
-                <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
-                  {result.enhanced}
-                </p>
-              </div>
             </div>
-          )}
-        </div>
 
-        <DrawerFooter className="pt-2">
-          {!result ? (
-            <button
-              onClick={handleEnhance}
-              disabled={!promptText.trim() || isEnhancing}
-              className={cn(
-                'flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold transition-all',
-                'bg-primary text-primary-foreground hover:bg-primary/90',
-                'disabled:opacity-50 disabled:cursor-not-allowed'
-              )}
-            >
-              {isEnhancing ? (
-                <>
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  Aprimorando...
-                </>
-              ) : (
-                <>
-                  <Wand2 className="h-4 w-4" />
-                  Aprimorar
-                </>
-              )}
-            </button>
-          ) : (
-            <>
-              <div className="flex gap-2">
-                <button
-                  onClick={handleCopy}
-                  className={cn(
-                    'flex flex-1 items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold transition-all',
-                    copied
-                      ? 'bg-emerald-500 text-white'
-                      : 'bg-primary text-primary-foreground hover:bg-primary/90'
-                  )}
-                >
-                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                  {copied ? 'Copiado!' : 'Copiar'}
-                </button>
-                <button
-                  onClick={handleViewFull}
-                  className="flex items-center justify-center gap-2 rounded-xl border-2 border-stroke-light bg-card px-4 py-3.5 text-sm font-bold transition-all hover:bg-surface-soft"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  Completo
-                </button>
+            {/* Result section */}
+            {result && (
+              <div className="space-y-3">
+                {/* Dashed divider */}
+                <div className="border-t border-dashed border-[#A3E4A1] dark:border-green-900" />
+
+                {/* RESULTADO label */}
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-primary">
+                  Resultado
+                </p>
+
+                {/* Score pill + jump */}
+                <div className="flex items-center gap-3">
+                  <span className="rounded-full bg-[#A3E4A1]/60 dark:bg-green-900/60 px-3 py-1 text-[13px] font-bold text-green-800 dark:text-green-300">
+                    {result.originalScore.toFixed(1)} → {result.enhancedScore.toFixed(1)}
+                  </span>
+                  <span className="text-[13px] font-semibold text-primary">
+                    +{result.jump} pontos ✓
+                  </span>
+                </div>
+
+                {/* Enhanced text box */}
+                <div className="max-h-44 overflow-y-auto rounded-2xl border border-[#A3E4A1] dark:border-green-900 bg-[#f0fdf0] dark:bg-[#0d1f0d] px-4 py-3">
+                  <p className="text-[13px] text-foreground whitespace-pre-wrap leading-relaxed">
+                    {result.enhanced}
+                  </p>
+                </div>
               </div>
+            )}
+          </div>
+
+          {/* Footer — sticky action area */}
+          <div className="shrink-0 px-5 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+12px)] space-y-2">
+
+            {!result ? (
               <button
-                onClick={() => setResult(null)}
-                className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
+                onClick={handleEnhance}
+                disabled={!promptText.trim() || isEnhancing}
+                className={cn(
+                  'flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-[15px] font-extrabold transition-all',
+                  'bg-primary text-white hover:opacity-90 active:scale-[.98]',
+                  'disabled:opacity-40 disabled:cursor-not-allowed'
+                )}
               >
-                <RotateCcw className="h-3.5 w-3.5" />
-                Tentar novamente
+                {isEnhancing ? (
+                  <>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Aprimorando...
+                  </>
+                ) : (
+                  <>
+                    <Zap className="h-4 w-4 fill-white" />
+                    Aprimorar
+                  </>
+                )}
               </button>
-            </>
-          )}
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+            ) : (
+              <>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleCopy}
+                    className={cn(
+                      'flex flex-1 items-center justify-center gap-2 rounded-2xl py-3.5 text-[14px] font-extrabold transition-all active:scale-[.98]',
+                      copied
+                        ? 'bg-green-500 text-white'
+                        : 'bg-primary text-white hover:opacity-90'
+                    )}
+                  >
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copied ? 'Copiado!' : 'Copiar'}
+                  </button>
+                  <button
+                    onClick={handleViewFull}
+                    className="flex items-center justify-center gap-2 rounded-2xl border-2 border-[#A3E4A1] dark:border-green-800 bg-white dark:bg-transparent px-4 py-3.5 text-[14px] font-bold text-primary hover:bg-[#f0fdf0] dark:hover:bg-green-950/30 transition-all active:scale-[.98]"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    Ver completo
+                  </button>
+                </div>
+                <button
+                  onClick={() => { setResult(null); setPromptText('') }}
+                  className="flex w-full items-center justify-center gap-1.5 py-1.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  Tentar novamente
+                </button>
+              </>
+            )}
+          </div>
+
+        </DrawerPrimitive.Content>
+      </DrawerPrimitive.Portal>
+    </DrawerPrimitive.Root>
   )
 }
