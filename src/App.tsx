@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { completeMission } from "@/lib/missions"
 import { useUTM } from "@/hooks/useUTM"
 import { useInactiveReminder } from "@/hooks/useInactiveReminder"
+import { QuickEnhanceModal } from "@/components/QuickEnhanceModal"
 
 // Initialize user-scoped localStorage namespacing
 initUserScope()
@@ -143,6 +144,7 @@ export default function App() {
           <ActivityTracker />
           <MissionTracker />
           <Toaster position="top-right" />
+          <QuickEnhanceModal />
           <Suspense fallback={<PageLoading />}>
             <Routes>
               <Route path="/" element={<Hero />} />

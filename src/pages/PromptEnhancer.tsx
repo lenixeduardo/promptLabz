@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   ArrowLeft,
   Sparkles,
@@ -23,6 +23,7 @@ import {
   type FocusMode,
 } from "@/lib/promptEnhancer";
 import { AppBottomNav } from "@/components/AppBottomNav";
+import { BackTapSetupCard } from "@/components/BackTapSetupCard";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -115,8 +116,11 @@ export default function PromptEnhancerPage() {
   const { user } = useAuth();
   const userId = user?.id ?? null;
   const [gems, setGems] = useState(0);
+  const location = useLocation();
 
-  const [promptText, setPromptText] = useState("");
+  const [promptText, setPromptText] = useState(
+    (location.state as { initialPrompt?: string } | null)?.initialPrompt ?? ""
+  );
   const [focusMode, setFocusMode] = useState<FocusMode>("general");
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [result, setResult] = useState<EnhancementResult | null>(null);
@@ -597,6 +601,11 @@ export default function PromptEnhancerPage() {
           </div>
         </div>
       )}
+
+      {/* Back Tap quick access setup guide */}
+      <div className="px-4 pb-6">
+        <BackTapSetupCard />
+      </div>
 
       <AppBottomNav />
     </div>
