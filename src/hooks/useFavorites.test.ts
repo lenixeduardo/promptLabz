@@ -2,6 +2,9 @@ import { describe, it, expect, beforeEach } from "vitest"
 import { renderHook, act } from "@testing-library/react"
 import { useFavorites } from "./useFavorites"
 
+// scopedKey("promptlabz:favorite_skills") resolves to this when no user is logged in
+const FAVORITES_KEY = "promptlabz:favorite_skills::u:anon"
+
 beforeEach(() => {
   localStorage.clear()
 })
@@ -13,13 +16,13 @@ describe("useFavorites — estado inicial", () => {
   })
 
   it("carrega favoritos salvos do localStorage", () => {
-    localStorage.setItem("promptlabz_favorite_skills", JSON.stringify(["Skill A", "Skill B"]))
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(["Skill A", "Skill B"]))
     const { result } = renderHook(() => useFavorites())
     expect(result.current.favorites).toEqual(["Skill A", "Skill B"])
   })
 
   it("retorna lista vazia quando localStorage tem JSON inválido", () => {
-    localStorage.setItem("promptlabz_favorite_skills", "not-json")
+    localStorage.setItem(FAVORITES_KEY, "not-json")
     const { result } = renderHook(() => useFavorites())
     expect(result.current.favorites).toEqual([])
   })
@@ -35,7 +38,7 @@ describe("useFavorites — toggleFavorite", () => {
   })
 
   it("remove skill dos favoritos quando já está favoritada", () => {
-    localStorage.setItem("promptlabz_favorite_skills", JSON.stringify(["Skill A"]))
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(["Skill A"]))
     const { result } = renderHook(() => useFavorites())
 
     act(() => { result.current.toggleFavorite("Skill A") })
@@ -48,17 +51,17 @@ describe("useFavorites — toggleFavorite", () => {
 
     act(() => { result.current.toggleFavorite("Skill A") })
 
-    const stored = JSON.parse(localStorage.getItem("promptlabz_favorite_skills") || "[]")
+    const stored = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]")
     expect(stored).toContain("Skill A")
   })
 
   it("remove do localStorage quando desfavorita", () => {
-    localStorage.setItem("promptlabz_favorite_skills", JSON.stringify(["Skill A"]))
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(["Skill A"]))
     const { result } = renderHook(() => useFavorites())
 
     act(() => { result.current.toggleFavorite("Skill A") })
 
-    const stored = JSON.parse(localStorage.getItem("promptlabz_favorite_skills") || "[]")
+    const stored = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]")
     expect(stored).not.toContain("Skill A")
   })
 
@@ -76,7 +79,7 @@ describe("useFavorites — toggleFavorite", () => {
 
 describe("useFavorites — isFavorite", () => {
   it("retorna true para skill favoritada", () => {
-    localStorage.setItem("promptlabz_favorite_skills", JSON.stringify(["Skill A"]))
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(["Skill A"]))
     const { result } = renderHook(() => useFavorites())
     expect(result.current.isFavorite("Skill A")).toBe(true)
   })
