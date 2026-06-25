@@ -126,6 +126,20 @@ export const AVATARS: Avatar[] = [
     price: 999,
     rarity: "legendary",
   },
+  {
+    id: "cat-rocker",
+    name: "Gatinha Rockeira",
+    image: "/assets/avatar-rocker.png",
+    price: 1200,
+    rarity: "legendary",
+  },
+  {
+    id: "cat-scientist",
+    name: "Gato Cientista",
+    image: "/assets/avatar-scientist.png",
+    price: 1500,
+    rarity: "legendary",
+  },
 ]
 
 export function getAvatarById(id: string): Avatar | undefined {
