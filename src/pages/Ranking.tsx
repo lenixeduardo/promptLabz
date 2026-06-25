@@ -64,69 +64,93 @@ function getAvatarImage(avatarUrl: string | null): string {
   return found?.image ?? "/assets/avatar-cat.png"
 }
 
-const RANK_MEDAL_COLORS: Record<number, string> = {
-  1: "#FBBF24",
-  2: "#94A3B8",
-  3: "#C97B3A",
-}
-
-function PodiumCard({ user, rank }: { user: RankedUser | undefined; rank: 1 | 2 | 3 }) {
+function PodiumSpot({ user, rank }: { user: RankedUser | undefined; rank: 1 | 2 | 3 }) {
   if (!user) return <div className="flex-1" />
 
   const isFirst = rank === 1
-  const heights = { 1: "h-[88px]", 2: "h-[60px]", 3: "h-[44px]" }
-  const avatarSizes = { 1: "h-[72px] w-[72px]", 2: "h-[56px] w-[56px]", 3: "h-[56px] w-[56px]" }
-  const medalColors = { 1: "#FBBF24", 2: "#94A3B8", 3: "#C97B3A" }
-  const pedestalColors = {
-    1: "from-yellow-500/30 to-yellow-600/10",
-    2: "from-slate-400/20 to-slate-500/10",
-    3: "from-amber-700/20 to-amber-800/10",
+
+  const avatarSizes = {
+    1: "h-[68px] w-[68px]",
+    2: "h-[52px] w-[52px]",
+    3: "h-[52px] w-[52px]",
   }
 
-  return (
-    <div className={cn("flex flex-1 flex-col items-center gap-1.5", isFirst ? "order-2 -mt-4" : rank === 2 ? "order-1" : "order-3")}>
-      {isFirst && (
-        <div className="mb-0.5 flex items-center justify-center">
-          <span className="text-2xl drop-shadow-sm animate-bounce-slow">👑</span>
-        </div>
-      )}
-      {!isFirst && <div className="h-8" />}
+  const pedestalColors = {
+    1: "bg-gradient-to-t from-yellow-400/30 to-yellow-300/10 border-t-2 border-yellow-300/60",
+    2: "bg-gradient-to-t from-slate-300/40 to-slate-200/10 border-t-2 border-slate-300/60",
+    3: "bg-gradient-to-t from-amber-600/25 to-amber-500/10 border-t-2 border-amber-400/40",
+  }
 
+  const pedestalHeights = { 1: "h-[80px]", 2: "h-[56px]", 3: "h-[40px]" }
+
+  const avatarRings = {
+    1: "border-[3px] border-yellow-400 shadow-lg shadow-yellow-200/60",
+    2: "border-2 border-slate-300",
+    3: "border-2 border-amber-400/70",
+  }
+
+  const medals = { 1: "🥇", 2: "🥈", 3: "🥉" }
+
+  return (
+    <div
+      className={cn(
+        "flex flex-1 flex-col items-center gap-1",
+        isFirst ? "order-2" : rank === 2 ? "order-1" : "order-3",
+      )}
+    >
+      {/* Crown / medal icon */}
+      {isFirst ? (
+        <span className="text-xl animate-bounce-slow">👑</span>
+      ) : (
+        <span className="text-base">{medals[rank]}</span>
+      )}
+
+      {/* Avatar */}
       <div className="relative">
         <div
           className={cn(
-            "overflow-hidden rounded-full border-[3px] shadow-lg",
+            "overflow-hidden rounded-full",
             avatarSizes[rank],
-            isFirst
-              ? "border-yellow-400 ring-4 ring-yellow-300/40"
-              : rank === 2
-              ? "border-slate-300"
-              : "border-amber-600/60",
+            avatarRings[rank],
+            isFirst && "ring-4 ring-yellow-300/30",
             user.isCurrentUser && "ring-2 ring-emerald ring-offset-2",
           )}
         >
-          <img src={getAvatarImage(user.avatar_url)} alt={user.full_name ?? ""} className="h-full w-full object-cover" />
+          <img
+            src={getAvatarImage(user.avatar_url)}
+            alt={user.full_name ?? ""}
+            className="h-full w-full object-cover"
+          />
         </div>
-        <div
-          className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white shadow-md text-sm font-black"
-          style={{ background: medalColors[rank] }}
-        >
-          <span className="text-white text-[10px] font-black">{rank}</span>
+        <div className="absolute -bottom-1 -right-1">
+          <LevelBadge level={user.level} size={isFirst ? "md" : "sm"} />
         </div>
       </div>
 
-      <p className="mt-1 max-w-[76px] text-center text-[11px] font-bold leading-tight text-white drop-shadow-sm">
-        {user.full_name?.split(" ")[0] ?? "Usuário"}
+      {/* Name */}
+      <p className="mt-1.5 max-w-[80px] text-center text-[11px] font-bold leading-tight text-foregroundDark">
+        {user.full_name ?? "Usuário"}
       </p>
+
+      {/* XP */}
       <div className="flex items-center gap-0.5">
-        <Icons.Zap className="h-3 w-3 text-yellow-300" />
-        <span className="text-[11px] font-extrabold text-yellow-200">
-          {user.xp.toLocaleString("pt-BR")}
+        <Icons.Zap className="h-3 w-3 text-yellow-500" />
+        <span className="text-[11px] font-extrabold text-foregroundDark">
+          {user.xp.toLocaleString("pt-BR")} XP
         </span>
       </div>
-      <span className="text-[9px] text-white/50 -mt-0.5">{user.levelTitle}</span>
 
-      <div className={cn("w-full rounded-t-2xl bg-gradient-to-t", heights[rank], pedestalColors[rank], "border-t border-white/10")} />
+      {/* Level title */}
+      <p className="text-[9px] text-foregroundTertiary">{user.levelTitle}</p>
+
+      {/* Pedestal */}
+      <div
+        className={cn(
+          "w-full rounded-t-2xl",
+          pedestalHeights[rank],
+          pedestalColors[rank],
+        )}
+      />
     </div>
   )
 }
@@ -197,7 +221,9 @@ export default function Ranking() {
   const { currentXP: progressXP, targetXP } = currentUser
     ? getLevelProgress(currentUser.xp)
     : { currentXP: 0, targetXP: 100 }
-  const progressPct = currentUser ? Math.min(100, Math.round((progressXP / targetXP) * 100)) : 0
+  const progressPct = currentUser
+    ? Math.min(100, Math.round((progressXP / targetXP) * 100))
+    : 0
 
   const PERIOD_LABELS: Record<Period, string> = {
     semana: "Semana",
@@ -207,97 +233,47 @@ export default function Ranking() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end">
+      <div className="mx-auto flex w-full max-w-[420px] flex-col px-5 pb-24 pt-8">
 
-      {/* Hero banner */}
-      <div
-        className="relative overflow-hidden px-5 pb-8 pt-10"
-        style={{
-          background: "linear-gradient(160deg, #0A1F12 0%, #14532d 55%, #166534 100%)",
-        }}
-      >
-        {/* Decorative circles */}
-        <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-emerald/10 blur-2xl" />
-        <div className="pointer-events-none absolute -left-8 top-20 h-32 w-32 rounded-full bg-yellow-400/8 blur-xl" />
-
-        {/* Header row */}
-        <div className="relative flex items-center justify-between">
+        {/* Header */}
+        <div className="mb-5 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-extrabold text-white">Ranking</h1>
-            <p className="mt-0.5 text-[11px] text-white/50">Top jogadores do PromptLabz</p>
+            <div className="flex items-center gap-2">
+              <Icons.Trophy className="h-6 w-6 text-emerald" />
+              <h1 className="text-2xl font-extrabold text-primary-dark">Ranking</h1>
+            </div>
+            {!loading && currentUser && (
+              <p className="mt-0.5 text-xs text-foregroundTertiary">
+                #{currentUser.position} · {currentUser.levelTitle} · Nível {currentUser.level}
+              </p>
+            )}
           </div>
           <button
             onClick={() => navigate("/profile")}
-            className="h-10 w-10 overflow-hidden rounded-full border-2 border-white/20 shadow-md ring-2 ring-emerald/40"
+            className="h-10 w-10 overflow-hidden rounded-full border-2 border-stroke-light shadow-sm"
             aria-label="Ir para perfil"
           >
             <img src={userAvatarImage} alt="Perfil" className="h-full w-full object-cover" />
           </button>
         </div>
 
-        {/* Current user stat card */}
-        {!loading && currentUser && (
-          <div className="relative mt-5 rounded-2xl border border-white/10 bg-white/8 p-4 backdrop-blur-sm">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-xl font-black text-yellow-300">
-                #{currentUser.position}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-white truncate">
-                  {currentUser.full_name ?? "Você"}
-                  <span className="ml-1.5 rounded-full bg-emerald/25 px-1.5 py-0.5 text-[9px] font-semibold text-emerald">
-                    você
-                  </span>
-                </p>
-                <p className="text-[10px] text-white/50">
-                  {currentUser.levelTitle} · Nível {currentUser.level}
-                </p>
-              </div>
-              <div className="shrink-0 text-right">
-                <div className="flex items-center gap-1 justify-end">
-                  <Icons.Zap className="h-3.5 w-3.5 text-yellow-300" />
-                  <span className="text-sm font-extrabold text-yellow-200">
-                    {currentUser.xp.toLocaleString("pt-BR")}
-                  </span>
-                </div>
-                <p className="text-[9px] text-white/40 mt-0.5">XP acumulado</p>
-              </div>
-            </div>
-            {/* XP progress bar */}
-            <div className="mt-3">
-              <div className="flex justify-between mb-1">
-                <span className="text-[9px] text-white/40">Progresso para Nível {currentUser.level + 1}</span>
-                <span className="text-[9px] text-white/40">{progressXP}/{targetXP} XP</span>
-              </div>
-              <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-emerald to-mint transition-all duration-500"
-                  style={{ width: `${progressPct}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Period tabs */}
-        <div className="relative mt-5 flex gap-1 rounded-xl bg-white/8 p-1">
+        <div className="mb-5 flex gap-1 rounded-2xl bg-white p-1 shadow-sm border border-stroke-muted">
           {(["semana", "mes", "geral"] as Period[]).map((p) => (
             <button
               key={p}
               onClick={() => setActivePeriod(p)}
               className={cn(
-                "flex-1 rounded-lg py-1.5 text-xs font-bold transition-all duration-200",
+                "flex-1 rounded-xl py-2 text-xs font-bold transition-all duration-200",
                 activePeriod === p
                   ? "bg-emerald text-white shadow-sm"
-                  : "text-white/50 hover:text-white/80",
+                  : "text-foregroundMuted hover:text-foregroundDark",
               )}
             >
               {PERIOD_LABELS[p]}
             </button>
           ))}
         </div>
-      </div>
-
-      <div className="mx-auto flex w-full max-w-[420px] flex-col px-5 pb-24">
 
         {loading ? (
           <div className="flex items-center justify-center py-16">
@@ -312,50 +288,83 @@ export default function Ranking() {
           </div>
         ) : (
           <>
-            {/* Podium */}
-            <div
-              className="-mt-2 mb-5 overflow-hidden rounded-b-3xl px-4 pb-0 pt-6 shadow-xl"
-              style={{
-                background: "linear-gradient(180deg, #166534 0%, #14532d 60%, #0f3d22 100%)",
-              }}
-            >
-              <p className="mb-5 text-center text-[11px] font-semibold tracking-widest uppercase text-yellow-300/70">
-                🏆 Top 3 do PromptLab
-              </p>
-              <div className="flex items-end justify-center gap-1">
-                <PodiumCard user={top3[1]} rank={2} />
-                <PodiumCard user={top3[0]} rank={1} />
-                <PodiumCard user={top3[2]} rank={3} />
+            {/* Podium — white card */}
+            <div className="mb-5 overflow-hidden rounded-3xl border border-stroke-muted bg-white shadow-sm">
+              <div className="px-4 pt-4 pb-0">
+                <p className="mb-4 text-center text-[11px] font-bold tracking-widest uppercase text-foregroundMuted">
+                  🏆 Top 3 do PromptLab
+                </p>
+                <div className="flex items-end justify-center gap-2">
+                  <PodiumSpot user={top3[1]} rank={2} />
+                  <PodiumSpot user={top3[0]} rank={1} />
+                  <PodiumSpot user={top3[2]} rank={3} />
+                </div>
               </div>
             </div>
+
+            {/* Current user progress bar (if outside top 3) */}
+            {currentUser && currentUser.position > 3 && (
+              <div className="mb-4 rounded-2xl border border-emerald/30 bg-surface-success px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald/15 text-sm font-black text-emerald">
+                    #{currentUser.position}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-bold text-primary-dark truncate">
+                      {currentUser.full_name ?? "Você"}
+                      <span className="ml-1.5 rounded-full bg-emerald/20 px-1.5 py-px text-[9px] font-semibold text-emerald">
+                        você
+                      </span>
+                    </p>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-emerald/15">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-emerald to-mint transition-all duration-500"
+                          style={{ width: `${progressPct}%` }}
+                        />
+                      </div>
+                      <span className="shrink-0 text-[9px] tabular-nums text-foregroundTertiary">
+                        {progressXP}/{targetXP} XP
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1">
+                    <Icons.Zap className="h-3.5 w-3.5 text-yellow-500" />
+                    <span className="text-sm font-extrabold text-primary-dark">
+                      {currentUser.xp.toLocaleString("pt-BR")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* List — positions 4+ */}
             {rest.length > 0 && (
               <div className="flex flex-col gap-2">
-                <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-foregroundMuted">
-                  Classificação geral
+                <p className="mb-1 flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-foregroundMuted">
+                  <span>Classificação geral</span>
+                  <span className="text-[9px] text-foregroundTertiary">i</span>
                 </p>
+
                 {rest.map((entry) => (
                   <div
                     key={entry.id}
                     className={cn(
                       "flex items-center gap-3 rounded-2xl border px-4 py-3 transition-all",
                       entry.isCurrentUser
-                        ? "border-emerald/40 bg-surface-success shadow-md shadow-emerald/10"
-                        : "border-stroke-muted bg-white shadow-sm hover:shadow-md",
+                        ? "border-emerald/40 bg-surface-success shadow-sm shadow-emerald/10"
+                        : "border-stroke-muted bg-white shadow-sm",
                     )}
                   >
-                    {/* Rank number */}
-                    <div
+                    {/* Position */}
+                    <span
                       className={cn(
-                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-sm font-black",
-                        entry.position <= 6
-                          ? "bg-primary-dark/8 text-primary-dark"
-                          : "text-foregroundTertiary",
+                        "w-6 shrink-0 text-center text-sm font-black",
+                        entry.isCurrentUser ? "text-emerald" : "text-foregroundTertiary",
                       )}
                     >
                       {entry.position}
-                    </div>
+                    </span>
 
                     {/* Avatar */}
                     <div className="relative h-10 w-10 shrink-0">
@@ -378,17 +387,17 @@ export default function Ranking() {
 
                     {/* Name + title */}
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         <p
                           className={cn(
-                            "truncate text-sm font-bold",
+                            "text-sm font-bold",
                             entry.isCurrentUser ? "text-primary-dark" : "text-foregroundDark",
                           )}
                         >
                           {entry.full_name ?? "Usuário"}
                         </p>
                         {entry.isCurrentUser && (
-                          <span className="shrink-0 rounded-full bg-emerald/15 px-1.5 py-px text-[9px] font-semibold text-emerald">
+                          <span className="rounded-full bg-emerald/15 px-1.5 py-px text-[9px] font-semibold text-emerald">
                             você
                           </span>
                         )}
@@ -397,16 +406,21 @@ export default function Ranking() {
                     </div>
 
                     {/* XP */}
-                    <div className="flex shrink-0 items-center gap-1 rounded-xl bg-yellow-50 px-2.5 py-1.5">
-                      <Icons.Zap className="h-3 w-3 text-yellow-500" />
-                      <span className="text-[11px] font-extrabold text-yellow-700 tabular-nums">
-                        {entry.xp.toLocaleString("pt-BR")}
+                    <div className="flex shrink-0 flex-col items-end gap-0.5">
+                      <div className="flex items-center gap-1">
+                        <Icons.Zap className="h-3.5 w-3.5 text-yellow-400" />
+                        <span className="text-sm font-extrabold text-primary-dark tabular-nums">
+                          {entry.xp.toLocaleString("pt-BR")}
+                        </span>
+                      </div>
+                      <span className="text-[9px] text-foregroundTertiary">
+                        XP · Nv {entry.level}
                       </span>
                     </div>
                   </div>
                 ))}
 
-                <button className="mt-3 flex items-center justify-center gap-2 rounded-2xl border border-stroke-muted bg-white py-3 text-sm font-semibold text-foregroundMuted shadow-sm hover:bg-surface-soft transition-colors">
+                <button className="mt-2 flex items-center justify-center gap-2 rounded-2xl border border-stroke-muted bg-white py-3 text-sm font-semibold text-foregroundMuted shadow-sm hover:bg-surface-soft transition-colors">
                   <Icons.ChevronDown className="h-4 w-4" />
                   Ver mais posições
                 </button>
