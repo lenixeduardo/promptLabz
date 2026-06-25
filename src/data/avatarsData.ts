@@ -127,6 +127,13 @@ export const AVATARS: Avatar[] = [
     rarity: "legendary",
   },
   {
+    id: "cat-punk",
+    name: "Gatinha Punk",
+    image: "/assets/avatar-punk.png",
+    price: 1100,
+    rarity: "legendary",
+  },
+  {
     id: "cat-rocker",
     name: "Gatinha Rockeira",
     image: "/assets/avatar-rocker.png",

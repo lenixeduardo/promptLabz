@@ -17,7 +17,7 @@ const MOCK_ENTRIES: LeaderboardEntry[] = [
   { id: "mock-4", full_name: "Carlos Rocha",   avatar_url: "cat-ninja",     xp: 2900 },
   { id: "mock-5", full_name: "Beatriz Costa",  avatar_url: "cat-astronaut", xp: 2200 },
   { id: "mock-6", full_name: "Lucas Ferreira", avatar_url: "cat-purple",    xp: 1950 },
-  { id: "mock-7", full_name: "Mariana Alves",  avatar_url: "cat-pink",      xp: 1700 },
+  { id: "mock-7", full_name: "Mariana Alves",  avatar_url: "cat-punk",      xp: 1700 },
   { id: "mock-8", full_name: "Rafael Sousa",   avatar_url: "cat-blue",      xp: 1450 },
 ]
 
