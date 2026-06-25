@@ -6,7 +6,7 @@ import { useTrendingSkills } from "@/hooks/useTrendingSkills"
 import { usePrompts } from "@/hooks/usePrompts"
 import { TEMPLATES } from "@/data/templatesData"
 import { SkillIcon } from "@/components/skills/shared"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 
 type LabTab = "skills" | "prompts" | "templates"
 type FilterMode = "todas" | "recomendadas" | "mais-usadas"
@@ -519,7 +519,7 @@ export default function Lab() {
         {activeTab === "templates" && <TemplatesTab />}
       </div>
 
-      <BottomNav active="lab" />
+      <AppBottomNav />
     </div>
   )
 }

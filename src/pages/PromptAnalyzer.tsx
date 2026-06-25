@@ -381,7 +381,7 @@ export default function PromptAnalyzerPage() {
                       Anexe seu histórico de conversa
                     </p>
                     <p className="mt-1.5 text-[11px] text-foreground-tertiary leading-relaxed">
-                      Formatos aceitos: .txt, .md, .pdf, docs
+                      Formatos aceitos: .txt, .md
                     </p>
                     <p className="text-[11px] text-foreground-tertiary">Tamanho máximo: 10MB</p>
                     {file && (
@@ -597,7 +597,7 @@ export default function PromptAnalyzerPage() {
               {/* ── Botões de ação (exemplo) ── */}
               <div className="mt-2 flex gap-2">
                 <button className="flex flex-1 items-center justify-center rounded-xl border-2 border-stroke-light bg-card py-3 text-xs font-bold text-foreground-secondary transition-colors hover:bg-surface-soft">
-                  Ver análise anterior
+                  Nova análise
                 </button>
                 <button className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-emerald py-3 text-xs font-bold text-white transition-all hover:bg-emerald-dark active:scale-[0.98]">
                   Nova análise →
@@ -792,7 +792,7 @@ export default function PromptAnalyzerPage() {
                 onClick={handleReset}
                 className="flex flex-1 items-center justify-center rounded-xl border-2 border-stroke-light bg-card py-3 text-xs font-bold text-foreground-secondary transition-colors hover:bg-surface-soft"
               >
-                Ver análise anterior
+                Nova análise
               </button>
               <button
                 onClick={handleReset}

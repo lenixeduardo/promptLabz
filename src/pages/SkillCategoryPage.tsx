@@ -8,7 +8,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { TRAIL_CATEGORY_SKILLS, type SkillDifficulty } from "@/data/trailCategorySkillsData"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 
 type DiffFilter = "Todas" | SkillDifficulty
 
@@ -155,7 +155,7 @@ export default function SkillCategoryPage() {
         )}
       </div>
 
-      <BottomNav active="trilha" />
+      <AppBottomNav />
     </div>
   )
 }

@@ -9,7 +9,7 @@ import {
 import { sileo } from "sileo"
 import { type LabCategory } from "@/data/labCategoriesData"
 import { useLabCategories } from "@/hooks/useLabCategories"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 
 type DiffFilter = "Todos" | "Iniciante" | "Intermediario" | "Avancado"
 
@@ -140,7 +140,7 @@ export default function Prompts() {
         </div>
       </div>
 
-      <BottomNav active="lab" />
+      <AppBottomNav />
     </div>
   )
 }

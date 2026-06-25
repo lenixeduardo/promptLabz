@@ -8,7 +8,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { TEMPLATES, TEMPLATE_CATEGORIES, type Template } from "@/data/templatesData"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Globe, BarChart3, ClipboardList, Calendar, Briefcase,
@@ -293,7 +293,7 @@ export default function Templates() {
         )}
       </div>
 
-      <BottomNav active="lab" />
+      <AppBottomNav />
     </div>
   )
 }

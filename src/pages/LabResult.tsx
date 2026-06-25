@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom"
 import { ArrowRight, CheckCircle2, BookmarkPlus } from "lucide-react"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 
 const DEFAULT_RESULT = {
   score: 92,
@@ -160,7 +160,7 @@ export default function LabResult() {
         </div>
       </div>
 
-      <BottomNav active="lab" />
+      <AppBottomNav />
     </div>
   )
 }

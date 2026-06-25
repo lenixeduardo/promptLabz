@@ -7,6 +7,17 @@ vi.mock("@/hooks/useAuth", () => ({
   useAuth: () => ({ user: { id: "user-1", email: "aluno@test.com" } }),
 }))
 
+vi.mock("@/contexts/useLives", () => ({
+  useLives: () => ({
+    lives: 5,
+    maxLives: 5,
+    canPlay: true,
+    msUntilNextLife: () => 0,
+    consumeLife: vi.fn(),
+    awardPerfectBonus: vi.fn(),
+  }),
+}))
+
 vi.mock("@/lib/moduleProgress", () => ({
   useModuleProgress: vi.fn().mockReturnValue(0),
 }))

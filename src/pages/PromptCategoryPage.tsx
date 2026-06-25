@@ -10,7 +10,7 @@ import {
 import { type PromptCard } from "@/data/promptsData"
 import { usePrompts } from "@/hooks/usePrompts"
 import { useLabCategories } from "@/hooks/useLabCategories"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 
 type DiffFilter = "Todos" | PromptCard["difficulty"]
 
@@ -223,7 +223,7 @@ export default function PromptCategoryPage() {
         )}
       </div>
 
-      <BottomNav active="lab" />
+      <AppBottomNav />
     </div>
   )
 }

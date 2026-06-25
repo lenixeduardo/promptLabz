@@ -33,7 +33,7 @@ const Lesson = lazy(() => import("@/pages/Lesson"))
 const Skills = lazy(() => import("@/pages/Skills"))
 const SkillDetail = lazy(() => import("@/pages/SkillDetail"))
 const MissionComplete = lazy(() => import("@/pages/MissionComplete"))
-const DailyMissions = lazy(() => import("@/pages/DailyMissions"))
+// DailyMissions removed — /missions is the canonical page
 const Favorites = lazy(() => import("@/pages/Favorites"))
 const Notifications = lazy(() => import("@/pages/Notifications"))
 const Premium = lazy(() => import("@/pages/Premium"))
@@ -68,6 +68,8 @@ const Roadmap = lazy(() => import("@/pages/Roadmap"))
 const Settings = lazy(() => import("@/pages/Settings"))
 const Community = lazy(() => import("@/pages/Community"))
 const Verify = lazy(() => import("@/pages/Verify"))
+const Terms = lazy(() => import("@/pages/Terms"))
+const Privacy = lazy(() => import("@/pages/Privacy"))
 
 function PageLoading() {
   return (
@@ -215,14 +217,7 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
-              <Route
-                path="/daily-missions"
-                element={
-                  <PrivateRoute>
-                    <DailyMissions />
-                  </PrivateRoute>
-                }
-              />
+              <Route path="/daily-missions" element={<Navigate to="/missions" replace />} />
               <Route
                 path="/favorites"
                 element={
@@ -399,7 +394,13 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
-              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/onboarding" element={
+                <PrivateRoute>
+                  <Onboarding />
+                </PrivateRoute>
+              } />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route
                 path="/lab"
                 element={

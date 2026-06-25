@@ -6,7 +6,7 @@ import type { LeaderboardEntry } from "@/lib/db"
 import { getLocalXP, getLocalGems, getLevel, getLevelProgress } from "@/lib/xp"
 import { getLevelTitle } from "@/lib/levelTitles"
 import { getAvatarById } from "@/data/avatarsData"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 import * as Icons from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
@@ -128,20 +128,20 @@ function PodiumSpot({ user, rank }: { user: RankedUser | undefined; rank: 1 | 2 
       </div>
 
       {/* Name */}
-      <p className="mt-1.5 max-w-[80px] text-center text-[11px] font-bold leading-tight text-foregroundDark">
+      <p className="mt-1.5 max-w-[80px] text-center text-[11px] font-bold leading-tight text-foreground-dark">
         {user.full_name ?? "Usuário"}
       </p>
 
       {/* XP */}
       <div className="flex items-center gap-0.5">
         <Icons.Zap className="h-3 w-3 text-yellow-500" />
-        <span className="text-[11px] font-extrabold text-foregroundDark">
+        <span className="text-[11px] font-extrabold text-foreground-dark">
           {user.xp.toLocaleString("pt-BR")} XP
         </span>
       </div>
 
       {/* Level title */}
-      <p className="text-[9px] text-foregroundTertiary">{user.levelTitle}</p>
+      <p className="text-[9px] text-foreground-tertiary">{user.levelTitle}</p>
 
       {/* Pedestal */}
       <div
@@ -161,7 +161,6 @@ export default function Ranking() {
   const [rankedUsers, setRankedUsers] = useState<RankedUser[]>([])
   const [loading, setLoading] = useState(true)
   const [userAvatarImage, setUserAvatarImage] = useState("/assets/avatar-cat.png")
-  const [activePeriod, setActivePeriod] = useState<Period>("geral")
 
   useEffect(() => {
     if (!user?.id) return
@@ -232,7 +231,7 @@ export default function Ranking() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-page-bg-light via-gradient-mid to-gradient-end">
       <div className="mx-auto flex w-full max-w-[420px] flex-col px-5 pb-24 pt-8">
 
         {/* Header */}
@@ -243,7 +242,7 @@ export default function Ranking() {
               <h1 className="text-2xl font-extrabold text-primary-dark">Ranking</h1>
             </div>
             {!loading && currentUser && (
-              <p className="mt-0.5 text-xs text-foregroundTertiary">
+              <p className="mt-0.5 text-xs text-foreground-tertiary">
                 #{currentUser.position} · {currentUser.levelTitle} · Nível {currentUser.level}
               </p>
             )}
@@ -257,22 +256,11 @@ export default function Ranking() {
           </button>
         </div>
 
-        {/* Period tabs */}
-        <div className="mb-5 flex gap-1 rounded-2xl bg-white p-1 shadow-sm border border-stroke-muted">
-          {(["semana", "mes", "geral"] as Period[]).map((p) => (
-            <button
-              key={p}
-              onClick={() => setActivePeriod(p)}
-              className={cn(
-                "flex-1 rounded-xl py-2 text-xs font-bold transition-all duration-200",
-                activePeriod === p
-                  ? "bg-emerald text-white shadow-sm"
-                  : "text-foregroundMuted hover:text-foregroundDark",
-              )}
-            >
-              {PERIOD_LABELS[p]}
-            </button>
-          ))}
+        {/* Period label - period filtering coming in v0.1 */}
+        <div className="mb-5 flex items-center justify-center">
+          <span className="rounded-full bg-emerald/10 px-4 py-1.5 text-xs font-bold text-emerald">
+            Ranking Geral (todos os tempos)
+          </span>
         </div>
 
         {loading ? (
@@ -291,7 +279,7 @@ export default function Ranking() {
             {/* Podium — white card */}
             <div className="mb-5 overflow-hidden rounded-3xl border border-stroke-muted bg-white shadow-sm">
               <div className="px-4 pt-4 pb-0">
-                <p className="mb-4 text-center text-[11px] font-bold tracking-widest uppercase text-foregroundMuted">
+                <p className="mb-4 text-center text-[11px] font-bold tracking-widest uppercase text-foreground-muted">
                   🏆 Top 3 do PromptLab
                 </p>
                 <div className="flex items-end justify-center gap-2">
@@ -323,7 +311,7 @@ export default function Ranking() {
                           style={{ width: `${progressPct}%` }}
                         />
                       </div>
-                      <span className="shrink-0 text-[9px] tabular-nums text-foregroundTertiary">
+                      <span className="shrink-0 text-[9px] tabular-nums text-foreground-tertiary">
                         {progressXP}/{targetXP} XP
                       </span>
                     </div>
@@ -341,9 +329,9 @@ export default function Ranking() {
             {/* List — positions 4+ */}
             {rest.length > 0 && (
               <div className="flex flex-col gap-2">
-                <p className="mb-1 flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-foregroundMuted">
+                <p className="mb-1 flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-foreground-muted">
                   <span>Classificação geral</span>
-                  <span className="text-[9px] text-foregroundTertiary">i</span>
+                  <span className="text-[9px] text-foreground-tertiary">i</span>
                 </p>
 
                 {rest.map((entry) => (
@@ -360,7 +348,7 @@ export default function Ranking() {
                     <span
                       className={cn(
                         "w-6 shrink-0 text-center text-sm font-black",
-                        entry.isCurrentUser ? "text-emerald" : "text-foregroundTertiary",
+                        entry.isCurrentUser ? "text-emerald" : "text-foreground-tertiary",
                       )}
                     >
                       {entry.position}
@@ -391,7 +379,7 @@ export default function Ranking() {
                         <p
                           className={cn(
                             "text-sm font-bold",
-                            entry.isCurrentUser ? "text-primary-dark" : "text-foregroundDark",
+                            entry.isCurrentUser ? "text-primary-dark" : "text-foreground-dark",
                           )}
                         >
                           {entry.full_name ?? "Usuário"}
@@ -402,7 +390,7 @@ export default function Ranking() {
                           </span>
                         )}
                       </div>
-                      <p className="text-[10px] text-foregroundTertiary">{entry.levelTitle}</p>
+                      <p className="text-[10px] text-foreground-tertiary">{entry.levelTitle}</p>
                     </div>
 
                     {/* XP */}
@@ -413,24 +401,25 @@ export default function Ranking() {
                           {entry.xp.toLocaleString("pt-BR")}
                         </span>
                       </div>
-                      <span className="text-[9px] text-foregroundTertiary">
+                      <span className="text-[9px] text-foreground-tertiary">
                         XP · Nv {entry.level}
                       </span>
                     </div>
                   </div>
                 ))}
 
-                <button className="mt-2 flex items-center justify-center gap-2 rounded-2xl border border-stroke-muted bg-white py-3 text-sm font-semibold text-foregroundMuted shadow-sm hover:bg-surface-soft transition-colors">
-                  <Icons.ChevronDown className="h-4 w-4" />
-                  Ver mais posições
-                </button>
+                {rankedUsers.length >= 20 && (
+                  <p className="mt-2 text-center text-xs text-foreground-tertiary py-2">
+                    Mostrando top 20 · mais posições em breve
+                  </p>
+                )}
               </div>
             )}
           </>
         )}
       </div>
 
-      <BottomNav active="ranking" />
+      <AppBottomNav />
     </div>
   )
 }
