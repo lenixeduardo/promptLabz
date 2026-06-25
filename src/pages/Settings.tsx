@@ -19,6 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { getReminderEnabled, setReminderEnabled } from "@/hooks/useInactiveReminder";
 import { ReviewModal } from "@/components/ReviewModal";
+import { BackTapSetupCard } from "@/components/BackTapSetupCard";
 import { useAuth } from "@/hooks/useAuth";
 
 const NOTIF_KEY = "promptlabz:settings:notif";
@@ -145,6 +146,13 @@ export default function SettingsPage() {
               <ChevronRight className="h-4 w-4 text-foreground-tertiary" />
             </button>
           </div>
+        </section>
+
+        <section>
+          <p className="mb-3 px-1 text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+            Acesso Rápido
+          </p>
+          <BackTapSetupCard />
         </section>
 
         <button
