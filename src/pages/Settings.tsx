@@ -54,7 +54,7 @@ export default function SettingsPage() {
         back="/profile"
         right={
           <img
-            src="/assets/mascot-icons/mascot_graduation.svg"
+            src="/assets/mascot-settings.png"
             alt=""
             aria-hidden="true"
             className="h-14 w-14 object-contain"
