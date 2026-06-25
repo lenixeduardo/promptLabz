@@ -1413,11 +1413,11 @@ export const lessonsData: Record<string, Category> = {
   },
   "agent-orchestration": {
     id: "agent-orchestration",
-    title: "Orquestracao de Agentes",
+    title: "Orquestração de Agentes",
     modules: [
       {
         id: "ao-mod-1",
-        title: "Modulo 1: Sistemas com Agentes de IA",
+        title: "Módulo 1: Sistemas com Agentes de IA",
         lessons: [
           {
             id: "ao-mod-1-l1",
@@ -1427,19 +1427,19 @@ export const lessonsData: Record<string, Category> = {
             content: [
               {
                 type: "heading",
-                text: "Agentes trabalham com objetivo, memoria e ferramentas"
+                text: "Agentes trabalham com objetivo, memória e ferramentas"
               },
               {
                 type: "text",
-                text: "Um chatbot responde a uma mensagem. Um agente recebe um objetivo, divide o trabalho em etapas, consulta ferramentas e revisa o proprio progresso. Essa mudanca permite automatizar tarefas como pesquisar, comparar opcoes, gerar documentos e validar resultados antes de devolver a resposta final."
+                text: "Um chatbot responde a uma mensagem. Um agente recebe um objetivo, divide o trabalho em etapas, consulta ferramentas e revisa o próprio progresso. Essa mudança permite automatizar tarefas como pesquisar, comparar opções, gerar documentos e validar resultados antes de devolver a resposta final."
               },
               {
                 type: "quote",
-                text: "\"Um bom agente nao e uma IA solta: e um fluxo com papel claro, limites, ferramentas autorizadas e criterio de parada.\""
+                text: "\"Um bom agente não é uma IA solta: é um fluxo com papel claro, limites, ferramentas autorizadas e critério de parada.\""
               },
               {
                 type: "text",
-                text: "Para criar agentes confiaveis, defina: papel, objetivo, contexto, ferramentas permitidas, formato de saida e regras de escalonamento quando houver incerteza."
+                text: "Para criar agentes confiáveis, defina: papel, objetivo, contexto, ferramentas permitidas, formato de saída e regras de escalonamento quando houver incerteza."
               }
             ],
             questions: [
@@ -1449,7 +1449,7 @@ export const lessonsData: Record<string, Category> = {
                 options: [
                   { letter: "A", text: "O agente sempre usa uma tela maior." },
                   { letter: "B", text: "O agente pode planejar etapas, usar ferramentas e avaliar progresso rumo a um objetivo." },
-                  { letter: "C", text: "O agente nao precisa de nenhum limite ou instrucao." },
+                  { letter: "C", text: "O agente não precisa de nenhum limite ou instrução." },
                   { letter: "D", text: "O agente funciona apenas sem internet." }
                 ],
                 correct: "B"
@@ -1458,7 +1458,7 @@ export const lessonsData: Record<string, Category> = {
                 id: 2,
                 question: "Qual item deve existir em um desenho seguro de agente?",
                 options: [
-                  { letter: "A", text: "Ferramentas autorizadas e criterio claro de parada." },
+                  { letter: "A", text: "Ferramentas autorizadas e critério claro de parada." },
                   { letter: "B", text: "Permissao para executar qualquer acao sem revisao." },
                   { letter: "C", text: "Objetivos vagos para deixar a IA improvisar." },
                   { letter: "D", text: "Ausencia total de logs." }
@@ -1469,7 +1469,7 @@ export const lessonsData: Record<string, Category> = {
           },
           {
             id: "ao-mod-1-l2",
-            title: "Orquestracao Multiagente",
+            title: "Orquestração Multiagente",
             icon: "Workflow",
             duration: "16 min",
             content: [
@@ -1479,24 +1479,24 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 type: "text",
-                text: "Orquestrar agentes significa dividir um trabalho complexo em papeis menores. Um agente pesquisador coleta evidencias, um analista estrutura hipoteses, um revisor procura falhas e um coordenador consolida a resposta. O ganho aparece quando cada papel tem responsabilidade e saida bem definida."
+                text: "Orquestrar agentes significa dividir um trabalho complexo em papéis menores. Um agente pesquisador coleta evidências, um analista estrutura hipóteses, um revisor procura falhas e um coordenador consolida a resposta. O ganho aparece quando cada papel tem responsabilidade e saída bem definida."
               },
               {
                 type: "quote",
-                text: "\"Multiagente nao e colocar varias IAs conversando sem direcao; e desenhar uma linha de montagem cognitiva.\""
+                text: "\"Multiagente não é colocar várias IAs conversando sem direção; é desenhar uma linha de montagem cognitiva.\""
               },
               {
                 type: "text",
-                text: "O coordenador deve evitar duplicidade, resolver conflitos entre agentes e pedir nova rodada apenas quando a evidencia for insuficiente."
+                text: "O coordenador deve evitar duplicidade, resolver conflitos entre agentes e pedir nova rodada apenas quando a evidência for insuficiente."
               }
             ],
             questions: [
               {
                 id: 1,
-                question: "Qual e a funcao de um agente coordenador?",
+                question: "Qual é a função de um agente coordenador?",
                 options: [
                   { letter: "A", text: "Ignorar todos os especialistas." },
-                  { letter: "B", text: "Consolidar resultados, resolver conflitos e decidir se nova rodada e necessaria." },
+                  { letter: "B", text: "Consolidar resultados, resolver conflitos e decidir se nova rodada é necessária." },
                   { letter: "C", text: "Fazer apenas design visual." },
                   { letter: "D", text: "Apagar evidencias divergentes." }
                 ],
@@ -1506,9 +1506,9 @@ export const lessonsData: Record<string, Category> = {
                 id: 2,
                 question: "Quando sistemas multiagente trazem mais valor?",
                 options: [
-                  { letter: "A", text: "Quando tarefas exigem pesquisa, analise, revisao e consolidacao com papeis diferentes." },
+                  { letter: "A", text: "Quando tarefas exigem pesquisa, análise, revisão e consolidação com papéis diferentes." },
                   { letter: "B", text: "Quando a tarefa e responder uma pergunta de uma palavra." },
-                  { letter: "C", text: "Quando nao existe criterio de qualidade." },
+                  { letter: "C", text: "Quando não existe critério de qualidade." },
                   { letter: "D", text: "Quando todos os agentes fazem exatamente a mesma coisa." }
                 ],
                 correct: "A"
@@ -1525,7 +1525,7 @@ export const lessonsData: Record<string, Category> = {
     modules: [
       {
         id: "fin-mod-1",
-        title: "Modulo 1: Analise Financeira com IA",
+        title: "Módulo 1: Análise Financeira com IA",
         lessons: [
           {
             id: "fin-mod-1-l1",
@@ -1535,28 +1535,28 @@ export const lessonsData: Record<string, Category> = {
             content: [
               {
                 type: "heading",
-                text: "Transformando numeros em decisoes"
+                text: "Transformando números em decisões"
               },
               {
                 type: "text",
-                text: "A IA pode ajudar a ler extratos, tabelas e categorias de despesas para encontrar padroes: sazonalidade, gastos recorrentes, gargalos de caixa e sinais de risco. O papel da IA nao e substituir o financeiro, mas acelerar a leitura e tornar as perguntas melhores."
+                text: "A IA pode ajudar a ler extratos, tabelas e categorias de despesas para encontrar padrões: sazonalidade, gastos recorrentes, gargalos de caixa e sinais de risco. O papel da IA não é substituir o financeiro, mas acelerar a leitura e tornar as perguntas melhores."
               },
               {
                 type: "quote",
-                text: "\"Separe observacao factual de recomendacao: primeiro o que os dados mostram, depois o que fazer.\""
+                text: "\"Separe observação factual de recomendação: primeiro o que os dados mostram, depois o que fazer.\""
               },
               {
                 type: "text",
-                text: "Um bom prompt financeiro pede periodo analisado, categorias, limites, premissas e formato de saida com alertas, oportunidades e proximas acoes."
+                text: "Um bom prompt financeiro pede período analisado, categorias, limites, premissas e formato de saída com alertas, oportunidades e próximas ações."
               }
             ],
             questions: [
               {
                 id: 1,
-                question: "Qual e uma boa forma de usar IA em fluxo de caixa?",
+                question: "Qual é uma boa forma de usar IA em fluxo de caixa?",
                 options: [
                   { letter: "A", text: "Pedir para inventar saldos sem dados." },
-                  { letter: "B", text: "Identificar padroes, recorrencias, riscos e oportunidades a partir de dados fornecidos." },
+                  { letter: "B", text: "Identificar padrões, recorrências, riscos e oportunidades a partir de dados fornecidos." },
                   { letter: "C", text: "Substituir conciliacao bancaria sem conferencia." },
                   { letter: "D", text: "Ignorar premissas e periodo analisado." }
                 ],
@@ -1564,11 +1564,11 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 id: 2,
-                question: "Por que separar fatos de recomendacoes em analises financeiras?",
+                question: "Por que separar fatos de recomendações em análises financeiras?",
                 options: [
-                  { letter: "A", text: "Para deixar claro o que veio dos dados e o que e sugestao de acao." },
+                  { letter: "A", text: "Para deixar claro o que veio dos dados e o que é sugestão de ação." },
                   { letter: "B", text: "Para esconder erros." },
-                  { letter: "C", text: "Para aumentar o tamanho do relatorio sem motivo." },
+                  { letter: "C", text: "Para aumentar o tamanho do relatório sem motivo." },
                   { letter: "D", text: "Para impedir revisao humana." }
                 ],
                 correct: "A"
@@ -1577,7 +1577,7 @@ export const lessonsData: Record<string, Category> = {
           },
           {
             id: "fin-mod-1-l2",
-            title: "Cenarios, Orcamento e Risco",
+            title: "Cenários, Orçamento e Risco",
             icon: "ShieldCheck",
             duration: "15 min",
             content: [
@@ -1587,11 +1587,11 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 type: "text",
-                text: "Com IA, voce pode testar cenarios como queda de receita, aumento de custos, inadimplencia ou contratacao de uma nova ferramenta. O modelo ajuda a estruturar hipoteses e explicar impacto, mas os numeros finais devem ser conferidos em planilha ou sistema financeiro."
+                text: "Com IA, você pode testar cenários como queda de receita, aumento de custos, inadimplência ou contratação de uma nova ferramenta. O modelo ajuda a estruturar hipóteses e explicar impacto, mas os números finais devem ser conferidos em planilha ou sistema financeiro."
               },
               {
                 type: "quote",
-                text: "\"Cenario financeiro bom sempre mostra premissas, faixa de variacao e risco de erro.\""
+                text: "\"Cenário financeiro bom sempre mostra premissas, faixa de variação e risco de erro.\""
               },
               {
                 type: "text",
@@ -1601,9 +1601,9 @@ export const lessonsData: Record<string, Category> = {
             questions: [
               {
                 id: 1,
-                question: "O que um bom cenario financeiro deve explicitar?",
+                question: "O que um bom cenário financeiro deve explicitar?",
                 options: [
-                  { letter: "A", text: "Premissas, variacoes, impacto e risco de erro." },
+                  { letter: "A", text: "Premissas, variações, impacto e risco de erro." },
                   { letter: "B", text: "Apenas uma previsao otimista." },
                   { letter: "C", text: "Somente opinioes sem dados." },
                   { letter: "D", text: "Resultados sem possibilidade de revisao." }
@@ -1612,9 +1612,9 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 id: 2,
-                question: "Qual cuidado e essencial ao usar IA para orcamento?",
+                question: "Qual cuidado é essencial ao usar IA para orçamento?",
                 options: [
-                  { letter: "A", text: "Conferir os numeros finais em fonte financeira confiavel." },
+                  { letter: "A", text: "Conferir os números finais em fonte financeira confiável." },
                   { letter: "B", text: "Aceitar qualquer resultado sem validar." },
                   { letter: "C", text: "Nunca informar premissas." },
                   { letter: "D", text: "Misturar moedas e periodos." }
@@ -1633,25 +1633,25 @@ export const lessonsData: Record<string, Category> = {
     modules: [
       {
         id: "mkt-mod-1",
-        title: "Modulo 1: Estrategia e Conteudo com IA",
+        title: "Módulo 1: Estratégia e Conteúdo com IA",
         lessons: [
           {
             id: "mkt-mod-1-l1",
-            title: "Pesquisa de Publico e Persona",
+            title: "Pesquisa de Público e Persona",
             icon: "Target",
             duration: "12 min",
             content: [
               {
                 type: "heading",
-                text: "Marketing bom comeca com pergunta boa"
+                text: "Marketing bom começa com pergunta boa"
               },
               {
                 type: "text",
-                text: "A IA ajuda a transformar entrevistas, reviews, comentarios e dados de CRM em segmentos de publico. Ela pode identificar dores, desejos, objeções, linguagem do cliente e momentos de decisao. Quanto mais real for a entrada, menos generica sera a persona."
+                text: "A IA ajuda a transformar entrevistas, reviews, comentários e dados de CRM em segmentos de público. Ela pode identificar dores, desejos, objeções, linguagem do cliente e momentos de decisão. Quanto mais real for a entrada, menos genérica será a persona."
               },
               {
                 type: "quote",
-                text: "\"Persona gerada sem evidencia vira personagem. Persona gerada com dados vira ferramenta de decisao.\""
+                text: "\"Persona gerada sem evidência vira personagem. Persona gerada com dados vira ferramenta de decisão.\""
               },
               {
                 type: "text",
@@ -1661,11 +1661,11 @@ export const lessonsData: Record<string, Category> = {
             questions: [
               {
                 id: 1,
-                question: "Qual entrada melhora muito a criacao de personas com IA?",
+                question: "Qual entrada melhora muito a criação de personas com IA?",
                 options: [
-                  { letter: "A", text: "Comentarios reais, entrevistas, reviews e dados de CRM." },
+                  { letter: "A", text: "Comentários reais, entrevistas, reviews e dados de CRM." },
                   { letter: "B", text: "Apenas pedir uma persona generica." },
-                  { letter: "C", text: "Nao informar produto nem publico." },
+                  { letter: "C", text: "Não informar produto nem público." },
                   { letter: "D", text: "Usar somente slogans prontos." }
                 ],
                 correct: "A"
@@ -1674,7 +1674,7 @@ export const lessonsData: Record<string, Category> = {
                 id: 2,
                 question: "O que diferencia persona util de personagem inventado?",
                 options: [
-                  { letter: "A", text: "Evidencia concreta que sustenta dores, desejos e linguagem." },
+                  { letter: "A", text: "Evidência concreta que sustenta dores, desejos e linguagem." },
                   { letter: "B", text: "Nome bonito e foto ilustrativa." },
                   { letter: "C", text: "Texto longo sem dados." },
                   { letter: "D", text: "Uso de termos tecnicos sem aplicacao." }
@@ -1691,19 +1691,19 @@ export const lessonsData: Record<string, Category> = {
             content: [
               {
                 type: "heading",
-                text: "Criatividade com criterio"
+                text: "Criatividade com critério"
               },
               {
                 type: "text",
-                text: "A IA pode gerar anuncios, emails, landing pages e variações de copy rapidamente. O valor aparece quando cada versao testa uma hipotese clara: preco, urgencia, prova social, dor principal, beneficio ou garantia."
+                text: "A IA pode gerar anúncios, emails, landing pages e variações de copy rapidamente. O valor aparece quando cada versão testa uma hipótese clara: preço, urgência, prova social, dor principal, benefício ou garantia."
               },
               {
                 type: "quote",
-                text: "\"Nao teste dez frases aleatorias. Teste dez hipoteses de comportamento.\""
+                text: "\"Não teste dez frases aleatórias. Teste dez hipóteses de comportamento.\""
               },
               {
                 type: "text",
-                text: "Um prompt de campanha deve incluir canal, publico, oferta, objeções, tom de voz, restricoes legais e metrica principal de sucesso."
+                text: "Um prompt de campanha deve incluir canal, público, oferta, objeções, tom de voz, restrições legais e métrica principal de sucesso."
               }
             ],
             questions: [
@@ -1711,7 +1711,7 @@ export const lessonsData: Record<string, Category> = {
                 id: 1,
                 question: "O que uma boa variacao de teste A/B deve mudar?",
                 options: [
-                  { letter: "A", text: "Uma hipotese clara, como beneficio principal ou prova social." },
+                  { letter: "A", text: "Uma hipótese clara, como benefício principal ou prova social." },
                   { letter: "B", text: "Tudo ao mesmo tempo sem criterio." },
                   { letter: "C", text: "Apenas cor de fundo sempre." },
                   { letter: "D", text: "Nada, para manter resultados iguais." }
@@ -1722,7 +1722,7 @@ export const lessonsData: Record<string, Category> = {
                 id: 2,
                 question: "Quais dados ajudam a IA a criar copy mais precisa?",
                 options: [
-                  { letter: "A", text: "Canal, publico, oferta, objecoes, tom de voz e metrica de sucesso." },
+                  { letter: "A", text: "Canal, público, oferta, objeções, tom de voz e métrica de sucesso." },
                   { letter: "B", text: "Somente a frase 'faca um anuncio legal'." },
                   { letter: "C", text: "A senha das contas de anuncio." },
                   { letter: "D", text: "Nenhuma informacao sobre produto." }
@@ -1741,21 +1741,21 @@ export const lessonsData: Record<string, Category> = {
     modules: [
       {
         id: "pm-mod-1",
-        title: "Modulo 1: Gestao de Projetos com IA",
+        title: "Módulo 1: Gestão de Projetos com IA",
         lessons: [
           {
             id: "pm-mod-1-l1",
-            title: "Escopo, Backlog e Priorizacao",
+            title: "Escopo, Backlog e Priorização",
             icon: "Kanban",
             duration: "13 min",
             content: [
               {
                 type: "heading",
-                text: "Da ideia solta ao backlog executavel"
+                text: "Da ideia solta ao backlog executável"
               },
               {
                 type: "text",
-                text: "A IA pode transformar uma conversa confusa em epicos, historias, criterios de aceite e riscos. Para isso, informe objetivo do produto, usuarios, restricoes, prazo e o que esta fora do escopo."
+                text: "A IA pode transformar uma conversa confusa em épicos, histórias, critérios de aceite e riscos. Para isso, informe objetivo do produto, usuários, restrições, prazo e o que está fora do escopo."
               },
               {
                 type: "quote",
@@ -1763,15 +1763,15 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 type: "text",
-                text: "Peça para a IA classificar itens por impacto, esforco, dependencia e risco. Depois valide com time tecnico e stakeholders."
+                text: "Peça para a IA classificar itens por impacto, esforço, dependência e risco. Depois valide com time técnico e stakeholders."
               }
             ],
             questions: [
               {
                 id: 1,
-                question: "Como a IA ajuda na criacao de backlog?",
+                question: "Como a IA ajuda na criação de backlog?",
                 options: [
-                  { letter: "A", text: "Convertendo objetivos em epicos, historias, criterios de aceite e riscos." },
+                  { letter: "A", text: "Convertendo objetivos em épicos, histórias, critérios de aceite e riscos." },
                   { letter: "B", text: "Eliminando toda conversa com stakeholders." },
                   { letter: "C", text: "Criando tarefas infinitas sem prioridade." },
                   { letter: "D", text: "Substituindo validacao tecnica." }
@@ -1780,9 +1780,9 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 id: 2,
-                question: "Quais criterios ajudam a priorizar backlog com IA?",
+                question: "Quais critérios ajudam a priorizar backlog com IA?",
                 options: [
-                  { letter: "A", text: "Impacto, esforco, dependencia e risco." },
+                  { letter: "A", text: "Impacto, esforço, dependência e risco." },
                   { letter: "B", text: "Ordem alfabetica." },
                   { letter: "C", text: "Tamanho do titulo da tarefa." },
                   { letter: "D", text: "Preferencia aleatoria do modelo." }
@@ -1793,36 +1793,36 @@ export const lessonsData: Record<string, Category> = {
           },
           {
             id: "pm-mod-1-l2",
-            title: "Reunioes, Riscos e Status Report",
+            title: "Reuniões, Riscos e Status Report",
             icon: "CalendarCheck",
             duration: "15 min",
             content: [
               {
                 type: "heading",
-                text: "Menos reuniao perdida, mais decisao registrada"
+                text: "Menos reunião perdida, mais decisão registrada"
               },
               {
                 type: "text",
-                text: "A IA pode resumir reunioes, extrair decisoes, donos, prazos, bloqueios e riscos. Tambem pode transformar notas soltas em status report executivo com semaforo, progresso, proximas acoes e pedidos de decisao."
+                text: "A IA pode resumir reuniões, extrair decisões, donos, prazos, bloqueios e riscos. Também pode transformar notas soltas em status report executivo com semáforo, progresso, próximas ações e pedidos de decisão."
               },
               {
                 type: "quote",
-                text: "\"Toda reuniao deve sair com decisoes, responsaveis e data. A IA ajuda a nao perder isso no ruido.\""
+                text: "\"Toda reunião deve sair com decisões, responsáveis e data. A IA ajuda a não perder isso no ruído.\""
               },
               {
                 type: "text",
-                text: "Um bom prompt de status pede fatos verificados, mudancas desde a ultima atualizacao, riscos com impacto e acoes que precisam de patrocinio."
+                text: "Um bom prompt de status pede fatos verificados, mudanças desde a última atualização, riscos com impacto e ações que precisam de patrocínio."
               }
             ],
             questions: [
               {
                 id: 1,
-                question: "O que a IA deve extrair de uma reuniao de projeto?",
+                question: "O que a IA deve extrair de uma reunião de projeto?",
                 options: [
-                  { letter: "A", text: "Decisoes, responsaveis, prazos, bloqueios e riscos." },
+                  { letter: "A", text: "Decisões, responsáveis, prazos, bloqueios e riscos." },
                   { letter: "B", text: "Somente piadas ditas na chamada." },
                   { letter: "C", text: "Dados que nao foram mencionados." },
-                  { letter: "D", text: "Senhas e informacoes sensiveis sem necessidade." }
+                  { letter: "D", text: "Senhas e informações sensíveis sem necessidade." }
                 ],
                 correct: "A"
               },
@@ -1830,7 +1830,7 @@ export const lessonsData: Record<string, Category> = {
                 id: 2,
                 question: "O que torna um status report executivo util?",
                 options: [
-                  { letter: "A", text: "Progresso, riscos, proximas acoes e decisoes necessarias." },
+                  { letter: "A", text: "Progresso, riscos, próximas ações e decisões necessárias." },
                   { letter: "B", text: "Texto longo sem conclusao." },
                   { letter: "C", text: "Apenas elogios ao projeto." },
                   { letter: "D", text: "Detalhes irrelevantes sem prioridade." }
@@ -1854,7 +1854,7 @@ export const lessonsData: Record<string, Category> = {
     modules: [
       {
         id: "dev-mod-1",
-        title: "Modulo 1: Qualidade e Testes de Codigo",
+        title: "Módulo 1: Qualidade e Testes de Código",
         lessons: [
           {
             id: "dev-mod-1-l1",
@@ -1868,7 +1868,7 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 type: "text",
-                text: "TDD e uma metodologia onde voce escreve o teste antes do codigo de producao. O ciclo e simples: primeiro escreva um teste que falha (Red), depois escreva o codigo minimo para passar (Green), e por fim refatore o codigo mantendo os testes verdes (Refactor). Isso garante que seu codigo seja testavel desde o inicio."
+                text: "TDD é uma metodologia onde você escreve o teste antes do código de produção. O ciclo é simples: primeiro escreva um teste que falha (Red), depois escreva o código mínimo para passar (Green), e por fim refatore o código mantendo os testes verdes (Refactor). Isso garante que seu código seja testável desde o início."
               },
               {
                 type: "quote",
@@ -1882,10 +1882,10 @@ export const lessonsData: Record<string, Category> = {
             questions: [
               {
                 id: 1,
-                question: "Qual e a ordem correta do ciclo TDD?",
+                question: "Qual é a ordem correta do ciclo TDD?",
                 options: [
                   { letter: "A", text: "Codigo → Teste → Refactor" },
-                  { letter: "B", text: "Teste que falha → Codigo minimo → Refactor" },
+                  { letter: "B", text: "Teste que falha → Código mínimo → Refactor" },
                   { letter: "C", text: "Refactor → Teste → Codigo" },
                   { letter: "D", text: "Teste que passa → Codigo → Otimizar" }
                 ],
@@ -1893,11 +1893,11 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 id: 2,
-                question: "Qual o principal beneficio do TDD além da deteccao de bugs?",
+                question: "Qual o principal benefício do TDD além da detecção de bugs?",
                 options: [
-                  { letter: "A", text: "Eliminar a necessidade de documentacao." },
-                  { letter: "B", text: "Forcar um design de codigo mais limpo e desacoplado." },
-                  { letter: "C", text: "Aumentar a velocidade de escrita de codigo." },
+                  { letter: "A", text: "Eliminar a necessidade de documentação." },
+                  { letter: "B", text: "Forçar um design de código mais limpo e desacoplado." },
+                  { letter: "C", text: "Aumentar a velocidade de escrita de código." },
                   { letter: "D", text: "Substituir a necessidade de code review." }
                 ],
                 correct: "B"
@@ -1916,21 +1916,21 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 type: "text",
-                text: "Debugging eficiente segue um ciclo: Reproduza o bug de forma consistente, Minimize o cenario removendo codigo irrelevante até isolar a causa raiz, Hipotetize sobre o que esta errado, Instrumente com logs ou ferramentas para confirmar, Corrija com a menor mudanca possivel, e por fim Teste regressao para garantir que nada quebrou."
+                text: "Debugging eficiente segue um ciclo: Reproduza o bug de forma consistente, Minimize o cenário removendo código irrelevante até isolar a causa raiz, Hipotetize sobre o que está errado, Instrumente com logs ou ferramentas para confirmar, Corrija com a menor mudança possível, e por fim Teste regressão para garantir que nada quebrou."
               },
               {
                 type: "quote",
-                text: "\"A maior parte do tempo em debugging e gasto tentando reproduzir o bug. Se voce nao consegue reproduzir sob demanda, voce nao pode prova-lo resolvido.\""
+                text: "\"A maior parte do tempo em debugging é gasto tentando reproduzir o bug. Se você não consegue reproduzir sob demanda, você não pode prová-lo resolvido.\""
               },
               {
                 type: "text",
-                text: "Ferramentas como Chrome DevTools, VS Code Debugger, e extensoes como React DevTools sao essenciais para instrumentar e identificar problemas em aplicacoes web."
+                text: "Ferramentas como Chrome DevTools, VS Code Debugger, e extensões como React DevTools são essenciais para instrumentar e identificar problemas em aplicações web."
               }
             ],
             questions: [
               {
                 id: 1,
-                question: "Qual e o primeiro passo no loop de diagnostico?",
+                question: "Qual é o primeiro passo no loop de diagnóstico?",
                 options: [
                   { letter: "A", text: "Corrigir o codigo imediatamente." },
                   { letter: "B", text: "Reproduzir o bug de forma consistente." },

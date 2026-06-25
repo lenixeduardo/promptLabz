@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import * as Icons from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
@@ -13,25 +13,28 @@ const NAV_ITEMS = [
 ]
 
 export function BottomNav({ active }: { active: NavTab }) {
-  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const resolvedActive = active ?? NAV_ITEMS.find((item) => pathname === item.path)?.key
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-pageBgLight bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-page-bg-light bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
       <div className="mx-auto flex max-w-[460px] items-center justify-around px-1 pb-5 pt-2">
         {NAV_ITEMS.map(({ key, label, icon: Icon, path }) => (
-          <button
+          <Link
             key={key}
-            onClick={() => navigate(path)}
+            to={path}
             className={cn(
               "flex flex-col items-center gap-0.5 px-3 py-1 transition-colors",
-              active === key ? "text-primary-dark" : "text-neutral hover:text-emerald"
+              resolvedActive === key ? "text-primary-dark" : "text-neutral hover:text-emerald"
             )}
+            aria-label={label}
+            aria-current={resolvedActive === key ? "page" : undefined}
           >
-            <Icon className="h-6 w-6" strokeWidth={active === key ? 2.5 : 1.8} />
-            <span className={cn("text-[10px]", active === key ? "font-bold" : "font-medium")}>
+            <Icon className="h-6 w-6" strokeWidth={resolvedActive === key ? 2.5 : 1.8} />
+            <span className={cn("text-[10px]", resolvedActive === key ? "font-bold" : "font-medium")}>
               {label}
             </span>
-          </button>
+          </Link>
         ))}
       </div>
     </nav>
