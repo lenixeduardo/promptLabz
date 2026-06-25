@@ -48,18 +48,15 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
-      <AppPageHeader
-        title="Configurações"
-        back="/profile"
-        right={
-          <img
-            src="/assets/mascot-settings.png"
-            alt=""
-            aria-hidden="true"
-            className="h-14 w-14 object-contain"
-          />
-        }
+    <div className="relative flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
+      <AppPageHeader title="Configurações" back="/profile" />
+
+      {/* Mascote flutuante sobrepõe o header no canto superior direito */}
+      <img
+        src="/assets/mascot-settings.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute right-2 top-0 z-20 w-36 object-contain"
       />
 
       <div className="mx-auto w-full max-w-lg space-y-4 px-4 py-5">
