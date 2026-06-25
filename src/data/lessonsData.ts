@@ -1956,7 +1956,7 @@ export const lessonsData: Record<string, Category> = {
       },
       {
         id: "dev-mod-2",
-        title: "Modulo 2: Frameworks Modernos e Boas Praticas",
+        title: "Módulo 2: Frameworks Modernos e Boas Práticas",
         lessons: [
           {
             id: "dev-mod-2-l1",
@@ -1970,15 +1970,15 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 type: "text",
-                text: "O ecossistema React moderno, especialmente com Vercel, introduziu conceitos como Server Components (componentes que rodam no servidor), Data Fetching com Server Actions, Streaming com Suspense boundaries, e otimizacao de Core Web Vitals. Saber quando usar cada abordagem e essencial para construir aplicacoes performaticas."
+                text: "O ecossistema React moderno, especialmente com Vercel, introduziu conceitos como Server Components (componentes que rodam no servidor), Data Fetching com Server Actions, Streaming com Suspense boundaries, e otimização de Core Web Vitals. Saber quando usar cada abordagem é essencial para construir aplicações performáticas."
               },
               {
                 type: "quote",
-                text: "\"Server Components permitem que voce mantenha logica pesada e acesso a banco de dados no servidor, enviando apenas o HTML final para o cliente. Menos JavaScript, mais velocidade.\""
+                text: "\"Server Components permitem que você mantenha lógica pesada e acesso a banco de dados no servidor, enviando apenas o HTML final para o cliente. Menos JavaScript, mais velocidade.\""
               },
               {
                 type: "text",
-                text: "O Edge Runtime da Vercel permite executar codigo em servidores distribuidos globalmente, reduzindo a latencia para usuarios em qualquer regiao do mundo."
+                text: "O Edge Runtime da Vercel permite executar código em servidores distribuídos globalmente, reduzindo a latência para usuários em qualquer região do mundo."
               }
             ],
             questions: [
@@ -1986,7 +1986,7 @@ export const lessonsData: Record<string, Category> = {
                 id: 1,
                 question: "Qual a principal vantagem dos Server Components no React?",
                 options: [
-                  { letter: "A", text: "Eles rodam mais rapido no cliente." },
+                  { letter: "A", text: "Eles rodam mais rápido no cliente." },
                   { letter: "B", text: "Eles executam no servidor e enviam apenas HTML, reduzindo JavaScript." },
                   { letter: "C", text: "Eles substituem a necessidade de CSS." },
                   { letter: "D", text: "Eles funcionam apenas com bancos NoSQL." }
@@ -1997,7 +1997,7 @@ export const lessonsData: Record<string, Category> = {
                 id: 2,
                 question: "O que e o Edge Runtime no contexto da Vercel?",
                 options: [
-                  { letter: "A", text: "Um ambiente de execucao distribuido globalmente para baixa latencia." },
+                  { letter: "A", text: "Um ambiente de execução distribuído globalmente para baixa latência." },
                   { letter: "B", text: "Uma biblioteca de componentes React prontos." },
                   { letter: "C", text: "Um editor de codigo online." },
                   { letter: "D", text: "Um sistema de banco de dados em memoria." }
@@ -2018,24 +2018,24 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 type: "text",
-                text: "Uma estrategia completa de testes envolve tres niveis: testes unitarios (Vitest) para funcoes e hooks, testes de componente (React Testing Library) para verificar comportamento de componentes, e testes E2E (Playwright) para simular fluxos completos do usuario no navegador. Cada nivel tem seu proposito e juntos formam a piramide de testes."
+                text: "Uma estratégia completa de testes envolve três níveis: testes unitários (Vitest) para funções e hooks, testes de componente (React Testing Library) para verificar comportamento de componentes, e testes E2E (Playwright) para simular fluxos completos do usuário no navegador. Cada nível tem seu propósito e juntos formam a pirâmide de testes."
               },
               {
                 type: "quote",
-                text: "\"Testes E2E sao os mais lentos e caros — use-os para fluxos criticos. Invista mais em testes unitarios e de componente, que sao rapidos e focados.\""
+                text: "\"Testes E2E são os mais lentos e caros — use-os para fluxos críticos. Invista mais em testes unitários e de componente, que são rápidos e focados.\""
               },
               {
                 type: "text",
-                text: "Playwright permite testar em varios navegadores (Chromium, Firefox, WebKit) com uma unica API, incluindo recursos como gravacao de video e captura de traces para debugging."
+                text: "Playwright permite testar em vários navegadores (Chromium, Firefox, WebKit) com uma única API, incluindo recursos como gravação de vídeo e captura de traces para debugging."
               }
             ],
             questions: [
               {
                 id: 1,
-                question: "Qual a ordem recomendada da piramide de testes?",
+                question: "Qual a ordem recomendada da pirâmide de testes?",
                 options: [
-                  { letter: "A", text: "Mais testes E2E, menos unitarios." },
-                  { letter: "B", text: "Mais testes unitarios, menos E2E." },
+                  { letter: "A", text: "Mais testes E2E, menos unitários." },
+                  { letter: "B", text: "Mais testes unitários, menos E2E." },
                   { letter: "C", text: "Apenas testes de componente." },
                   { letter: "D", text: "Apenas testes E2E." }
                 ],
@@ -2043,7 +2043,7 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 id: 2,
-                question: "Qual biblioteca e recomendada para testes E2E em varios navegadores?",
+                question: "Qual biblioteca é recomendada para testes E2E em vários navegadores?",
                 options: [
                   { letter: "A", text: "Jest" },
                   { letter: "B", text: "React Testing Library" },
@@ -2058,29 +2058,29 @@ export const lessonsData: Record<string, Category> = {
       },
       {
         id: "dev-mod-3",
-        title: "Modulo 3: Infraestrutura de Dados e Backend",
+        title: "Módulo 3: Infraestrutura de Dados e Backend",
         lessons: [
           {
             id: "dev-mod-3-l1",
-            title: "Supabase e PosgreSQL — Boas Praticas",
+            title: "Supabase e PostgreSQL — Boas Práticas",
             icon: "Database",
             duration: "16 min",
             content: [
               {
                 type: "heading",
-                text: "Backend como Servico com Supabase"
+                text: "Backend como Serviço com Supabase"
               },
               {
                 type: "text",
-                text: "Supabase e uma plataforma open source que oferece banco de dados PostgreSQL, autenticacao, storage e Edge Functions. As boas praticas incluem: design de esquemas com normalizacao adequada, implementacao de Row-Level Security (RLS) para seguranca em nivel de linha, uso de real-time subscriptions para dados ao vivo, e estrategias de migracao com ferramentas como Prisma ou migrations SQL."
+                text: "Supabase é uma plataforma open source que oferece banco de dados PostgreSQL, autenticação, storage e Edge Functions. As boas práticas incluem: design de esquemas com normalização adequada, implementação de Row-Level Security (RLS) para segurança em nível de linha, uso de real-time subscriptions para dados ao vivo, e estratégias de migração com ferramentas como Prisma ou migrations SQL."
               },
               {
                 type: "quote",
-                text: "\"RLS no Supabase permite que voce defina politicas de acesso diretamente no banco: 'um usuario so pode ver suas proprias tarefas'. A segurança e aplicada no banco, nao no codigo.\""
+                text: "\"RLS no Supabase permite que você defina políticas de acesso diretamente no banco: 'um usuário só pode ver suas próprias tarefas'. A segurança é aplicada no banco, não no código.\""
               },
               {
                 type: "text",
-                text: "Edge Functions do Supabase (baseadas em Deno) permitem executar logica de servidor perto do usuario, ideais para webhooks e integracoes com servicos externos."
+                text: "Edge Functions do Supabase (baseadas em Deno) permitem executar lógica de servidor perto do usuário, ideais para webhooks e integrações com serviços externos."
               }
             ],
             questions: [
@@ -2089,7 +2089,7 @@ export const lessonsData: Record<string, Category> = {
                 question: "O que e Row-Level Security (RLS) no Supabase?",
                 options: [
                   { letter: "A", text: "Um sistema de criptografia de senhas." },
-                  { letter: "B", text: "Politicas de acesso aplicadas diretamente no banco para controlar quem ve cada linha." },
+                  { letter: "B", text: "Políticas de acesso aplicadas diretamente no banco para controlar quem vê cada linha." },
                   { letter: "C", text: "Um firewall de rede para o banco de dados." },
                   { letter: "D", text: "Uma ferramenta de backup automatico." }
                 ],
@@ -2110,7 +2110,7 @@ export const lessonsData: Record<string, Category> = {
           },
           {
             id: "dev-mod-3-l2",
-            title: "Skill Creator e Automacao de Ferramentas",
+            title: "Skill Creator e Automação de Ferramentas",
             icon: "Wand2",
             duration: "12 min",
             content: [
@@ -2120,23 +2120,23 @@ export const lessonsData: Record<string, Category> = {
               },
               {
                 type: "text",
-                text: "Skills sao instrucoes modulares que estendem as capacidades de agentes de IA como Claude Code e Cursor. Criar uma skill envolve definir um nome, descricao, instrucoes claras de comportamento, e recursos auxiliares. O ecossistema de skills permite que desenvolvedores compartilhem e reutilizem comportamentos especializados."
+                text: "Skills são instruções modulares que estendem as capacidades de agentes de IA como Claude Code e Cursor. Criar uma skill envolve definir um nome, descrição, instruções claras de comportamento, e recursos auxiliares. O ecossistema de skills permite que desenvolvedores compartilhem e reutilizem comportamentos especializados."
               },
               {
                 type: "quote",
-                text: "\"Uma boa skill resolve um problema especifico de forma declarativa — nao diga como fazer, diga o que fazer e deixe o agente decidir a implementacao.\""
+                text: "\"Uma boa skill resolve um problema específico de forma declarativa — não diga como fazer, diga o que fazer e deixe o agente decidir a implementação.\""
               },
               {
                 type: "text",
-                text: "O Skill Creator da Anthropic fornece templates e validacao automatica para garantir que sua skill siga as melhores praticas do ecossistema."
+                text: "O Skill Creator da Anthropic fornece templates e validação automática para garantir que sua skill siga as melhores práticas do ecossistema."
               }
             ],
             questions: [
               {
                 id: 1,
-                question: "Qual e a estrutura basica de uma skill para agentes de IA?",
+                question: "Qual é a estrutura básica de uma skill para agentes de IA?",
                 options: [
-                  { letter: "A", text: "Nome, descricao, instrucoes e recursos auxiliares." },
+                  { letter: "A", text: "Nome, descrição, instruções e recursos auxiliares." },
                   { letter: "B", text: "Apenas um arquivo de codigo fonte." },
                   { letter: "C", text: "Um arquivo binario compilado." },
                   { letter: "D", text: "Uma URL e uma chave de API." }
@@ -2147,8 +2147,8 @@ export const lessonsData: Record<string, Category> = {
                 id: 2,
                 question: "Qual filosofias uma boa skill deve seguir?",
                 options: [
-                  { letter: "A", text: "Ser o mais generica possivel para cobrir todos os casos." },
-                  { letter: "B", text: "Resolver um problema especifico de forma declarativa." },
+                  { letter: "A", text: "Ser o mais genérica possível para cobrir todos os casos." },
+                  { letter: "B", text: "Resolver um problema específico de forma declarativa." },
                   { letter: "C", text: "Exigir acesso total ao sistema operacional." },
                   { letter: "D", text: "Ser escrita apenas em Python." }
                 ],
