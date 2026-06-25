@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Send,
@@ -122,6 +122,7 @@ function evaluatePrompt(text: string): EvalResult {
 }
 
 export default function PromptLabPage() {
+  const navigate = useNavigate();
   const [input, setInput] = useState("");
   const [evaluating, setEvaluating] = useState(false);
   const [result, setResult] = useState<EvalResult | null>(null);
@@ -171,9 +172,9 @@ export default function PromptLabPage() {
       <CelebrationCanvas active={showCelebration} duration={3500} />
 
       <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
-        <Link to="/skills" className="rounded-full p-1.5 text-forest hover:bg-surface-success">
+        <button onClick={() => navigate(-1)} className="rounded-full p-1.5 text-forest hover:bg-surface-success">
           <ArrowLeft className="h-5 w-5" />
-        </Link>
+        </button>
         <div>
           <h1 className="text-base font-bold text-primary-dark">Laboratório de Prompts</h1>
           <p className="text-[11px] text-foreground-tertiary">

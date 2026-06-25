@@ -28,10 +28,9 @@ export default function Premium() {
   const [billingCycle, setBillingCycle] = useState<BillingCycle>("yearly")
 
   const handleStartPremium = () => {
-    const planLabel = billingCycle === "yearly" ? "Anual" : "Mensal"
     sileo.success({
-      title: "Redirecionando para checkout",
-      description: `Plano ${planLabel} — Em breve você será redirecionado para o pagamento seguro.`,
+      title: "Obrigado pelo interesse!",
+      description: "O Premium chega em breve. Você será notificado quando estiver disponível.",
     })
   }
 
@@ -126,10 +125,10 @@ export default function Premium() {
             className="w-full shadow-lg shadow-primary-dark/20"
             onClick={handleStartPremium}
           >
-            Começar agora
+            Entrar na lista de espera
           </Button>
           <p className="mt-2 text-xs font-medium text-foregroundMuted">
-            7 dias grátis. Cancele quando quiser.
+            Premium em breve · você será o primeiro a saber
           </p>
         </div>
 

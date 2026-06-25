@@ -200,16 +200,17 @@ export default function HomePage() {
       <div className="flex flex-col min-h-screen bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
         <div className="bg-card border-b border-stroke-muted px-4 py-3 flex items-center justify-between sticky top-0 z-10">
           <div>
-            <h1 className="text-lg font-bold text-primary-dark">Olá, Explorador! 👋</h1>
+            <h1 className="text-lg font-bold text-primary-dark">Olá, {user?.user_metadata?.full_name?.split(" ")[0] ?? "Explorador"}! 👋</h1>
             <p className="text-xs text-foreground-tertiary">Pronto para mais um desafio?</p>
           </div>
           <div className="flex items-center gap-2">
-            <button
+            <Link
+              to="/favorites"
               className="flex items-center justify-center rounded-full border border-stroke-light bg-card/70 p-2 shadow-sm text-forest hover:bg-surface-soft transition-colors"
               aria-label="Favoritos"
             >
               <Heart className="h-5 w-5" strokeWidth={2.2} />
-            </button>
+            </Link>
             <NotificationsBell />
             <img
               src={equipped.image}

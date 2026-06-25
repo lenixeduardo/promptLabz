@@ -381,7 +381,7 @@ export default function PromptAnalyzerPage() {
                       Anexe seu histórico de conversa
                     </p>
                     <p className="mt-1.5 text-[11px] text-foreground-tertiary leading-relaxed">
-                      Formatos aceitos: .txt, .md, .pdf, docs
+                      Formatos aceitos: .txt, .md
                     </p>
                     <p className="text-[11px] text-foreground-tertiary">Tamanho máximo: 10MB</p>
                     {file && (

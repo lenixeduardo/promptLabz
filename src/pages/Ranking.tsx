@@ -161,7 +161,6 @@ export default function Ranking() {
   const [rankedUsers, setRankedUsers] = useState<RankedUser[]>([])
   const [loading, setLoading] = useState(true)
   const [userAvatarImage, setUserAvatarImage] = useState("/assets/avatar-cat.png")
-  const [activePeriod, setActivePeriod] = useState<Period>("geral")
 
   useEffect(() => {
     if (!user?.id) return
@@ -257,22 +256,11 @@ export default function Ranking() {
           </button>
         </div>
 
-        {/* Period tabs */}
-        <div className="mb-5 flex gap-1 rounded-2xl bg-white p-1 shadow-sm border border-stroke-muted">
-          {(["semana", "mes", "geral"] as Period[]).map((p) => (
-            <button
-              key={p}
-              onClick={() => setActivePeriod(p)}
-              className={cn(
-                "flex-1 rounded-xl py-2 text-xs font-bold transition-all duration-200",
-                activePeriod === p
-                  ? "bg-emerald text-white shadow-sm"
-                  : "text-foregroundMuted hover:text-foregroundDark",
-              )}
-            >
-              {PERIOD_LABELS[p]}
-            </button>
-          ))}
+        {/* Period label - period filtering coming in v0.1 */}
+        <div className="mb-5 flex items-center justify-center">
+          <span className="rounded-full bg-emerald/10 px-4 py-1.5 text-xs font-bold text-emerald">
+            Ranking Geral (todos os tempos)
+          </span>
         </div>
 
         {loading ? (
@@ -420,10 +408,11 @@ export default function Ranking() {
                   </div>
                 ))}
 
-                <button className="mt-2 flex items-center justify-center gap-2 rounded-2xl border border-stroke-muted bg-white py-3 text-sm font-semibold text-foregroundMuted shadow-sm hover:bg-surface-soft transition-colors">
-                  <Icons.ChevronDown className="h-4 w-4" />
-                  Ver mais posições
-                </button>
+                {rankedUsers.length >= 20 && (
+                  <p className="mt-2 text-center text-xs text-foreground-tertiary py-2">
+                    Mostrando top 20 · mais posições em breve
+                  </p>
+                )}
               </div>
             )}
           </>

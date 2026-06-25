@@ -86,7 +86,7 @@ export default function Signup() {
         setPendingEmail(email)
       } else {
         sileo.success({ title: "Conta criada com sucesso!" })
-        navigate("/home")
+        navigate("/onboarding")
       }
     } else {
       sileo.error({ title: result.error || "Erro ao criar conta" })
@@ -257,14 +257,14 @@ export default function Signup() {
             <p className="text-center text-xs text-foregroundSecondary">
               Ao criar a conta, você concorda com os{" "}
               <Link
-                to="#"
+                to="/terms"
                 className="font-medium text-link underline underline-offset-2"
               >
                 Termos de Uso
               </Link>{" "}
               e{" "}
               <Link
-                to="#"
+                to="/privacy"
                 className="font-medium text-link underline underline-offset-2"
               >
                 Política de Privacidade

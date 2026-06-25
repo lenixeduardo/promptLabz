@@ -1,19 +1,11 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Lightbulb, Pencil, Sparkles, Plus, Type, ArrowRight, MessageSquarePlus, Star, Users, ShieldCheck } from "lucide-react"
+import { Lightbulb, Pencil, Sparkles, Plus, Type, ArrowRight, MessageSquarePlus, Zap, BookOpen, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { BrandLogo } from "@/components/BrandLogo"
 import { CircleTransition } from "@/components/CircleTransition"
 import { PageSEO } from "@/components/PageSEO"
 import { capture } from "@/lib/analytics"
-
-// ─── Social proof data ───────────────────────────────────────────────────────
-// Update these numbers as the platform grows.
-const SOCIAL_PROOF = {
-  students: "5.000+",
-  rating: "4.9",
-  ratingCount: "312",
-}
 
 const HAS_ACCOUNT_KEY = "promptlabz:hasAccount"
 
@@ -106,22 +98,18 @@ export default function Hero() {
         </p>
       </div>
 
-      {/* Social proof bar */}
+      {/* Value proposition bar */}
       <div className="flex items-center justify-center gap-4 mb-5 w-full max-w-xs">
-        {/* Students count */}
         <div className="flex items-center gap-1.5">
-          <Users className="h-4 w-4 text-forest flex-shrink-0" />
-          <span className="text-xs font-semibold text-[#1E4D2F]">{SOCIAL_PROOF.students} alunos</span>
+          <BookOpen className="h-4 w-4 text-forest flex-shrink-0" />
+          <span className="text-xs font-semibold text-[#1E4D2F]">68+ lições</span>
         </div>
         <span className="text-[#7CC79A] text-xs">•</span>
-        {/* Rating */}
         <div className="flex items-center gap-1">
-          <Star className="h-4 w-4 text-amber-500 fill-amber-500 flex-shrink-0" />
-          <span className="text-xs font-semibold text-[#1E4D2F]">{SOCIAL_PROOF.rating}</span>
-          <span className="text-xs text-[#4A7A5C]">({SOCIAL_PROOF.ratingCount})</span>
+          <Zap className="h-4 w-4 text-amber-500 flex-shrink-0" />
+          <span className="text-xs font-semibold text-[#1E4D2F]">Gamificado</span>
         </div>
         <span className="text-[#7CC79A] text-xs">•</span>
-        {/* Free trust signal */}
         <div className="flex items-center gap-1">
           <ShieldCheck className="h-4 w-4 text-forest flex-shrink-0" />
           <span className="text-xs font-semibold text-[#1E4D2F]">100% grátis</span>

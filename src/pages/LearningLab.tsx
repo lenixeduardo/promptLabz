@@ -27,10 +27,12 @@ import {
   CalendarClock,
   GitBranch,
   Package,
+  Heart,
 } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { cn } from "@/lib/utils";
 import { useModuleProgress, type TrackId } from "@/lib/moduleProgress";
+import { useLives } from "@/contexts/useLives";
 
 type Status = "completed" | "current" | "locked";
 
@@ -110,6 +112,7 @@ export default function LearningLabPage() {
   const navigate = useNavigate();
   const track = (searchParams.get("track") as TrackId) || "a1";
   const completions = useTrackCompletion();
+  const { lives } = useLives();
 
   const trackUnlocked: Record<TrackId, boolean> = {
     a1: true,
@@ -133,7 +136,7 @@ export default function LearningLabPage() {
             </p>
           </div>
           <div className="flex items-center gap-1 rounded-full bg-red-50 px-3 py-1 text-sm font-bold text-red-500">
-            ❤️ <span>5</span>
+            <Heart className="h-3.5 w-3.5 fill-red-500" /> <span>{lives}</span>
           </div>
         </div>
 

@@ -187,15 +187,19 @@ export default function Store() {
 
         {/* Pacotes especiais */}
         <section>
-          <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-primary-dark">
-            Pacotes especiais
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="mb-3 flex items-center gap-2">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-primary-dark">
+              Pacotes especiais
+            </h2>
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold uppercase text-amber-700">
+              Em breve
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-3 opacity-60">
             {GEM_PACKAGES.map((pkg) => (
-              <button
+              <div
                 key={pkg.id}
-                onClick={handleBuyGemPackage}
-                className="relative flex flex-col items-center gap-2 rounded-2xl border border-stroke-muted bg-gradient-to-b from-white to-pageBgLight p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.97]"
+                className="relative flex flex-col items-center gap-2 rounded-2xl border border-stroke-muted bg-gradient-to-b from-white to-pageBgLight p-4 shadow-sm cursor-not-allowed"
               >
                 {pkg.badge && (
                   <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-primary-dark px-3 py-0.5 text-[9px] font-bold text-white whitespace-nowrap">
@@ -207,10 +211,10 @@ export default function Store() {
                   <span className="text-2xl font-extrabold text-primary-dark">{pkg.gemAmount}</span>
                 </div>
                 <p className="text-xs text-emerald">{pkg.name}</p>
-                <div className="w-full rounded-xl bg-primary-dark py-2 text-center text-xs font-bold text-white">
-                  {pkg.price}
+                <div className="w-full rounded-xl bg-stroke-muted py-2 text-center text-xs font-bold text-foreground-tertiary">
+                  Pagamento em breve
                 </div>
-              </button>
+              </div>
             ))}
           </div>
         </section>

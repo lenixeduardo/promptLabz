@@ -59,14 +59,14 @@ describe("Premium — renderização", () => {
     expect(screen.getByText("R$ 49,90")).toBeInTheDocument()
   })
 
-  it("exibe o CTA 'Começar agora'", () => {
+  it("exibe o CTA de entrada na lista de espera", () => {
     renderPremium()
-    expect(screen.getByText("Começar agora")).toBeInTheDocument()
+    expect(screen.getByText("Entrar na lista de espera")).toBeInTheDocument()
   })
 
-  it("exibe o texto '7 dias grátis'", () => {
+  it("exibe o texto indicando que premium está em breve", () => {
     renderPremium()
-    expect(screen.getByText(/7 dias grátis/i)).toBeInTheDocument()
+    expect(screen.getByText(/Premium em breve/i)).toBeInTheDocument()
   })
 
   it("exibe os trust badges", () => {
