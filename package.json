@@ -18,9 +18,20 @@
     "smoke:supabase": "node scripts/smoke-supabase.mjs",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm smoke:supabase",
     "install-deps": "pnpm install --prefer-offline",
-    "clean": "rm -rf node_modules .pnpm-store pnpm-lock.yaml && pnpm store prune"
+    "clean": "rm -rf node_modules .pnpm-store pnpm-lock.yaml && pnpm store prune",
+    "ios:init": "pnpm build && cap add ios",
+    "ios:sync": "pnpm build && cap sync ios",
+    "ios:open": "cap open ios",
+    "ios:build": "pnpm build && cap sync ios && cap build ios"
   },
   "dependencies": {
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/cli": "^8.4.1",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.4.1",
+    "@capacitor/keyboard": "^8.0.5",
+    "@capacitor/status-bar": "^8.0.2",
     "@hookform/resolvers": "^5.4.0",
     "@radix-ui/react-accordion": "^1.2.14",
     "@radix-ui/react-alert-dialog": "^1.1.17",
