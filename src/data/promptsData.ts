@@ -6,7 +6,7 @@ export interface PromptCard {
   title: string
   difficulty: "Iniciante" | "Intermediario" | "Avancado"
   color: "green" | "yellow" | "red"
-  category: "Criatividade" | "Marketing" | "Programacao" | "Educacao" | "Produtividade" | "Gestao de Produto" | "Comunicacao" | "Analise" | "Automacao"
+  category: "Criatividade" | "Marketing" | "Programacao" | "Educacao" | "Produtividade" | "Gestao de Produto" | "Comunicacao" | "Analise" | "Automacao" | "Negocios" | "Design" | "Suporte" | "RH"
   promptText: string
   description: string
   exampleInput?: string
@@ -353,5 +353,170 @@ Escreva a sequência de mensagens curtas de WhatsApp para o cenário informado.
 - Texto no formato mobile-friendly.`,
     exampleInput: "Contexto: Agendamento de aula experimental em academia de dança.",
     exampleOutput: "**Mensagem 1:** Olá, [Nome]! Sua aula experimental de dança está confirmada para amanhã às 18h..."
-  }
+  },
+  // ── Negocios fallback ────────────────────────────────────────────────────
+  {
+    title: "Plano de Negocios Rapido",
+    difficulty: "Iniciante",
+    color: "green",
+    category: "Negocios",
+    description: "Canvas de plano de negócios de uma página com problema, solução, mercado e modelo de receita.",
+    promptText: `# Instrução
+Crie um plano de negócios de uma página (Lean Canvas) para a ideia descrita.
+
+# Blocos obrigatórios
+1. Problema (top 3 dores do cliente).
+2. Solução (3 funcionalidades-chave).
+3. Proposta de Valor Única (1 frase).
+4. Segmento de clientes e early adopters.
+5. Canais de distribuição.
+6. Modelo de receita e estrutura de custos.
+7. Métricas-chave (3 KPIs).`,
+    exampleInput: "Ideia: App de aluguel de trajes sociais por assinatura para jovens profissionais.",
+    exampleOutput: "# Lean Canvas: AlugaFormal\n**Problema:** 1. Comprar terno é caro..."
+  },
+  {
+    title: "Estrategia de Precificacao",
+    difficulty: "Intermediario",
+    color: "yellow",
+    category: "Negocios",
+    description: "Comparação de estratégias de precificação e recomendação baseada no produto e mercado.",
+    promptText: `# Instrução
+Analise o produto/serviço e recomende a melhor estratégia de precificação.
+
+# Estratégias a avaliar
+1. Cost-plus: custo + margem desejada.
+2. Valor percebido: willingness to pay do cliente.
+3. Competitiva: ancoragem no mercado.
+4. Freemium / Assinatura: se aplicável.
+
+# Entregue
+- Tabela comparativa das 3 estratégias.
+- Recomendação justificada.
+- Faixa de preço sugerida.`,
+    exampleInput: "Produto: Curso online de Excel avançado, 8h de conteúdo, com suporte via WhatsApp.",
+    exampleOutput: "# Estratégia de Precificação: Curso Excel\n| Estratégia | Preço sugerido | Prós | Contras |"
+  },
+  // ── Design fallback ──────────────────────────────────────────────────────
+  {
+    title: "Briefing de Design Visual",
+    difficulty: "Iniciante",
+    color: "green",
+    category: "Design",
+    description: "Documento de briefing para projetos de design com objetivos, público, referências e restrições.",
+    promptText: `# Instrução
+Crie um briefing de design visual completo para o projeto descrito.
+
+# Seções obrigatórias
+- Objetivo do projeto (o que será criado e por quê).
+- Público-alvo (perfil, faixa etária, contexto de uso).
+- Tom e personalidade (3 adjetivos e 3 "não somos X").
+- Referências visuais (descreva estilos ou cite exemplos).
+- Restrições (cores da marca, tipografia existente, formatos).
+- Entregáveis esperados e prazo.`,
+    exampleInput: "Projeto: Redesign da embalagem de uma linha de chás orgânicos para público feminino 30-45 anos.",
+    exampleOutput: "# Briefing: Redesign Linha de Chás Orgânicos\n**Objetivo:** Elevar percepção de premium..."
+  },
+  {
+    title: "Sistema de Design Minimo",
+    difficulty: "Intermediario",
+    color: "yellow",
+    category: "Design",
+    description: "Especificação de tokens de design (cores, tipografia, espaçamento) para consistência visual.",
+    promptText: `# Instrução
+Defina os tokens de um sistema de design mínimo para a marca descrita.
+
+# Entregáveis
+- Paleta de cores: primária, secundária, neutros, feedbacks.
+- Tipografia: família, pesos e tamanhos para h1→h4, body, caption.
+- Escala de espaçamento: base 4px ou 8px.
+- Bordas e raios: padrão de border-radius.
+- Sombras: 3 níveis (baixo, médio, alto).
+- Componentes base: botão, input, card, badge.`,
+    exampleInput: "Marca: Fintech de crédito para autônomos. Valores: confiança, simplicidade, modernidade.",
+    exampleOutput: "# Design System: FinCredit\n**Primária:** #1A56DB (azul profundo)..."
+  },
+  // ── Suporte fallback ─────────────────────────────────────────────────────
+  {
+    title: "Resposta a Reclamacao de Cliente",
+    difficulty: "Iniciante",
+    color: "green",
+    category: "Suporte",
+    description: "Modelo de resposta empática e resolutiva para reclamações de clientes insatisfeitos.",
+    promptText: `# Instrução
+Escreva uma resposta profissional e empática para a reclamação do cliente.
+
+# Estrutura
+1. Acolhimento: reconhecer a frustração sem defensividade.
+2. Pedido de desculpas: sincero e específico.
+3. Explicação breve: o que aconteceu (sem excesso).
+4. Solução: o que será feito e prazo.
+5. Gesto de boa vontade: compensação se aplicável.
+6. Encerramento: reforço do compromisso com a experiência.
+
+# Tom: humano, direto, nunca robótico.`,
+    exampleInput: "Reclamação: Produto chegou amassado e o suporte demorou 5 dias para responder.",
+    exampleOutput: "Olá, [Nome], fico genuinamente chateado com o que aconteceu..."
+  },
+  {
+    title: "Script de FAQ Inteligente",
+    difficulty: "Intermediario",
+    color: "yellow",
+    category: "Suporte",
+    description: "Criação de perguntas frequentes com respostas claras e caminho de escalonamento.",
+    promptText: `# Instrução
+Crie um FAQ inteligente para o produto/serviço descrito.
+
+# Para cada pergunta inclua
+- Pergunta (como o cliente realmente pergunta).
+- Resposta direta (máx. 3 parágrafos).
+- Link ou passo útil (documento, tutorial, tela).
+- Se não resolver: caminho de escalonamento (chat, e-mail, tel).
+
+# Gere pelo menos 8 perguntas cobrindo: conta, pagamento, produto, cancelamento, bug.`,
+    exampleInput: "Produto: Plataforma SaaS de gestão de projetos para equipes remotas.",
+    exampleOutput: "**1. Como faço para adicionar um membro à minha equipe?**\nAcesse Configurações → Membros → Convidar..."
+  },
+  // ── RH fallback ──────────────────────────────────────────────────────────
+  {
+    title: "Descricao de Vaga Atrativa",
+    difficulty: "Iniciante",
+    color: "green",
+    category: "RH",
+    description: "Modelo de descrição de vaga inclusiva, clara e que atrai os candidatos certos.",
+    promptText: `# Instrução
+Escreva uma descrição de vaga profissional e atrativa para a posição descrita.
+
+# Seções obrigatórias
+1. Sobre a empresa (missão, cultura, 3 linhas).
+2. Sobre o cargo (o que a pessoa fará no dia a dia).
+3. Responsabilidades (5-7 bullets).
+4. Requisitos obrigatórios (máx. 5 — seja realista).
+5. Diferenciais desejáveis (máx. 3).
+6. Benefícios (seja específico, sem "ambiente inovador" genérico).
+7. Como se candidatar.
+
+# Linguagem inclusiva: evite termos que excluam gênero ou idade.`,
+    exampleInput: "Cargo: Desenvolvedor(a) Front-end Pleno. Stack: React, TypeScript. Remoto, PJ.",
+    exampleOutput: "# Vaga: Desenvolvedor(a) Front-end Pleno\n**Sobre nós:** Somos uma fintech que simplifica..."
+  },
+  {
+    title: "Roteiro de Entrevista Estruturada",
+    difficulty: "Intermediario",
+    color: "yellow",
+    category: "RH",
+    description: "Script de entrevista comportamental com perguntas STAR e rubrica de avaliação.",
+    promptText: `# Instrução
+Crie um roteiro de entrevista estruturada para a vaga descrita.
+
+# Entregáveis
+- Abertura (2 min): apresentação e alinhamento de agenda.
+- Perguntas técnicas (3-4): avaliação de habilidades-chave.
+- Perguntas comportamentais STAR (4-5): situação passada real.
+- Perguntas situacionais (2-3): "o que você faria se...".
+- Espaço para perguntas do candidato (5 min).
+- Rubrica de avaliação: critérios e pontuação 1-5 por competência.`,
+    exampleInput: "Vaga: Gerente de Produto. Competências: visão de produto, comunicação, priorização.",
+    exampleOutput: "# Roteiro de Entrevista: Gerente de Produto\n**Abertura:** \"Obrigado por estar aqui, [Nome]...\""
+  },
 ];
