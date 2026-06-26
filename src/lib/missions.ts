@@ -99,7 +99,7 @@ export const SPECIAL_QUESTS: SpecialQuest[] = [
     desc: "Acesse sua área de certificados conquistados",
     action: "certificate",
     gems: 50,
-    link: "/certificate",
+    link: "/certificates",
     linkLabel: "Ver certificado",
   },
   {

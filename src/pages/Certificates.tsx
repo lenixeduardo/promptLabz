@@ -1,12 +1,13 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Award, Download, Eye, BookOpen } from "lucide-react"
+import { Award, Download, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { AppPageHeader } from "@/components/AppPageHeader"
 import { useAuth } from "@/hooks/useAuth"
 import { getLocalXP, getLevel } from "@/lib/xp"
 import { getLevelTitle } from "@/lib/levelTitles"
 import { downloadCertificatePdf } from "@/lib/certificatePdf"
+import { tryCompleteSpecialQuest } from "@/lib/missions"
 
 interface StoredCertificate {
   id: string
@@ -60,6 +61,10 @@ export default function Certificates() {
   )
   const [downloading, setDownloading] = useState<string | null>(null)
 
+  useEffect(() => {
+    tryCompleteSpecialQuest("certificate")
+  }, [])
+
   async function handleDownload(cert: StoredCertificate) {
     setDownloading(cert.id)
     try {
@@ -73,16 +78,6 @@ export default function Certificates() {
     } finally {
       setDownloading(null)
     }
-  }
-
-  function handleView(cert: StoredCertificate) {
-    navigate("/certificate", {
-      state: {
-        courseName: cert.courseName,
-        completionDate: cert.completionDate,
-        hours: cert.hours,
-      },
-    })
   }
 
   return (
@@ -152,14 +147,6 @@ export default function Certificates() {
                   </div>
 
                   <div className="mt-4 flex gap-2">
-                    <Button
-                      variant="outline"
-                      className="h-9 flex-1 gap-1.5 px-3 text-xs"
-                      onClick={() => handleView(cert)}
-                    >
-                      <Eye className="h-3.5 w-3.5" />
-                      Ver certificado
-                    </Button>
                     <Button
                       className="h-9 flex-1 gap-1.5 px-3 text-xs"
                       disabled={downloading === cert.id}
