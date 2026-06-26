@@ -135,8 +135,8 @@ export default function Profile() {
             </Link>
           )}
 
-          {/* Modo teste Premium */}
-          <div
+          {/* Modo teste Premium — apenas visível em desenvolvimento */}
+          {import.meta.env.DEV && <div
             className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-accent bg-white p-4 shadow-sm"
             style={{ borderColor: "rgba(245, 166, 35, 0.45)" }}
           >
@@ -165,7 +165,7 @@ export default function Profile() {
                 )}
               />
             </button>
-          </div>
+          </div>}
 
           {/* Stats row */}
           <div className="flex gap-2">
