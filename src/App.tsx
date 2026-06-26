@@ -31,7 +31,6 @@ const Profile = lazy(() => import("@/pages/Profile"))
 const AvatarScreen = lazy(() => import("@/pages/AvatarScreen"))
 const LearningLab = lazy(() => import("@/pages/LearningLab"))
 const Lesson = lazy(() => import("@/pages/Lesson"))
-const Skills = lazy(() => import("@/pages/Skills"))
 const SkillDetail = lazy(() => import("@/pages/SkillDetail"))
 const MissionComplete = lazy(() => import("@/pages/MissionComplete"))
 // DailyMissions removed — /missions is the canonical page
@@ -195,14 +194,7 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
-              <Route
-                path="/skills"
-                element={
-                  <PrivateRoute>
-                    <Skills />
-                  </PrivateRoute>
-                }
-              />
+              <Route path="/skills" element={<Navigate to="/lab" replace />} />
               <Route
                 path="/skill/:skillName"
                 element={

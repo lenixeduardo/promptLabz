@@ -38,7 +38,7 @@ export const DAILY_MISSIONS: DailyMission[] = [
     icon: "⚡",
     type: "challenge",
     actionLabel: "Ir ao Laboratório",
-    actionHref: "/skills",
+    actionHref: "/lab",
   },
   {
     id: "read-news",

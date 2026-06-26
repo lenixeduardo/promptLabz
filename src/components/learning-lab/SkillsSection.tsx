@@ -62,7 +62,7 @@ export default function SkillsSection() {
           ⚡ Central de Skills
         </h2>
         <button
-          onClick={() => navigate("/skills")}
+          onClick={() => navigate("/lab")}
           className="text-xs font-semibold text-primary-dark"
         >
           Ver todas &gt;

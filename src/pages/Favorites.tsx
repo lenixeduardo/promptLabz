@@ -50,7 +50,7 @@ export default function Favorites() {
 
         {/* Empty state */}
         <FavoritesEmptyState
-          ctaTo={activeTab === "tracks" ? "/learn" : "/skills"}
+          ctaTo={activeTab === "tracks" ? "/learn" : "/lab"}
           ctaLabel="Explorar conteúdo"
         />
 

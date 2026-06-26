@@ -32,7 +32,7 @@ export const FAVORITES_SUGGESTIONS: FavoriteSuggestion[] = [
     title: "Explorar conteúdos",
     description: "Descubra novos prompts e habilidades",
     icon: "Search",
-    to: "/skills",
+    to: "/lab",
   },
   {
     id: "s2",
