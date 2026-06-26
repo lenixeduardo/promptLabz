@@ -75,7 +75,7 @@ test.describe("Accessibility - Keyboard Navigation", () => {
     await expect(focusedElement).toBeDefined()
 
     // Tab through form fields
-    let previousElement = await focusedElement.evaluate((el) => el.tagName)
+    const previousElement = await focusedElement.evaluate((el) => el.tagName)
 
     for (let i = 0; i < 5; i++) {
       await page.keyboard.press("Tab")
