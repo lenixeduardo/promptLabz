@@ -31,6 +31,10 @@ vi.mock("@/components/ReviewModal", () => ({
     open ? <div data-testid="review-modal" /> : null,
 }))
 
+vi.mock("@/components/ThemeToggle", () => ({
+  ThemeToggle: () => <button aria-label="Ativar modo claro" data-testid="theme-toggle" />,
+}))
+
 function renderSettings() {
   return render(
     <MemoryRouter>
@@ -59,17 +63,16 @@ describe("Settings — renderização", () => {
     expect(screen.getByText("Configurar Back Tap")).toBeInTheDocument()
   })
 
-  it("renderiza o botão 'Abrir Ajustes'", () => {
+  it("renderiza o link de navegação para '/settings/back-tap'", () => {
     renderSettings()
-    expect(screen.getByRole("button", { name: /abrir ajustes/i })).toBeInTheDocument()
+    const link = screen.getByRole("link", { name: /configurar back tap/i })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute("href", "/settings/back-tap")
   })
 
-  it("renderiza os 4 passos do Back Tap", () => {
+  it("renderiza a descrição do Back Tap na seção Acesso Rápido", () => {
     renderSettings()
-    expect(screen.getByText(/abra o app atalhos/i)).toBeInTheDocument()
-    expect(screen.getByText(/novo atalho.*abrir url/i)).toBeInTheDocument()
-    expect(screen.getByText(/ajustes.*acessibilidade/i)).toBeInTheDocument()
-    expect(screen.getByText(/back tap.*toque duplo/i)).toBeInTheDocument()
+    expect(screen.getByText(/aprimoramento rápido com 2 toques/i)).toBeInTheDocument()
   })
 
   it("renderiza o botão de logout", () => {

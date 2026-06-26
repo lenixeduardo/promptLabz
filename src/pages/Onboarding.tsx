@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sparkles, Target, Trophy, ArrowRight, Check } from "lucide-react";
+
+export const ONBOARDED_KEY = "promptlabz:onboarded";
 
 const STEPS = [
   {
@@ -34,6 +36,13 @@ export default function OnboardingPage() {
   const [picked, setPicked] = useState<number | null>(null);
   const navigate = useNavigate();
   const current = STEPS[step];
+
+  // Guard: redirect already-onboarded users back to /home
+  useEffect(() => {
+    if (localStorage.getItem(ONBOARDED_KEY) === "true") {
+      navigate("/home", { replace: true });
+    }
+  }, [navigate]);
   const Icon = current.icon;
   const isLast = step === STEPS.length - 1;
   const needsPick = "options" in current;
@@ -51,9 +60,15 @@ export default function OnboardingPage() {
             />
           ))}
         </div>
-        <Link to="/home" className="text-xs font-semibold text-foreground-tertiary hover:text-forest">
+        <button
+          onClick={() => {
+            localStorage.setItem(ONBOARDED_KEY, "true");
+            navigate("/home");
+          }}
+          className="text-xs font-semibold text-foreground-tertiary hover:text-forest"
+        >
           Pular
-        </Link>
+        </button>
       </div>
 
       <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
@@ -93,8 +108,12 @@ export default function OnboardingPage() {
               const goal = (current as typeof STEPS[1]).options[picked];
               localStorage.setItem("promptlabz:learningGoal", goal);
             }
-            if (isLast) navigate("/home");
-            else setStep((s) => s + 1);
+            if (isLast) {
+              localStorage.setItem(ONBOARDED_KEY, "true");
+              navigate("/home");
+            } else {
+              setStep((s) => s + 1);
+            }
           }}
           className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald py-4 text-sm font-extrabold text-white shadow-md shadow-emerald/30 transition-colors hover:bg-emerald-dark disabled:cursor-not-allowed disabled:opacity-50"
         >

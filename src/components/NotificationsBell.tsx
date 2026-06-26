@@ -50,7 +50,6 @@ export function NotificationsBell() {
         <button
           className="relative"
           aria-label={`Notificações${unreadCount > 0 ? ` - ${unreadCount} não lida${unreadCount !== 1 ? "s" : ""}` : ""}`}
-          aria-badge={unreadCount > 0 ? unreadCount.toString() : undefined}
         >
           <Bell className="h-6 w-6 text-primary-dark" strokeWidth={2} />
           {unreadCount > 0 && (

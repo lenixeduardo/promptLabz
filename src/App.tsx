@@ -57,6 +57,7 @@ const Templates = lazy(() => import("@/pages/Templates"))
 const LabResult = lazy(() => import("@/pages/LabResult"))
 const QuizResult = lazy(() => import("@/pages/QuizResult"))
 const Certificates = lazy(() => import("@/pages/Certificates"))
+const Certificate = lazy(() => import("@/pages/Certificate"))
 const Onboarding = lazy(() => import("@/pages/Onboarding"))
 const PromptLab = lazy(() => import("@/pages/PromptLab"))
 const Lab = lazy(() => import("@/pages/Lab"))
@@ -379,6 +380,14 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <Certificates />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/certificate"
+                element={
+                  <PrivateRoute>
+                    <Certificate />
                   </PrivateRoute>
                 }
               />

@@ -26,7 +26,7 @@ export default function MissionsPage() {
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
       <AppPageHeader
         title="Missões Diárias"
-        subtitle={`Complete ${CHEST_THRESHOLD} missões para ganhar +${CHEST_REWARD_XP} XP e +${CHEST_REWARD_GEMS} 💎`}
+        subtitle={`Conclua ${CHEST_THRESHOLD} missões para ganhar +${CHEST_REWARD_XP} XP e +${CHEST_REWARD_GEMS} 💎`}
         back="/home"
       />
 
@@ -162,6 +162,13 @@ export default function MissionsPage() {
         </div>
 
         {/* Mission list — read-only, no click-to-complete */}
+        {missions.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-12 text-center">
+            <Gift className="h-10 w-10 text-stroke-light" />
+            <p className="text-sm font-bold text-foreground-dark">Nenhuma missão disponível</p>
+            <p className="text-xs text-foreground-tertiary">Volte amanhã para novas missões!</p>
+          </div>
+        ) : (
         <div className="flex flex-col gap-3">
           {missions.map((m) => {
             const Icon = m.icon;
@@ -217,6 +224,7 @@ export default function MissionsPage() {
             );
           })}
         </div>
+        )}
 
         <Link
           to="/home"

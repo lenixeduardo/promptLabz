@@ -76,10 +76,12 @@ export default function Prompts() {
 
       <div className="px-4 pt-4">
         {/* Difficulty filter tabs */}
-        <div className="no-scrollbar mb-5 flex gap-2 overflow-x-auto pb-1">
+        <div role="tablist" className="no-scrollbar mb-5 flex gap-2 overflow-x-auto pb-1">
           {DIFF_TABS.map((d) => (
             <button
               key={d}
+              role="tab"
+              aria-selected={activeDiff === d}
               onClick={() => setActiveDiff(d)}
               className={`inline-flex shrink-0 items-center rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors ${
                 activeDiff === d

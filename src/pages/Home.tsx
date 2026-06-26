@@ -226,15 +226,43 @@ export default function HomePage() {
               <Heart className="h-5 w-5" strokeWidth={2.2} />
             </Link>
             <NotificationsBell />
-            <img
-              src={equipped.image}
-              alt={equipped.name}
-              className="w-9 h-9 rounded-full object-cover border-2 border-stroke-light bg-card"
-            />
+            <Link to="/profile" aria-label="Ir para perfil">
+              <img
+                src={equipped.image}
+                alt={equipped.name}
+                className="w-9 h-9 rounded-full object-cover border-2 border-stroke-light bg-card transition-opacity hover:opacity-80"
+              />
+            </Link>
           </div>
         </div>
 
         <div className="flex-1 px-4 py-5 flex flex-col gap-5">
+          {xp === 0 && streak === 0 && (
+            <div className="rounded-2xl border-2 border-emerald/30 bg-gradient-to-br from-emerald/10 to-card p-5">
+              <div className="flex items-start gap-3 mb-4">
+                <img
+                  src={equipped.image}
+                  alt=""
+                  className="h-12 w-12 rounded-full object-cover border-2 border-emerald/30 shrink-0"
+                />
+                <div>
+                  <p className="text-base font-extrabold text-foreground-dark">
+                    Bem-vindo ao PromptLabz! 🎉
+                  </p>
+                  <p className="mt-1 text-xs text-foreground-tertiary leading-relaxed">
+                    Comece pela primeira lição e ganhe seus primeiros XP. São só 10 minutos!
+                  </p>
+                </div>
+              </div>
+              <Link
+                to="/lesson?track=a1"
+                className="flex items-center justify-center gap-2 w-full rounded-xl bg-emerald py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-dark"
+              >
+                Começar agora
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
           <DailyTipCard tip={dailyTip.text} />
 
           <div className="rounded-2xl bg-gradient-to-br from-forest to-emerald-dark p-5 text-white shadow-lg shadow-forest/20">

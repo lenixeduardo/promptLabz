@@ -210,7 +210,16 @@ export default function Ranking() {
       setLoading(false)
     }
 
-    buildRanking()
+    buildRanking().catch(() => {
+      setRankedUsers(MOCK_ENTRIES.map((entry, i) => ({
+        ...entry,
+        position: i + 1,
+        isCurrentUser: false,
+        level: getLevel(entry.xp),
+        levelTitle: getLevelTitle(getLevel(entry.xp)),
+      })))
+      setLoading(false)
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id])
 
