@@ -49,6 +49,8 @@ export default function Notifications() {
       if (data && data.some((n) => n.read_at === null)) {
         markNotificationsRead(user.id!)
       }
+    }).catch(() => {
+      setLoading(false)
     })
   }, [user?.id])
 

@@ -228,6 +228,13 @@ function SkillsTab() {
       </p>
 
       {/* Skills list */}
+      {filtered.length === 0 && search.trim() && (
+        <div className="flex flex-col items-center gap-2 py-10 text-center">
+          <Icons.Search className="h-8 w-8 text-foregroundMuted" />
+          <p className="text-sm font-semibold text-foregroundDark dark:text-white">Nenhuma skill encontrada</p>
+          <p className="text-xs text-foregroundMuted">Tente um termo diferente</p>
+        </div>
+      )}
       <div className="flex flex-col gap-2 pb-4">
         {filtered.map(skill => (
           <button
@@ -325,6 +332,13 @@ function PromptsTab() {
       </p>
 
       {/* Prompt cards */}
+      {filtered.length === 0 && search.trim() && (
+        <div className="flex flex-col items-center gap-2 py-10 text-center">
+          <Icons.Search className="h-8 w-8 text-foregroundMuted" />
+          <p className="text-sm font-semibold text-foregroundDark dark:text-white">Nenhum prompt encontrado</p>
+          <p className="text-xs text-foregroundMuted">Tente um termo diferente</p>
+        </div>
+      )}
       <div className="flex flex-col gap-3 pb-4">
         {filtered.map((prompt, idx) => {
           const iconKey = PROMPT_ICONS[prompt.category] ?? "Lightbulb"
@@ -447,6 +461,13 @@ function TemplatesTab() {
       </p>
 
       {/* Template cards */}
+      {filtered.length === 0 && search.trim() && (
+        <div className="flex flex-col items-center gap-2 py-10 text-center">
+          <Icons.Search className="h-8 w-8 text-foregroundMuted" />
+          <p className="text-sm font-semibold text-foregroundDark dark:text-white">Nenhum template encontrado</p>
+          <p className="text-xs text-foregroundMuted">Tente um termo diferente</p>
+        </div>
+      )}
       <div className="flex flex-col gap-4 pb-4">
         {filtered.map(template => (
           <div
