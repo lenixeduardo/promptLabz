@@ -83,7 +83,7 @@ export function SkillCard({
         <div className="flex items-center justify-between">
           <div className="flex flex-wrap gap-1">
             {skill.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="rounded-full bg-[#F4F9F5] px-2 py-0.5 text-[10px] font-medium text-primary-dark">
+              <span key={tag} className="rounded-full bg-surface-soft px-2 py-0.5 text-[10px] font-medium text-primary-dark">
                 {tag}
               </span>
             ))}

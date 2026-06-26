@@ -211,7 +211,7 @@ export default function Skills() {
             onClick={() => { setViewMode("all"); setActiveSkillCat("Todas") }}
             className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "all"
-                ? "border-primary-dark bg-primary-dark text-white"
+                ? "border-primary-dark bg-primary-dark text-white dark:border-emerald dark:bg-emerald dark:text-[#0A1F12]"
                 : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
             }`}
           >
@@ -223,12 +223,12 @@ export default function Skills() {
             onClick={() => setViewMode("favorites")}
             className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "favorites"
-                ? "border-primary-dark bg-primary-dark text-white"
+                ? "border-primary-dark bg-primary-dark text-white dark:border-emerald dark:bg-emerald dark:text-[#0A1F12]"
                 : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
             }`}
           >
             <Icons.Heart
-              className={`h-4 w-4 ${viewMode === "favorites" ? "fill-white" : ""}`}
+              className={`h-4 w-4 ${viewMode === "favorites" ? "fill-white dark:fill-[#0A1F12]" : ""}`}
             />
             Favoritas
             <CountBadge count={favorites.length} />
@@ -237,7 +237,7 @@ export default function Skills() {
             onClick={() => setViewMode("ranking")}
             className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
               viewMode === "ranking"
-                ? "border-primary-dark bg-primary-dark text-white"
+                ? "border-primary-dark bg-primary-dark text-white dark:border-emerald dark:bg-emerald dark:text-[#0A1F12]"
                 : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
             }`}
           >
@@ -291,7 +291,7 @@ export default function Skills() {
               onClick={() => setActiveSkillCat("Todas")}
               className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                 activeSkillCat === "Todas"
-                  ? "border-primary-dark bg-primary-dark text-white"
+                  ? "border-primary-dark bg-primary-dark text-white dark:border-emerald dark:bg-emerald dark:text-[#0A1F12]"
                   : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
               }`}
             >
@@ -308,7 +308,7 @@ export default function Skills() {
                   onClick={() => setActiveSkillCat(label)}
                   className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                     isActive
-                      ? "border-primary-dark bg-primary-dark text-white"
+                      ? "border-primary-dark bg-primary-dark text-white dark:border-emerald dark:bg-emerald dark:text-[#0A1F12]"
                       : "border-stroke-light bg-white text-primary-dark hover:bg-pageBgLight"
                   }`}
                 >
