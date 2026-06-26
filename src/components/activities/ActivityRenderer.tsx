@@ -91,7 +91,7 @@ export function ActivityRenderer({
           alt=""
           className="h-14 w-14 shrink-0 object-contain"
         />
-        <div className="relative rounded-2xl rounded-tl-none border-2 border-stroke-light bg-card px-4 py-3 shadow-sm">
+        <div className="relative rounded-2xl rounded-tl-none border-2 border-stroke-light bg-card px-4 py-3 shadow-sm dark:border-emerald-dark/30 dark:bg-surface-soft">
           <p className="text-sm font-bold text-foreground-dark">
             {isFillBlank(activity)
               ? "Complete a frase abaixo:"
