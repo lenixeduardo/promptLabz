@@ -198,7 +198,7 @@ export default function Skills() {
               className="flex-1 bg-transparent text-sm text-foregroundDark placeholder:text-foregroundPlaceholder focus:outline-none"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery("")} className="rounded-full p-1 text-foregroundMuted hover:bg-pageBgLight">
+              <button onClick={() => setSearchQuery("")} aria-label="Limpar busca" className="rounded-full p-1 text-foregroundMuted hover:bg-pageBgLight">
                 <Icons.X className="h-4 w-4" />
               </button>
             )}

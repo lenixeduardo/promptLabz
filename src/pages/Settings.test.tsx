@@ -1,13 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { render, screen } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter } from "react-router-dom"
-import { HelmetProvider } from "react-helmet-async"
 import Settings from "./Settings"
 
-// Mock only external dependencies — NOT the Switch so snapshot captures real Radix UI
+const mockLogout = vi.fn()
+const mockNavigate = vi.fn()
+
+vi.mock("react-router-dom", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-router-dom")>()
+  return { ...actual, useNavigate: () => mockNavigate }
+})
+
 vi.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ user: { id: "test-user" }, logout: vi.fn() }),
+  useAuth: () => ({ user: { id: "test-user" }, logout: mockLogout }),
 }))
 
 vi.mock("@/components/AppBottomNav", () => ({
@@ -15,117 +21,108 @@ vi.mock("@/components/AppBottomNav", () => ({
 }))
 
 vi.mock("@/components/AppPageHeader", () => ({
-  AppPageHeader: ({ title }: any) => <div data-testid="app-page-header">{title}</div>,
+  AppPageHeader: ({ title }: { title: string }) => (
+    <div data-testid="app-page-header">{title}</div>
+  ),
 }))
 
-vi.mock("@/components/ThemeToggle", () => ({
-  ThemeToggle: () => <div data-testid="theme-toggle" />,
-}))
-
-vi.mock("sileo", () => ({
-  sileo: { success: vi.fn(), error: vi.fn() },
-  Toaster: () => null,
-}))
-
-let mockReminderEnabled = true
-
-vi.mock("@/hooks/useInactiveReminder", () => ({
-  getReminderEnabled: () => mockReminderEnabled,
-  setReminderEnabled: vi.fn(),
+vi.mock("@/components/ReviewModal", () => ({
+  ReviewModal: ({ open }: { open: boolean; onOpenChange: (v: boolean) => void }) =>
+    open ? <div data-testid="review-modal" /> : null,
 }))
 
 function renderSettings() {
   return render(
-    <HelmetProvider>
-      <MemoryRouter>
-        <Settings />
-      </MemoryRouter>
-    </HelmetProvider>,
+    <MemoryRouter>
+      <Settings />
+    </MemoryRouter>,
   )
 }
 
 beforeEach(() => {
-  localStorage.clear()
-  mockReminderEnabled = true
+  vi.clearAllMocks()
 })
 
-describe("Settings — toggles", () => {
-  it("renderiza 3 switches (notificações, som, lembrete)", () => {
+describe("Settings — renderização", () => {
+  it("renderiza o header com título 'Configurações'", () => {
     renderSettings()
-    const switches = screen.getAllByRole("switch")
-    expect(switches).toHaveLength(3)
+    expect(screen.getByTestId("app-page-header")).toHaveTextContent("Configurações")
   })
 
-  it("todos os switches iniciam no estado 'checked' quando habilitados", () => {
+  it("renderiza a seção 'Acesso Rápido'", () => {
     renderSettings()
-    const switches = screen.getAllByRole("switch")
-    switches.forEach((s) => {
-      expect(s).toHaveAttribute("data-state", "checked")
-    })
+    expect(screen.getByText(/acesso rápido/i)).toBeInTheDocument()
   })
 
-  it("switch de lembrete inicia 'checked' por padrão", () => {
+  it("renderiza o botão 'Configurar Back Tap'", () => {
     renderSettings()
-    const switches = screen.getAllByRole("switch")
-    expect(switches[2]).toHaveAttribute("data-state", "checked")
+    expect(screen.getByText("Configurar Back Tap")).toBeInTheDocument()
   })
 
-  it("alterna para 'unchecked' ao clicar no switch", async () => {
+  it("renderiza o botão 'Abrir Ajustes'", () => {
+    renderSettings()
+    expect(screen.getByRole("button", { name: /abrir ajustes/i })).toBeInTheDocument()
+  })
+
+  it("renderiza os 4 passos do Back Tap", () => {
+    renderSettings()
+    expect(screen.getByText(/abra o app atalhos/i)).toBeInTheDocument()
+    expect(screen.getByText(/novo atalho.*abrir url/i)).toBeInTheDocument()
+    expect(screen.getByText(/ajustes.*acessibilidade/i)).toBeInTheDocument()
+    expect(screen.getByText(/back tap.*toque duplo/i)).toBeInTheDocument()
+  })
+
+  it("renderiza o botão de logout", () => {
+    renderSettings()
+    expect(screen.getByRole("button", { name: /sair da conta/i })).toBeInTheDocument()
+  })
+
+  it("renderiza a seção de feedback com 'Avalie nosso projeto'", () => {
+    renderSettings()
+    expect(screen.getByText(/avalie nosso projeto/i)).toBeInTheDocument()
+  })
+
+  it("renderiza a versão do app", () => {
+    renderSettings()
+    expect(screen.getByText(/promptlabz.*v0\.3/i)).toBeInTheDocument()
+  })
+
+  it("renderiza a bottom nav", () => {
+    renderSettings()
+    expect(screen.getByTestId("app-bottom-nav")).toBeInTheDocument()
+  })
+})
+
+describe("Settings — logout", () => {
+  it("chama logout e navega para /login ao clicar em 'Sair da conta'", async () => {
+    mockLogout.mockResolvedValue(undefined)
     const user = userEvent.setup()
     renderSettings()
-    const switches = screen.getAllByRole("switch")
 
-    await user.click(switches[0])
-    expect(switches[0]).toHaveAttribute("data-state", "unchecked")
+    await user.click(screen.getByRole("button", { name: /sair da conta/i }))
+
+    await waitFor(() => expect(mockLogout).toHaveBeenCalledOnce())
+    expect(mockNavigate).toHaveBeenCalledWith("/login")
   })
 
-  it("alterna para 'checked' novamente ao clicar duas vezes", async () => {
+  it("exibe 'Saindo...' enquanto logout está em andamento", async () => {
+    mockLogout.mockImplementation(() => new Promise(() => {}))
     const user = userEvent.setup()
     renderSettings()
-    const switches = screen.getAllByRole("switch")
 
-    await user.click(switches[0])
-    expect(switches[0]).toHaveAttribute("data-state", "unchecked")
+    await user.click(screen.getByRole("button", { name: /sair da conta/i }))
 
-    await user.click(switches[0])
-    expect(switches[0]).toHaveAttribute("data-state", "checked")
-  })
-
-  it("renderiza switch de lembrete como 'unchecked' quando desabilitado nas preferências", () => {
-    mockReminderEnabled = false
-    renderSettings()
-    const switches = screen.getAllByRole("switch")
-    // O terceiro switch (lembrete diário) deve estar unchecked
-    expect(switches[2]).toHaveAttribute("data-state", "unchecked")
+    expect(screen.getByRole("button", { name: /saindo/i })).toBeDisabled()
   })
 })
 
-describe("Settings — snapshot", () => {
-  it("corresponde ao snapshot com todos os toggles habilitados", () => {
-    const { container } = renderSettings()
-    expect(container).toMatchSnapshot()
-  })
-
-  it("corresponde ao snapshot com lembrete diário desabilitado", () => {
-    mockReminderEnabled = false
-    const { container } = renderSettings()
-    expect(container).toMatchSnapshot()
-  })
-})
-
-describe("Settings — labels", () => {
-  it("exibe o label 'Notificações push'", () => {
+describe("Settings — modal de avaliação", () => {
+  it("abre o ReviewModal ao clicar em 'Avalie nosso projeto'", async () => {
+    const user = userEvent.setup()
     renderSettings()
-    expect(screen.getByText("Notificações push")).toBeInTheDocument()
-  })
 
-  it("exibe o label 'Sons e efeitos'", () => {
-    renderSettings()
-    expect(screen.getByText("Sons e efeitos")).toBeInTheDocument()
-  })
-
-  it("exibe o label 'Lembrete diário (streak)'", () => {
-    renderSettings()
-    expect(screen.getByText("Lembrete diário (streak)")).toBeInTheDocument()
+    expect(screen.queryByTestId("review-modal")).not.toBeInTheDocument()
+    await user.click(screen.getByText(/avalie nosso projeto/i))
+    expect(screen.getByTestId("review-modal")).toBeInTheDocument()
   })
 })
