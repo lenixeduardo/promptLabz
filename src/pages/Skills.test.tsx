@@ -74,11 +74,9 @@ describe("Skills — busca", () => {
     const input = screen.getByPlaceholderText(/buscar skills por nome/i)
 
     await userEvent.type(input, "teste")
-    const clearBtn = screen.getByRole("button", { name: "" })
-    // The X button appears when there's text
     expect(input).toHaveValue("teste")
 
-    await userEvent.clear(input)
+    await userEvent.click(screen.getByRole("button", { name: /limpar busca/i }))
     expect(input).toHaveValue("")
   })
 
