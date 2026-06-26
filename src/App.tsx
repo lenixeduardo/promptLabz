@@ -68,6 +68,7 @@ const PromptAnalyzer = lazy(() => import("@/pages/PromptAnalyzer"))
 const PromptEnhancer = lazy(() => import("@/pages/PromptEnhancer"))
 const Roadmap = lazy(() => import("@/pages/Roadmap"))
 const Settings = lazy(() => import("@/pages/Settings"))
+const BackTapConfig = lazy(() => import("@/pages/BackTapConfig"))
 const Community = lazy(() => import("@/pages/Community"))
 const Verify = lazy(() => import("@/pages/Verify"))
 const Terms = lazy(() => import("@/pages/Terms"))
@@ -496,6 +497,14 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <Settings />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/settings/back-tap"
+                element={
+                  <PrivateRoute>
+                    <BackTapConfig />
                   </PrivateRoute>
                 }
               />
