@@ -205,6 +205,14 @@ export function completeMission(id: string): void {
   if (stored.completed[id]) return
   stored.completed[id] = true
   writeMissionsStorage(stored)
+  const mission = MISSIONS.find((m) => m.id === id)
+  if (mission) {
+    const uid = getUserId()
+    if (uid) {
+      saveLocalXP(uid, getLocalXP(uid) + mission.xp)
+      window.dispatchEvent(new CustomEvent(XP_UPDATE_EVENT))
+    }
+  }
   window.dispatchEvent(new CustomEvent(MISSION_UPDATE_EVENT))
 }
 

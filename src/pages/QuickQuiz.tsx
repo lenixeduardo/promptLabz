@@ -1,6 +1,8 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { completeMission } from "@/lib/missions"
+import { getUserId } from "@/lib/userScope"
+import { getLocalXP, saveLocalXP, XP_UPDATE_EVENT } from "@/lib/xp"
 import { X, Zap, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MascotGlow } from "@/components/MascotGlow"
@@ -156,9 +158,15 @@ export default function QuickQuiz() {
     if (isLast) {
       const finalScore = score + (confirmed && selected === currentQuestion.correct ? 1 : 0)
       const timeElapsed = Math.round((Date.now() - startTime.current) / 1000)
+      const xpEarned = finalScore * 50
       completeMission("quiz")
+      const uid = getUserId()
+      if (uid) {
+        saveLocalXP(uid, getLocalXP(uid) + xpEarned)
+        window.dispatchEvent(new Event(XP_UPDATE_EVENT))
+      }
       navigate("/quiz-result", {
-        state: { score: finalScore, total, timeElapsed, xpEarned: finalScore * 50 },
+        state: { score: finalScore, total, timeElapsed, xpEarned },
       })
       return
     }
