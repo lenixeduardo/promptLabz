@@ -1,45 +1,53 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
+  Bell,
+  Globe,
+  Volume2,
+  Shield,
+  HelpCircle,
   LogOut,
   ChevronRight,
-  ExternalLink,
-  Link as LinkIcon,
-  Settings as SettingsIcon,
-  Hand,
+  Map,
+  Award,
+  Sparkles,
+  Smartphone,
   Star,
   Heart,
-  Smartphone,
 } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { AppPageHeader } from "@/components/AppPageHeader";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { Switch } from "@/components/ui/switch";
 import { ReviewModal } from "@/components/ReviewModal";
 import { useAuth } from "@/hooks/useAuth";
+import { getReminderEnabled, setReminderEnabled } from "@/hooks/useInactiveReminder";
 
-const BACK_TAP_STEPS = [
-  {
-    icon: <LinkIcon className="h-5 w-5 text-emerald" strokeWidth={2.5} />,
-    text: "Abra o app Atalhos no iPhone",
-  },
-  {
-    icon: <LinkIcon className="h-5 w-5 text-emerald" strokeWidth={2.5} />,
-    text: "Novo atalho → Abrir URL → https://promptlabz.com/?action=enhance",
-  },
-  {
-    icon: <SettingsIcon className="h-5 w-5 text-emerald" strokeWidth={2.5} />,
-    text: "Ajustes → Acessibilidade → Toque",
-  },
-  {
-    icon: <Hand className="h-5 w-5 text-emerald" strokeWidth={2.5} />,
-    text: "Back Tap → Toque Duplo → seu atalho",
-  },
-];
+const NOTIF_KEY = "promptlabz:settings:notif";
+const SOUND_KEY = "promptlabz:settings:sound";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const [notif, setNotifState] = useState(() => localStorage.getItem(NOTIF_KEY) !== "false");
+  const [sound, setSoundState] = useState(() => localStorage.getItem(SOUND_KEY) !== "false");
+  const [reminders, setReminders] = useState(() => getReminderEnabled());
   const [loggingOut, setLoggingOut] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+
+  function setNotif(value: boolean) {
+    setNotifState(value);
+    localStorage.setItem(NOTIF_KEY, String(value));
+  }
+
+  function setSound(value: boolean) {
+    setSoundState(value);
+    localStorage.setItem(SOUND_KEY, String(value));
+  }
+
+  useEffect(() => {
+    setReminderEnabled(reminders);
+  }, [reminders]);
 
   async function handleLogout() {
     setLoggingOut(true);
@@ -51,7 +59,6 @@ export default function SettingsPage() {
     <div className="relative flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
       <AppPageHeader title="Configurações" back="/profile" />
 
-      {/* Mascote flutuante sobrepõe o header no canto superior direito */}
       <img
         src="/assets/mascot-settings.png"
         alt=""
@@ -59,57 +66,118 @@ export default function SettingsPage() {
         className="pointer-events-none absolute right-2 top-0 z-20 w-36 object-contain"
       />
 
-      <div className="mx-auto w-full max-w-lg space-y-4 px-4 py-5">
-        {/* ACESSO RÁPIDO */}
-        <section>
-          <p className="mb-3 text-[11px] font-extrabold uppercase tracking-wider text-emerald">
-            Acesso Rápido
+      <div className="mx-auto w-full max-w-lg space-y-5 px-4 py-5">
+        {/* Preferências */}
+        <section className="rounded-2xl border-2 border-stroke-light bg-card">
+          <p className="px-4 pt-4 text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+            Preferências
           </p>
-
-          <div className="rounded-2xl border-2 border-stroke-light bg-card">
-            {/* Back Tap header card */}
-            <button className="flex w-full items-center gap-3 px-4 py-4 text-left">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-surface-soft">
-                <Smartphone className="h-5 w-5 text-foreground-dark" strokeWidth={2} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-foreground-dark">Configurar Back Tap</p>
-                <p className="mt-0.5 text-xs leading-relaxed text-foreground-muted">
-                  Ative o aprimoramento rápido com 2 toques na parte traseira do iPhone
-                </p>
-              </div>
-              <ChevronRight className="h-4 w-4 flex-shrink-0 text-foreground-tertiary" />
-            </button>
-
-            {/* Steps list */}
-            <div className="space-y-3 border-t border-stroke-muted px-4 py-4">
-              {BACK_TAP_STEPS.map((step, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald text-[11px] font-extrabold text-white">
-                    {i + 1}
-                  </div>
-                  <p className="flex-1 pt-0.5 text-xs leading-relaxed text-foreground-dark">
-                    {step.text}
-                  </p>
-                  <div className="flex-shrink-0 pt-0.5">{step.icon}</div>
-                </div>
-              ))}
+          <div className="divide-y divide-stroke-muted">
+            <div className="flex items-center gap-3 px-4 py-3">
+              <Bell className="h-5 w-5 text-emerald" />
+              <span className="flex-1 text-sm font-semibold text-foreground-dark">
+                Notificações push
+              </span>
+              <Switch checked={notif} onCheckedChange={setNotif} />
             </div>
-
-            {/* Open Settings button */}
-            <div className="px-4 pb-4">
-              <button
-                onClick={() => window.open("App-prefs:", "_blank")}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald py-3 text-sm font-bold text-emerald hover:bg-surface-success transition-colors"
-              >
-                Abrir Ajustes
-                <ExternalLink className="h-4 w-4" />
-              </button>
+            <div className="flex items-center gap-3 px-4 py-3">
+              <Volume2 className="h-5 w-5 text-emerald" />
+              <span className="flex-1 text-sm font-semibold text-foreground-dark">
+                Sons e efeitos
+              </span>
+              <Switch checked={sound} onCheckedChange={setSound} />
+            </div>
+            <div className="flex items-center gap-3 px-4 py-3">
+              <Sparkles className="h-5 w-5 text-emerald" />
+              <span className="flex-1 text-sm font-semibold text-foreground-dark">
+                Lembrete diário (streak)
+              </span>
+              <Switch checked={reminders} onCheckedChange={setReminders} />
+            </div>
+            <div className="flex items-center gap-3 px-4 py-3">
+              <Globe className="h-5 w-5 text-emerald" />
+              <span className="flex-1 text-sm font-semibold text-foreground-dark">
+                Idioma
+              </span>
+              <span className="text-xs font-semibold text-foreground-tertiary">
+                Português (BR)
+              </span>
+            </div>
+            <div className="flex items-center gap-3 px-4 py-3">
+              <span className="flex-1 text-sm font-semibold text-foreground-dark">Tema</span>
+              <ThemeToggle />
             </div>
           </div>
         </section>
 
-        {/* Sign out */}
+        {/* Conta */}
+        <section className="rounded-2xl border-2 border-stroke-light bg-card">
+          <p className="px-4 pt-4 text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+            Conta
+          </p>
+          <div className="divide-y divide-stroke-muted">
+            <Link
+              to="/certificates"
+              className="flex items-center gap-3 px-4 py-3 hover:bg-surface-soft"
+            >
+              <Award className="h-5 w-5 text-emerald" />
+              <span className="flex-1 text-sm font-semibold text-foreground-dark">
+                Meus certificados
+              </span>
+              <ChevronRight className="h-4 w-4 text-foreground-tertiary" />
+            </Link>
+            <Link
+              to="/roadmap"
+              className="flex items-center gap-3 px-4 py-3 hover:bg-surface-soft"
+            >
+              <Map className="h-5 w-5 text-emerald" />
+              <span className="flex-1 text-sm font-semibold text-foreground-dark">
+                Roadmap do produto
+              </span>
+              <ChevronRight className="h-4 w-4 text-foreground-tertiary" />
+            </Link>
+            <Link
+              to="/premium"
+              className="flex items-center gap-3 px-4 py-3 hover:bg-surface-soft"
+            >
+              <Shield className="h-5 w-5 text-luxury" />
+              <span className="flex-1 text-sm font-semibold text-foreground-dark">
+                Assinatura Premium
+              </span>
+              <ChevronRight className="h-4 w-4 text-foreground-tertiary" />
+            </Link>
+            <button className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-surface-soft">
+              <HelpCircle className="h-5 w-5 text-emerald" />
+              <span className="flex-1 text-sm font-semibold text-foreground-dark">
+                Ajuda e suporte
+              </span>
+              <ChevronRight className="h-4 w-4 text-foreground-tertiary" />
+            </button>
+          </div>
+        </section>
+
+        {/* Acesso Rápido */}
+        <section className="rounded-2xl border-2 border-stroke-light bg-card">
+          <p className="px-4 pt-4 text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+            Acesso Rápido
+          </p>
+          <div className="divide-y divide-stroke-muted">
+            <Link
+              to="/settings/back-tap"
+              className="flex items-center gap-3 px-4 py-3 hover:bg-surface-soft"
+            >
+              <Smartphone className="h-5 w-5 text-emerald" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground-dark">Configurar Back Tap</p>
+                <p className="text-xs text-foreground-muted">
+                  Aprimoramento rápido com 2 toques no iPhone
+                </p>
+              </div>
+              <ChevronRight className="h-4 w-4 text-foreground-tertiary" />
+            </Link>
+          </div>
+        </section>
+
         <button
           type="button"
           onClick={handleLogout}
@@ -120,11 +188,9 @@ export default function SettingsPage() {
           {loggingOut ? "Saindo..." : "Sair da conta"}
         </button>
 
-        <p className="text-center text-[11px] text-foreground-tertiary">
-          PromptLabz · v0.3 MVP
-        </p>
+        <p className="text-center text-[11px] text-foreground-tertiary">PromptLabz · v0.3 MVP</p>
 
-        {/* FEEDBACK */}
+        {/* Feedback */}
         <section>
           <p className="mb-3 text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
             Feedback
