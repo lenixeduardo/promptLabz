@@ -37,7 +37,7 @@ export default function SkillDetail() {
         <Icons.Frown className="h-16 w-16 text-foregroundMuted" />
         <h1 className="text-xl font-bold text-foregroundDark">Skill não encontrada</h1>
         <p className="text-sm text-foregroundMuted">A skill que você procura não está disponível.</p>
-        <Button onClick={() => navigate("/skills")}>Voltar para Skills</Button>
+        <Button onClick={() => navigate("/lab")}>Voltar para Skills</Button>
       </div>
     )
   }
