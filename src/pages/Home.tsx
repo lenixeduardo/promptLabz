@@ -64,10 +64,24 @@ const TRACKS: TrackInfo[] = [
       "Prompts para código",
       "Automação com IA",
       "Prompts para negócios",
-      "Workflows com agentes",
+      "Fluxos com agentes (Workflows)",
       "Avaliação & métricas",
-      "Segurança e guardrails",
+      "Segurança e proteções (Guardrails)",
       "Projeto final",
+      "Usando agentes de IA (Agents)",
+      "Usando OpenRouter",
+      "Modelos locais (Local Models)",
+      "Claude Code na prática",
+      "Habilidades (Skills) no Claude Code",
+      "Personalizar modelos prontos (Templates)",
+      "O que é API key",
+      "Migrations e banco de dados",
+      "Health check (banco e backend)",
+      "Cron jobs para automações",
+      "Node.js — O que é e para que serve",
+      "Git Bash — Terminal e versionamento",
+      "npm — Gerenciador de pacotes",
+      "Skills em LLMs — Como usar",
     ],
   },
 ];
@@ -200,16 +214,17 @@ export default function HomePage() {
       <div className="flex flex-col min-h-screen bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
         <div className="bg-card border-b border-stroke-muted px-4 py-3 flex items-center justify-between sticky top-0 z-10">
           <div>
-            <h1 className="text-lg font-bold text-primary-dark">Olá, Explorador! 👋</h1>
+            <h1 className="text-lg font-bold text-primary-dark">Olá, {user?.user_metadata?.full_name?.split(" ")[0] ?? "Explorador"}! 👋</h1>
             <p className="text-xs text-foreground-tertiary">Pronto para mais um desafio?</p>
           </div>
           <div className="flex items-center gap-2">
-            <button
+            <Link
+              to="/favorites"
               className="flex items-center justify-center rounded-full border border-stroke-light bg-card/70 p-2 shadow-sm text-forest hover:bg-surface-soft transition-colors"
               aria-label="Favoritos"
             >
               <Heart className="h-5 w-5" strokeWidth={2.2} />
-            </button>
+            </Link>
             <NotificationsBell />
             <img
               src={equipped.image}

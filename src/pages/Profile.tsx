@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { Settings, ChevronRight, Zap, BookOpen, Edit2, Heart, Crown, Flame } from "lucide-react"
 import { ThemeToggle } from "@/components/ThemeToggle"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
 import { useAvatar } from "@/components/AvatarProvider"
@@ -198,7 +198,7 @@ export default function Profile() {
         </div>
       </div>
 
-      <BottomNav active="perfil" />
+      <AppBottomNav />
     </div>
   )
 }

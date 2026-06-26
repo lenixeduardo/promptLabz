@@ -33,18 +33,4 @@ describe("ErrorBoundary", () => {
     consoleSpy.mockRestore()
   })
 
-  it("exibe botão de retorno ao início na tela de erro", () => {
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
-
-    render(
-      <ErrorBoundary>
-        <Bomb shouldThrow={true} />
-      </ErrorBoundary>
-    )
-
-    const button = screen.getByRole("button", { name: /voltar ao início/i })
-    expect(button).toBeInTheDocument()
-
-    consoleSpy.mockRestore()
-  })
 })

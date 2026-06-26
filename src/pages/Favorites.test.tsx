@@ -14,7 +14,7 @@ function renderFavorites(initialRoute = "/favorites") {
     <MemoryRouter initialEntries={[initialRoute]}>
       <Routes>
         <Route path="/favorites" element={<Favorites />} />
-        <Route path="/skills" element={<div>Skills Page</div>} />
+        <Route path="/lab" element={<div>Lab Page</div>} />
         <Route path="/learn" element={<div>Learn Page</div>} />
         <Route path="/home" element={<div>Home Page</div>} />
       </Routes>
@@ -83,7 +83,7 @@ describe("Favorites — interação", () => {
     renderFavorites()
     await userEvent.click(screen.getByText("Explorar conteúdo"))
     await waitFor(() => {
-      expect(screen.getByText("Skills Page")).toBeInTheDocument()
+      expect(screen.getByText("Lab Page")).toBeInTheDocument()
     })
   })
 
@@ -91,7 +91,7 @@ describe("Favorites — interação", () => {
     renderFavorites()
     await userEvent.click(screen.getByText("Explorar conteúdos"))
     await waitFor(() => {
-      expect(screen.getByText("Skills Page")).toBeInTheDocument()
+      expect(screen.getByText("Lab Page")).toBeInTheDocument()
     })
   })
 })

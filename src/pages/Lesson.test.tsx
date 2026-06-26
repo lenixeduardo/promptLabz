@@ -3,6 +3,36 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import Lesson from "./Lesson"
 
+vi.mock("@/hooks/useAuth", () => ({
+  useAuth: () => ({ user: { id: "user-1", email: "aluno@test.com" } }),
+}))
+
+vi.mock("@/contexts/useLives", () => ({
+  useLives: () => ({
+    lives: 5,
+    maxLives: 5,
+    canPlay: true,
+    msUntilNextLife: () => 0,
+    consumeLife: vi.fn(),
+    awardPerfectBonus: vi.fn(),
+  }),
+}))
+
+vi.mock("@/hooks/useAchievements", () => ({
+  useAchievements: () => ({
+    checkLessonComplete: vi.fn().mockReturnValue([]),
+  }),
+}))
+
+vi.mock("@/lib/xp", () => ({
+  saveLocalXP: vi.fn(),
+  saveLocalGems: vi.fn(),
+  getLocalXP: vi.fn().mockReturnValue(0),
+  getLocalGems: vi.fn().mockReturnValue(0),
+  XP_UPDATE_EVENT: "promptlabz:xp-updated",
+  GEMS_UPDATE_EVENT: "promptlabz:gems-updated",
+}))
+
 vi.mock("@/lib/moduleProgress", () => ({
   advanceModule: vi.fn(),
   useModuleProgress: vi.fn().mockReturnValue(0),

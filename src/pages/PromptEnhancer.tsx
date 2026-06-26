@@ -464,9 +464,23 @@ export default function PromptEnhancerPage() {
                   Pontuação do prompt
                 </p>
                 <CircularScore score={result.enhancedScore} />
-                <p className="mt-3 text-sm font-extrabold text-emerald">Excelente! ✨</p>
+                <p className={cn(
+                  "mt-3 text-sm font-extrabold",
+                  result.enhancedScore >= 85 ? "text-emerald" :
+                  result.enhancedScore >= 65 ? "text-yellow-500" :
+                  result.enhancedScore >= 40 ? "text-orange-400" :
+                  "text-red-400"
+                )}>
+                  {result.enhancedScore >= 85 ? "Excelente! ✨" :
+                   result.enhancedScore >= 65 ? "Bom trabalho! 👍" :
+                   result.enhancedScore >= 40 ? "Pode melhorar 📝" :
+                   "Prompt fraco ⚠️"}
+                </p>
                 <p className="mt-1 px-1 text-[9px] leading-tight text-foreground-tertiary text-center">
-                  Seu prompt alcançou a pontuação máxima
+                  {result.enhancedScore >= 85 ? "Seu prompt está com ótima qualidade." :
+                   result.enhancedScore >= 65 ? "Seu prompt tem boas práticas, mas pode melhorar." :
+                   result.enhancedScore >= 40 ? "Seu prompt precisa de ajustes para ser mais eficaz." :
+                   "Revise a estrutura do seu prompt seguindo as sugestões."}
                 </p>
               </div>
 

@@ -136,7 +136,7 @@ describe("Retry Logic Tests", () => {
 
     it("disables retries in test environment", () => {
       const isTestEnvironment = import.meta.env.VITEST
-      const shouldRetry = 0 < 3 && !isTestEnvironment
+      const shouldRetry = !isTestEnvironment
 
       // In test environment, shouldRetry should be false
       expect(shouldRetry).toBe(false)

@@ -16,6 +16,10 @@ import type { LessonActivity } from "@/lib/lessonContent";
 import { ActivityRenderer } from "@/components/activities/ActivityRenderer";
 import { scopedKey } from "@/lib/userScope";
 import { completeMission } from "@/lib/missions";
+import { useAuth } from "@/hooks/useAuth";
+import { useLives } from "@/contexts/useLives";
+import { useAchievements } from "@/hooks/useAchievements";
+import { saveLocalXP, saveLocalGems, getLocalXP, getLocalGems, XP_UPDATE_EVENT, GEMS_UPDATE_EVENT } from "@/lib/xp";
 
 const proofKey = (track: TrackId, module: number) =>
   scopedKey(`promptlabz:proof:${track}:${module}`);
@@ -34,6 +38,10 @@ export default function LessonPage() {
   const track = (searchParams.get("track") as TrackId) || "a1";
   const module = parseInt(searchParams.get("module") || "0", 10);
 
+  const { user } = useAuth();
+  const { lives, consumeLife, awardPerfectBonus } = useLives();
+  const { checkLessonComplete } = useAchievements();
+
   const ACTIVITIES = useMemo(() => getActivities(track, module), [track, module]);
   const proofTask = useMemo(() => getProofTask(track, module), [track, module]);
   const [step, setStep] = useState(0);
@@ -42,6 +50,8 @@ export default function LessonPage() {
   const [matchOrderAnswers, setMatchOrderAnswers] = useState<Record<string, Record<string, string>>>({});
   const [proofDataUrl, setProofDataUrl] = useState<string | null>(() => readProof(track, module));
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const rewardGrantedRef = useRef(false);
+  const scoreRef = useRef(0);
 
   useEffect(() => {
     setProofDataUrl(readProof(track, module));
@@ -80,10 +90,18 @@ export default function LessonPage() {
     return acc + (answer === (activity as any).correct ? 1 : 0)
   }, 0)
 
+  // Keep scoreRef in sync so the lessonComplete effect reads the latest value
+  useEffect(() => { scoreRef.current = score }, [score]);
+
   function pick(id: string) {
     if (answered || !currentActivity) return
     setSelected(id)
     setAnswers((prev) => ({ ...prev, [currentActivity.id]: id }))
+    // Consume a life when the user picks a wrong answer on MC/fill-blank
+    const correct = (currentActivity as any).correct as string | undefined
+    if (correct && id !== correct) {
+      consumeLife()
+    }
   }
 
   function handleMatchAnswer(pairs: Record<string, string>) {
@@ -144,10 +162,24 @@ export default function LessonPage() {
   const isLastLesson = module === TRACK_TOTALS[track] - 1;
 
   useEffect(() => {
-    if (lessonComplete) {
-      advanceModule(TRACK_TOTALS[track], track);
-      completeMission("lesson");
+    if (!lessonComplete || rewardGrantedRef.current) return;
+    rewardGrantedRef.current = true;
+    advanceModule(TRACK_TOTALS[track], track);
+    completeMission("lesson");
+    // Save XP and gems earned in this lesson
+    if (user?.id) {
+      const earned = scoreRef.current;
+      const xpGain = earned * 25;
+      const gemGain = earned * 3;
+      saveLocalXP(user.id, getLocalXP(user.id) + xpGain);
+      saveLocalGems(user.id, getLocalGems(user.id) + gemGain);
+      window.dispatchEvent(new Event(XP_UPDATE_EVENT));
+      window.dispatchEvent(new Event(GEMS_UPDATE_EVENT));
     }
+    // Check achievements (lessonComplete implies perfect == true)
+    checkLessonComplete(true);
+    // Award a bonus life for perfect completion
+    awardPerfectBonus();
   }, [lessonComplete, track]);
 
   if (finished && needsProof && !proofDone) {
@@ -325,7 +357,7 @@ export default function LessonPage() {
           />
         </div>
         <div className="flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-sm font-bold text-red-500">
-          <Heart className="h-3.5 w-3.5 fill-red-500" /> <span>5</span>
+          <Heart className="h-3.5 w-3.5 fill-red-500" /> <span>{lives}</span>
         </div>
       </div>
 

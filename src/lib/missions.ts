@@ -44,7 +44,7 @@ export const MISSIONS: Mission[] = [
     hint: "Favorite pelo menos 3 habilidades na seção Skills",
     xp: 20,
     icon: Zap,
-    link: "/skills",
+    link: "/lab",
   },
   {
     id: "quiz",

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ChevronDown, ChevronUp, Copy, ArrowRight, Heart } from "lucide-react"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 import { cn } from "@/lib/utils"
 import { trackPromptUsed } from "@/lib/analytics"
 import { useFavoritePrompts } from "@/hooks/useFavoritePrompts"
@@ -224,7 +224,7 @@ export default function PromptDetail() {
         </div>
       </div>
 
-      <BottomNav active="lab" />
+      <AppBottomNav />
     </div>
   )
 }

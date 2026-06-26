@@ -5,7 +5,7 @@ import {
   TrendingUp, Users, BarChart3, Zap,
   type LucideIcon,
 } from "lucide-react"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 import { cn } from "@/lib/utils"
 import { TEMPLATES, type Template } from "@/data/templatesData"
 
@@ -333,7 +333,7 @@ export default function TemplateDetail() {
         </div>
       </div>
 
-      <BottomNav active="lab" />
+      <AppBottomNav />
     </div>
   )
 }

@@ -33,6 +33,7 @@ function renderSignup() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<div>login</div>} />
           <Route path="/home" element={<div>home</div>} />
+          <Route path="/onboarding" element={<div>onboarding</div>} />
         </Routes>
       </MemoryRouter>
     </HelmetProvider>
@@ -95,14 +96,14 @@ describe("Signup — validações", () => {
 })
 
 describe("Signup — submissão", () => {
-  it("navega para /home quando signup é bem-sucedido", async () => {
+  it("navega para /onboarding quando signup é bem-sucedido", async () => {
     mockSignup.mockResolvedValue({ success: true })
 
     renderSignup()
     await fillForm()
     await userEvent.click(screen.getByRole("button", { name: /criar conta/i }))
 
-    await waitFor(() => expect(screen.getByText("home")).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText("onboarding")).toBeInTheDocument())
     expect(mockSignup).toHaveBeenCalledWith("novo@test.com", "Senha123", "Novo User")
   })
 

@@ -89,6 +89,10 @@ export default function OnboardingPage() {
         <button
           disabled={needsPick && picked === null}
           onClick={() => {
+            if (needsPick && picked !== null) {
+              const goal = (current as typeof STEPS[1]).options[picked];
+              localStorage.setItem("promptlabz:learningGoal", goal);
+            }
             if (isLast) navigate("/home");
             else setStep((s) => s + 1);
           }}

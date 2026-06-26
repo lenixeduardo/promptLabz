@@ -6,19 +6,22 @@ import type { LeaderboardEntry } from "@/lib/db"
 import { getLocalXP, getLocalGems, getLevel, getLevelProgress } from "@/lib/xp"
 import { getLevelTitle } from "@/lib/levelTitles"
 import { getAvatarById } from "@/data/avatarsData"
-import { BottomNav } from "@/components/BottomNav"
+import { AppBottomNav } from "@/components/AppBottomNav"
 import * as Icons from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 const MOCK_ENTRIES: LeaderboardEntry[] = [
-  { id: "mock-1", full_name: "Ana Lima", avatar_url: null, xp: 4200 },
-  { id: "mock-2", full_name: "Pedro Silva", avatar_url: null, xp: 3800 },
-  { id: "mock-3", full_name: "Julia Mendes", avatar_url: null, xp: 3500 },
-  { id: "mock-4", full_name: "Carlos Rocha", avatar_url: null, xp: 2900 },
-  { id: "mock-5", full_name: "Beatriz Costa", avatar_url: null, xp: 2200 },
-  { id: "mock-6", full_name: "Rafael Nunes", avatar_url: null, xp: 1700 },
-  { id: "mock-7", full_name: "Thais Ferreira", avatar_url: null, xp: 1200 },
+  { id: "mock-1", full_name: "Ana Lima",       avatar_url: "cat-scientist", xp: 4200 },
+  { id: "mock-2", full_name: "Pedro Silva",    avatar_url: "cat-rocker",    xp: 3800 },
+  { id: "mock-3", full_name: "Julia Mendes",   avatar_url: "cat-void",      xp: 3500 },
+  { id: "mock-4", full_name: "Carlos Rocha",   avatar_url: "cat-ninja",     xp: 2900 },
+  { id: "mock-5", full_name: "Beatriz Costa",  avatar_url: "cat-astronaut", xp: 2200 },
+  { id: "mock-6", full_name: "Lucas Ferreira", avatar_url: "cat-purple",    xp: 1950 },
+  { id: "mock-7", full_name: "Mariana Alves",  avatar_url: "cat-punk",      xp: 1700 },
+  { id: "mock-8", full_name: "Rafael Sousa",   avatar_url: "cat-blue",      xp: 1450 },
 ]
+
+type Period = "semana" | "mes" | "geral"
 
 interface RankedUser extends LeaderboardEntry {
   position: number
@@ -40,35 +43,17 @@ function getLevelStyle(level: number): React.CSSProperties {
 }
 
 function LevelBadge({ level, size = "sm" }: { level: number; size?: "sm" | "md" }) {
-  const dim = size === "md" ? "h-7 w-7 text-[11px]" : "h-5 w-5 text-[9px]"
+  const dim = size === "md" ? "h-6 w-6 text-[10px]" : "h-5 w-5 text-[9px]"
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-full font-extrabold text-white shadow-sm",
+        "flex shrink-0 items-center justify-center rounded-full font-extrabold text-white shadow",
         dim,
       )}
       style={getLevelStyle(level)}
       aria-label={`Nível ${level}`}
     >
       {level}
-    </div>
-  )
-}
-
-function XpProgressBar({ xp }: { xp: number }) {
-  const { currentXP, targetXP } = getLevelProgress(xp)
-  const pct = Math.min(100, Math.round((currentXP / targetXP) * 100))
-  return (
-    <div className="mt-1.5 flex items-center gap-1.5">
-      <div className="h-1 flex-1 overflow-hidden rounded-full bg-stroke-muted">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-emerald to-emerald-dark transition-all duration-500"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      <span className="text-[9px] tabular-nums text-foregroundTertiary">
-        {currentXP}/{targetXP}
-      </span>
     </div>
   )
 }
@@ -82,29 +67,53 @@ function getAvatarImage(avatarUrl: string | null): string {
 function PodiumSpot({ user, rank }: { user: RankedUser | undefined; rank: 1 | 2 | 3 }) {
   if (!user) return <div className="flex-1" />
 
-  const config = {
-    1: { avatar: "h-16 w-16", pedestal: "h-20", order: "order-2", badgeSize: "md" as const },
-    2: { avatar: "h-12 w-12", pedestal: "h-14", order: "order-1", badgeSize: "sm" as const },
-    3: { avatar: "h-12 w-12", pedestal: "h-10", order: "order-3", badgeSize: "sm" as const },
-  }[rank]
+  const isFirst = rank === 1
+
+  const avatarSizes = {
+    1: "h-[68px] w-[68px]",
+    2: "h-[52px] w-[52px]",
+    3: "h-[52px] w-[52px]",
+  }
+
+  const pedestalColors = {
+    1: "bg-gradient-to-t from-yellow-400/30 to-yellow-300/10 border-t-2 border-yellow-300/60",
+    2: "bg-gradient-to-t from-slate-300/40 to-slate-200/10 border-t-2 border-slate-300/60",
+    3: "bg-gradient-to-t from-amber-600/25 to-amber-500/10 border-t-2 border-amber-400/40",
+  }
+
+  const pedestalHeights = { 1: "h-[80px]", 2: "h-[56px]", 3: "h-[40px]" }
+
+  const avatarRings = {
+    1: "border-[3px] border-yellow-400 shadow-lg shadow-yellow-200/60",
+    2: "border-2 border-slate-300",
+    3: "border-2 border-amber-400/70",
+  }
 
   const medals = { 1: "🥇", 2: "🥈", 3: "🥉" }
-  const pedestalClass = {
-    1: "bg-gradient-to-t from-primary-dark to-emerald",
-    2: "bg-gradient-to-t from-emerald to-foregroundMuted",
-    3: "bg-gradient-to-t from-emerald to-foregroundMuted",
-  }[rank]
 
   return (
-    <div className={cn("flex flex-1 flex-col items-center gap-1", config.order)}>
-      <span className="text-lg">{medals[rank]}</span>
+    <div
+      className={cn(
+        "flex flex-1 flex-col items-center gap-1",
+        isFirst ? "order-2" : rank === 2 ? "order-1" : "order-3",
+      )}
+    >
+      {/* Crown / medal icon */}
+      {isFirst ? (
+        <span className="text-xl animate-bounce-slow">👑</span>
+      ) : (
+        <span className="text-base">{medals[rank]}</span>
+      )}
 
+      {/* Avatar */}
       <div className="relative">
         <div
           className={cn(
-            "overflow-hidden rounded-full border-2",
-            user.isCurrentUser ? "border-primary-dark ring-2 ring-emerald ring-offset-1" : "border-white",
-            config.avatar,
+            "overflow-hidden rounded-full",
+            avatarSizes[rank],
+            avatarRings[rank],
+            isFirst && "ring-4 ring-yellow-300/30",
+            user.isCurrentUser && "ring-2 ring-emerald ring-offset-2",
           )}
         >
           <img
@@ -114,19 +123,34 @@ function PodiumSpot({ user, rank }: { user: RankedUser | undefined; rank: 1 | 2 
           />
         </div>
         <div className="absolute -bottom-1 -right-1">
-          <LevelBadge level={user.level} size={config.badgeSize} />
+          <LevelBadge level={user.level} size={isFirst ? "md" : "sm"} />
         </div>
       </div>
 
-      <p className="mt-1.5 max-w-[80px] text-center text-[11px] font-bold leading-tight text-foregroundDark">
+      {/* Name */}
+      <p className="mt-1.5 max-w-[80px] text-center text-[11px] font-bold leading-tight text-foreground-dark">
         {user.full_name ?? "Usuário"}
       </p>
-      <p className="text-[10px] font-semibold text-emerald">
-        {user.xp.toLocaleString("pt-BR")} XP
-      </p>
-      <p className="text-[9px] text-foregroundTertiary">{user.levelTitle}</p>
 
-      <div className={cn("w-full rounded-t-xl", config.pedestal, pedestalClass)} />
+      {/* XP */}
+      <div className="flex items-center gap-0.5">
+        <Icons.Zap className="h-3 w-3 text-yellow-500" />
+        <span className="text-[11px] font-extrabold text-foreground-dark">
+          {user.xp.toLocaleString("pt-BR")} XP
+        </span>
+      </div>
+
+      {/* Level title */}
+      <p className="text-[9px] text-foreground-tertiary">{user.levelTitle}</p>
+
+      {/* Pedestal */}
+      <div
+        className={cn(
+          "w-full rounded-t-2xl",
+          pedestalHeights[rank],
+          pedestalColors[rank],
+        )}
+      />
     </div>
   )
 }
@@ -154,7 +178,6 @@ export default function Ranking() {
       const currentName =
         user!.user_metadata?.full_name ?? user!.email?.split("@")[0] ?? "Você"
 
-      // Sync local XP/gems so the current user appears in the live leaderboard.
       await updateUserXP(user!.id, currentXP, currentGems)
 
       const { data } = await getLeaderboard(20)
@@ -194,32 +217,50 @@ export default function Ranking() {
   const top3 = [rankedUsers[0], rankedUsers[1], rankedUsers[2]]
   const rest = rankedUsers.slice(3)
   const currentUser = rankedUsers.find((u) => u.isCurrentUser)
+  const { currentXP: progressXP, targetXP } = currentUser
+    ? getLevelProgress(currentUser.xp)
+    : { currentXP: 0, targetXP: 100 }
+  const progressPct = currentUser
+    ? Math.min(100, Math.round((progressXP / targetXP) * 100))
+    : 0
+
+  const PERIOD_LABELS: Record<Period, string> = {
+    semana: "Semana",
+    mes: "Mês",
+    geral: "Geral",
+  }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-page-bg-light via-gradient-mid to-gradient-end">
       <div className="mx-auto flex w-full max-w-[420px] flex-col px-5 pb-24 pt-8">
 
         {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-5 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-extrabold text-primary-dark">Ranking</h1>
+            <div className="flex items-center gap-2">
+              <Icons.Trophy className="h-6 w-6 text-emerald" />
+              <h1 className="text-2xl font-extrabold text-primary-dark">Ranking</h1>
+            </div>
             {!loading && currentUser && (
-              <p className="mt-0.5 text-xs text-foregroundTertiary">
+              <p className="mt-0.5 text-xs text-foreground-tertiary">
                 #{currentUser.position} · {currentUser.levelTitle} · Nível {currentUser.level}
               </p>
             )}
           </div>
           <button
             onClick={() => navigate("/profile")}
-            className="h-9 w-9 overflow-hidden rounded-full border-2 border-stroke-light shadow-sm"
+            className="h-10 w-10 overflow-hidden rounded-full border-2 border-stroke-light shadow-sm"
             aria-label="Ir para perfil"
           >
-            <img
-              src={userAvatarImage}
-              alt="Perfil"
-              className="h-full w-full object-cover"
-            />
+            <img src={userAvatarImage} alt="Perfil" className="h-full w-full object-cover" />
           </button>
+        </div>
+
+        {/* Period label - period filtering coming in v0.1 */}
+        <div className="mb-5 flex items-center justify-center">
+          <span className="rounded-full bg-emerald/10 px-4 py-1.5 text-xs font-bold text-emerald">
+            Ranking Geral (todos os tempos)
+          </span>
         </div>
 
         {loading ? (
@@ -235,40 +276,92 @@ export default function Ranking() {
           </div>
         ) : (
           <>
-            {/* Pódio */}
-            <div className="mb-6 rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
-              <p className="mb-4 text-center text-xs font-semibold text-foregroundMuted">
-                🏆 Top 3 do PromptLab
-              </p>
-              <div className="flex items-end justify-center gap-2">
-                <PodiumSpot user={top3[1]} rank={2} />
-                <PodiumSpot user={top3[0]} rank={1} />
-                <PodiumSpot user={top3[2]} rank={3} />
+            {/* Podium — white card */}
+            <div className="mb-5 overflow-hidden rounded-3xl border border-stroke-muted bg-white shadow-sm">
+              <div className="px-4 pt-4 pb-0">
+                <p className="mb-4 text-center text-[11px] font-bold tracking-widest uppercase text-foreground-muted">
+                  🏆 Top 3 do PromptLab
+                </p>
+                <div className="flex items-end justify-center gap-2">
+                  <PodiumSpot user={top3[1]} rank={2} />
+                  <PodiumSpot user={top3[0]} rank={1} />
+                  <PodiumSpot user={top3[2]} rank={3} />
+                </div>
               </div>
             </div>
 
-            {/* Lista posições 4+ */}
+            {/* Current user progress bar (if outside top 3) */}
+            {currentUser && currentUser.position > 3 && (
+              <div className="mb-4 rounded-2xl border border-emerald/30 bg-surface-success px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald/15 text-sm font-black text-emerald">
+                    #{currentUser.position}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-bold text-primary-dark truncate">
+                      {currentUser.full_name ?? "Você"}
+                      <span className="ml-1.5 rounded-full bg-emerald/20 px-1.5 py-px text-[9px] font-semibold text-emerald">
+                        você
+                      </span>
+                    </p>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-emerald/15">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-emerald to-mint transition-all duration-500"
+                          style={{ width: `${progressPct}%` }}
+                        />
+                      </div>
+                      <span className="shrink-0 text-[9px] tabular-nums text-foreground-tertiary">
+                        {progressXP}/{targetXP} XP
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1">
+                    <Icons.Zap className="h-3.5 w-3.5 text-yellow-500" />
+                    <span className="text-sm font-extrabold text-primary-dark">
+                      {currentUser.xp.toLocaleString("pt-BR")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* List — positions 4+ */}
             {rest.length > 0 && (
               <div className="flex flex-col gap-2">
-                <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-foregroundMuted">
-                  Classificação geral
+                <p className="mb-1 flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-foreground-muted">
+                  <span>Classificação geral</span>
+                  <span className="text-[9px] text-foreground-tertiary">i</span>
                 </p>
+
                 {rest.map((entry) => (
                   <div
                     key={entry.id}
                     className={cn(
-                      "flex items-center gap-3 rounded-2xl border px-4 py-3 shadow-sm",
+                      "flex items-center gap-3 rounded-2xl border px-4 py-3 transition-all",
                       entry.isCurrentUser
-                        ? "border-emerald bg-surface-success"
-                        : "border-stroke-muted bg-white",
+                        ? "border-emerald/40 bg-surface-success shadow-sm shadow-emerald/10"
+                        : "border-stroke-muted bg-white shadow-sm",
                     )}
                   >
-                    <span className="w-6 shrink-0 text-center text-sm font-bold text-foregroundTertiary">
+                    {/* Position */}
+                    <span
+                      className={cn(
+                        "w-6 shrink-0 text-center text-sm font-black",
+                        entry.isCurrentUser ? "text-emerald" : "text-foreground-tertiary",
+                      )}
+                    >
                       {entry.position}
                     </span>
 
-                    <div className="relative h-9 w-9 shrink-0">
-                      <div className="h-full w-full overflow-hidden rounded-full border border-stroke-muted">
+                    {/* Avatar */}
+                    <div className="relative h-10 w-10 shrink-0">
+                      <div
+                        className={cn(
+                          "h-full w-full overflow-hidden rounded-full border-2",
+                          entry.isCurrentUser ? "border-emerald" : "border-stroke-light",
+                        )}
+                      >
                         <img
                           src={getAvatarImage(entry.avatar_url)}
                           alt={entry.full_name ?? ""}
@@ -280,42 +373,53 @@ export default function Ranking() {
                       </div>
                     </div>
 
+                    {/* Name + title */}
                     <div className="min-w-0 flex-1">
-                      <p
-                        className={cn(
-                          "truncate text-sm font-bold",
-                          entry.isCurrentUser ? "text-primary-dark" : "text-foregroundDark",
-                        )}
-                      >
-                        {entry.full_name ?? "Usuário"}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <p
+                          className={cn(
+                            "text-sm font-bold",
+                            entry.isCurrentUser ? "text-primary-dark" : "text-foreground-dark",
+                          )}
+                        >
+                          {entry.full_name ?? "Usuário"}
+                        </p>
                         {entry.isCurrentUser && (
-                          <span className="ml-1 text-xs font-normal text-foregroundMuted">
-                            (você)
+                          <span className="rounded-full bg-emerald/15 px-1.5 py-px text-[9px] font-semibold text-emerald">
+                            você
                           </span>
                         )}
-                      </p>
-                      <p className="text-[10px] text-foregroundTertiary">{entry.levelTitle}</p>
-                      {entry.isCurrentUser && <XpProgressBar xp={entry.xp} />}
+                      </div>
+                      <p className="text-[10px] text-foreground-tertiary">{entry.levelTitle}</p>
                     </div>
 
+                    {/* XP */}
                     <div className="flex shrink-0 flex-col items-end gap-0.5">
                       <div className="flex items-center gap-1">
                         <Icons.Zap className="h-3.5 w-3.5 text-yellow-400" />
-                        <span className="text-sm font-bold text-primary-dark">
+                        <span className="text-sm font-extrabold text-primary-dark tabular-nums">
                           {entry.xp.toLocaleString("pt-BR")}
                         </span>
                       </div>
-                      <span className="text-[9px] text-foregroundTertiary">XP · Nv {entry.level}</span>
+                      <span className="text-[9px] text-foreground-tertiary">
+                        XP · Nv {entry.level}
+                      </span>
                     </div>
                   </div>
                 ))}
+
+                {rankedUsers.length >= 20 && (
+                  <p className="mt-2 text-center text-xs text-foreground-tertiary py-2">
+                    Mostrando top 20 · mais posições em breve
+                  </p>
+                )}
               </div>
             )}
           </>
         )}
       </div>
 
-      <BottomNav active="ranking" />
+      <AppBottomNav />
     </div>
   )
 }

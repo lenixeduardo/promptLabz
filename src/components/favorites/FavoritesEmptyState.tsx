@@ -14,7 +14,7 @@ interface FavoritesEmptyStateProps {
  * Features a mascot illustration, explanatory text, and a primary CTA.
  */
 export function FavoritesEmptyState({
-  ctaTo = "/skills",
+  ctaTo = "/lab",
   ctaLabel = "Explorar conteúdo",
 }: FavoritesEmptyStateProps) {
   const navigate = useNavigate()

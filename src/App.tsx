@@ -16,6 +16,8 @@ import { completeMission } from "@/lib/missions"
 import { useUTM } from "@/hooks/useUTM"
 import { useInactiveReminder } from "@/hooks/useInactiveReminder"
 import { QuickEnhanceModal } from "@/components/QuickEnhanceModal"
+import { getUserProfile, loadProgress } from "@/lib/db"
+import { getLocalXP, getLocalGems, saveLocalXP, saveLocalGems, XP_UPDATE_EVENT, GEMS_UPDATE_EVENT } from "@/lib/xp"
 
 // Initialize user-scoped localStorage namespacing
 initUserScope()
@@ -31,10 +33,9 @@ const Profile = lazy(() => import("@/pages/Profile"))
 const AvatarScreen = lazy(() => import("@/pages/AvatarScreen"))
 const LearningLab = lazy(() => import("@/pages/LearningLab"))
 const Lesson = lazy(() => import("@/pages/Lesson"))
-const Skills = lazy(() => import("@/pages/Skills"))
 const SkillDetail = lazy(() => import("@/pages/SkillDetail"))
 const MissionComplete = lazy(() => import("@/pages/MissionComplete"))
-const DailyMissions = lazy(() => import("@/pages/DailyMissions"))
+// DailyMissions removed — /missions is the canonical page
 const Favorites = lazy(() => import("@/pages/Favorites"))
 const Notifications = lazy(() => import("@/pages/Notifications"))
 const Premium = lazy(() => import("@/pages/Premium"))
@@ -69,6 +70,8 @@ const Roadmap = lazy(() => import("@/pages/Roadmap"))
 const Settings = lazy(() => import("@/pages/Settings"))
 const Community = lazy(() => import("@/pages/Community"))
 const Verify = lazy(() => import("@/pages/Verify"))
+const Terms = lazy(() => import("@/pages/Terms"))
+const Privacy = lazy(() => import("@/pages/Privacy"))
 
 function PageLoading() {
   return (
@@ -132,6 +135,37 @@ function MissionTracker() {
   return null
 }
 
+// ── Profile Sync: DB → localStorage on login ─────────────────────────────
+// Ensures XP, gems and category progress are visible even on a fresh device.
+function ProfileSyncTracker() {
+  const { user } = useAuth()
+  useEffect(() => {
+    if (!user?.id) return
+    const uid = user.id
+
+    // Sync XP / gems from DB if localStorage is empty
+    const localXP = getLocalXP(uid)
+    const localGems = getLocalGems(uid)
+    if (localXP === 0 || localGems === 0) {
+      getUserProfile(uid).then(({ data: profile }) => {
+        if (!profile) return
+        if (localXP === 0 && (profile.xp ?? 0) > 0) {
+          saveLocalXP(uid, profile.xp!)
+          window.dispatchEvent(new Event(XP_UPDATE_EVENT))
+        }
+        if (localGems === 0 && (profile.gems ?? 0) > 0) {
+          saveLocalGems(uid, profile.gems!)
+          window.dispatchEvent(new Event(GEMS_UPDATE_EVENT))
+        }
+      })
+    }
+
+    // Sync category progress from DB → localStorage (loadProgress already does this)
+    loadProgress(uid).catch(() => {/* silent — localStorage remains as fallback */})
+  }, [user?.id])
+  return null
+}
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -143,6 +177,7 @@ export default function App() {
           <AnalyticsTracker />
           <ActivityTracker />
           <MissionTracker />
+          <ProfileSyncTracker />
           <Toaster position="top-right" />
           <QuickEnhanceModal />
           <Suspense fallback={<PageLoading />}>
@@ -193,14 +228,7 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
-              <Route
-                path="/skills"
-                element={
-                  <PrivateRoute>
-                    <Skills />
-                  </PrivateRoute>
-                }
-              />
+              <Route path="/skills" element={<Navigate to="/lab" replace />} />
               <Route
                 path="/skill/:skillName"
                 element={
@@ -217,14 +245,7 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
-              <Route
-                path="/daily-missions"
-                element={
-                  <PrivateRoute>
-                    <DailyMissions />
-                  </PrivateRoute>
-                }
-              />
+              <Route path="/daily-missions" element={<Navigate to="/missions" replace />} />
               <Route
                 path="/favorites"
                 element={
@@ -401,7 +422,13 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
-              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/onboarding" element={
+                <PrivateRoute>
+                  <Onboarding />
+                </PrivateRoute>
+              } />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route
                 path="/lab"
                 element={
