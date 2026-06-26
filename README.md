@@ -8,23 +8,63 @@
 
 ## O que é
 
-PromptLabz ajuda estudantes em transição de carreira, criadores de conteúdo e devs iniciantes a praticar prompt engineering de forma gamificada: trilhas de lições, sistema de vidas, conquistas e uma biblioteca de 80+ skills reais do [skills.sh](https://www.skills.sh/).
+PromptLabz ajuda estudantes em transição de carreira, criadores de conteúdo e devs iniciantes a praticar prompt engineering de forma gamificada: trilhas de lições, ferramentas interativas de prompt, sistema de vidas, conquistas, ranking e uma biblioteca de 80+ skills reais do [skills.sh](https://www.skills.sh/).
 
 ---
 
 ## Funcionalidades
 
+### Aprendizado e Trilhas
 - **Autenticação completa** — email/senha, Google OAuth, Apple OAuth, reset de senha via email personalizado com mascote
 - **Trilhas de Aprendizado** — módulos sequenciais com lições interativas, feedback imediato e progresso persistido
+- **Módulo de Exame** — avaliação ao término de módulos para validar aprendizado
+- **Certificados** — geração de certificados em PDF ao concluir trilhas (com QR code e mascote)
 - **Central de Skills** — 80+ skills catalogadas com busca full-text, filtro por categoria (7 categorias), ranking por instalações e favoritos
+- **Onboarding** — fluxo de boas-vindas para novos usuários
+
+### Ferramentas de Prompt
+- **PromptLab** — editor interativo com avaliação em tempo real (clareza, especificidade, score)
+- **PromptAnalyzer** — análise de conversas/mensagens com métricas de qualidade e sugestões
+- **PromptEnhancer** — melhoria automática de prompts com sugestões contextuais
+- **PromptChallenge** — desafios cronometrados de escrita de prompts
+- **PromptWars** — modo duelo em tempo real (em breve)
+- **Templates** — biblioteca de templates de prompt curados por categoria
+- **Biblioteca de Prompts** — explorar, filtrar e usar prompts prontos por categoria
+
+### Gamificação
 - **Sistema de Vidas** — 5 vidas que se regeneram com o tempo; perde ao errar, incentiva foco
-- **Conquistas (Achievements)** — badges desbloqueados por consistência, exploração e volume de prática
+- **XP e Níveis** — ganhe XP completando lições; suba de nível a cada 500 XP
+- **Gemas** — moeda in-game ganha por conquistas e missões; gasta na Loja
+- **Loja** — avatares desbloqueáveis e power-ups comprados com gemas
+- **Inventário** — gerencie avatares e power-ups adquiridos
+- **Conquistas (Achievements)** — badges desbloqueados por consistência, exploração e volume
+- **Streak** — rastreamento de dias consecutivos de prática (streak atual + recorde)
+- **Missões Diárias** — tarefas diárias com recompensas em XP e gemas
+- **LevelUp** — tela comemorativa animada ao subir de nível
+- **Ranking** — pódio com top 3 e lista completa de usuários por XP
+
+### Conteúdo e Comunidade
+- **Feed de Notícias** — notícias diárias de tecnologia via GitHub Actions (cron 07:00 UTC)
+- **Comunidade** — tela de comunidade e interação social
+- **Roadmap** — página com o roadmap público do produto
+- **Quiz Rápido** — quizzes de conhecimento com tela de resultado
+
+### Perfil e Configurações
 - **Perfil com Avatar** — customização de avatar, nome e acompanhamento de progresso por categoria
+- **Configurações** — preferências do usuário e conta
+- **Tema claro/escuro** — suporte completo a dark mode com `ThemeContext` e `ThemeToggle`
+- **Tela de Notificações** (`/notifications`): filtros (Todas/Não lidas/Mentions), agrupamento por data
+- **Tela de Favoritos** (`/favorites`): abas (Prompts/Templates/Notícias/Trilhas), estado vazio com CTA
+- **Tela Premium/Paywall** (`/premium`): toggle Mensal/Anual (-40%), cards de preço, grid de benefícios, 7 dias grátis
+- **Assinatura** — tela de gerenciamento de assinatura
+- **Termos e Privacidade** — páginas legais
+
+### Infraestrutura
 - **Progresso offline-first** — salvo imediatamente em `localStorage`, sincronizado com Supabase ao reconectar
-- **Tela de Notificações** (`/notifications`): filtros (Todas/Não lidas/Mentions), agrupamento por data, indicador de não lido
-- **Tela de Favoritos** (`/favorites`): abas (Prompts/Templates/Notícias/Trilhas), estado vazio com CTA, seção "Dicas para você"
-- **Tela Premium/Paywall** (`/premium`): toggle Mensal/Anual (-40%), cards de preço com seleção rádio, grid de benefícios, trust badges, CTA com 7 dias grátis
-- **Bottom Navigation Bar** (`AppBottomNav`): navegação inferior fixa com 6 ícones (Início, Trilha, Laboratório, Desafios, Notícias, Perfil)
+- **Bottom Navigation Bar** (`AppBottomNav`): navegação inferior fixa com ícones (Início, Trilha, Laboratório, Desafios, Notícias, Perfil)
+- **Analytics** — PostHog para eventos de produto + Google Ads/GA4 para conversões
+- **Error tracking** — Sentry integrado com painel de auditoria interno (`ErrorTrackingDashboard`)
+- **Android** — app nativo via Capacitor (builds debug e release com Gradle)
 
 ---
 
@@ -37,15 +77,18 @@ PromptLabz ajuda estudantes em transição de carreira, criadores de conteúdo e
 | Tailwind CSS | Estilo utilitário sem CSS separado; consistência visual fácil |
 | Supabase | Auth + Postgres + RLS gerenciado — sem servidor próprio |
 | Resend | Emails transacionais com template HTML próprio (mascote da marca) |
+| Capacitor | Empacotamento do SPA como app Android nativo sem reescrever código |
+| PostHog | Analytics de produto com eventos customizados por fluxo |
+| Sentry | Error tracking e monitoramento em produção |
 | Vitest + Testing Library | Testes unitários e de UI rápidos, compatível com Vite |
-| GitHub Actions | CI com typecheck → lint → test → build em todo PR |
+| GitHub Actions | CI com typecheck → lint → test → build em todo PR; cron de notícias |
 
 ---
 
 ## Arquitetura
 
 ```
-Browser (React SPA)
+Browser (React SPA)          Android (Capacitor)
   └── Pages → Hooks → lib/db → Supabase JS SDK
                                       │
                               ┌───────▼───────┐
@@ -59,8 +102,8 @@ Browser (React SPA)
 **Padrões principais:**
 - **Offline-first**: progresso salvo em `localStorage` antes de sincronizar com o banco
 - **Lazy loading**: todas as páginas carregadas sob demanda com `React.lazy()`
-- **Context API**: 3 contextos (Auth, Lives, Achievements) com escopo bem definido
-- **RLS**: usuário só acessa seus próprios dados; campos premium bloqueados no cliente
+- **Context API**: 4 contextos (Auth, Lives, Achievements, Theme) com escopo bem definido
+- **RLS**: usuário só acessa seus próprios dados; campos premium bloqueados no banco
 
 → Detalhes completos em [ARCHITECTURE.md](./ARCHITECTURE.md)
 
@@ -105,6 +148,18 @@ pnpm dev
 
 Acesse `http://localhost:5173`
 
+### Build Android
+
+```bash
+# Sincroniza o build web com o projeto Capacitor e abre no Android Studio
+pnpm android:sync
+pnpm android:open
+
+# Builds diretos via Gradle
+pnpm android:build:debug    # APK de debug
+pnpm android:build:release  # APK de release
+```
+
 ---
 
 ## Validação e Testes
@@ -112,11 +167,12 @@ Acesse `http://localhost:5173`
 ```bash
 pnpm typecheck        # TypeScript sem erros
 pnpm lint             # ESLint sem warnings
-pnpm test             # Vitest (163 testes — unit + integração + UI)
-pnpm build            # Build de produção (46 chunks · ~68s)
+pnpm test             # Vitest (248 testes — unit + integração + UI)
+pnpm test:e2e         # Playwright E2E
+pnpm build            # Build de produção
 ```
 
-**Cobertura atual:** hooks, components, pages, contexts — 19 arquivos de teste.
+**Cobertura atual:** hooks, components, pages, contexts — 32 arquivos de teste.
 
 ---
 
@@ -128,8 +184,9 @@ pnpm build            # Build de produção (46 chunks · ~68s)
 |---|---|
 | 🏠 **Home** — Progresso, streak, trilha e acesso rápido | 📚 **Trilha de Aprendizado** — Módulos sequenciais com lições interativas |
 | 🏆 **Ranking** — Pódio com top 3 e lista de usuários | ⭐ **Skills** — 80+ skills com busca, filtros e favoritos |
-| 🔔 **Notificações** — Filtros Todas/Não lidas/Mentions | ❤️ **Favoritos** — Abas por tipo com empty state e sugestões |
-| 👑 **Premium** — Paywall com toggle de planos e benefícios | 👤 **Perfil** — Avatar, XP, gemas, conquistas e certificados |
+| 🔬 **PromptLab** — Editor com avaliação em tempo real | 🔍 **PromptAnalyzer** — Análise de prompts com métricas de clareza |
+| 🎮 **Loja** — Avatares e power-ups comprados com gemas | 👤 **Perfil** — Avatar, XP, gemas, conquistas e certificados |
+| 🌙 **Dark mode** — Tema claro/escuro em todo o app | 📰 **Notícias** — Feed diário de tecnologia atualizado via cron |
 
 ---
 
@@ -140,8 +197,9 @@ Veja o guia completo em [DEPLOYMENT.md](./DEPLOYMENT.md).
 **Resumo:**
 1. Configure projeto no Supabase e rode as migrations (`supabase db push`)
 2. Configure Google/Apple OAuth no painel do Supabase
-3. Deploy da Edge Function `send-auth-email` com Resend configurado
-4. Conecte o repo no Vercel com `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`
+3. Deploy das Edge Functions (`send-auth-email`, `daily-tech-news`, `stripe-checkout`) com Resend e segredos configurados
+4. Conecte o repo no Vercel com `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` e variáveis opcionais de PostHog/Sentry/Google Ads
+5. Para o feed de notícias: configure `SUPABASE_URL` e `DAILY_NEWS_SECRET` nos secrets do repositório GitHub
 
 ---
 
@@ -149,15 +207,16 @@ Veja o guia completo em [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ```
 src/
-├── components/   # UI reutilizável (ErrorBoundary, PrivateRoute, BrandLogo...)
-├── contexts/     # Estado global (Auth, Lives, Achievements)
-├── hooks/        # Lógica de negócio (useAuth, useFavorites, useAchievements)
-├── pages/        # Uma página por rota
-├── lib/          # Supabase client, db helpers, achievements logic, icons
-└── data/         # Conteúdo estático (lições, skills, avatars, prompts)
+├── components/    # UI reutilizável (AppBottomNav, ErrorBoundary, ThemeToggle, StreakWidget...)
+├── contexts/      # Estado global (Auth, Lives, Achievements, Theme)
+├── hooks/         # Lógica de negócio (useAuth, useFavorites, useStreak, useRetry...)
+├── pages/         # Uma página por rota (~65 páginas)
+├── lib/           # Supabase client, db helpers, xp, streak, analytics, errorLogging, certificatePdf...
+└── data/          # Conteúdo estático (lições, skills, prompts, templates, missões, power-ups, loja...)
 supabase/
-├── functions/    # Edge Functions (send-auth-email, stripe-checkout)
-└── migrations/   # SQL versionado
+├── functions/     # Edge Functions (send-auth-email, daily-tech-news, stripe-checkout)
+└── migrations/    # SQL versionado
+android/           # Projeto Capacitor Android (gerado — não editar manualmente)
 ```
 
 ---
@@ -167,18 +226,20 @@ supabase/
 - **Supabase** em vez de Firebase: SQL + RLS nativo permite segurança declarativa e queries complexas para analytics futuro
 - **Conteúdo em `src/data`** em vez de CMS: acelera o MVP — migração para DB planejada na v0.3
 - **React SPA** em vez de Next.js: produto não é SEO-crítico; SSR traria complexidade sem benefício real
+- **Capacitor** em vez de React Native: reutiliza 100% do código web existente; trade-off em performance nativa aceito para MVP
+- **PostHog + Google Ads** em vez de só GA4: PostHog para análise de produto granular; GA4/Ads para rastrear conversões de tráfego pago
 - **Campos premium no banco desde o v0.1**: evita migração futura quando o plano pago for implementado; update protegido por RLS
 - **`src/lib/icons.ts`** centraliza imports de lucide-react para tree-shaking, evitando importar toda a biblioteca (700+ kB)
-- **Bottom nav e componentes compartilhados** (`AppPageHeader`, `PillTabs`) foram criados como componentes opcionais e configuráveis, sem refatorar páginas existentes
-- **Telas de Notificações e Favoritos** usam dados mock preparados para migração futura para Supabase (estrutura de tabelas já planejada)
+- **Bottom nav e componentes compartilhados** (`AppPageHeader`, `PillTabs`) criados como componentes configuráveis, sem refatorar páginas existentes
+- **Streak e XP em localStorage com sync Supabase**: garante responsividade mesmo offline; dados sensíveis (plano, dono do recurso) sempre validados no servidor
 
 ---
 
 ## Demo
 
-> 🚧 Ambiente de demonstração está sendo configurado.
+> **Acesse em:** [promptlabz.vercel.app](https://promptlabz.vercel.app)
 >
-> **Enquanto isso:**
+> **Ou rode localmente:**
 > 1. Clone o repositório: `git clone https://github.com/lenixeduardo/promptLab.git`
 > 2. Instale as dependências: `pnpm install`
 > 3. Inicie o servidor: `pnpm dev`
@@ -191,9 +252,9 @@ supabase/
 | Versão | Foco | Status |
 |--------|------|--------|
 | **v0.1** | MVP: auth, trilhas, skills, gamificação | ✅ Publicado |
-| **v0.2** | Notificações in-app, Favoritos, Premium UI, Ranking, streak | ✅ Concluído |
-| **v0.3** | Stripe real, Sentry, testes E2E, comunidade | 🔨 Em desenvolvimento |
-| **v1.0** | Premium real, certificados, PWA offline, mobile | 🔮 Futuro |
+| **v0.2** | Notificações in-app, Favoritos, Premium UI, Ranking, streak, ferramentas de prompt, Android, dark mode | ✅ Concluído |
+| **v0.3** | Stripe real, Sentry, testes E2E, comunidade, PostHog analytics | 🔨 Em desenvolvimento |
+| **v1.0** | Premium real, certificados públicos, PWA offline, Prompt Wars ao vivo | 🔮 Futuro |
 
 → Detalhes e estimativas em [ROADMAP.md](./ROADMAP.md)
 
