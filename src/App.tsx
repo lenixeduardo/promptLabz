@@ -16,6 +16,8 @@ import { completeMission } from "@/lib/missions"
 import { useUTM } from "@/hooks/useUTM"
 import { useInactiveReminder } from "@/hooks/useInactiveReminder"
 import { QuickEnhanceModal } from "@/components/QuickEnhanceModal"
+import { getUserProfile, loadProgress } from "@/lib/db"
+import { getLocalXP, getLocalGems, saveLocalXP, saveLocalGems, XP_UPDATE_EVENT, GEMS_UPDATE_EVENT } from "@/lib/xp"
 
 // Initialize user-scoped localStorage namespacing
 initUserScope()
@@ -133,6 +135,37 @@ function MissionTracker() {
   return null
 }
 
+// ── Profile Sync: DB → localStorage on login ─────────────────────────────
+// Ensures XP, gems and category progress are visible even on a fresh device.
+function ProfileSyncTracker() {
+  const { user } = useAuth()
+  useEffect(() => {
+    if (!user?.id) return
+    const uid = user.id
+
+    // Sync XP / gems from DB if localStorage is empty
+    const localXP = getLocalXP(uid)
+    const localGems = getLocalGems(uid)
+    if (localXP === 0 || localGems === 0) {
+      getUserProfile(uid).then(({ data: profile }) => {
+        if (!profile) return
+        if (localXP === 0 && (profile.xp ?? 0) > 0) {
+          saveLocalXP(uid, profile.xp!)
+          window.dispatchEvent(new Event(XP_UPDATE_EVENT))
+        }
+        if (localGems === 0 && (profile.gems ?? 0) > 0) {
+          saveLocalGems(uid, profile.gems!)
+          window.dispatchEvent(new Event(GEMS_UPDATE_EVENT))
+        }
+      })
+    }
+
+    // Sync category progress from DB → localStorage (loadProgress already does this)
+    loadProgress(uid).catch(() => {/* silent — localStorage remains as fallback */})
+  }, [user?.id])
+  return null
+}
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -144,6 +177,7 @@ export default function App() {
           <AnalyticsTracker />
           <ActivityTracker />
           <MissionTracker />
+          <ProfileSyncTracker />
           <Toaster position="top-right" />
           <QuickEnhanceModal />
           <Suspense fallback={<PageLoading />}>
