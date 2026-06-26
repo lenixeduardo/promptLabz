@@ -149,12 +149,13 @@ function SkillsTab() {
         <input
           type="text"
           placeholder="Buscar skills..."
+          aria-label="Buscar skills"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="flex-1 bg-transparent text-sm text-foregroundDark placeholder:text-foregroundPlaceholder focus:outline-none dark:text-white"
         />
         {search && (
-          <button onClick={() => setSearch("")}>
+          <button onClick={() => setSearch("")} aria-label="Limpar busca">
             <Icons.X className="h-3.5 w-3.5 text-foregroundMuted" />
           </button>
         )}
@@ -193,7 +194,6 @@ function SkillsTab() {
                 Recomendadas — Superpowers
               </span>
             </div>
-            <button className="text-xs font-semibold text-emerald">Ver todas</button>
           </div>
           <p className="mb-3 text-xs text-foregroundMuted">Skills curadas com instalação 1-clique</p>
           <div className="no-scrollbar -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
@@ -298,12 +298,13 @@ function PromptsTab() {
         <input
           type="text"
           placeholder="Buscar prompts..."
+          aria-label="Buscar prompts"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="flex-1 bg-transparent text-sm text-foregroundDark placeholder:text-foregroundPlaceholder focus:outline-none dark:text-white"
         />
         {search && (
-          <button onClick={() => setSearch("")}>
+          <button onClick={() => setSearch("")} aria-label="Limpar busca">
             <Icons.X className="h-3.5 w-3.5 text-foregroundMuted" />
           </button>
         )}
@@ -423,12 +424,13 @@ function TemplatesTab() {
         <input
           type="text"
           placeholder="Buscar templates..."
+          aria-label="Buscar templates"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="flex-1 bg-transparent text-sm text-foregroundDark placeholder:text-foregroundPlaceholder focus:outline-none dark:text-white"
         />
         {search && (
-          <button onClick={() => setSearch("")}>
+          <button onClick={() => setSearch("")} aria-label="Limpar busca">
             <Icons.X className="h-3.5 w-3.5 text-foregroundMuted" />
           </button>
         )}
@@ -515,10 +517,12 @@ export default function Lab() {
         <h1 className="text-2xl font-extrabold text-foregroundDark dark:text-white">{title}</h1>
         <p className="mt-0.5 text-sm text-[#3E6B50] dark:text-foregroundMuted">{subtitle}</p>
 
-        <div className="mt-4 flex gap-6">
+        <div role="tablist" className="mt-4 flex gap-6">
           {TABS.map(tab => (
             <button
               key={tab.key}
+              role="tab"
+              aria-selected={activeTab === tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={`pb-3 text-sm font-semibold transition-colors ${
                 activeTab === tab.key

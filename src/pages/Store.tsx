@@ -17,6 +17,7 @@ export default function Store() {
   const { user } = useAuth()
   const [gems, setGems] = useState(0)
   const [ownedAvatarIds, setOwnedAvatarIds] = useState<string[]>(["cat-green"])
+  const [purchasingId, setPurchasingId] = useState<string | null>(null)
 
   useEffect(() => {
     if (!user?.id) return
@@ -33,26 +34,43 @@ export default function Store() {
     }
     const newGems = gems - price
     saveLocalGems(user.id, newGems)
-    updateUserGems(user.id, newGems)
     setGems(newGems)
     return newGems
   }
 
-  function handleBuyAvatar(avatarId: string, price: number) {
-    if (!user?.id) return
+  async function handleBuyAvatar(avatarId: string, price: number) {
+    if (!user?.id || purchasingId) return
     if (ownedAvatarIds.includes(avatarId)) return
-    if (deductGems(price) === null) return
-    const inv = addAvatar(user.id, avatarId)
-    setOwnedAvatarIds([...inv.ownedAvatarIds])
-    updateUserAvatar(user.id, avatarId)
-    sileo.success({ title: "Avatar desbloqueado! 🎉" })
+    const newGems = deductGems(price)
+    if (newGems === null) return
+    setPurchasingId(avatarId)
+    try {
+      const inv = addAvatar(user.id, avatarId)
+      setOwnedAvatarIds([...inv.ownedAvatarIds])
+      await updateUserAvatar(user.id, avatarId)
+      await updateUserGems(user.id, newGems)
+      sileo.success({ title: "Avatar desbloqueado! 🎉" })
+    } catch {
+      sileo.error({ title: "Erro ao salvar. Tente novamente." })
+    } finally {
+      setPurchasingId(null)
+    }
   }
 
-  function handleBuyPowerUp(id: PowerUpId, price: number) {
-    if (!user?.id) return
-    if (deductGems(price) === null) return
-    addPowerUp(user.id, id)
-    sileo.success({ title: "Power-up adicionado! ⚡" })
+  async function handleBuyPowerUp(id: PowerUpId, price: number) {
+    if (!user?.id || purchasingId) return
+    const newGems = deductGems(price)
+    if (newGems === null) return
+    setPurchasingId(id)
+    try {
+      addPowerUp(user.id, id)
+      await updateUserGems(user.id, newGems)
+      sileo.success({ title: "Power-up adicionado! ⚡" })
+    } catch {
+      sileo.error({ title: "Erro ao salvar. Tente novamente." })
+    } finally {
+      setPurchasingId(null)
+    }
   }
 
   function handleBuyGemPackage() {
@@ -110,16 +128,19 @@ export default function Store() {
           <div className="grid grid-cols-2 gap-3">
             {AVATARS.filter((a) => a.price > 0).map((avatar) => {
               const owned = ownedAvatarIds.includes(avatar.id)
+              const buying = purchasingId === avatar.id
               return (
                 <button
                   key={avatar.id}
                   onClick={() => handleBuyAvatar(avatar.id, avatar.price)}
-                  disabled={owned}
+                  disabled={owned || !!purchasingId}
                   className={cn(
                     "relative flex flex-col items-center gap-2 rounded-2xl border p-3 shadow-sm transition-all active:scale-[0.97]",
                     owned
                       ? "border-primary-dark bg-pageBgLight opacity-80"
-                      : "border-stroke-muted bg-white hover:shadow-md"
+                      : buying
+                        ? "border-stroke-muted bg-white opacity-70"
+                        : "border-stroke-muted bg-white hover:shadow-md disabled:opacity-60"
                   )}
                 >
                   {owned && (
@@ -137,8 +158,14 @@ export default function Store() {
                   <p className="text-center text-xs font-bold text-foregroundDark dark:text-white">{avatar.name}</p>
                   {!owned && (
                     <div className="flex items-center gap-1">
-                      <Icons.Diamond className="h-3 w-3 text-cyan-500" />
-                      <span className="text-xs font-semibold text-primary-dark">{avatar.price}</span>
+                      {buying ? (
+                        <span className="text-xs font-semibold text-primary-dark">Comprando...</span>
+                      ) : (
+                        <>
+                          <Icons.Diamond className="h-3 w-3 text-cyan-500" />
+                          <span className="text-xs font-semibold text-primary-dark">{avatar.price}</span>
+                        </>
+                      )}
                     </div>
                   )}
                 </button>
@@ -157,11 +184,16 @@ export default function Store() {
               const Icon = Icons[pu.icon as keyof typeof Icons] as React.ComponentType<{
                 className?: string
               }>
+              const buying = purchasingId === pu.id
               return (
                 <button
                   key={pu.id}
                   onClick={() => handleBuyPowerUp(pu.id, pu.storePrice)}
-                  className="flex items-center gap-3 rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+                  disabled={!!purchasingId}
+                  className={cn(
+                    "flex items-center gap-3 rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm transition-all active:scale-[0.98]",
+                    buying ? "opacity-70" : "hover:shadow-md disabled:opacity-60"
+                  )}
                 >
                   <div
                     className={cn(
@@ -176,8 +208,14 @@ export default function Store() {
                     <p className="text-xs text-foregroundMuted dark:text-foregroundSecondary">{pu.description}</p>
                   </div>
                   <div className="flex items-center gap-1 rounded-full bg-pageBgLight px-3 py-1">
-                    <Icons.Diamond className="h-3 w-3 text-cyan-500" />
-                    <span className="text-xs font-bold text-primary-dark">{pu.storePrice}</span>
+                    {buying ? (
+                      <span className="text-xs font-bold text-primary-dark">Comprando...</span>
+                    ) : (
+                      <>
+                        <Icons.Diamond className="h-3 w-3 text-cyan-500" />
+                        <span className="text-xs font-bold text-primary-dark">{pu.storePrice}</span>
+                      </>
+                    )}
                   </div>
                 </button>
               )

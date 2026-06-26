@@ -140,7 +140,7 @@ export default function LearningLabPage() {
           </div>
         </div>
 
-        <div className="mt-3 flex gap-2 overflow-x-auto">
+        <div role="tablist" className="mt-3 flex gap-2 overflow-x-auto">
           {TRACKS.map((t) => {
             const unlocked = trackUnlocked[t.id];
             const isActive = t.id === active.id;
@@ -149,6 +149,8 @@ export default function LearningLabPage() {
               <button
                 key={t.id}
                 type="button"
+                role="tab"
+                aria-selected={isActive}
                 disabled={!unlocked}
                 onClick={() => setSearchParams({ track: t.id })}
                 className={cn(

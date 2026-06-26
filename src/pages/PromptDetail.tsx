@@ -1,10 +1,11 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams, useLocation } from "react-router-dom"
 import { ChevronDown, ChevronUp, Copy, ArrowRight, Heart } from "lucide-react"
 import { AppBottomNav } from "@/components/AppBottomNav"
 import { cn } from "@/lib/utils"
 import { trackPromptUsed } from "@/lib/analytics"
 import { useFavoritePrompts } from "@/hooks/useFavoritePrompts"
+import { TEMPLATES } from "@/data/templatesData"
 
 const PROMPT_DATA = {
   id: "1",
@@ -87,16 +88,68 @@ function AccordionItem({
 
 export default function PromptDetail() {
   const navigate = useNavigate()
+  const { promptId } = useParams<{ promptId: string }>()
+  const location = useLocation()
   const [openItem, setOpenItem] = useState<string | null>("1")
   const [copied, setCopied] = useState(false)
   const { toggleFavoritePrompt, isFavoritePrompt } = useFavoritePrompts()
-  const isFav = isFavoritePrompt(PROMPT_DATA.id)
+
+  // Resolve prompt: check location.state first, then look up by promptId in TEMPLATES
+  const statePrompt = (location.state as { promptText?: string; title?: string; category?: string; tags?: string[] } | null)
+  const matchedTemplate = promptId ? TEMPLATES.find((t) => t.promptId === promptId) : null
+
+  const prompt = statePrompt?.promptText
+    ? {
+        id: promptId ?? PROMPT_DATA.id,
+        title: statePrompt.title ?? PROMPT_DATA.title,
+        category: statePrompt.category ?? PROMPT_DATA.category,
+        text: statePrompt.promptText,
+        tags: statePrompt.tags ?? PROMPT_DATA.tags,
+        howItWorks: PROMPT_DATA.howItWorks,
+        steps: PROMPT_DATA.steps,
+      }
+    : matchedTemplate
+    ? {
+        id: matchedTemplate.promptId,
+        title: matchedTemplate.name,
+        category: matchedTemplate.category,
+        text: matchedTemplate.promptContent,
+        tags: matchedTemplate.tags,
+        howItWorks: PROMPT_DATA.howItWorks,
+        steps: PROMPT_DATA.steps,
+      }
+    : promptId && promptId !== PROMPT_DATA.id
+    ? null
+    : PROMPT_DATA
+
+  const isFav = isFavoritePrompt(prompt?.id ?? PROMPT_DATA.id)
 
   function handleCopy() {
-    navigator.clipboard.writeText(PROMPT_DATA.text).then(() => {
+    if (!prompt) return
+    navigator.clipboard.writeText(prompt.text).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     })
+  }
+
+  // Not found state
+  if (!prompt) {
+    return (
+      <div className="min-h-screen bg-surface-soft flex flex-col items-center justify-center px-6 pb-32">
+        <p className="mb-2 text-lg font-bold text-foregroundDark">Prompt não encontrado</p>
+        <p className="mb-6 text-sm text-foregroundSecondary text-center">
+          Não conseguimos encontrar o prompt com ID "{promptId}".
+        </p>
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 rounded-xl border border-primary-dark px-5 py-3 text-sm font-semibold text-primary-dark transition-all active:scale-95 hover:bg-pageBgLight"
+        >
+          <ArrowRight className="h-4 w-4 rotate-180" />
+          Voltar
+        </button>
+        <AppBottomNav />
+      </div>
+    )
   }
 
   return (
@@ -111,9 +164,9 @@ export default function PromptDetail() {
           >
             <ArrowRight className="h-4 w-4 rotate-180 text-primary-dark" />
           </button>
-          <span className="text-xs font-semibold text-[#3E6B50]">{PROMPT_DATA.category}</span>
+          <span className="text-xs font-semibold text-[#3E6B50]">{prompt.category}</span>
           <button
-            onClick={() => toggleFavoritePrompt(PROMPT_DATA.id)}
+            onClick={() => toggleFavoritePrompt(prompt.id)}
             className="ml-auto flex h-9 w-9 items-center justify-center rounded-full border border-stroke-muted bg-white shadow-sm transition-all active:scale-95"
             aria-label={isFav ? "Remover dos favoritos" : "Salvar nos favoritos"}
           >
@@ -125,7 +178,7 @@ export default function PromptDetail() {
         <div className="flex items-start justify-between">
           <div className="flex-1 pr-2">
             <h1 className="text-xl font-extrabold leading-tight text-foregroundDark">
-              {PROMPT_DATA.title}
+              {prompt.title}
             </h1>
           </div>
           <img
@@ -144,7 +197,7 @@ export default function PromptDetail() {
           </p>
           <div className="max-h-40 overflow-y-auto rounded-xl bg-[#F5FBF7] p-3">
             <p className="whitespace-pre-wrap text-xs leading-relaxed text-foregroundDark">
-              {PROMPT_DATA.text}
+              {prompt.text}
             </p>
           </div>
         </div>
@@ -152,7 +205,7 @@ export default function PromptDetail() {
         {/* Como funciona */}
         <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
           <p className="mb-1 text-sm font-bold text-foregroundDark">Como funciona?</p>
-          {PROMPT_DATA.howItWorks.map((item) => (
+          {prompt.howItWorks.map((item) => (
             <AccordionItem
               key={item.id}
               item={item}
@@ -166,7 +219,7 @@ export default function PromptDetail() {
         <div className="rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
           <p className="mb-4 text-sm font-bold text-foregroundDark">Processo de resultado:</p>
           <div className="flex items-center justify-between">
-            {PROMPT_DATA.steps.map((step, i) => (
+            {prompt.steps.map((step, i) => (
               <div key={step.label} className="flex flex-1 items-center">
                 <div className="flex flex-col items-center gap-1">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-dark text-sm font-bold text-white shadow-md">
@@ -175,7 +228,7 @@ export default function PromptDetail() {
                   <span className="text-[11px] font-semibold text-foregroundDark">{step.label}</span>
                   <span className="text-[9px] text-center text-foregroundMuted">{step.description}</span>
                 </div>
-                {i < PROMPT_DATA.steps.length - 1 && (
+                {i < prompt.steps.length - 1 && (
                   <div className="mx-1 mb-6 h-0.5 flex-1 bg-gradient-to-r from-primary-dark to-stroke-light" />
                 )}
               </div>
@@ -185,7 +238,7 @@ export default function PromptDetail() {
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2">
-          {PROMPT_DATA.tags.map((tag) => (
+          {prompt.tags.map((tag) => (
             <span
               key={tag}
               className="rounded-full border border-stroke-light bg-pageBgLight px-3 py-1 text-xs font-semibold text-primary-dark"
@@ -213,7 +266,7 @@ export default function PromptDetail() {
           </button>
           <button
             onClick={() => {
-              trackPromptUsed(PROMPT_DATA.category, PROMPT_DATA.title)
+              trackPromptUsed(prompt.category, prompt.title)
               navigate("/lab-result")
             }}
             className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"

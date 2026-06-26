@@ -58,9 +58,9 @@ describe("LearningLab — trilha de aprendizado", () => {
 
   it("exibe os seletores das três trilhas", () => {
     renderLearningLab()
-    expect(screen.getByRole("button", { name: /Trilha A1/i })).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /Trilha A2/i })).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /Trilha A3/i })).toBeInTheDocument()
+    expect(screen.getByRole("tab", { name: /Trilha A1/i })).toBeInTheDocument()
+    expect(screen.getByRole("tab", { name: /Trilha A2/i })).toBeInTheDocument()
+    expect(screen.getByRole("tab", { name: /Trilha A3/i })).toBeInTheDocument()
   })
 
   it("exibe o primeiro módulo da trilha A1", () => {
@@ -76,7 +76,7 @@ describe("LearningLab — trilha de aprendizado", () => {
 
   it("troca para a trilha A2 ao clicar no seletor", () => {
     renderLearningLab()
-    fireEvent.click(screen.getByRole("button", { name: /Trilha A2/i }))
+    fireEvent.click(screen.getByRole("tab", { name: /Trilha A2/i }))
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Trilha A2")
     expect(screen.getByText(/Prompts avançados/i)).toBeInTheDocument()
   })
@@ -100,7 +100,7 @@ describe("LearningLab — trilha de aprendizado", () => {
 
   it("troca para a trilha A3 ao clicar no seletor", () => {
     renderLearningLab()
-    fireEvent.click(screen.getByRole("button", { name: /Trilha A3/i }))
+    fireEvent.click(screen.getByRole("tab", { name: /Trilha A3/i }))
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Trilha A3")
     expect(screen.getByText(/Prompts para código/i)).toBeInTheDocument()
   })
