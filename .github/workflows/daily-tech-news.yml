@@ -12,6 +12,20 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: Validate required secrets
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          DAILY_NEWS_SECRET: ${{ secrets.DAILY_NEWS_SECRET }}
+        run: |
+          missing=()
+          [ -z "$SUPABASE_URL" ]      && missing+=("SUPABASE_URL")
+          [ -z "$DAILY_NEWS_SECRET" ] && missing+=("DAILY_NEWS_SECRET")
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Missing required repository secrets: ${missing[*]}"
+            echo "Go to Settings → Secrets and variables → Actions and add the missing secrets."
+            exit 1
+          fi
+
       - name: Trigger daily-tech-news Edge Function
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
