@@ -14,7 +14,6 @@ import {
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { AppPageHeader } from "@/components/AppPageHeader";
 import { ReviewModal } from "@/components/ReviewModal";
-import { BackTapSetupCard } from "@/components/BackTapSetupCard";
 import { useAuth } from "@/hooks/useAuth";
 
 const BACK_TAP_STEPS = [
@@ -108,13 +107,6 @@ export default function SettingsPage() {
               </button>
             </div>
           </div>
-        </section>
-
-        <section>
-          <p className="mb-3 px-1 text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
-            Acesso Rápido
-          </p>
-          <BackTapSetupCard />
         </section>
 
         {/* Sign out */}
