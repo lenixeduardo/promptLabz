@@ -143,7 +143,7 @@ function FlameIllustration() {
 function HillsBackground() {
   return (
     <svg
-      viewBox="0 0 375 130"
+      viewBox="0 80 375 50"
       xmlns="http://www.w3.org/2000/svg"
       className="w-full block"
       preserveAspectRatio="none"
