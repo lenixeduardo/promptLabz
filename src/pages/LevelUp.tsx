@@ -279,10 +279,9 @@ export default function LevelUp() {
           style={{ marginBottom: -12 }}
         >
           <img
-            src="/assets/mascot-levelup.jpg"
+            src="/assets/mascot-levelup.png"
             alt="Mascote celebrando novo nível"
-            className="h-48 w-auto object-contain"
-            style={{ mixBlendMode: "multiply", display: "block" }}
+            className="h-48 w-auto object-contain drop-shadow-xl"
           />
         </div>
 
