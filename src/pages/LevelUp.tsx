@@ -281,7 +281,7 @@ export default function LevelUp() {
           <img
             src="/assets/mascot-levelup.png"
             alt="Mascote celebrando novo nível"
-            className="h-48 w-auto object-contain drop-shadow-xl"
+            className="h-96 w-auto object-contain drop-shadow-xl"
           />
         </div>
 
