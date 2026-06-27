@@ -102,7 +102,7 @@ function FeatureCard({ illustration, title, description }: FeatureCardProps) {
 /* ── Cat-laptop illustration ── */
 function CatLaptopIllustration() {
   return (
-    <div className="relative w-[68px] h-[60px]">
+    <div className="relative w-[90px] h-[80px]">
       <img
         src="/cat-laptop.png"
         alt="Gato com laptop"
@@ -290,15 +290,6 @@ export default function HeroPage() {
                 Do zero ao avançado, sem precisar saber programar.
               </p>
 
-              <button
-                onClick={handleCTA}
-                className="bg-[#0F3D2E] text-white font-bold text-[13px] uppercase tracking-[0.1em] py-[15px] rounded-full flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(15,61,46,0.35)] hover:bg-[#1a5c44] active:scale-[0.98] transition-all mb-5"
-                style={{ width: '240px' }}
-              >
-                {hasAccount ? 'CONTINUAR' : 'COMEÇAR AGORA'}
-                <ArrowRight />
-              </button>
-
               <div className="flex items-center gap-[6px] flex-wrap pb-4" style={{ maxWidth: '210px' }}>
                 <div className="flex items-center gap-[3px]">
                   <BookOpen />
@@ -334,8 +325,20 @@ export default function HeroPage() {
           </div>
         </section>
 
+        {/* CTA — flutuando sobre a faixa verde entre hero e features */}
+        <div className="relative z-10 flex justify-center px-4 -mt-6 mb-0">
+          <button
+            onClick={handleCTA}
+            className="bg-[#0F3D2E] text-white font-bold text-[13px] uppercase tracking-[0.1em] py-[15px] rounded-full flex items-center justify-center gap-2.5 shadow-[0_8px_24px_rgba(15,61,46,0.4)] hover:bg-[#1a5c44] active:scale-[0.98] transition-all"
+            style={{ width: '240px' }}
+          >
+            {hasAccount ? 'CONTINUAR' : 'COMEÇAR AGORA'}
+            <ArrowRight />
+          </button>
+        </div>
+
         {/* ── Features Section ── */}
-        <section className="bg-white px-4 pt-8 pb-8">
+        <section className="bg-white px-4 pt-7 pb-8">
           <div className="text-center mb-6">
             <div className="flex items-center justify-center gap-2 mb-2">
               <Sparkle size={13} className="text-[#22C55E]" />
