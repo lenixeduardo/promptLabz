@@ -238,6 +238,10 @@ module.exports = {
 					'70%':  { transform: 'scale(1.1)', opacity: '1' },
 					'100%': { transform: 'scale(1)', opacity: '1' },
 				},
+				'mascot-float': {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%':      { transform: 'translateY(-10px)' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -258,6 +262,7 @@ module.exports = {
 				'crown-float': 'crown-float 2.2s ease-in-out infinite',
 				'top10-glow': 'top10-glow 2s ease-in-out infinite',
 				'celebration-pop': 'celebration-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) both',
+				'mascot-float': 'mascot-float 2.2s ease-in-out infinite',
 			},
 		},
 	},
