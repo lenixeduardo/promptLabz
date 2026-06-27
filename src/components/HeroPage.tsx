@@ -290,32 +290,6 @@ export default function HeroPage() {
                 Do zero ao avançado, sem precisar saber programar.
               </p>
 
-              <div className="flex items-center gap-[6px] flex-wrap pb-4" style={{ maxWidth: '210px' }}>
-                <div className="flex items-center gap-[3px]">
-                  <BookOpen />
-                  <div className="leading-none">
-                    <div className="text-[11px] font-bold text-[#0F3D2E]">68+</div>
-                    <div className="text-[9px] text-[#0F3D2E]">lições</div>
-                  </div>
-                </div>
-
-                <span className="text-[#22C55E] text-[8px] font-black">•</span>
-
-                <div className="flex items-center gap-[3px]">
-                  <LightningBolt size={12} color="#22C55E" />
-                  <span className="text-[10px] font-semibold text-[#0F3D2E]">Gamificado</span>
-                </div>
-
-                <span className="text-[#22C55E] text-[8px] font-black">•</span>
-
-                <div className="flex items-center gap-[3px]">
-                  <ShieldCheck />
-                  <div className="leading-none">
-                    <div className="text-[11px] font-bold text-[#0F3D2E]">100%</div>
-                    <div className="text-[9px] text-[#0F3D2E]">grátis</div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Hills landscape */}
