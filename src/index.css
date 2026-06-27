@@ -439,8 +439,18 @@
   .animate-ring,
   .animate-glow,
   .animate-twinkle,
-  .animate-slide-up {
+  .animate-slide-up,
+  .animate-level-badge-pop,
+  .animate-unlock-slide-in,
+  .animate-achievement-unlock,
+  .animate-rank-entry,
+  .animate-podium-rise,
+  .animate-crown-float,
+  .animate-top10-glow,
+  .animate-celebration-pop {
     animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
 
