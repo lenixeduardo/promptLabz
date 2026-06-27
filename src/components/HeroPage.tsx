@@ -292,10 +292,6 @@ export default function HeroPage() {
 
             </div>
 
-            {/* Hills landscape */}
-            <div className="relative z-0 -mb-1">
-              <HillsBackground />
-            </div>
           </div>
         </section>
 
