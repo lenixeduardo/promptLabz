@@ -218,18 +218,13 @@ export default function HeroPage() {
 
         {/* ── Navigation Header ── */}
         <header className="bg-white flex items-center justify-between px-4 py-3 sticky top-0 z-30 shadow-[0_1px_0_#E8F7EC]">
-          <div className="flex items-center gap-2">
-            <div className="relative w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0">
-              <img
-                src="/mascot.png"
-                alt="PromptLabz"
-                className="absolute inset-0 w-full h-full object-cover object-top scale-[1.4] translate-y-1"
-              />
-            </div>
-            <span className="text-[22px] font-extrabold tracking-tight leading-none">
-              <span className="text-[#0F3D2E]">Prompt</span>
-              <span className="text-[#22C55E]">Labz</span>
-            </span>
+          {/* Logo PNG has large whitespace — wrapper clips to content area */}
+          <div className="overflow-hidden flex-shrink-0" style={{ height: '40px', width: '128px' }}>
+            <img
+              src="/logo.png"
+              alt="PromptLabz"
+              style={{ width: '128px', height: 'auto', marginTop: '-69px' }}
+            />
           </div>
 
           <button
