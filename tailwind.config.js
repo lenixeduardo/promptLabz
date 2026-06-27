@@ -15,6 +15,9 @@ module.exports = {
 				'2xl': '1400px',
 			},
 		},		extend: {
+			fontWeight: {
+				heavy: '900',
+			},
 			fontFamily: {
 				/* duolingo-sans é servido via @font-face em index.css (Nunito como base) */
 				sans: [
