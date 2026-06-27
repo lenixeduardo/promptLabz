@@ -203,6 +203,7 @@ Browser (React SPA)
 - **Illustration cards**: match the height/width ratio of the card icons to the reference. Feature card icons that appear small-to-medium in the reference should stay that way (typically 48–56px, not 80–90px).
 - **When in doubt, size down** — oversized assets break layout balance. It is easier to increase a size on request than to justify an oversized default.
 - **Logo/brand assets**: render at the size visible in the reference nav/header (typically 32–40px tall for nav logos), using overflow-hidden crop if the PNG has extra whitespace.
+- **Assets ausentes**: se um asset (imagem, ícone, ilustração) não foi fornecido e não é possível extraí-lo/cropá-lo de uma imagem de referência, **NÃO substituir por SVG gerado, placeholder aleatório ou qualquer coisa inventada**. Em vez disso, **pausar e solicitar o asset ao usuário** antes de continuar.
 
 ### Non-obvious Patterns & Gotchas
 - **Offline-first behavior**: Changes are immediately saved to localStorage, then synced to Supabase when online. If sync fails, data remains in localStorage and retries automatically.
