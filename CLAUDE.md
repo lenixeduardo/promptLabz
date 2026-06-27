@@ -197,6 +197,13 @@ Browser (React SPA)
 - **Test files** located alongside source files with `.test.tsx` suffix
 - **CI**: GitHub Actions runs typecheck → lint → test → build on every PR
 
+### Design & Asset Sizing Rules
+- **Always match reference image proportions exactly.** When implementing UI from a design reference or screenshot, reproduce icon/image sizes as they appear in the reference — do NOT scale them up or estimate freely.
+- **Icons**: use the same visual weight as shown. If a reference shows a small icon (e.g. ~24px), keep it small; do not enlarge to 52px, 80px, etc. unless the reference clearly shows a large icon.
+- **Illustration cards**: match the height/width ratio of the card icons to the reference. Feature card icons that appear small-to-medium in the reference should stay that way (typically 48–56px, not 80–90px).
+- **When in doubt, size down** — oversized assets break layout balance. It is easier to increase a size on request than to justify an oversized default.
+- **Logo/brand assets**: render at the size visible in the reference nav/header (typically 32–40px tall for nav logos), using overflow-hidden crop if the PNG has extra whitespace.
+
 ### Non-obvious Patterns & Gotchas
 - **Offline-first behavior**: Changes are immediately saved to localStorage, then synced to Supabase when online. If sync fails, data remains in localStorage and retries automatically.
 - **Context API usage**: Auth context provides user data and auth functions; Lives context manages game lives system; Achievements context tracks badge progress.
