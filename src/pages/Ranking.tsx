@@ -64,6 +64,8 @@ function getAvatarImage(avatarUrl: string | null): string {
   return found?.image ?? "/assets/avatar-cat.png"
 }
 
+const PODIUM_DELAYS = { 1: 0.1, 2: 0, 3: 0.2 } as const
+
 function PodiumSpot({ user, rank }: { user: RankedUser | undefined; rank: 1 | 2 | 3 }) {
   if (!user) return <div className="flex-1" />
 
@@ -94,15 +96,16 @@ function PodiumSpot({ user, rank }: { user: RankedUser | undefined; rank: 1 | 2 
   return (
     <div
       className={cn(
-        "flex flex-1 flex-col items-center gap-1",
+        "animate-podium-rise flex flex-1 flex-col items-center gap-1",
         isFirst ? "order-2" : rank === 2 ? "order-1" : "order-3",
       )}
+      style={{ animationDelay: `${PODIUM_DELAYS[rank]}s` }}
     >
       {/* Crown / medal icon */}
       {isFirst ? (
-        <span className="text-xl animate-bounce-slow">👑</span>
+        <span className="text-xl animate-crown-float">👑</span>
       ) : (
-        <span className="text-base">{medals[rank]}</span>
+        <span className="text-base animate-bounce-slow" style={{ animationDelay: `${rank * 0.15}s` }}>{medals[rank]}</span>
       )}
 
       {/* Avatar */}
@@ -285,6 +288,26 @@ export default function Ranking() {
           </div>
         ) : (
           <>
+            {/* Top 10 celebration banner */}
+            {currentUser && currentUser.position <= 10 && (
+              <div className="animate-celebration-pop mb-5 flex items-center gap-3 rounded-2xl border border-emerald/40 bg-gradient-to-r from-emerald/10 to-mint/10 px-4 py-3 shadow-sm animate-top10-glow">
+                <span className="text-2xl">🎉</span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-extrabold text-primary-dark">
+                    Você está no Top {currentUser.position <= 3 ? currentUser.position : "10"}!
+                  </p>
+                  <p className="text-xs text-foreground-muted">
+                    {currentUser.position === 1
+                      ? "Você é o #1 do PromptLab 🏆"
+                      : currentUser.position <= 3
+                        ? `Incrível! Pódio garantido na posição #${currentUser.position}`
+                        : `Continue assim — você está no top 10 🔥`}
+                  </p>
+                </div>
+                <span className="text-xl">{currentUser.position === 1 ? "👑" : "⭐"}</span>
+              </div>
+            )}
+
             {/* Podium — white card */}
             <div className="mb-5 overflow-hidden rounded-3xl border border-stroke-muted bg-white shadow-sm">
               <div className="px-4 pt-4 pb-0">
@@ -343,15 +366,16 @@ export default function Ranking() {
                   <span className="text-[9px] text-foreground-tertiary">i</span>
                 </p>
 
-                {rest.map((entry) => (
+                {rest.map((entry, idx) => (
                   <div
                     key={entry.id}
                     className={cn(
-                      "flex items-center gap-3 rounded-2xl border px-4 py-3 transition-all",
+                      "animate-rank-entry flex items-center gap-3 rounded-2xl border px-4 py-3 transition-all",
                       entry.isCurrentUser
                         ? "border-emerald/40 bg-surface-success shadow-sm shadow-emerald/10"
                         : "border-stroke-muted bg-white shadow-sm",
                     )}
+                    style={{ animationDelay: `${0.3 + idx * 0.07}s` }}
                   >
                     {/* Position */}
                     <span

@@ -94,7 +94,7 @@ export default function Achievements() {
 
         {/* Achievement cards */}
         <div className="flex flex-col gap-3 pb-6">
-          {allAchievements.map((ach) => {
+          {allAchievements.map((ach, idx) => {
             const isUnlocked = unlocked.includes(ach.id)
             const IconComp = Icons[ach.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }> | undefined
             const progress = getProgressCount(ach.id, data)
@@ -103,20 +103,22 @@ export default function Achievements() {
               <article
                 key={ach.id}
                 className={cn(
-                  "flex items-center gap-3 rounded-2xl border bg-white p-4 shadow-sm transition-all duration-300",
+                  "animate-rank-entry flex items-center gap-3 rounded-2xl border bg-white p-4 shadow-sm transition-all duration-300",
                   isUnlocked
                     ? "border-stroke-muted scale-100"
                     : "border-pageBgLight opacity-65 scale-98",
                 )}
+                style={{ animationDelay: `${idx * 0.06}s` }}
               >
                 {/* Icon Circle */}
                 <div
                   className={cn(
                     "relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full transition-all duration-300",
                     isUnlocked
-                      ? "bg-gradient-to-br from-emerald to-emerald shadow-md"
+                      ? "animate-achievement-unlock bg-gradient-to-br from-emerald to-emerald shadow-md"
                       : "bg-gradient-to-br from-[#E8EEE9] to-[#DCEAE3]",
                   )}
+                  style={isUnlocked ? { animationDelay: `${idx * 0.06 + 0.15}s` } : undefined}
                   aria-hidden="true"
                 >
                   {isUnlocked ? (
