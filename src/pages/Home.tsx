@@ -5,7 +5,6 @@ import {
   ArrowRight,
   Clock,
   Sparkles,
-  Star,
   Lock,
   Check,
   Zap,
@@ -25,7 +24,6 @@ import { useModuleProgress, type TrackId } from "@/lib/moduleProgress";
 import { scopedKey, USER_SCOPE_EVENT } from "@/lib/userScope";
 import { useAuth } from "@/hooks/useAuth";
 import { getLocalXP, getLocalGems, GEMS_UPDATE_EVENT, XP_UPDATE_EVENT } from "@/lib/xp";
-import { getLevelTitle } from "@/lib/levelTitles";
 import { getDailyTip } from "@/lib/dailyTip";
 
 type TrackInfo = { id: TrackId; label: string; modules: string[] };
@@ -180,11 +178,6 @@ export default function HomePage() {
   const { count: streak, longest: longestStreak } = useStreak();
   const [streakCelebration, setStreakCelebration] = useState(false);
 
-  const XP_PER_LEVEL = 500;
-  const level = Math.floor(xp / XP_PER_LEVEL) + 1;
-  const currentXPInLevel = xp % XP_PER_LEVEL;
-  const targetXPInLevel = XP_PER_LEVEL;
-  const xpPct = Math.round((currentXPInLevel / targetXPInLevel) * 100);
   const dailyTip = getDailyTip();
 
   useEffect(() => {
@@ -265,30 +258,8 @@ export default function HomePage() {
           )}
           <DailyTipCard tip={dailyTip.text} />
 
-          <div className="rounded-2xl bg-gradient-to-br from-forest to-emerald-dark p-5 text-white shadow-lg shadow-forest/20">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider opacity-80">
-                  Nível {level}
-                </p>
-                <p className="text-xl font-extrabold">{getLevelTitle(level)}</p>
-              </div>
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-card/15 backdrop-blur">
-                <Star className="h-7 w-7 text-luxury fill-luxury" />
-              </div>
-            </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-card/20">
-              <div
-                className="h-full rounded-full bg-luxury transition-all"
-                style={{ width: `${xpPct}%` }}
-              />
-            </div>
-            <p className="mt-2 text-xs opacity-90">
-              {currentXPInLevel} / {targetXPInLevel} XP para o próximo nível
-              </p>
-          </div>
-
-          {/* ── Analisador de Prompts card ── */}            <Link
+          {/* ── Analisador de Prompts card ── */}
+          <Link
             to="/prompt-analyzer"
             className="group flex items-center gap-3 rounded-2xl border-2 border-emerald/30 bg-gradient-to-br from-emerald/[0.08] to-card p-4 transition-all hover:border-emerald/60 hover:shadow-md active:scale-[0.98]"
           >

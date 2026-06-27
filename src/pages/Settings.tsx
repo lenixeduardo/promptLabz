@@ -22,13 +22,32 @@ import { Switch } from "@/components/ui/switch";
 import { ReviewModal } from "@/components/ReviewModal";
 import { useAuth } from "@/hooks/useAuth";
 import { getReminderEnabled, setReminderEnabled } from "@/hooks/useInactiveReminder";
+import { getLocalXP, XP_UPDATE_EVENT } from "@/lib/xp";
+import { getLevelTitle } from "@/lib/levelTitles";
 
 const NOTIF_KEY = "promptlabz:settings:notif";
 const SOUND_KEY = "promptlabz:settings:sound";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+  const userId = user?.id ?? null;
+  const [xp, setXp] = useState(0);
+  useEffect(() => {
+    const readXP = () => setXp(userId ? getLocalXP(userId) : 0);
+    readXP();
+    window.addEventListener(XP_UPDATE_EVENT, readXP);
+    window.addEventListener("storage", readXP);
+    return () => {
+      window.removeEventListener(XP_UPDATE_EVENT, readXP);
+      window.removeEventListener("storage", readXP);
+    };
+  }, [userId]);
+  const XP_PER_LEVEL = 500;
+  const level = Math.floor(xp / XP_PER_LEVEL) + 1;
+  const currentXPInLevel = xp % XP_PER_LEVEL;
+  const xpPct = Math.round((currentXPInLevel / XP_PER_LEVEL) * 100);
+
   const [notif, setNotifState] = useState(() => localStorage.getItem(NOTIF_KEY) !== "false");
   const [sound, setSoundState] = useState(() => localStorage.getItem(SOUND_KEY) !== "false");
   const [reminders, setReminders] = useState(() => getReminderEnabled());
@@ -67,6 +86,30 @@ export default function SettingsPage() {
       />
 
       <div className="mx-auto w-full max-w-lg space-y-5 px-4 py-5">
+        {/* Nível */}
+        <div className="rounded-2xl bg-gradient-to-br from-forest to-emerald-dark p-5 text-white shadow-lg shadow-forest/20">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider opacity-80">
+                Nível {level}
+              </p>
+              <p className="text-xl font-extrabold">{getLevelTitle(level)}</p>
+            </div>
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-card/15 backdrop-blur">
+              <Star className="h-7 w-7 text-luxury fill-luxury" />
+            </div>
+          </div>
+          <div className="h-2 w-full overflow-hidden rounded-full bg-card/20">
+            <div
+              className="h-full rounded-full bg-luxury transition-all"
+              style={{ width: `${xpPct}%` }}
+            />
+          </div>
+          <p className="mt-2 text-xs opacity-90">
+            {currentXPInLevel} / {XP_PER_LEVEL} XP para o próximo nível
+          </p>
+        </div>
+
         {/* Preferências */}
         <section className="rounded-2xl border-2 border-stroke-light bg-card">
           <p className="px-4 pt-4 text-[11px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
