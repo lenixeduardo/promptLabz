@@ -1,3 +1,4 @@
+import React from "react"
 import { Navigate, useLocation, useNavigate } from "react-router-dom"
 import { CheckCircle2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -6,19 +7,24 @@ import { getLocalXP, getLevel } from "@/lib/xp"
 import { getLevelTitle } from "@/lib/levelTitles"
 
 // ── Confetti rectangles ─────────────────────────────────────────────
+// Negative delays start pieces mid-fall so confetti is visible immediately
 const CONFETTI = [
-  { color: "#4ADE80", x: "5%",  w: 7,  h: 18, rotate: 20,  delay: "0s",    dur: "3.2s" },
-  { color: "#FCD34D", x: "14%", w: 5,  h: 14, rotate: -30, delay: "0.4s",  dur: "3.8s" },
-  { color: "#86EFAC", x: "24%", w: 6,  h: 16, rotate: 45,  delay: "0.15s", dur: "2.9s" },
-  { color: "#FCD34D", x: "38%", w: 5,  h: 12, rotate: 15,  delay: "0.6s",  dur: "3.5s" },
-  { color: "#4ADE80", x: "50%", w: 7,  h: 16, rotate: -20, delay: "0.25s", dur: "4.0s" },
-  { color: "#A8EDCA", x: "62%", w: 6,  h: 15, rotate: 55,  delay: "0.5s",  dur: "3.1s" },
-  { color: "#FCD34D", x: "73%", w: 5,  h: 13, rotate: -40, delay: "0.1s",  dur: "3.6s" },
-  { color: "#4ADE80", x: "83%", w: 8,  h: 19, rotate: 25,  delay: "0.35s", dur: "2.7s" },
-  { color: "#86EFAC", x: "91%", w: 6,  h: 14, rotate: -15, delay: "0.7s",  dur: "3.3s" },
-  { color: "#FCD34D", x: "30%", w: 5,  h: 11, rotate: 60,  delay: "0.2s",  dur: "4.1s" },
-  { color: "#4ADE80", x: "57%", w: 7,  h: 17, rotate: -50, delay: "0.8s",  dur: "3.0s" },
-  { color: "#A8EDCA", x: "78%", w: 5,  h: 12, rotate: 30,  delay: "0.45s", dur: "3.7s" },
+  { color: "#4ADE80", x: "5%",  w: 8,  h: 20, rotate: 20,  delay: "-0.8s", dur: "3.2s" },
+  { color: "#FCD34D", x: "14%", w: 6,  h: 16, rotate: -30, delay: "-2.1s", dur: "3.8s" },
+  { color: "#86EFAC", x: "24%", w: 7,  h: 18, rotate: 45,  delay: "-1.4s", dur: "2.9s" },
+  { color: "#FCD34D", x: "38%", w: 6,  h: 14, rotate: 15,  delay: "-0.5s", dur: "3.5s" },
+  { color: "#4ADE80", x: "50%", w: 8,  h: 18, rotate: -20, delay: "-2.8s", dur: "4.0s" },
+  { color: "#A8EDCA", x: "62%", w: 7,  h: 17, rotate: 55,  delay: "-1.8s", dur: "3.1s" },
+  { color: "#FCD34D", x: "73%", w: 6,  h: 15, rotate: -40, delay: "-0.3s", dur: "3.6s" },
+  { color: "#4ADE80", x: "83%", w: 9,  h: 21, rotate: 25,  delay: "-1.1s", dur: "2.7s" },
+  { color: "#86EFAC", x: "91%", w: 7,  h: 16, rotate: -15, delay: "-2.5s", dur: "3.3s" },
+  { color: "#FCD34D", x: "30%", w: 6,  h: 13, rotate: 60,  delay: "-0.7s", dur: "4.1s" },
+  { color: "#4ADE80", x: "57%", w: 8,  h: 19, rotate: -50, delay: "-3.2s", dur: "3.0s" },
+  { color: "#A8EDCA", x: "78%", w: 6,  h: 14, rotate: 30,  delay: "-1.6s", dur: "3.7s" },
+  { color: "#FCD34D", x: "8%",  w: 7,  h: 16, rotate: -10, delay: "-2.3s", dur: "3.4s" },
+  { color: "#4ADE80", x: "45%", w: 6,  h: 13, rotate: 35,  delay: "-0.9s", dur: "3.9s" },
+  { color: "#86EFAC", x: "68%", w: 8,  h: 17, rotate: -25, delay: "-1.7s", dur: "2.8s" },
+  { color: "#FCD34D", x: "88%", w: 5,  h: 12, rotate: 50,  delay: "-3.5s", dur: "4.2s" },
 ]
 
 // ── Sparkle stars ──────────────────────────────────────────────────
@@ -209,10 +215,9 @@ export default function LevelUp() {
             height: c.h,
             backgroundColor: c.color,
             borderRadius: 2,
-            transform: `rotate(${c.rotate}deg)`,
             animation: `confettiFall ${c.dur} ${c.delay} ease-in infinite`,
-            opacity: 0,
-          }}
+            ['--r' as string]: `${c.rotate}deg`,
+          } as React.CSSProperties}
         />
       ))}
 
@@ -274,9 +279,10 @@ export default function LevelUp() {
           style={{ marginBottom: -12 }}
         >
           <img
-            src="/assets/mascot-promo.png"
+            src="/assets/mascot-levelup.jpg"
             alt="Mascote celebrando novo nível"
-            className="h-44 w-auto object-contain drop-shadow-xl"
+            className="h-48 w-auto object-contain"
+            style={{ mixBlendMode: "multiply", display: "block" }}
           />
         </div>
 
