@@ -1,11 +1,12 @@
 import { Lightbulb } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { LessonActivity, FillBlankActivity, MatchActivity, OrderActivity, Question } from "@/lib/lessonContent"
-import { isFillBlank, isMatch, isOrder, isEssay } from "@/lib/lessonContent"
+import { isFillBlank, isMatch, isOrder, isEssay, isContentSlide } from "@/lib/lessonContent"
 import { FillBlankCard } from "./FillBlankCard"
 import { MatchCard } from "./MatchCard"
 import { OrderCard } from "./OrderCard"
 import { EssayCard, EssayBadge } from "./EssayCard"
+import { SlideCard } from "./SlideCard"
 
 interface Props {
   activity: LessonActivity
@@ -30,6 +31,10 @@ export function ActivityRenderer({
   onOrderAnswer,
   onEssayAnswer,
 }: Props) {
+  if (isContentSlide(activity)) {
+    return <SlideCard slide={activity} />
+  }
+
   if (isEssay(activity)) {
     return (
       <div className="flex flex-col gap-4">
