@@ -16,10 +16,10 @@ module.exports = {
 			},
 		},		extend: {
 			fontFamily: {
-				/* duolingo-sans é servido via @font-face em index.css (Nunito como base) */
+				/* duolingo-sans é servido via @font-face em index.css (Poppins como base) */
 				sans: [
 					'duolingo-sans',
-					'Nunito',
+					'Poppins',
 					'-apple-system',
 					'BlinkMacSystemFont',
 					'Helvetica Neue',
@@ -28,12 +28,12 @@ module.exports = {
 				],
 				display: [
 					'duolingo-sans',
-					'Nunito',
+					'Poppins',
 					'sans-serif',
 				],
 				'duolingo-sans': [
 					'duolingo-sans',
-					'Nunito',
+					'Poppins',
 					'sans-serif',
 				],
 			},
