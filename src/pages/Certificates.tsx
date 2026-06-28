@@ -14,6 +14,7 @@ interface StoredCertificate {
   courseName: string
   completionDate: string
   hours: number
+  track?: "A1" | "A2" | "A3"
 }
 
 const DEMO_CERTIFICATES: StoredCertificate[] = [
@@ -22,6 +23,7 @@ const DEMO_CERTIFICATES: StoredCertificate[] = [
     courseName: "Engenharia de Prompts para Iniciantes",
     completionDate: new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" }),
     hours: 4,
+    track: "A1",
   },
   {
     id: "cert-demo-002",
@@ -32,6 +34,7 @@ const DEMO_CERTIFICATES: StoredCertificate[] = [
       year: "numeric",
     }),
     hours: 6,
+    track: "A2",
   },
 ]
 
@@ -125,7 +128,7 @@ export default function Certificates() {
                 <div className="px-4 py-4">
                   <div className="flex items-start gap-3">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-dark">
-                      <span className="text-xs font-extrabold text-white">PL</span>
+                      <span className="text-xs font-extrabold text-white">{cert.track ?? "PL"}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold uppercase tracking-widest text-emerald">
