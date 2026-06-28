@@ -2,17 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* duolingo-sans — apelido para Nunito (carregada via Google Fonts no index.html) */
+/* duolingo-sans — apelido para Poppins (carregada via Google Fonts no index.html) */
 @font-face {
   font-family: 'duolingo-sans';
-  src: local('Nunito');
+  src: local('Poppins');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'duolingo-sans';
-  src: local('Nunito');
+  src: local('Poppins');
   font-weight: 100 900;
   font-style: italic;
   font-display: swap;
@@ -218,21 +218,21 @@
 
   /* Tipografia Duolingo — todas as headings usam duolingo-sans bold */
   h1 {
-    font-family: 'duolingo-sans', 'Nunito', sans-serif;
+    font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-size: 32px;
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: normal;
   }
   h2 {
-    font-family: 'duolingo-sans', 'Nunito', sans-serif;
+    font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-size: 19px;
     font-weight: 700;
     line-height: 26.6px;
     letter-spacing: normal;
   }
   h3, h4, h5, h6 {
-    font-family: 'duolingo-sans', 'Nunito', sans-serif;
+    font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-weight: 700;
   }
 
@@ -305,38 +305,38 @@
 /* ── Duolingo typography utilities ── */
 @layer utilities {
   .duo-hero {
-    font-family: 'duolingo-sans', 'Nunito', sans-serif;
+    font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-size: 32px;
     font-weight: 700;
     line-height: 1.2;
   }
   .duo-subheading {
-    font-family: 'duolingo-sans', 'Nunito', sans-serif;
+    font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-size: 19px;
     font-weight: 700;
     line-height: 26.6px;
   }
   .duo-body {
-    font-family: 'duolingo-sans', 'Nunito', sans-serif;
+    font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-size: 17px;
     font-weight: 500;
     line-height: 20px;
   }
   .duo-btn-label {
-    font-family: 'duolingo-sans', 'Nunito', sans-serif;
+    font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-size: 15px;
     font-weight: 700;
     line-height: 20px;
     letter-spacing: 0.8px;
   }
   .duo-small-label {
-    font-family: 'duolingo-sans', 'Nunito', sans-serif;
+    font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-size: 13px;
     font-weight: 700;
     line-height: 16px;
   }
   .duo-nav-link {
-    font-family: 'duolingo-sans', 'Nunito', sans-serif;
+    font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-size: 17px;
     font-weight: 500;
     line-height: 24px;
