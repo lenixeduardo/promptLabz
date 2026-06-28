@@ -13,26 +13,16 @@ export function DailyTipCard({ tip }: DailyTipCardProps) {
         aria-hidden="true"
       />
 
-      <div className="relative flex items-center gap-3">
-        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-card/60 p-1">
-          <img
-            src="/assets/mascot-teacher.png"
-            alt="Gatinha professora dando a dica do dia"
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
-
-        <div className="min-w-0 flex-1 rounded-2xl rounded-bl-md bg-card px-3.5 py-3 shadow-sm ring-1 ring-stroke-light">
-          <h2
-            id="daily-tip-title"
-            className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-emerald-dark"
-          >
-            Dica do dia
-          </h2>
-          <p className="mt-1 text-sm font-semibold leading-snug text-foreground-dark">
-            {tip}
-          </p>
-        </div>
+      <div className="relative rounded-2xl bg-card px-3.5 py-3 shadow-sm ring-1 ring-stroke-light">
+        <h2
+          id="daily-tip-title"
+          className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-emerald-dark"
+        >
+          Dica do dia
+        </h2>
+        <p className="mt-1 text-sm font-semibold leading-snug text-foreground-dark">
+          {tip}
+        </p>
       </div>
     </section>
   );
