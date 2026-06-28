@@ -131,13 +131,13 @@ export default function SkillDetail() {
           </div>
 
           {/* Tags */}
-          <div className="rounded-2xl border border-stroke-muted bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-stroke-muted bg-transparent p-5">
             <h2 className="mb-2.5 text-xs font-bold uppercase tracking-wider text-primary-dark">Tags</h2>
             <div className="flex flex-wrap gap-2">
               {skill.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-stroke-muted bg-[#F9FCFA] px-3 py-1.5 text-xs font-medium text-primary-dark transition-colors hover:bg-surface-success hover:border-emerald"
+                  className="rounded-full border border-stroke-muted bg-transparent px-3 py-1.5 text-xs font-medium text-primary-dark transition-colors hover:bg-surface-success hover:border-emerald"
                 >
                   #{tag}
                 </span>
@@ -146,7 +146,7 @@ export default function SkillDetail() {
           </div>
 
           {/* Install info */}
-          <div className="rounded-2xl border border-stroke-muted bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-stroke-muted bg-transparent p-5">
             <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-primary-dark">Como instalar</h2>
             <p className="text-sm text-foregroundSecondary">
               Esta skill está disponível no{" "}
@@ -160,7 +160,7 @@ export default function SkillDetail() {
               </a>
               , o diretório oficial de skills para agentes de IA. Para instalar em seu agente:
             </p>
-            <pre className="mt-3 overflow-x-auto rounded-xl bg-[#F4F9F5] border border-stroke-muted p-3 text-xs font-mono text-primary-dark">
+            <pre className="mt-3 overflow-x-auto rounded-xl bg-transparent border border-stroke-muted p-3 text-xs font-mono text-primary-dark">
               npx skills add {skill.author}/{skill.name.toLowerCase().replace(/\s+/g, "-")}
             </pre>
             <p className="mt-2 text-xs text-foregroundMuted">
