@@ -241,7 +241,7 @@ export default function PromptDetail() {
           {prompt.tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-stroke-light bg-pageBgLight px-3 py-1 text-xs font-semibold text-primary-dark"
+              className="rounded-full border border-stroke-light bg-transparent px-3 py-1 text-xs font-semibold text-primary-dark"
             >
               {tag}
             </span>
