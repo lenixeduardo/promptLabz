@@ -128,7 +128,7 @@ export default function Hero() {
             <img
               src="/assets/mascot-hero-laptop.png"
               alt="Lições práticas"
-              className="w-14 h-14 object-contain mb-2"
+              className="w-20 h-20 object-contain mb-2"
             />
             <p className="text-[11px] font-bold text-[#1A3B24] mb-1 leading-tight">
               Lições práticas
@@ -142,7 +142,7 @@ export default function Hero() {
             <img
               src="/assets/icon-trophy.png"
               alt="Gamificado"
-              className="w-14 h-14 object-contain mb-2"
+              className="w-20 h-20 object-contain mb-2"
             />
             <p className="text-[11px] font-bold text-[#1A3B24] mb-1 leading-tight">
               Gamificado
@@ -156,7 +156,7 @@ export default function Hero() {
             <img
               src="/assets/icon-fire.png"
               alt="Progresso real"
-              className="w-14 h-14 object-contain mb-2"
+              className="w-20 h-20 object-contain mb-2"
             />
             <p className="text-[11px] font-bold text-[#1A3B24] mb-1 leading-tight">
               Progresso real
