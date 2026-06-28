@@ -31,7 +31,7 @@ export default function Hero() {
   }
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-white overflow-x-hidden" data-force-light>
       <PageSEO
         title="Aprenda Engenharia de Prompts — Curso Gratuito de IA"
         description="Aprenda engenharia de prompts do zero com lições gamificadas. Plataforma 100% gratuita para dominar ChatGPT, Claude e IA generativa. Comece agora sem cartão de crédito!"
