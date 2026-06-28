@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Lightbulb, Pencil, Sparkles, Plus, Type, ArrowRight, MessageSquarePlus } from "lucide-react"
+import { ArrowRight, Sparkles, Heart, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { BrandLogo } from "@/components/BrandLogo"
 import { CircleTransition } from "@/components/CircleTransition"
@@ -20,7 +20,7 @@ export default function Hero() {
       capture("hero_cta_clicked", { cta_text: "Continuar aprendendo" })
       navigate("/login")
     } else {
-      capture("hero_cta_clicked", { cta_text: "Começar grátis agora" })
+      capture("hero_cta_clicked", { cta_text: "Começar agora" })
       setTransitioning(true)
     }
   }
@@ -31,7 +31,7 @@ export default function Hero() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center bg-gradient-to-b from-[#EAF7F0] to-[#D6EEE3] px-6 pb-10 pt-12 overflow-hidden">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       <PageSEO
         title="Aprenda Engenharia de Prompts — Curso Gratuito de IA"
         description="Aprenda engenharia de prompts do zero com lições gamificadas. Plataforma 100% gratuita para dominar ChatGPT, Claude e IA generativa. Comece agora sem cartão de crédito!"
@@ -39,90 +39,188 @@ export default function Hero() {
       />
       <CircleTransition to="/signup" active={transitioning} />
 
-      {/* Background sparkles */}
-      <Sparkles className="animate-twinkle absolute top-16 right-8 h-4 w-4 text-[#7CC79A]/60" style={{ animationDelay: "0s" }} />
-      <Sparkles className="animate-twinkle absolute top-32 left-4 h-3 w-3 text-[#7CC79A]/50" style={{ animationDelay: "1.2s" }} />
-      <Sparkles className="animate-twinkle absolute bottom-48 right-6 h-3.5 w-3.5 text-emerald/50" style={{ animationDelay: "0.6s" }} />
-      <Sparkles className="animate-twinkle absolute bottom-32 left-8 h-3 w-3 text-[#7CC79A]/40" style={{ animationDelay: "1.8s" }} />
-
-      {/* Top floating icon circles */}
-      <div className="flex items-end justify-center gap-6 mb-6 w-full max-w-xs">
-        <div className="mt-4 bg-white rounded-full p-3.5 shadow-md shadow-green-100">
-          <Lightbulb className="h-6 w-6 text-accent" />
-        </div>
-        <div className="bg-white rounded-full p-3.5 shadow-md shadow-green-100">
-          <MessageSquarePlus className="h-6 w-6 text-forest" />
-        </div>
-        <div className="mt-3 bg-white rounded-full p-3.5 shadow-md shadow-green-100">
-          <Pencil className="h-6 w-6 text-forest" />
-        </div>
-      </div>
-
-      {/* A1 badge + brand name */}
-      <div className="flex flex-col items-center gap-2 mb-2">
-        <div className="bg-forest text-white rounded-2xl px-4 py-1.5 text-sm font-bold tracking-wide">
-          A1
-        </div>
-        <BrandLogo className="text-5xl" />
-      </div>
-
-      {/* Mascot area with floating decorations */}
-      <div className="relative flex items-center justify-center w-full max-w-xs my-2">
-        <div className="absolute left-2 top-1/2 -translate-y-1/2 bg-forest text-white rounded-2xl p-2.5 shadow-lg">
-          <Plus className="h-5 w-5" />
-        </div>
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-forest text-white rounded-2xl p-2.5 shadow-lg">
-          <Type className="h-5 w-5" />
-        </div>
-        <Sparkles className="animate-twinkle absolute top-2 left-16 h-4 w-4 text-emerald" style={{ animationDelay: "0.3s" }} />
-        <Sparkles className="animate-twinkle absolute top-2 right-14 h-3.5 w-3.5 text-[#7CC79A]" style={{ animationDelay: "1.0s" }} />
-        <Sparkles className="animate-twinkle absolute bottom-4 left-20 h-3 w-3 text-emerald" style={{ animationDelay: "1.6s" }} />
+      {/* ── Seção 1: Hero ── */}
+      <section className="relative bg-[#EEF9F4] overflow-hidden" style={{ minHeight: "520px" }}>
+        {/* Mascote posicionado à direita como background */}
         <img
-          src="/assets/mascot-login-new.png"
-          alt="Mascote do PromptLabz — aprenda engenharia de prompts"
-          width={400}
-          height={400}
+          src="/assets/mascot-hero.png"
+          alt=""
+          aria-hidden="true"
           fetchPriority="high"
-          className="h-56 w-auto object-contain drop-shadow-md"
+          className="absolute right-0 top-0 h-[108%] w-auto pointer-events-none select-none"
         />
-      </div>
 
-      {/* Headline */}
-      <div className="flex flex-col items-center gap-3 mt-2 mb-4">
-        <h1 className="text-4xl font-extrabold text-[#1E4D2F] text-center leading-tight">
-          Aprenda Engenharia<br />de Prompts — Grátis
-        </h1>
-        <p className="text-base text-[#4A7A5C] text-center max-w-xs leading-relaxed">
-          Domine ChatGPT, Claude e IA generativa com lições gamificadas. Do zero ao avançado, sem precisar saber programar.
-        </p>
-      </div>
+        {/* Sparkles decorativos */}
+        <Sparkles
+          className="animate-twinkle absolute top-24 right-[40%] h-3.5 w-3.5 text-emerald-400/70"
+          style={{ animationDelay: "0.4s" }}
+        />
+        <Sparkles
+          className="animate-twinkle absolute top-12 right-[32%] h-3 w-3 text-[#7CC79A]/60"
+          style={{ animationDelay: "1.2s" }}
+        />
 
-      {/* CTA */}
-      <div className="flex flex-col items-center gap-3 w-full max-w-xs mt-auto">
-        <Button
-          size="lg"
-          className="w-full flex items-center justify-between px-6"
-          disabled={transitioning}
-          onClick={handleCTA}
+        {/* Conteúdo — coluna esquerda */}
+        <div className="relative z-10 flex flex-col px-5 pt-10 pb-10 max-w-[58%]">
+          <BrandLogo className="text-2xl mb-10" />
+
+          <h1 className="font-extrabold text-[#1A3B24] leading-[1.1] mb-4">
+            <span className="text-[2.5rem]">Aprenda IA</span>
+            <br />
+            <span className="text-[2rem]">do zero ao</span>
+            <br />
+            <span className="text-[2rem]">avançado</span>
+          </h1>
+
+          <p className="text-sm text-[#4A6741] leading-snug mb-1">
+            Domine ChatGPT, Claude e IA generativa com lições gamificadas.
+          </p>
+          <p className="text-sm text-[#4A6741] leading-snug mb-7">
+            Do zero ao avançado, sem precisar saber programar.
+          </p>
+
+          <Button
+            size="default"
+            className="flex items-center justify-between px-5 w-full"
+            disabled={transitioning}
+            onClick={handleCTA}
+          >
+            <span className="text-[13px]">
+              {hasAccount ? "CONTINUAR" : "COMEÇAR AGORA"}
+            </span>
+            <ArrowRight className="h-4 w-4 flex-shrink-0" />
+          </Button>
+        </div>
+      </section>
+
+      {/* Onda de transição hero → features */}
+      <div className="relative -mt-px">
+        <svg
+          viewBox="0 0 390 48"
+          preserveAspectRatio="none"
+          className="w-full block"
+          style={{ height: "48px" }}
         >
-          <span>{hasAccount ? "Continuar aprendendo" : "Começar grátis agora"}</span>
-          <ArrowRight className="h-5 w-5" />
-        </Button>
+          <path d="M0,0 Q195,48 390,0 L390,48 L0,48 Z" fill="white" />
+        </svg>
+        <div className="absolute inset-0 top-auto h-px bg-white" />
+      </div>
 
-        <p className="text-xs text-[#4A7A5C] text-center leading-snug">
-          Sem cartão de crédito &nbsp;·&nbsp; Sem compromisso &nbsp;·&nbsp; Cancele quando quiser
+      {/* ── Seção 2: Features ── */}
+      <section className="bg-white px-4 pt-2 pb-8">
+        {/* Heading */}
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <Sparkles className="h-4 w-4 text-[#4CAF50] flex-shrink-0" />
+          <h2 className="text-[15px] font-bold text-[#1A3B24] text-center leading-tight">
+            Aprenda brincando. Evolua de verdade.
+          </h2>
+          <Sparkles className="h-4 w-4 text-[#4CAF50] flex-shrink-0" />
+        </div>
+        <p className="text-sm text-[#4A6741] text-center leading-relaxed mb-6">
+          Lições curtas, desafios e recompensas para
+          <br />
+          você aprender mais e melhor todos os dias.
         </p>
 
-        <p className="text-sm text-[#4A7A5C]">
+        {/* 3 cards */}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 flex flex-col items-center text-center">
+            <img
+              src="/assets/mascot-hero-laptop.png"
+              alt="Lições práticas"
+              className="w-14 h-14 object-contain mb-2"
+            />
+            <p className="text-[11px] font-bold text-[#1A3B24] mb-1 leading-tight">
+              Lições práticas
+            </p>
+            <p className="text-[10px] text-[#4A6741] leading-tight">
+              Conteúdo direto ao ponto com exemplos reais.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 flex flex-col items-center text-center">
+            <img
+              src="/assets/icon-trophy.png"
+              alt="Gamificado"
+              className="w-14 h-14 object-contain mb-2"
+            />
+            <p className="text-[11px] font-bold text-[#1A3B24] mb-1 leading-tight">
+              Gamificado
+            </p>
+            <p className="text-[10px] text-[#4A6741] leading-tight">
+              Ganhe XP, conquistas e suba de nível.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 flex flex-col items-center text-center">
+            <img
+              src="/assets/icon-fire.png"
+              alt="Progresso real"
+              className="w-14 h-14 object-contain mb-2"
+            />
+            <p className="text-[11px] font-bold text-[#1A3B24] mb-1 leading-tight">
+              Progresso real
+            </p>
+            <p className="text-[10px] text-[#4A6741] leading-tight">
+              Acompanhe seu progresso e veja sua evolução.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Seção 3: Prova social ── */}
+      <section className="px-4 pb-10">
+        <div className="bg-[#EAF7F0] rounded-2xl p-4 flex items-center gap-3">
+          {/* Coração */}
+          <div className="bg-[#C5EDD6] rounded-xl p-2.5 flex-shrink-0">
+            <Heart className="h-5 w-5 text-[#2A7A4B] fill-[#2A7A4B]" />
+          </div>
+
+          {/* Texto + avatares */}
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-[#1A3B24] leading-snug mb-2">
+              Junte-se aos alunos
+              <br />
+              que já estão evoluindo
+              <br />
+              com o{" "}
+              <span className="text-[#2A7A4B] font-bold">PromptLabz</span>
+            </p>
+            <div className="flex -space-x-2">
+              {["avatar-cat", "avatar-punk", "avatar-rocker"].map((name) => (
+                <img
+                  key={name}
+                  src={`/assets/${name}.png`}
+                  alt=""
+                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Rating */}
+          <div className="flex-shrink-0 text-right">
+            <div className="flex gap-0.5 justify-end mb-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+              ))}
+            </div>
+            <p className="text-lg font-extrabold text-[#1A3B24] leading-none">4.9/5</p>
+            <p className="text-[10px] text-[#4A6741] mt-0.5">de alunos</p>
+          </div>
+        </div>
+
+        {/* Link "Já tem conta?" discreto */}
+        <p className="text-sm text-[#4A6741] text-center mt-6">
           Já tem uma conta?{" "}
           <button
-            className="font-bold text-forest underline-offset-2 hover:underline"
+            className="font-bold text-[#2A7A4B] underline-offset-2 hover:underline"
             onClick={handleLoginClick}
           >
             Entrar
           </button>
         </p>
-      </div>
+      </section>
     </div>
   )
 }
