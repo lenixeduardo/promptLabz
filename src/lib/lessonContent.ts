@@ -55,7 +55,24 @@ export type OrderActivity = {
   explanation: string;
 };
 
-export type LessonActivity = Question | FillBlankActivity | MatchActivity | OrderActivity | EssayActivity;
+// ── Slide de Conteúdo (aparece ANTES das atividades) ──────────────────────
+
+export type ContentSlideBlock =
+  | { type: "heading"; text: string }
+  | { type: "text"; text: string }
+  | { type: "quote"; text: string }
+  | { type: "code"; language: string; code: string }
+  | { type: "mind-map"; title: string; branches: { label: string; children: string[] }[] }
+  | { type: "tip"; text: string }
+  | { type: "example"; label: string; before: string; after: string };
+
+export type ContentSlide = {
+  id: string;
+  type: "content-slide";
+  blocks: ContentSlideBlock[];
+};
+
+export type LessonActivity = Question | FillBlankActivity | MatchActivity | OrderActivity | EssayActivity | ContentSlide;
 
 // ── Guards ─────────────────────────────────────────────────────────────
 export function isFillBlank(a: LessonActivity): a is FillBlankActivity {
@@ -69,6 +86,9 @@ export function isOrder(a: LessonActivity): a is OrderActivity {
 }
 export function isEssay(a: LessonActivity): a is EssayActivity {
   return (a as EssayActivity).type === "essay";
+}
+export function isContentSlide(a: LessonActivity): a is ContentSlide {
+  return (a as ContentSlide).type === "content-slide";
 }
 // ── Atividades dos novos tipos ─────────────────────────────────────────
 
@@ -2206,9 +2226,880 @@ export const LESSONS: Record<TrackId, LessonActivity[][]> = {
   ],
 };
 
+// ── Slides de conteúdo introdutório (um por módulo) ───────────────────────
+// Estes slides aparecem ANTES das atividades em cada lição.
+
+const SLIDE_CONTENT: Record<TrackId, ContentSlide[][]> = {
+  // ── Trilha A1 — Fundamentos de Prompts ────────────────────────────────
+  a1: [
+    // Módulo 0 — Boas-vindas
+    [{
+      id: "slide-a1-0",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Bem-vindo ao PromptLabz!" },
+        { type: "text", text: "PromptLabz é uma trilha de aprendizado prática para você dominar a arte de escrever prompts e usar IA com eficiência. Aqui você não aprende teoria desconectada — aprende com exercícios, exemplos reais e desafios progressivos." },
+        { type: "mind-map", title: "O que você vai dominar", branches: [
+          { label: "A1 — Fundamentos", children: ["O que é prompt", "Contexto & clareza", "Role prompting", "Framework CRAFT", "Few-shot", "Refino iterativo"] },
+          { label: "A2 — Avançado", children: ["Chain-of-thought", "Decomposição", "Multi-etapa", "Avaliação"] },
+          { label: "A3 — Profissional", children: ["Código", "Automação", "Agentes", "APIs"] },
+        ]},
+        { type: "quote", text: "\"Saber escrever bons prompts é como saber fazer as perguntas certas — a habilidade mais valiosa para trabalhar com IA.\"" },
+        { type: "tip", text: "Complete todas as atividades com nota perfeita para desbloquear o próximo módulo e ganhar uma vida bônus!" },
+      ],
+    }],
+    // Módulo 1 — O que é um Prompt
+    [{
+      id: "slide-a1-1",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "O que é um Prompt?" },
+        { type: "text", text: "Um prompt é a instrução, pergunta ou texto que você envia para um modelo de linguagem (LLM) para obter uma resposta. É a sua entrada (input) — pode ser uma pergunta simples, um comando detalhado, um trecho de texto para continuar ou qualquer coisa que você envia para a IA processar." },
+        { type: "example", label: "Prompt vago × Prompt eficaz", before: "Me conta algo sobre marketing.", after: "Liste 5 estratégias de marketing digital para um restaurante delivery no bairro do Itaim Bibi, focando em redes sociais. Use bullet points curtos." },
+        { type: "text", text: "A diferença entre os dois exemplos é clareza, contexto e objetivo. Um prompt eficaz responde internamente: 'O que eu quero?', 'Para quem?', 'Em que formato?'" },
+        { type: "tip", text: "Clareza sempre vence comprimento. Um prompt curto e específico é melhor que um longo e vago." },
+      ],
+    }],
+    // Módulo 2 — Contexto & Clareza
+    [{
+      id: "slide-a1-2",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Contexto & Clareza em Prompts" },
+        { type: "text", text: "O modelo de IA não conhece você, sua empresa, seu público ou seu histórico. O contexto que você fornece no prompt é a única fonte de informação que ele tem para personalizar a resposta. Sem contexto, o modelo adivinha — e geralmente erra o alvo." },
+        { type: "example", label: "Sem contexto × Com contexto", before: "Crie um e-mail de recusa.", after: "Crie um e-mail formal de 5 linhas recusando uma proposta de parceria, mantendo tom cordial, para enviar ao CEO de uma startup de fintech. Assine como Diretor Comercial." },
+        { type: "text", text: "Elementos de contexto que transformam um prompt: quem você é, para quem é destinado, qual o objetivo, qual o canal (e-mail, post, relatório) e quais restrições existem." },
+        { type: "tip", text: "Antes de enviar um prompt, pergunte: 'Se outra pessoa lesse isso, saberia exatamente o que preciso?' Se não, adicione contexto." },
+      ],
+    }],
+    // Módulo 3 — Personas e Papéis
+    [{
+      id: "slide-a1-3",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Role Prompting — Atribuição de Persona" },
+        { type: "text", text: "Role prompting é pedir ao modelo que assuma uma persona específica. Ao definir um papel, você calibra o vocabulário, o nível técnico, o tom e a perspectiva da resposta. A mesma pergunta gera respostas completamente diferentes dependendo do papel atribuído." },
+        { type: "mind-map", title: "Como a persona muda a resposta", branches: [
+          { label: "Médico pediatra", children: ["Linguagem acessível para pais", "Foco em segurança infantil", "Evita jargão técnico excessivo"] },
+          { label: "PhD em Medicina", children: ["Terminologia clínica precisa", "Referências a estudos", "Profundidade técnica"] },
+          { label: "Professor de 5° ano", children: ["Analogias simples", "Exemplos do cotidiano", "Frases curtas"] },
+        ]},
+        { type: "example", label: "Persona vaga × Persona específica", before: "Aja como especialista. Explique autenticação.", after: "Você é um engenheiro de software sênior com 10 anos em segurança web. Explique autenticação JWT para um dev junior que sabe JavaScript mas nunca trabalhou com tokens." },
+        { type: "tip", text: "Quanto mais específica a persona (área + experiência + relação com o interlocutor), mais consistente e útil a resposta." },
+      ],
+    }],
+    // Módulo 4 — Estruturas de Prompt (CRAFT)
+    [{
+      id: "slide-a1-4",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Framework CRAFT — Estrutura Completa" },
+        { type: "text", text: "CRAFT é um checklist que garante que os elementos mais importantes estejam presentes no seu prompt. Cada letra representa um componente que, quando presente, reduz ambiguidade e melhora a qualidade da resposta." },
+        { type: "mind-map", title: "CRAFT", branches: [
+          { label: "C — Contexto", children: ["Quem você é", "Qual é a situação", "Por que você precisa disso"] },
+          { label: "R — Role (Papel)", children: ["Persona do modelo", "Nível de expertise", "Relação com o interlocutor"] },
+          { label: "A — Ação", children: ["O que o modelo deve fazer", "Verbo de ação claro", "Escopo definido"] },
+          { label: "F — Formato", children: ["Lista, JSON, tabela", "Número de itens", "Tamanho máximo"] },
+          { label: "T — Tom", children: ["Formal / informal", "Técnico / acessível", "Entusiasta / neutro"] },
+        ]},
+        { type: "example", label: "Prompt com CRAFT completo", before: "Escreva sobre marketing digital.", after: "Contexto: tenho loja de roupas no Instagram com 5k seguidores. Papel: copywriter de moda. Ação: escreva 3 legendas para posts de produto. Formato: uma por bloco, máximo 80 palavras, com 3 emojis. Tom: jovem, descontraído e inspirador." },
+      ],
+    }],
+    // Módulo 5 — Few-Shot Prompting
+    [{
+      id: "slide-a1-5",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Few-Shot Prompting — Aprender por Exemplos" },
+        { type: "text", text: "Few-shot prompting fornece ao modelo exemplos concretos de entrada e saída dentro do próprio prompt. O modelo infere o padrão dos exemplos e replica na nova resposta. É mais eficaz do que descrever o formato em palavras — mostrar é mais poderoso que dizer." },
+        { type: "mind-map", title: "Variações de 'shot'", branches: [
+          { label: "Zero-shot", children: ["Nenhum exemplo", "Depende do modelo entender a instrução", "Bom para tarefas simples"] },
+          { label: "One-shot", children: ["1 exemplo de input/output", "Suficiente para formatos simples"] },
+          { label: "Few-shot", children: ["2–10 exemplos", "Ensina padrões complexos", "Ideal para formatos específicos"] },
+        ]},
+        { type: "code", language: "prompt", code: `Classifique o sentimento do texto. Use: POSITIVO, NEGATIVO ou NEUTRO.
+
+Texto: "O produto chegou no prazo e funcionou perfeitamente."
+Sentimento: POSITIVO
+
+Texto: "Péssimo atendimento, nunca mais compro aqui."
+Sentimento: NEGATIVO
+
+Texto: "O pacote foi entregue ontem."
+Sentimento: [← modelo preenche aqui]` },
+        { type: "tip", text: "2–3 exemplos geralmente são suficientes. Mais de 5 só se o padrão for muito complexo ou sutil." },
+      ],
+    }],
+    // Módulo 6 — Refino Iterativo
+    [{
+      id: "slide-a1-6",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Refino Iterativo — Prompts como Código" },
+        { type: "text", text: "Raramente um prompt fica perfeito na primeira versão. Prompts são como código: você testa, identifica o que falhou, melhora e testa de novo. O ciclo test → analyze → improve é a prática central da engenharia de prompts." },
+        { type: "mind-map", title: "Ciclo de Refino", branches: [
+          { label: "1. Testar", children: ["Rodar o prompt", "Anotar o resultado"] },
+          { label: "2. Analisar", children: ["O que faltou?", "Contexto? Formato? Tom? Persona?"] },
+          { label: "3. Melhorar", children: ["Adicionar o que faltou", "Remover o que confundiu"] },
+          { label: "4. Versionar", children: ["Salvar como v2, v3…", "Construir biblioteca pessoal"] },
+        ]},
+        { type: "quote", text: "\"Prompt engineering é 10% inspiração, 90% iteração. A versão 1 raramente é a versão boa.\"" },
+        { type: "tip", text: "Ao analisar uma resposta ruim, sempre pergunte primeiro: 'O que estava faltando ou ambíguo no MEU prompt?' — não no modelo." },
+      ],
+    }],
+  ],
+
+  // ── Trilha A2 — Prompts Avançados ─────────────────────────────────────
+  a2: [
+    // Módulo 0 — Chain-of-Thought
+    [{
+      id: "slide-a2-0",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Chain-of-Thought — Raciocínio Passo a Passo" },
+        { type: "text", text: "Chain-of-Thought (CoT) é uma técnica que instrui o modelo a externalizar o raciocínio antes de dar a resposta final. Ao 'mostrar o trabalho', o modelo comete menos erros em problemas que exigem múltiplos passos de lógica." },
+        { type: "example", label: "Sem CoT × Com CoT", before: "Quantas palavras tem 'inteligência artificial'? Multiplique por 7.", after: "Pense passo a passo:\n1. Contar as palavras: 'inteligência' (1) + 'artificial' (2) = 2 palavras.\n2. Multiplicar: 2 × 7 = 14.\nResposta: 14." },
+        { type: "text", text: "Chain-of-Thought tem mais impacto em: matemática e lógica, análise de código, diagnósticos, raciocínio jurídico e qualquer tarefa onde pular etapas gera erros." },
+        { type: "code", language: "prompt", code: `Analise este contrato e identifique cláusulas problemáticas.
+Pense passo a passo:
+1. Liste todas as obrigações de cada parte.
+2. Identifique assimetrias ou ambiguidades.
+3. Aponte cláusulas que favorecem desproporcionalmente uma parte.
+Após a análise, liste os problemas encontrados.` },
+        { type: "tip", text: "A frase mais simples para ativar CoT: 'Pense passo a passo antes de responder.' Experimente adicionar isso a qualquer prompt de raciocínio." },
+      ],
+    }],
+    // Módulo 1 — Decomposição de Tarefas
+    [{
+      id: "slide-a2-1",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Decomposição — Dividir para Conquistar" },
+        { type: "text", text: "Tarefas complexas em um único prompt causam 'instrução esquecida' — o modelo perde foco, omite partes ou mistura requisitos. Decompor a tarefa em prompts menores e sequenciais garante atenção total a cada etapa e permite revisar antes de avançar." },
+        { type: "mind-map", title: "Pipeline de criação de artigo", branches: [
+          { label: "Prompt 1 — Estrutura", children: ["Gerar outline com tópicos e subtópicos", "Revisar e aprovar antes de avançar"] },
+          { label: "Prompt 2 — Conteúdo", children: ["Desenvolver cada seção do outline", "Manter contexto do outline aprovado"] },
+          { label: "Prompt 3 — Revisão", children: ["Checar coerência, tom e erros", "Ajustar com instruções específicas"] },
+        ]},
+        { type: "quote", text: "\"Quanto mais requisitos num único prompt, maior o risco de instrução esquecida. Decompor garante que cada etapa receba atenção total.\"" },
+        { type: "tip", text: "Regra prática: se sua tarefa tem mais de 3 requisitos distintos, considere decompô-la em prompts separados." },
+      ],
+    }],
+    // Módulo 2 — Prompts com Restrições
+    [{
+      id: "slide-a2-2",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Restrições — Definindo as Fronteiras" },
+        { type: "text", text: "Restrições são instruções explícitas que definem o que o modelo pode e não pode fazer: limite de palavras, temas proibidos, formato obrigatório. Elas reduzem a variabilidade da resposta e garantem que o output caiba no seu caso de uso." },
+        { type: "example", label: "Sem restrição × Com restrições", before: "Resuma este texto.", after: "Resuma em no máximo 3 frases, sem usar jargões técnicos, focando nas ações práticas para o leitor. Não mencione percentuais ou estatísticas." },
+        { type: "mind-map", title: "Tipos de Restrição", branches: [
+          { label: "Tamanho", children: ["máx. 100 palavras", "exatamente 3 bullet points", "1 parágrafo"] },
+          { label: "Vocabulário", children: ["sem jargão técnico", "linguagem para leigos", "em português formal"] },
+          { label: "Foco", children: ["apenas sobre X", "não mencione Y", "foco em ações práticas"] },
+          { label: "Formato", children: ["JSON", "tabela Markdown", "lista numerada"] },
+        ]},
+        { type: "tip", text: "Restrições negativas ('não faça X') funcionam melhor acompanhadas de uma instrução positiva equivalente ('faça Y em vez disso')." },
+      ],
+    }],
+    // Módulo 3 — Estilo e Tom Controlado
+    [{
+      id: "slide-a2-3",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Estilo e Tom — A Personalidade da Escrita" },
+        { type: "text", text: "Tom é o estilo emocional e de linguagem da resposta — formal, informal, humorístico, empático, direto, técnico. Mesmo com o mesmo conteúdo, toms diferentes criam textos completamente diferentes. Especificar explicitamente garante consistência independente do modelo." },
+        { type: "mind-map", title: "Tom × Contexto", branches: [
+          { label: "Formal", children: ["Relatório executivo", "Comunicação corporativa", "Documentação oficial"] },
+          { label: "Conversacional", children: ["Tutorial para iniciantes", "Blog post", "E-mail de acompanhamento"] },
+          { label: "Técnico", children: ["Documentação de API", "White paper", "Artigo científico"] },
+          { label: "Empático", children: ["Suporte ao cliente", "Comunicação de crise", "Mensagem de desculpas"] },
+        ]},
+        { type: "example", label: "Tom vago × Tom específico", before: "Escreva profissionalmente.", after: "Escreva em tom formal e respeitoso, como uma carta corporativa de alto nível. Evite contrações e gírias. Use frases completas e linguagem direta." },
+        { type: "tip", text: "Use comparações para definir tom: 'como um colega explicando para outro' é muito mais claro que 'informal'." },
+      ],
+    }],
+    // Módulo 4 — Prompts Multi-etapa
+    [{
+      id: "slide-a2-4",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Prompts Multi-etapa — Pipelines de Conteúdo" },
+        { type: "text", text: "Prompts multi-etapa encadeiam resultados: a saída de um prompt alimenta o próximo. Isso cria pipelines de produção onde você pode revisar e ajustar cada etapa antes de avançar — como uma linha de montagem de conteúdo." },
+        { type: "code", language: "prompt", code: `# Passo 1 — Estrutura
+Extraia os 5 pontos principais deste artigo: [artigo]
+
+# Passo 2 — Síntese (usa saída do passo 1)
+Com base nesses 5 pontos: [resultado anterior]
+Escreva um resumo executivo de 150 palavras para um CEO.
+
+# Passo 3 — Adaptação (usa saída do passo 2)
+Adapte este resumo: [resultado anterior]
+Para publicação no LinkedIn. Tom: inspirador. Máx: 300 chars.` },
+        { type: "tip", text: "Para manter contexto entre etapas: copie e cole o resultado anterior no próximo prompt precedido de 'Com base no texto acima…'" },
+      ],
+    }],
+    // Módulo 5 — Avaliação de Respostas
+    [{
+      id: "slide-a2-5",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Avaliando Respostas de LLMs" },
+        { type: "text", text: "Modelos podem gerar texto fluente mas incorreto. Avaliar respostas de LLMs significa verificar: precisão factual, completude, aderência ao formato solicitado, tom adequado e ausência de alucinações (informações inventadas apresentadas como fatos)." },
+        { type: "mind-map", title: "O que verificar em uma resposta", branches: [
+          { label: "Precisão", children: ["Fatos verificáveis corretos?", "Datas, nomes, números conferidos?", "Fontes citadas existem?"] },
+          { label: "Completude", children: ["Todos os pontos foram cobertos?", "Alguma instrução foi ignorada?"] },
+          { label: "Formato", children: ["Estrutura pedida foi seguida?", "Tamanho dentro do limite?"] },
+          { label: "Alucinação", children: ["Modelo admitiu incerteza?", "Informações parecem inventadas?"] },
+        ]},
+        { type: "quote", text: "\"Alucinação: quando o modelo gera informações falsas com alto grau de confiança. Ele não avisa — escreve ficção com a mesma fluência dos fatos.\"" },
+        { type: "tip", text: "Para reduzir alucinações: forneça contexto factual no prompt e instrua explicitamente: 'Se não tiver certeza, diga que não sabe'." },
+      ],
+    }],
+    // Módulo 6 — Refino Guiado por Dados
+    [{
+      id: "slide-a2-6",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Refino Guiado por Dados" },
+        { type: "text", text: "Refino guiado por dados é a diferença entre intuição e engenharia. Em vez de mudar o prompt por instinto, você coleta resultados, identifica padrões de falha e usa esses dados para melhorar de forma deliberada — como um engenheiro depurando código." },
+        { type: "mind-map", title: "Ciclo de melhoria baseado em dados", branches: [
+          { label: "Coletar", children: ["Registrar inputs e outputs", "Avaliar cada resposta (1-5 ou pass/fail)"] },
+          { label: "Analisar", children: ["Agrupar falhas por categoria", "Identificar padrões recorrentes"] },
+          { label: "Melhorar", children: ["Adicionar instrução para a falha mais comum", "Criar teste de regressão"] },
+          { label: "Validar", children: ["Rodar todos os casos anteriores", "Confirmar melhoria sem regressão"] },
+        ]},
+        { type: "tip", text: "Testes de regressão de prompt: um conjunto de inputs com outputs esperados que você roda toda vez que muda o prompt — para garantir que nenhuma melhoria quebrou casos que funcionavam." },
+      ],
+    }],
+    // Módulo 7 — Engenharia de Prompt
+    [{
+      id: "slide-a2-7",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Engenharia de Prompt — A Ciência por Trás" },
+        { type: "text", text: "Engenharia de Prompt é o design sistemático de instruções para maximizar a qualidade e previsibilidade das respostas do modelo. Não envolve treinar o modelo — é sobre guiá-lo com precisão. É uma disciplina que combina psicologia, linguística e lógica de sistemas." },
+        { type: "mind-map", title: "Técnicas de Prompt Engineering", branches: [
+          { label: "Zero-shot", children: ["Sem exemplos", "Apenas instrução clara"] },
+          { label: "Few-shot", children: ["2-10 exemplos", "Ensina padrão por demonstração"] },
+          { label: "Chain-of-Thought", children: ["'Pense passo a passo'", "Externaliza raciocínio"] },
+          { label: "CRAFT", children: ["Contexto + Role + Ação + Formato + Tom"] },
+          { label: "Guardrails", children: ["Restrições explícitas", "Instruções de escopo"] },
+        ]},
+        { type: "code", language: "prompt", code: `# Exemplo de prompt com engenharia completa:
+
+Você é um copywriter sênior especializado em SaaS B2B.
+[Role: persona específica]
+
+Contexto: temos um produto de gestão de projetos para PMEs.
+[Context: situação clara]
+
+Ação: escreva 3 variações de headline para landing page.
+[Action: objetivo preciso]
+
+Formato: uma variação por linha, máx. 8 palavras cada.
+[Format: estrutura definida]
+
+Tom: direto, orientado a resultado, sem jargão.
+[Tone: estilo especificado]
+
+NÃO use as palavras: revolucionário, incrível, poderoso.
+[Guardrail: restrição explícita]` },
+      ],
+    }],
+    // Módulo 8 — Conhecendo LLMs
+    [{
+      id: "slide-a2-8",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Conhecendo os Modelos de Linguagem (LLMs)" },
+        { type: "text", text: "LLM (Large Language Model) é um modelo de IA treinado em grandes volumes de texto para prever a próxima palavra mais provável com base no contexto. Esse mecanismo simples, aplicado em escala massiva, gera texto coerente, responde perguntas e resolve problemas." },
+        { type: "mind-map", title: "Principais LLMs e suas origens", branches: [
+          { label: "Anthropic", children: ["Claude (Claude 3, 4…)", "Foco em segurança e alinhamento"] },
+          { label: "OpenAI", children: ["GPT-4, GPT-5", "Codex (especializado em código)"] },
+          { label: "Google", children: ["Gemini (Nano, Flash, Pro, Ultra)"] },
+          { label: "Meta", children: ["Llama (open-weights, local)"] },
+          { label: "Alibaba", children: ["Qwen (open-weights)"] },
+        ]},
+        { type: "text", text: "Modelos open-weights (Llama, Qwen) liberam os pesos e permitem rodar localmente — útil para privacidade e custo. Modelos proprietários (Claude, GPT) oferecem maior qualidade via API." },
+        { type: "tip", text: "Escolha o modelo pelo caso de uso: Claude para raciocínio e código, GPT para ecossistema e integrações, Gemini para contexto longo, Llama/Qwen para privacidade local." },
+      ],
+    }],
+  ],
+
+  // ── Trilha A3 — Aplicações Profissionais ──────────────────────────────
+  a3: [
+    // Módulo 0 — Prompts para Código
+    [{
+      id: "slide-a3-0",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Prompts para Geração de Código" },
+        { type: "text", text: "Gerar código de qualidade com IA exige especificidade máxima. Código é uma linguagem exata — uma ambiguidade no prompt gera código que roda mas faz a coisa errada, ou que usa uma API que não existe na versão que você usa." },
+        { type: "code", language: "prompt", code: `# Prompt ruim:
+Escreva código para ordenar uma lista.
+
+# Prompt profissional:
+Em Python 3.11, escreva uma função:
+- Nome: sort_by_date(items: list[dict]) -> list[dict]
+- Ordena pelo campo 'date' (formato ISO 8601)
+- Ordem: do mais recente para o mais antigo
+- Inclua: docstring com parâmetros e retorno
+- Inclua: 3 casos de teste com pytest
+- Bibliotecas disponíveis: apenas stdlib` },
+        { type: "mind-map", title: "Elementos do prompt de código", branches: [
+          { label: "Linguagem e versão", children: ["Python 3.11", "TypeScript 5", "Node.js 20"] },
+          { label: "Assinatura", children: ["Nome da função", "Tipos de entrada/saída"] },
+          { label: "Comportamento", children: ["O que faz", "Casos extremos", "Erros tratados"] },
+          { label: "Restrições", children: ["Bibliotecas permitidas", "Estilo (PEP8, ESLint)"] },
+          { label: "Validação", children: ["Incluir testes", "Incluir docstring"] },
+        ]},
+        { type: "tip", text: "Para debug: forneça código + erro exato + o que você já tentou + comportamento esperado. Contexto completo = diagnóstico preciso." },
+      ],
+    }],
+    // Módulo 1 — Automação com IA
+    [{
+      id: "slide-a3-1",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Automação com IA — LLM + Orquestrador" },
+        { type: "text", text: "Automação com IA combina um modelo de linguagem com um orquestrador (n8n, Zapier, script Python) que dispara prompts automaticamente em resposta a gatilhos. O resultado é um fluxo que executa tarefas de texto repetitivas sem intervenção humana constante." },
+        { type: "mind-map", title: "Plataformas de automação", branches: [
+          { label: "n8n", children: ["Código aberto", "Auto-hospedável", "Fluxos visuais complexos"] },
+          { label: "Zapier", children: ["Sem código", "Rápido para integrações simples", "Limitado em lógica"] },
+          { label: "Make (ex-Integromat)", children: ["Visual, complexidade média", "Bom para dados estruturados"] },
+          { label: "Python + API", children: ["Controle total", "Scripts customizados", "Privacidade máxima"] },
+        ]},
+        { type: "code", language: "python", code: `# Exemplo: automação de triagem de e-mails
+import anthropic
+
+client = anthropic.Anthropic()
+
+def triagem_email(assunto: str, corpo: str) -> dict:
+    prompt = f"""
+    Classifique este e-mail em: URGENTE, NORMAL ou SPAM.
+    Retorne JSON: {{"categoria": "...", "razao": "..."}}
+
+    Assunto: {assunto}
+    Corpo: {corpo}
+    """
+    response = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=200,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response.content[0].text` },
+        { type: "tip", text: "Comece com 'human-in-the-loop' (humano revisando). Só automatize completamente após validar a qualidade em cenários reais." },
+      ],
+    }],
+    // Módulo 2 — Prompts para Negócios
+    [{
+      id: "slide-a3-2",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Prompts para Negócios — Escala com Templates" },
+        { type: "text", text: "Templates parametrizados (com variáveis como {{cliente}}, {{setor}}, {{objetivo}}) permitem reutilizar a mesma estrutura de prompt em múltiplos contextos, trocando apenas os valores específicos. Isso escala o uso de IA de um para muitos." },
+        { type: "code", language: "prompt", code: `# Template de proposta comercial parametrizado:
+
+Você é um consultor de negócios especialista em {{setor}}.
+
+Escreva uma proposta de {{tipo_proposta}} para:
+- Cliente: {{nome_cliente}}
+- Desafio: {{desafio_principal}}
+- Orçamento estimado: {{orcamento}}
+- Prazo: {{prazo}}
+
+Formato: estrutura executiva com 4 seções:
+1. Entendimento do desafio
+2. Solução proposta
+3. Cronograma e entregáveis
+4. Investimento e ROI esperado
+
+Tom: formal e orientado a resultado.
+Tamanho: máx. 500 palavras.` },
+        { type: "tip", text: "Sempre revise antes de enviar para clientes. IA pode acertar o tom mas errar um dado específico — revisão humana é obrigatória em comunicações externas." },
+      ],
+    }],
+    // Módulo 3 — Fluxos com Agentes
+    [{
+      id: "slide-a3-3",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Fluxos com Agentes — IA que Age" },
+        { type: "text", text: "Um agente de IA é um sistema onde um LLM recebe um objetivo, decide quais ferramentas (tools) usar e executa ações em um laço (loop) até concluir a tarefa. Diferente de uma chamada simples, o agente age — não apenas responde." },
+        { type: "mind-map", title: "Componentes de um Agente", branches: [
+          { label: "LLM", children: ["Raciocina sobre o objetivo", "Decide próximos passos"] },
+          { label: "Ferramentas (Tools)", children: ["Busca web", "Leitura de arquivo", "Chamada de API", "Execução de código"] },
+          { label: "Memória", children: ["Contexto de curto prazo", "Histórico de ações"] },
+          { label: "Orquestrador", children: ["Loop de decisão", "Condição de parada", "Limite de iterações"] },
+        ]},
+        { type: "code", language: "python", code: `# Fluxo multi-agente simplificado:
+# Agente 1: Pesquisa → Agente 2: Análise → Agente 3: Relatório
+
+orquestrador.run([
+    Agente("Pesquisador", tools=["web_search", "arxiv"]),
+    Agente("Analista",    tools=["code_exec", "calculator"]),
+    Agente("Redator",     tools=["format_document"]),
+], objetivo="Analise tendências em LLMs de 2024 e gere relatório")` },
+        { type: "tip", text: "Sempre defina condição de parada e limite máximo de iterações. Agentes sem limite podem entrar em loop infinito e gerar custos exponenciais." },
+      ],
+    }],
+    // Módulo 4 — Avaliação & Métricas
+    [{
+      id: "slide-a3-4",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Avaliação & Métricas em Sistemas de IA" },
+        { type: "text", text: "IA em produção precisa de monitoramento contínuo. Prompts que funcionavam ontem podem degradar após uma atualização do modelo ou mudança na distribuição dos inputs. Métricas de negócio (não apenas técnicas) revelam se a IA está realmente resolvendo o problema." },
+        { type: "mind-map", title: "Camadas de métricas", branches: [
+          { label: "Técnicas", children: ["Latência (P50, P95)", "Taxa de erro", "Tokens consumidos/mês"] },
+          { label: "Qualidade", children: ["Taxa de alucinação", "Aderência ao formato", "Coerência da resposta"] },
+          { label: "Negócio", children: ["CSAT (satisfação)", "Taxa de escalação para humano", "Taxa de resolução"] },
+        ]},
+        { type: "text", text: "LLM-as-judge: usar um LLM para avaliar automaticamente a qualidade das respostas de outro LLM — você escreve um prompt de avaliação com critérios e o modelo pontua milhares de saídas automaticamente." },
+        { type: "tip", text: "Métricas de negócio são a estrela do norte. Um sistema rápido que gera respostas erradas tem ótima latência e péssimo CSAT." },
+      ],
+    }],
+    // Módulo 5 — Segurança e Guardrails
+    [{
+      id: "slide-a3-5",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Guardrails — Segurança em Sistemas de IA" },
+        { type: "text", text: "Guardrails são mecanismos que impedem o modelo de gerar conteúdo prejudicial, fora do escopo ou incorreto. Eles operam em camadas: no prompt (instrução de escopo), no código (validação da saída) e no sistema (filtros externos). A estratégia é 'defesa em profundidade'." },
+        { type: "mind-map", title: "Camadas de Defesa", branches: [
+          { label: "No Prompt", children: ["Definir escopo explícito", "Instruir resposta padrão para fora do escopo", "Guardrails negativos ('não faça X')"] },
+          { label: "No Código", children: ["Validar formato da saída", "Checar conteúdo proibido", "Limite de tokens de saída"] },
+          { label: "No Sistema", children: ["Filtros de conteúdo externos", "Rate limiting", "Logging para auditoria"] },
+        ]},
+        { type: "code", language: "prompt", code: `# Guardrail de escopo no system prompt:
+Você é um assistente de suporte do produto X.
+
+REGRAS:
+- Responda APENAS sobre funcionalidades do produto X.
+- Para qualquer outra pergunta, diga:
+  "Só posso ajudar com questões sobre o produto X.
+   Para outros assuntos, consulte [link]."
+- NUNCA invente funcionalidades que não existem.
+- Se não souber, diga: "Não tenho essa informação."` },
+        { type: "tip", text: "Prompt injection: usuários podem enviar texto que instrui o modelo a ignorar suas regras. Por isso, guardrails apenas no prompt não são suficientes para sistemas críticos." },
+      ],
+    }],
+    // Módulo 6 — Projeto Final
+    [{
+      id: "slide-a3-6",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Projeto Final — MVP-First com IA" },
+        { type: "text", text: "Projetos de IA bem-sucedidos seguem o ciclo MVP-first: começar simples, validar com usuários reais, medir resultados e iterar. A tecnologia é secundária — clareza do problema e critérios de sucesso mensuráveis são primários." },
+        { type: "mind-map", title: "Ciclo de projeto de IA", branches: [
+          { label: "1. Definir", children: ["Problema em 1 frase", "Usuário-alvo", "Critérios de sucesso mensuráveis"] },
+          { label: "2. Prototipar", children: ["Prompt simples (MVP)", "Sem over-engineering inicial"] },
+          { label: "3. Testar", children: ["Usuários reais", "Casos extremos", "Feedback qualitativo"] },
+          { label: "4. Medir", children: ["Métricas definidas na etapa 1", "Comparar com baseline"] },
+          { label: "5. Iterar", children: ["Refinar prompt", "Adicionar complexidade gradualmente"] },
+        ]},
+        { type: "quote", text: "\"A diferença entre um projeto de IA bem-sucedido e um que falha: clareza do problema, métricas definidas e testes com usuários reais — não o modelo mais caro.\"" },
+        { type: "tip", text: "Um projeto de IA maduro tem: prompts versionados e testados, tratamento de erros, guardrails, métricas de qualidade e documentação das decisões de design." },
+      ],
+    }],
+    // Módulo 7 — Aplicando Agentes
+    [{
+      id: "slide-a3-7",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Agentes de IA na Prática" },
+        { type: "text", text: "Um agente recebe um objetivo, decide quais ferramentas usar, executa ações e itera até concluir. Ferramentas (tools) são funções tipadas que o agente chama — busca web, leitura de arquivo, chamada de API, execução de código. Sem tools, o agente só conversa; com elas, age no mundo real." },
+        { type: "code", language: "python", code: `# Definindo uma ferramenta para um agente
+tools = [
+    {
+        "name": "buscar_preco",
+        "description": "Busca o preço atual de um produto no e-commerce",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "produto": {
+                    "type": "string",
+                    "description": "Nome do produto"
+                }
+            },
+            "required": ["produto"]
+        }
+    }
+]
+
+# O agente decide QUANDO e SE chamar cada tool
+# com base no objetivo recebido` },
+        { type: "tip", text: "Proteja seu agente com: limite de iterações (max_steps), timeout por ação, e revisão humana antes de ações irreversíveis (envio de e-mail, pagamento)." },
+      ],
+    }],
+    // Módulo 8 — OpenRouter
+    [{
+      id: "slide-a3-8",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "OpenRouter — Um Gateway para Todos os LLMs" },
+        { type: "text", text: "OpenRouter é um gateway que unifica acesso a centenas de modelos de linguagem (OpenAI, Anthropic, Google, Meta, e mais) por uma única API compatível com a da OpenAI. Você troca de modelo mudando apenas um parâmetro — sem reescrever o código." },
+        { type: "code", language: "python", code: `# Com OpenRouter, a API é compatível com OpenAI:
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key="sua_chave_openrouter",  # não a da OpenAI
+)
+
+# Troque apenas o 'model' para usar qualquer LLM:
+response = client.chat.completions.create(
+    model="anthropic/claude-sonnet-4-6",  # ou openai/gpt-4o
+    messages=[{"role": "user", "content": "Olá!"}]
+)` },
+        { type: "mind-map", title: "Vantagens do OpenRouter", branches: [
+          { label: "Flexibilidade", children: ["Centenas de modelos", "Troca com 1 parâmetro"] },
+          { label: "Custo", children: ["Fallbacks automáticos", "Comparação de preços", "Pay-per-use"] },
+          { label: "Compatibilidade", children: ["API compatível com OpenAI", "Qualquer SDK OpenAI funciona"] },
+        ]},
+      ],
+    }],
+    // Módulo 9 — Modelos Locais
+    [{
+      id: "slide-a3-9",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Modelos Locais — IA sem Nuvem" },
+        { type: "text", text: "Modelos locais têm seus pesos rodando diretamente na sua máquina, sem depender de APIs externas. Isso garante privacidade total (dados nunca saem), funcionamento offline e custo previsível em alto volume — à custa de qualidade menor e exigência de hardware." },
+        { type: "mind-map", title: "Ferramentas para modelos locais", branches: [
+          { label: "Ollama", children: ["CLI simples", "API local compatível com OpenAI", "Gerencia download de modelos"] },
+          { label: "LM Studio", children: ["Interface gráfica", "Suporta GGUF quantizado", "Chat integrado"] },
+          { label: "llama.cpp", children: ["C++ otimizado", "Máxima performance", "Para desenvolvedores"] },
+        ]},
+        { type: "code", language: "bash", code: `# Instalar e rodar modelo local com Ollama:
+ollama pull llama3.1:8b          # baixar modelo
+ollama run llama3.1:8b           # chat direto no terminal
+
+# API local compatível com OpenAI (porta 11434):
+curl http://localhost:11434/v1/chat/completions \\
+  -H "Content-Type: application/json" \\
+  -d '{"model": "llama3.1:8b", "messages": [...]}'` },
+        { type: "tip", text: "Quantização (Q4, Q5, Q8): comprime os pesos do modelo para caber em menos RAM com leve perda de qualidade. Q4_K_M é o balanço mais comum para uso geral." },
+      ],
+    }],
+    // Módulo 10 — Claude Code na Prática
+    [{
+      id: "slide-a3-10",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Claude Code — IA Agente no seu Terminal" },
+        { type: "text", text: "Claude Code é uma CLI agente da Anthropic que opera dentro do seu repositório: lê e edita arquivos, roda comandos, mantém contexto do projeto e executa tarefas complexas de desenvolvimento. É um agente completo que age sobre o seu código." },
+        { type: "code", language: "bash", code: `# Instalar e configurar Claude Code:
+npm install -g @anthropic-ai/claude-code
+
+# Iniciar sessão em um projeto:
+cd meu-projeto/
+claude
+
+# Comandos especiais dentro do Claude Code:
+/init      # gera CLAUDE.md com contexto do projeto
+/clear     # limpa contexto (nova sessão)
+/help      # lista todos os comandos disponíveis` },
+        { type: "mind-map", title: "Arquivo CLAUDE.md", branches: [
+          { label: "O que incluir", children: ["Comandos de desenvolvimento", "Convenções do projeto", "Estrutura de pastas", "Regras de negócio"] },
+          { label: "Como funciona", children: ["Lido automaticamente em cada sessão", "Funciona como system prompt do projeto", "Persistente entre sessões"] },
+        ]},
+        { type: "tip", text: "Para tarefas grandes: quebre em etapas pequenas, revise os diffs propostos, e use /clear entre tarefas independentes para manter o contexto limpo." },
+      ],
+    }],
+    // Módulo 11 — Skills no Claude Code
+    [{
+      id: "slide-a3-11",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Skills no Claude Code — Conhecimento Reutilizável" },
+        { type: "text", text: "Uma Skill é um pacote de instruções e recursos que o Claude carrega quando a tarefa combina com sua descrição. Skills são conhecimento procedural reutilizável — uma pasta com SKILL.md + recursos opcionais (templates, exemplos, scripts)." },
+        { type: "code", language: "markdown", code: `# Estrutura de uma Skill (.claude/skills/minha-skill/)
+
+SKILL.md:
+---
+name: deploy-vercel
+description: |
+  Use when deploying to Vercel, running vercel commands,
+  or troubleshooting Vercel deployments. Covers CLI setup,
+  environment variables, and common errors.
+---
+
+# Como fazer deploy no Vercel
+
+## Pré-requisitos
+...
+
+## Passos para deploy
+...
+
+## Erros comuns e soluções
+...` },
+        { type: "tip", text: "O campo 'description' do SKILL.md é o mais importante: é o gancho de recuperação que o Claude usa para decidir quando ativar a skill. Uma descrição vaga = skill nunca ativada." },
+      ],
+    }],
+    // Módulo 12 — Personalizar Templates
+    [{
+      id: "slide-a3-12",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Templates de Prompt — Parametrizar para Reutilizar" },
+        { type: "text", text: "Um template de prompt tem partes fixas (estrutura, guardrails, formato) e partes variáveis ({{cliente}}, {{setor}}, {{objetivo}}). Parametrizar separa o que é padrão do que muda por caso de uso, tornando o prompt escalável e manutenível." },
+        { type: "code", language: "prompt", code: `# Template parametrizado de análise de sentimento:
+
+Você é um analista de {{setor}}.
+
+Analise o feedback abaixo e retorne JSON:
+{
+  "sentimento": "POSITIVO | NEGATIVO | NEUTRO",
+  "intensidade": 1-5,
+  "temas_principais": ["tema1", "tema2"],
+  "acao_recomendada": "..."
+}
+
+Contexto: feedback de {{tipo_cliente}} sobre {{produto}}.
+Tom da análise: {{tom_analise}}.
+
+Feedback:
+"""
+{{feedback_do_cliente}}
+"""` },
+        { type: "tip", text: "Antes de customizar um template: leia tudo, mapeie as variáveis, identifique os guardrails. Remover proteções sem entender por que estão ali é o erro mais comum ao adaptar templates." },
+      ],
+    }],
+    // Módulo 13 — API Key Básico
+    [{
+      id: "slide-a3-13",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Chaves de API — Segurança desde o Início" },
+        { type: "text", text: "Uma chave de API (API key) é uma credencial secreta que identifica e autoriza seu aplicativo a chamar uma API. Funciona como login + senha do seu app junto ao serviço. Se vazar, qualquer um pode usar a sua conta, gerar custos e acessar seus dados." },
+        { type: "mind-map", title: "Onde guardar (e onde NÃO guardar)", branches: [
+          { label: "NUNCA aqui", children: ["Código front-end (browser)", "Repositório Git público", "Mensagens de chat", "E-mails"] },
+          { label: "Use sempre", children: ["Variáveis de ambiente (.env)", "Secrets Manager (Vault)", "CI/CD secrets (GitHub Secrets)"] },
+        ]},
+        { type: "code", language: "bash", code: `# .env (nunca commitar — add ao .gitignore)
+ANTHROPIC_API_KEY=sk-ant-...
+OPENAI_API_KEY=sk-...
+
+# .env.example (commitar — sem valores reais)
+ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
+
+# Acessar no código:
+import os
+api_key = os.environ["ANTHROPIC_API_KEY"]` },
+        { type: "tip", text: "Se sua chave vazar: 1) Rotacione imediatamente (revogue + gere nova). 2) Cheque os logs por uso não autorizado. 3) Apagar o commit NÃO basta — o histórico do Git preserva o segredo." },
+      ],
+    }],
+    // Módulo 14 — Migrations
+    [{
+      id: "slide-a3-14",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Migrations — Versionamento do Banco de Dados" },
+        { type: "text", text: "Uma migration é um arquivo versionado com instruções SQL que evolui o esquema do banco de forma reproduzível. Pense como commits do Git aplicados ao schema — cada mudança fica registrada, pode ser revisada em PR e qualquer ambiente chega ao mesmo estado ao rodar as migrations." },
+        { type: "code", language: "sql", code: `-- Migration: 0001_criar_tabela_usuarios.sql
+CREATE TABLE usuarios (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email TEXT NOT NULL UNIQUE,
+    nome TEXT,
+    criado_em TIMESTAMPTZ DEFAULT now()
+);
+
+-- Migration: 0002_adicionar_plano.sql
+ALTER TABLE usuarios
+ADD COLUMN plano TEXT NOT NULL DEFAULT 'free'
+    CHECK (plano IN ('free', 'pro', 'enterprise'));
+
+-- Seed idempotente (pode rodar várias vezes):
+INSERT INTO planos (nome, preco) VALUES
+  ('free', 0), ('pro', 49), ('enterprise', 199)
+ON CONFLICT (nome) DO NOTHING;` },
+        { type: "tip", text: "Regra de ouro: nunca altere uma migration já aplicada em produção — crie uma nova migration para desfazer ou corrigir." },
+      ],
+    }],
+    // Módulo 15 — Health Check
+    [{
+      id: "slide-a3-15",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Health Check — Sinal de Vida do Serviço" },
+        { type: "text", text: "Um health check é um endpoint (GET /health) que responde rapidamente dizendo se o serviço está saudável. Balanceadores de carga, orquestradores (Kubernetes) e ferramentas de monitoramento usam esse endpoint para decidir se o app está apto a receber tráfego." },
+        { type: "mind-map", title: "Tipos de health check", branches: [
+          { label: "Liveness", children: ["'O processo está vivo?'", "Falha → orquestrador reinicia o container"] },
+          { label: "Readiness", children: ["'Está pronto para tráfego?'", "Falha → balanceador para de enviar requisições", "Banco/cache podem estar verificados aqui"] },
+          { label: "Startup", children: ["'Terminou de inicializar?'", "Evita matar containers lentos para subir"] },
+        ]},
+        { type: "code", language: "javascript", code: `// Health check em Node.js / Express:
+app.get('/health', async (req, res) => {
+    const checks = {
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        db: 'unknown',
+    };
+
+    try {
+        // SELECT 1 — leve, prova que o pool funciona
+        await db.query('SELECT 1');
+        checks.db = 'ok';
+    } catch {
+        checks.db = 'error';
+        checks.status = 'degraded';
+    }
+
+    const code = checks.status === 'ok' ? 200 : 503;
+    res.status(code).json(checks);
+});` },
+      ],
+    }],
+    // Módulo 16 — Cron Jobs
+    [{
+      id: "slide-a3-16",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Cron Jobs — Automação por Agendamento" },
+        { type: "text", text: "Um cron job é uma tarefa agendada que roda automaticamente em horários definidos por uma expressão cron. A expressão tem 5 campos: minuto, hora, dia-do-mês, mês, dia-da-semana. Asterisco (*) significa 'qualquer valor'." },
+        { type: "code", language: "bash", code: `# Formato: minuto hora dia-mês mês dia-semana
+
+0 9 * * 1      → toda segunda-feira às 09:00
+*/15 * * * *   → a cada 15 minutos
+0 0 * * *      → todo dia à meia-noite
+0 0 1 * *      → primeiro dia de cada mês às 00:00
+30 8 * * 1-5   → dias úteis às 08:30
+
+# Ferramenta de teste visual: crontab.guru
+# Verificar jobs ativos no Linux:
+crontab -l` },
+        { type: "mind-map", title: "Boas práticas em produção", branches: [
+          { label: "Idempotência", children: ["Rodar duas vezes não estraga dados", "Use ON CONFLICT DO NOTHING em INSERTs"] },
+          { label: "Logs", children: ["Registre início, fim e erros", "Inclua timestamp e ID de execução"] },
+          { label: "Lock (mutex)", children: ["Evita execuções sobrepostas", "Job lento + intervalo curto = problema"] },
+          { label: "Alertas", children: ["Notifique quando falhar", "Monitore duração anormal"] },
+        ]},
+      ],
+    }],
+    // Módulo 17 — Node.js Básico
+    [{
+      id: "slide-a3-17",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Node.js — JavaScript no Servidor" },
+        { type: "text", text: "Node.js é um runtime (ambiente de execução) baseado no motor V8 do Chrome que permite rodar JavaScript fora do navegador — no servidor, no terminal e em ferramentas de linha de comando. Ele é o fundamento de ferramentas como npm, Vite, Next.js e a maioria dos CLIs modernos." },
+        { type: "mind-map", title: "Para que Node.js é usado", branches: [
+          { label: "APIs e servidores web", children: ["Express, Fastify, Hono", "REST e GraphQL"] },
+          { label: "CLIs", children: ["Ferramentas de linha de comando", "Scripts de automação"] },
+          { label: "Build tools", children: ["Vite, Webpack, esbuild", "TypeScript compiler"] },
+          { label: "Runtimes derivados", children: ["Deno (seguro por padrão)", "Bun (rápido, compatível npm)"] },
+        ]},
+        { type: "code", language: "javascript", code: `// Hello World em Node.js:
+// arquivo: server.js
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('Hello World!');
+});
+
+server.listen(3000, () => {
+    console.log('Servidor rodando em http://localhost:3000');
+});
+
+// Rodar: node server.js` },
+        { type: "tip", text: "Node.js brilha em I/O assíncrono (muitas requisições simultâneas). Não é ideal para tarefas CPU-intensivas (processamento de imagem, ML) — use Python ou Rust para isso." },
+      ],
+    }],
+    // Módulo 18 — Git Bash Básico
+    [{
+      id: "slide-a3-18",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Git Bash — Controle de Versão no Terminal" },
+        { type: "text", text: "Git é o sistema de controle de versão mais usado no mundo. Git Bash é o terminal que traz Git + comandos Unix (ls, pwd, grep) para Windows. Juntos, permitem versionar código, colaborar em equipe e navegar pelo sistema como em um terminal Unix." },
+        { type: "mind-map", title: "Fluxo básico do Git", branches: [
+          { label: "Iniciar", children: ["git clone <url>  → copiar repositório", "git init         → criar novo repo"] },
+          { label: "Salvar", children: ["git add <arquivo>  → preparar para commit", "git commit -m \"msg\" → salvar no histórico local"] },
+          { label: "Sincronizar", children: ["git push  → enviar para repositório remoto", "git pull  → receber mudanças do remoto"] },
+          { label: "Colaborar", children: ["git branch  → criar branch", "git merge   → unir branches"] },
+        ]},
+        { type: "code", language: "bash", code: `# Fluxo diário típico:
+git status                    # ver o que mudou
+git add src/componente.tsx    # preparar arquivo
+git add -p                    # revisar mudança por mudança
+git commit -m "feat: add botão de login"  # salvar
+git push origin main          # enviar para GitHub
+
+# Ver histórico:
+git log --oneline -10  # últimos 10 commits resumidos` },
+      ],
+    }],
+    // Módulo 19 — npm Básico
+    [{
+      id: "slide-a3-19",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "npm — Gerenciador de Pacotes do Node.js" },
+        { type: "text", text: "npm (Node Package Manager) é o gerenciador oficial de pacotes do Node.js. Ele lê o package.json, resolve versões compatíveis e baixa bibliotecas para a pasta node_modules. É o primeiro comando a rodar ao clonar um projeto." },
+        { type: "code", language: "bash", code: `# Comandos essenciais:
+npm install              # instala tudo do package.json
+npm install express      # adiciona uma dependência
+npm install -D vitest    # adiciona devDependency
+npm run dev              # executa script "dev" do package.json
+npm run build            # compila para produção
+npm run test             # roda os testes
+
+# package.json:
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "test": "vitest"
+  },
+  "dependencies":    { "react": "^18" },  // produção
+  "devDependencies": { "vite": "^5" }     // só em dev
+}` },
+        { type: "tip", text: "Alternativas ao npm: pnpm (mais rápido, economiza disco) e yarn (versão v1 ou berry). A sintaxe de comandos é quase idêntica — pnpm install, pnpm run dev." },
+      ],
+    }],
+    // Módulo 20 — Skills LLM Básico
+    [{
+      id: "slide-a3-20",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Skills em LLMs — Prompts Sistematizados" },
+        { type: "text", text: "Skills em LLMs são conjuntos de instruções, exemplos e diretrizes que ensinam o modelo a executar uma tarefa específica com qualidade e consistência. Diferente de um prompt comum (pergunta pontual), uma skill é um sistema completo com persona, regras, exemplos few-shot, formato e guardrails." },
+        { type: "mind-map", title: "Skill × Prompt comum", branches: [
+          { label: "Prompt comum", children: ["Pergunta pontual e isolada", "Sem estrutura reutilizável", "Sem examples ou guardrails"] },
+          { label: "Skill", children: ["Persona definida", "Regras e restrições", "Exemplos few-shot integrados", "Formato de saída fixo", "Guardrails de segurança"] },
+        ]},
+        { type: "code", language: "markdown", code: `# Exemplo de Skill: Revisor de Código
+
+Você é um engenheiro sênior especializado em code review.
+
+## Regras de revisão:
+- Priorize: segurança > correção > performance > estilo
+- Aponte problemas com: linha, categoria e sugestão de fix
+- Para cada problema, classifique: CRÍTICO | IMPORTANTE | SUGESTÃO
+- Não reescreva o código — explique o que e por que mudar
+
+## Formato de saída:
+**Linha XX** [CRÍTICO] Problema: ... Sugestão: ...
+
+## O que NÃO fazer:
+- Nunca aprove código com SQL injection ou XSS
+- Não comente sobre estilo se houver problemas críticos` },
+        { type: "tip", text: "Skills são 'instaladas' no contexto: no system prompt, em arquivos de configuração (CLAUDE.md, .cursorrules), ou em ferramentas como Claude Code (.claude/skills/)." },
+      ],
+    }],
+  ],
+};
+
 export function getActivities(track: TrackId, moduleIndex: number): LessonActivity[] {
   const set = LESSONS[track]?.[moduleIndex];
-  return set && set.length > 0 ? set : DEFAULT_QUESTIONS;
+  const activities = set && set.length > 0 ? set : DEFAULT_QUESTIONS;
+  const slides = SLIDE_CONTENT[track]?.[moduleIndex] ?? [];
+  return [...slides, ...activities];
 }
 
 /** @deprecated Use getActivities instead */

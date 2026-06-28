@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { advanceModule, type TrackId } from "@/lib/moduleProgress";
-import { getActivities, getProofTask, TRACK_TOTALS, isMatch, isOrder, isEssay } from "@/lib/lessonContent";
+import { getActivities, getProofTask, TRACK_TOTALS, isMatch, isOrder, isEssay, isContentSlide } from "@/lib/lessonContent";
 import type { LessonActivity } from "@/lib/lessonContent";
 import { ActivityRenderer } from "@/components/activities/ActivityRenderer";
 import { scopedKey } from "@/lib/userScope";
@@ -59,12 +59,17 @@ export default function LessonPage() {
 
   const finished = step >= ACTIVITIES.length;
   const currentActivity = ACTIVITIES[step] as LessonActivity | undefined;
-  const answered = selected !== null || !!matchOrderAnswers[step];
+  const isCurrentSlide = currentActivity ? isContentSlide(currentActivity) : false;
+  const answered = isCurrentSlide || selected !== null || !!matchOrderAnswers[step];
   const isCurrentEssay = currentActivity ? isEssay(currentActivity) : false;
   const isLast = step === ACTIVITIES.length - 1;
 
+  // Slides não contam para score — só as atividades reais
+  const scorableActivities = ACTIVITIES.filter((a) => !isContentSlide(a));
+
   // Score: essays sempre contam 1 se respondidas; match/order por pares; MC/fill-blank por correct
   const score = ACTIVITIES.reduce((acc, activity, i) => {
+    if (isContentSlide(activity)) return acc
     if (isEssay(activity)) {
       return answers[activity.id] ? acc + 1 : acc
     }
@@ -155,7 +160,7 @@ export default function LessonPage() {
 
   const progress = Math.round(((step + (answered ? 1 : 0)) / ACTIVITIES.length) * 100);
 
-  const perfect = finished && score === ACTIVITIES.length;
+  const perfect = finished && score === scorableActivities.length;
   const needsProof = !!proofTask;
   const proofDone = !!proofDataUrl;
   const lessonComplete = perfect && (!needsProof || proofDone);
@@ -265,7 +270,7 @@ export default function LessonPage() {
             {perfect ? "Perfeito!" : "Boa tentativa!"}
           </h2>
           <p className="mt-1 text-sm text-foreground-tertiary">
-            Você acertou {score} de {ACTIVITIES.length} atividades
+            Você acertou {score} de {scorableActivities.length} atividades
           </p>
           {perfect && (
             <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald/15 px-3 py-1 text-xs font-bold text-emerald">
@@ -380,7 +385,7 @@ export default function LessonPage() {
               onClick={next}
               className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald py-4 text-sm font-extrabold uppercase tracking-wide text-white transition-colors hover:bg-emerald-dark"
             >
-              {isLast ? "Ver resultado" : "Próxima atividade"}
+              {isLast ? "Ver resultado" : isCurrentSlide ? "Continuar" : "Próxima atividade"}
               <ArrowRight className="h-4 w-4" />
             </button>
           ) : (
