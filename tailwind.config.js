@@ -16,10 +16,10 @@ module.exports = {
 			},
 		},		extend: {
 			fontFamily: {
-				/* duolingo-sans é servido via @font-face em index.css (Poppins como base) */
+				/* Poppins loaded via Google Fonts in index.html */
 				sans: [
-					'duolingo-sans',
 					'Poppins',
+					'duolingo-sans',
 					'-apple-system',
 					'BlinkMacSystemFont',
 					'Helvetica Neue',
@@ -27,13 +27,13 @@ module.exports = {
 					'sans-serif',
 				],
 				display: [
-					'duolingo-sans',
 					'Poppins',
+					'duolingo-sans',
 					'sans-serif',
 				],
 				'duolingo-sans': [
-					'duolingo-sans',
 					'Poppins',
+					'duolingo-sans',
 					'sans-serif',
 				],
 			},
