@@ -169,7 +169,7 @@ export default function ModuleExamPage() {
   }
 
   return (
-    <AppLayout>
+    <>
       <CelebrationCanvas active={showConfetti} duration={4000} />
       <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
         <div className="sticky top-0 z-10 border-b border-stroke-muted bg-card px-4 py-3">
@@ -357,5 +357,6 @@ export default function ModuleExamPage() {
 
         <AppBottomNav />
       </div>
+    </>
   );
 }

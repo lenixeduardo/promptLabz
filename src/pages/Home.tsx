@@ -196,7 +196,7 @@ export default function HomePage() {
   }, [streak]);
 
   return (
-    <AppLayout>
+    <>
       <StreakCelebration
         active={streakCelebration}
         streak={streak}
@@ -583,5 +583,6 @@ export default function HomePage() {
 
         <AppBottomNav />
       </div>
+    </>
   );
 }

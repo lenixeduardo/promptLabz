@@ -29,7 +29,6 @@ const BACK_TAP_STEPS = [
 
 export default function BackTapConfigPage() {
   return (
-    <AppLayout>
     <div className="relative flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
       <AppPageHeader title="Configurar Back Tap" back="/settings" />
 

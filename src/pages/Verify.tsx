@@ -119,7 +119,6 @@ export default function VerifyPage() {
   }
 
   return (
-    <AppLayout>
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
       <AppPageHeader
         title="Validação de Certificado"

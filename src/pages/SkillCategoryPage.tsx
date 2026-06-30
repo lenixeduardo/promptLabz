@@ -63,7 +63,6 @@ export default function SkillCategoryPage() {
   const CategoryIcon = ICON_MAP[catData.icon] ?? Lightbulb
 
   return (
-    <AppLayout>
     <div className="min-h-screen bg-surface-soft pb-24 lg:pb-8">
       {/* Header */}
       <div className="bg-white px-4 pb-4 pt-12 shadow-sm">

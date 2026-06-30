@@ -238,7 +238,6 @@ export default function TemplateDetail() {
   }
 
   return (
-    <AppLayout>
     <div className="min-h-screen bg-surface-soft pb-32 lg:pb-8">
       {/* Top header */}
       <div className="sticky top-0 z-20 flex items-center justify-between border-b border-pageBgLight bg-white px-4 pt-10 pb-3">

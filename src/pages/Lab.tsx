@@ -537,7 +537,6 @@ export default function Lab() {
           </div>
         </div>
         <div className="h-px bg-stroke-muted" />
-        </div>
       </div>
 
       {/* Tab content */}
