@@ -10,7 +10,6 @@ import { sileo } from "sileo"
 import { type LabCategory } from "@/data/labCategoriesData"
 import { useLabCategories } from "@/hooks/useLabCategories"
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout"
 
 type DiffFilter = "Todos" | "Iniciante" | "Intermediario" | "Avancado"
 
@@ -146,6 +145,5 @@ export default function Prompts() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   )
 }

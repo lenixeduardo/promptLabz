@@ -6,7 +6,6 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout"
 import { cn } from "@/lib/utils"
 import { TEMPLATES, type Template } from "@/data/templatesData"
 
@@ -337,6 +336,5 @@ export default function TemplateDetail() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   )
 }

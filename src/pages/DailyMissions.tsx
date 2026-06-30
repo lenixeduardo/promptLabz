@@ -3,7 +3,6 @@ import { ArrowLeft, CheckCircle2, Circle, Zap } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { DAILY_MISSIONS, TOTAL_DAILY_XP } from "@/data/dailyMissionsData"
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout"
 import { useAchievements } from "@/hooks/useAchievements"
 import { cn } from "@/lib/utils"
 
@@ -160,6 +159,5 @@ export default function DailyMissions() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   )
 }

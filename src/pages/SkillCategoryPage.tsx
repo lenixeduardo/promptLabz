@@ -9,7 +9,6 @@ import {
 } from "lucide-react"
 import { TRAIL_CATEGORY_SKILLS, type SkillDifficulty } from "@/data/trailCategorySkillsData"
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout"
 
 type DiffFilter = "Todas" | SkillDifficulty
 
@@ -159,6 +158,5 @@ export default function SkillCategoryPage() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   )
 }

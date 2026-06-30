@@ -7,7 +7,6 @@ import { getLocalXP, getLocalGems, getLevel, getLevelProgress } from "@/lib/xp"
 import { getLevelTitle } from "@/lib/levelTitles"
 import { getAvatarById } from "@/data/avatarsData"
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout"
 import * as Icons from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
@@ -456,6 +455,5 @@ export default function Ranking() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   )
 }

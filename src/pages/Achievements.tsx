@@ -5,7 +5,6 @@ import { MascotGlow } from "@/components/MascotGlow"
 import { cn } from "@/lib/utils"
 import * as Icons from "@/lib/icons"
 import { getProgressCount } from "@/lib/achievements"
-import { AppLayout } from "@/components/AppLayout"
 
 export default function Achievements() {
   const navigate = useNavigate()
@@ -188,6 +187,5 @@ export default function Achievements() {
 
       </div>
     </div>
-    </AppLayout>
   )
 }

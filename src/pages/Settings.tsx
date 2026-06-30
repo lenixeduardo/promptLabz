@@ -16,7 +16,6 @@ import {
   Heart,
 } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
-import { AppLayout } from "@/components/AppLayout";
 import { AppPageHeader } from "@/components/AppPageHeader";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Switch } from "@/components/ui/switch";
@@ -258,6 +257,5 @@ export default function SettingsPage() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   );
 }

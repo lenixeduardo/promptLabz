@@ -2,7 +2,6 @@ import { useState } from "react"
 import { useNavigate, useParams, useLocation } from "react-router-dom"
 import { ChevronDown, ChevronUp, Copy, ArrowRight, Heart } from "lucide-react"
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout"
 import { cn } from "@/lib/utils"
 import { trackPromptUsed } from "@/lib/analytics"
 import { useFavoritePrompts } from "@/hooks/useFavoritePrompts"
@@ -281,6 +280,5 @@ export default function PromptDetail() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   )
 }

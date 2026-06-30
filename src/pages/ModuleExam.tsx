@@ -12,7 +12,6 @@ import {
   Star,
 } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
-import { AppLayout } from "@/components/AppLayout";
 import { cn } from "@/lib/utils";
 import { CelebrationCanvas } from "@/components/CelebrationCanvas";
 
@@ -358,6 +357,5 @@ export default function ModuleExamPage() {
 
         <AppBottomNav />
       </div>
-    </AppLayout>
   );
 }

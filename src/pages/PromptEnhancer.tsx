@@ -23,7 +23,6 @@ import {
   type FocusMode,
 } from "@/lib/promptEnhancer";
 import { AppBottomNav } from "@/components/AppBottomNav";
-import { AppLayout } from "@/components/AppLayout";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -619,6 +618,5 @@ export default function PromptEnhancerPage() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   );
 }

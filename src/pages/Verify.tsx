@@ -15,8 +15,6 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout";
-import { AppLayout } from "@/components/AppLayout";
 import { AppPageHeader } from "@/components/AppPageHeader";
 import verifyShield from "@/assets/verify-shield.png";
 import {
@@ -246,7 +244,6 @@ export default function VerifyPage() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   );
 }
 

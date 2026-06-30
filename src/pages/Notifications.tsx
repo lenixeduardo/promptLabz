@@ -14,7 +14,6 @@ import {
 import { getNotifications, markNotificationsRead, type DbNotification } from "@/lib/db"
 import { useAuth } from "@/hooks/useAuth"
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout"
 import { sileo } from "sileo"
 
 function mapDbToLocal(row: DbNotification): AppNotification {
@@ -148,6 +147,5 @@ export default function Notifications() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   )
 }

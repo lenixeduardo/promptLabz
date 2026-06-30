@@ -6,8 +6,6 @@ import {
   Smartphone,
 } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout";
-import { AppLayout } from "@/components/AppLayout";
 import { AppPageHeader } from "@/components/AppPageHeader";
 
 const BACK_TAP_STEPS = [
@@ -84,6 +82,5 @@ export default function BackTapConfigPage() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   );
 }

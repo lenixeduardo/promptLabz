@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import { Swords, ArrowLeft, Clock } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout";
-import { AppLayout } from "@/components/AppLayout";
 
 export default function PromptWarsPage() {
   return (
@@ -42,6 +40,5 @@ export default function PromptWarsPage() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   );
 }

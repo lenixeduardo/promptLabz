@@ -7,7 +7,6 @@ import { usePrompts } from "@/hooks/usePrompts"
 import { TEMPLATES } from "@/data/templatesData"
 import { SkillIcon } from "@/components/skills/shared"
 import { AppBottomNav } from "@/components/AppBottomNav"
-import { AppLayout } from "@/components/AppLayout"
 
 type LabTab = "skills" | "prompts" | "templates"
 type FilterMode = "todas" | "recomendadas" | "mais-usadas"
@@ -550,6 +549,5 @@ export default function Lab() {
 
       <AppBottomNav />
     </div>
-    </AppLayout>
   )
 }
