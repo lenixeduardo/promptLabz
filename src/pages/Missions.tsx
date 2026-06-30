@@ -23,14 +23,14 @@ export default function MissionsPage() {
   } = useDailyMissions();
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
       <AppPageHeader
         title="Missões Diárias"
         subtitle={`Conclua ${CHEST_THRESHOLD} missões para ganhar +${CHEST_REWARD_XP} XP e +${CHEST_REWARD_GEMS} 💎`}
         back="/home"
       />
 
-      <div className="mx-auto w-full max-w-lg px-4 py-4">
+      <div className="mx-auto w-full max-w-lg lg:max-w-3xl px-4 py-4">
         {/* Daily chest */}
         <div
           className={cn(
@@ -169,7 +169,7 @@ export default function MissionsPage() {
             <p className="text-xs text-foreground-tertiary">Volte amanhã para novas missões!</p>
           </div>
         ) : (
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {missions.map((m) => {
             const Icon = m.icon;
             const isDone = completed[m.id];

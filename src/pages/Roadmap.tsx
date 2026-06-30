@@ -88,14 +88,14 @@ const STATUS_STYLE: Record<Status, { dot: string; chip: string; icon: typeof Che
 
 export default function RoadmapPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
       <AppPageHeader
         title="Roadmap"
         subtitle="O futuro do Laboratório"
         back="/profile"
       />
 
-      <div className="mx-auto w-full max-w-lg px-4 py-5">
+      <div className="mx-auto w-full max-w-lg lg:max-w-2xl px-4 py-5">
         <ol className="relative space-y-5 border-l-2 border-stroke-light pl-6">
           {PHASES.map((p) => {
             const s = STATUS_STYLE[p.status];

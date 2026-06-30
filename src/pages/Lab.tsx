@@ -235,7 +235,7 @@ function SkillsTab() {
           <p className="text-xs text-foregroundMuted">Tente um termo diferente</p>
         </div>
       )}
-      <div className="flex flex-col gap-2 pb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 pb-4">
         {filtered.map(skill => (
           <button
             key={skill.name}
@@ -340,7 +340,7 @@ function PromptsTab() {
           <p className="text-xs text-foregroundMuted">Tente um termo diferente</p>
         </div>
       )}
-      <div className="flex flex-col gap-3 pb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 pb-4">
         {filtered.map((prompt, idx) => {
           const iconKey = PROMPT_ICONS[prompt.category] ?? "Lightbulb"
           const Icon = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[iconKey]
@@ -470,7 +470,7 @@ function TemplatesTab() {
           <p className="text-xs text-foregroundMuted">Tente um termo diferente</p>
         </div>
       )}
-      <div className="flex flex-col gap-4 pb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
         {filtered.map(template => (
           <div
             key={template.id}
@@ -511,34 +511,36 @@ export default function Lab() {
   const { title, subtitle } = HEADER_INFO[activeTab]
 
   return (
-    <div className="min-h-screen bg-[#F0FAF3] pb-24 dark:bg-pageBg">
+    <div className="min-h-screen bg-[#F0FAF3] pb-24 lg:pb-8 dark:bg-pageBg">
       {/* Sticky header + tabs */}
-      <div className="sticky top-0 z-10 bg-[#F0FAF3] px-4 pb-0 pt-12 dark:bg-pageBg">
-        <h1 className="text-2xl font-extrabold text-foregroundDark dark:text-white">{title}</h1>
-        <p className="mt-0.5 text-sm text-[#3E6B50] dark:text-foregroundMuted">{subtitle}</p>
+      <div className="sticky top-0 z-10 bg-[#F0FAF3] px-4 lg:px-8 pb-0 pt-6 lg:pt-8 dark:bg-pageBg">
+        <div className="lg:max-w-5xl lg:mx-auto">
+          <h1 className="text-2xl lg:text-3xl font-extrabold text-foregroundDark dark:text-white">{title}</h1>
+          <p className="mt-0.5 text-sm lg:text-base text-[#3E6B50] dark:text-foregroundMuted">{subtitle}</p>
 
-        <div role="tablist" className="mt-4 flex gap-6">
-          {TABS.map(tab => (
-            <button
-              key={tab.key}
-              role="tab"
-              aria-selected={activeTab === tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`pb-3 text-sm font-semibold transition-colors ${
-                activeTab === tab.key
-                  ? "border-b-2 border-emerald text-emerald"
-                  : "text-foregroundMuted hover:text-foreground"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+          <div role="tablist" className="mt-4 flex gap-6">
+            {TABS.map(tab => (
+              <button
+                key={tab.key}
+                role="tab"
+                aria-selected={activeTab === tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`pb-3 text-sm font-semibold transition-colors ${
+                  activeTab === tab.key
+                    ? "border-b-2 border-emerald text-emerald"
+                    : "text-foregroundMuted hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
         <div className="h-px bg-stroke-muted" />
       </div>
 
       {/* Tab content */}
-      <div className="px-4 pt-4">
+      <div className="px-4 lg:px-8 pt-4 lg:max-w-5xl lg:mx-auto">
         {activeTab === "skills" && <SkillsTab />}
         {activeTab === "prompts" && <PromptsTab />}
         {activeTab === "templates" && <TemplatesTab />}

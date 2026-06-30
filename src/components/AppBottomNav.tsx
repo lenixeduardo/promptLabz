@@ -43,7 +43,7 @@ export const AppBottomNav = memo(function AppBottomNav({ items = BOTTOM_NAV_ITEM
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-stroke-muted bg-card/95 backdrop-blur-md"
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-stroke-muted bg-card/95 backdrop-blur-md lg:hidden"
       aria-label="Navegação principal"
     >
       <div className="mx-auto flex max-w-lg items-center justify-around px-2 py-1">

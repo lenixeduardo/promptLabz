@@ -75,8 +75,8 @@ export default function Notifications() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6 pb-24">
-      <div className="mx-auto w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6 pb-24 lg:pb-8">
+      <div className="mx-auto w-full max-w-md lg:max-w-2xl">
         <AppPageHeader
           title="Notificações"
           onBack={() => navigate("/home")}

@@ -35,8 +35,8 @@ export default function Premium() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6 pb-24">
-      <div className="mx-auto w-full max-w-lg">
+    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6 pb-24 lg:pb-8">
+      <div className="mx-auto w-full max-w-lg lg:max-w-2xl">
         {/* Back button */}
         <button
           onClick={() => navigate("/home")}
