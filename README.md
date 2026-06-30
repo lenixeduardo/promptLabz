@@ -178,15 +178,15 @@ pnpm build            # Build de produção
 
 ## Screenshots
 
-> 📸 Screenshots em breve — o app está em deploy ativo em **[promptlabz.vercel.app](https://promptlabz.vercel.app)**
+> Acesse em: **[promptlabz.vercel.app](https://promptlabz.vercel.app)**
 
 | | |
 |---|---|
-| 🏠 **Home** — Progresso, streak, trilha e acesso rápido | 📚 **Trilha de Aprendizado** — Módulos sequenciais com lições interativas |
-| 🏆 **Ranking** — Pódio com top 3 e lista de usuários | ⭐ **Skills** — 80+ skills com busca, filtros e favoritos |
-| 🔬 **PromptLab** — Editor com avaliação em tempo real | 🔍 **PromptAnalyzer** — Análise de prompts com métricas de clareza |
-| 🎮 **Loja** — Avatares e power-ups comprados com gemas | 👤 **Perfil** — Avatar, XP, gemas, conquistas e certificados |
-| 🌙 **Dark mode** — Tema claro/escuro em todo o app | 📰 **Notícias** — Feed diário de tecnologia atualizado via cron |
+| **Home** — Progresso, streak, trilha e acesso rápido | **Trilha de Aprendizado** — Módulos sequenciais com lições interativas |
+| **Ranking** — Pódio com top 3 e lista de usuários | **Skills** — 80+ skills com busca, filtros e favoritos |
+| **PromptLab** — Editor com avaliação em tempo real | **PromptAnalyzer** — Análise de prompts com métricas de clareza |
+| **Loja** — Avatares e power-ups comprados com gemas | **Perfil** — Avatar, XP, gemas, conquistas e certificados |
+| **Dark mode** — Tema claro/escuro em todo o app | **Notícias** — Feed diário de tecnologia atualizado via cron |
 
 ---
 
@@ -265,8 +265,9 @@ android/           # Projeto Capacitor Android (gerado — não editar manualmen
 | Arquivo | Descrição |
 |---------|-----------|
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Design do sistema, fluxo de dados, banco, decisões |
+| [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) | Tokens de design, paleta, tipografia, componentes, animações |
 | [PRODUCT.md](./PRODUCT.md) | Requisitos, regras de negócio, casos de borda |
 | [PERSONAS.md](./PERSONAS.md) | Perfis dos usuários-alvo |
 | [ROADMAP.md](./ROADMAP.md) | Versões, features planejadas, trade-offs |
-| [DEPLOYMENT.md](./DEPLOYMENT.md) | Guia de deploy Vercel + Supabase |
+| [DEPLOYMENT.md](./DEPLOYMENT.md) | Guia de deploy Vercel + Supabase + variáveis de ambiente |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | Como contribuir, convenções, testes |

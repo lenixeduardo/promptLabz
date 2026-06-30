@@ -47,6 +47,10 @@ src/
 │   ├── AchievementsContext  # Conquistas desbloqueadas
 │   └── ThemeContext     # Tema dark/light com persistência em localStorage
 │
+│   # Providers adicionais em src/components/
+│   ├── AvatarProvider   # Avatar selecionado pelo usuário (global)
+│   └── PremiumProvider  # Status premium (free/trial/active/cancelled)
+│
 ├── hooks/               # Lógica de negócio reutilizável
 │   ├── useAuth          # Login, signup, logout, OAuth, reset
 │   ├── useAchievements  # Acesso ao AchievementsContext
@@ -234,45 +238,163 @@ Evento (ex: lesson_completed)
 
 ## Banco de Dados
 
-### Diagrama de Tabelas
+O schema completo está em `schema.sql` (snapshot) e versionado em `supabase/migrations/`. As migrations são aplicadas em ordem cronológica via `supabase db push`.
+
+### Tabelas Principais (User Data)
 
 ```
-public.users                    public.user_progress
-─────────────────────           ──────────────────────────────
-id           UUID PK            id               UUID PK
-email        TEXT               user_id          UUID FK→users.id
-full_name    TEXT               category_id      TEXT
-avatar_url   TEXT               completed_lessons TEXT[]
-premium_status ENUM             current_module_index INT
-stripe_customer_id TEXT         current_lesson_index INT
-trial_ends_at TIMESTAMPTZ       created_at       TIMESTAMPTZ
-created_at   TIMESTAMPTZ        updated_at       TIMESTAMPTZ
-updated_at   TIMESTAMPTZ
-                                UNIQUE(user_id, category_id)
+public.users                          public.user_progress
+────────────────────────────          ────────────────────────────────
+id             UUID PK                id               UUID PK
+email          TEXT UNIQUE            user_id          UUID FK→users.id
+full_name      TEXT                   category_id      TEXT (≤80 chars)
+avatar_url     TEXT                   completed_lessons TEXT[] (≤500)
+premium_status TEXT ('free'|          current_module_index INT
+               'trial'|'active'|      current_lesson_index INT
+               'cancelled')           updated_at       TIMESTAMPTZ
+stripe_customer_id    TEXT UNIQUE      UNIQUE(user_id, category_id)
+stripe_subscription_id TEXT UNIQUE
+trial_ends_at  TIMESTAMPTZ
+premium_since  TIMESTAMPTZ
+xp             INT (≥0, ≤10M)
+gems           INT (≥0, ≤1M)
+created_at     TIMESTAMPTZ
+updated_at     TIMESTAMPTZ
+```
+
+### Gamificação e Conquistas
+
+```
+public.user_achievements              public.notifications
+────────────────────────────          ────────────────────────────────
+id                  UUID PK           id          UUID PK
+user_id             UUID FK→users.id  user_id     UUID FK→users.id
+unlocked_achievements TEXT[] (≤50)    type        TEXT ('achievement'|
+total_lessons_completed INT                        'mention'|'system'|
+perfect_count        INT                           'reminder')
+last_visit_date      DATE             title       TEXT (≤200)
+consecutive_days     INT              description TEXT (≤500)
+visited_categories   TEXT[]           action_label TEXT
+completed_category_ids TEXT[]         href        TEXT
+updated_at           TIMESTAMPTZ      mention     BOOLEAN
+UNIQUE(user_id)                       read_at     TIMESTAMPTZ
+                                      created_at  TIMESTAMPTZ
+```
+
+### Conteúdo (Leitura Pública)
+
+```
+public.news_articles                  public.trending_skills
+────────────────────────────          ────────────────────────────────
+id           UUID PK                  id           UUID PK
+title        TEXT (≤300)              name         VARCHAR(255)
+description  TEXT (≤800)              description  TEXT
+category     TEXT ('OpenAI'|          category     VARCHAR(100)
+             'Anthropic'|             author       VARCHAR(255)
+             'Google'|'ChatGPT')      installs     VARCHAR(10)
+image_emoji  TEXT                     installs_count INT
+visible      BOOLEAN                  tags         TEXT[]
+published_at TIMESTAMPTZ              icon         VARCHAR(100)
+                                      sort_order   INT UNIQUE
+
+public.prompts                        public.skill_trail_categories
+────────────────────────────          ────────────────────────────────
+id           UUID PK                  id           UUID PK
+title        TEXT                     category_id  VARCHAR(50) UNIQUE
+content      TEXT                     label        VARCHAR(255)
+category     TEXT                     icon         VARCHAR(100)
+tags         TEXT[]                   sort_order   INT UNIQUE
+installs_count INT
+visible      BOOLEAN
+published_at TIMESTAMPTZ
+
+public.lab_categories / public.lab_config / public.achievement_definitions
+  ── tabelas de configuração de conteúdo, leitura pública via RLS
+```
+
+### Pagamentos e Assinatura
+
+```
+public.subscriptions
+────────────────────────────────────────
+id                   UUID PK
+user_id              UUID FK→auth.users
+paddle_subscription_id TEXT UNIQUE
+paddle_customer_id   TEXT
+product_id / price_id TEXT
+status               TEXT ('active'|'canceled'|...)
+current_period_start/end TIMESTAMPTZ
+cancel_at_period_end BOOLEAN
+environment          TEXT ('live'|'sandbox')
+created_at / updated_at TIMESTAMPTZ
+```
+
+### Observabilidade
+
+```
+public.error_logs                     public.reviews
+────────────────────────────          ────────────────────────────────
+id           UUID PK                  id        UUID PK
+user_id      UUID (nullable)          user_id   UUID FK→users.id
+error_type   TEXT                     rating    INT (1-5)
+message      TEXT                     comment   TEXT
+context      JSONB                    created_at TIMESTAMPTZ
+created_at   TIMESTAMPTZ
 ```
 
 ### Row-Level Security
 
-Ambas as tabelas têm RLS habilitado. As políticas garantem:
+Todas as tabelas têm RLS habilitado. Resumo das políticas:
 
 ```sql
--- users: só pode ver e editar a própria linha
-SELECT: auth.uid() = id
-UPDATE: auth.uid() = id (exceto campos premium_status, stripe_customer_id, trial_ends_at)
+-- users: autenticados veem todos os perfis (para ranking); atualizam só o próprio
+SELECT: auth.uid() IS NOT NULL (leaderboard)
+UPDATE: auth.uid() = id
+-- Campos editáveis pelo cliente: full_name, avatar_url, xp, gems
+-- Campos bloqueados ao cliente: premium_status, stripe_customer_id, trial_ends_at
 
--- user_progress: só pode ver e editar o próprio progresso
+-- user_progress, user_achievements, notifications: próprio registro apenas
+SELECT/INSERT/UPDATE: auth.uid() = user_id
+
+-- news_articles, trending_skills, prompts, lab_*: leitura pública (sem auth)
+SELECT: true (sem restrição de auth)
+
+-- subscriptions: própria assinatura / service_role para webhooks
 SELECT: auth.uid() = user_id
-INSERT/UPDATE: auth.uid() = user_id
+ALL: service_role (para webhook Paddle)
+
+-- error_logs: service_role + usuário insere os próprios
 ```
 
 ### Trigger de Criação de Perfil
 
 ```sql
 -- Ao criar usuário no Auth, cria automaticamente em public.users
+-- e inicializa a linha em public.user_achievements
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 ```
+
+### Histórico de Migrations
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| `20260610_000_initial_schema.sql` | `users`, `user_progress`, RLS, trigger |
+| `20260610_001_users_premium.sql` | Campos premium/Stripe em `users` |
+| `20260610_002_community_tables.sql` | Tabelas `news`, `daily_tips`, `templates` (esboço futuro) |
+| `20260611_003_user_achievements.sql` | `user_achievements`, trigger de auto-criação |
+| `20260612_003_user_streaks.sql` | Suporte a streaks no schema |
+| `20260616_004_notifications.sql` | `notifications` + índice de performance |
+| `20260616_005_news_articles.sql` | `news_articles` + seed com 10 artigos |
+| `20260616_006_skills_prompts_achievements.sql` | `trending_skills`, `skill_trail_*`, `prompts`, `lab_*`, `achievement_definitions` |
+| `20260618_007_news_articles_extend.sql` | Extensão de categorias no `news_articles` |
+| `20260618_008_error_logs.sql` | `error_logs` para auditoria |
+| `20260619_009_subscriptions.sql` | `subscriptions` (Paddle) |
+| `20260619_010_trending_prompts.sql` | Extensão de prompts |
+| `20260619_011_reviews.sql` | `reviews` de usuários |
+| `20260621_012_users_xp_gems.sql` | Colunas `xp`/`gems` em `users`, índice de ranking |
+| `20260626_013_prompts_missing_categories.sql` | Categorias faltantes em prompts |
 
 ---
 
@@ -318,7 +440,7 @@ npx cap open android    # Abre Android Studio
 ## Decisões de Arquitetura
 
 ### Context API vs Zustand/Redux
-Optamos por Context API nativo para evitar dependência de estado externo. Os 4 contextos (Auth, Lives, Achievements, Theme) têm escopo bem definido e não compartilham estado entre si. Para estado de curta duração (XP, gems), eventos customizados do DOM são usados para evitar re-renders globais.
+Optamos por Context API nativo para evitar dependência de estado externo. Os 6 providers (Theme, Auth, Avatar, Premium, Lives, Achievements) têm escopo bem definido e não compartilham estado entre si. Para estado de curta duração (XP, gems), eventos customizados do DOM (`promptlabz:xp-updated`, `promptlabz:gems-updated`) são usados para evitar re-renders globais.
 
 ### Dados Estáticos em TypeScript
 Todo o conteúdo de lições, skills, prompts e missões está em arquivos `.ts` em `src/data`. Isso acelera o MVP mas tem dois custos: bundle maior e necessidade de redeploy para atualizar conteúdo. A migração para Supabase está prevista na v0.3.
@@ -331,6 +453,9 @@ Todas as páginas são carregadas com `React.lazy()`. O bundle principal contém
 
 ### Analytics Dual-Track
 PostHog cobre product analytics (funnels, retenção, feature flags futuras). Google Tag Manager / GA4 cobre conversões de ads e remarketing. A camada `lib/analytics.ts` abstrai os dois, evitando acoplamento direto nos componentes.
+
+### Design System e UI
+Tokens de cores, tipografia, componentes, animações e estratégia responsiva documentados em [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md). O sistema usa Tailwind CSS com CSS custom properties para suporte a dark/light mode sem JavaScript extra.
 
 ---
 

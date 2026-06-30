@@ -122,12 +122,29 @@ Dashboard → Authentication → Hooks → **Send Email Hook**:
 
 No painel do projeto → Settings → Environment Variables:
 
+**Obrigatórias:**
 ```
 VITE_SUPABASE_URL      = https://SEU_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY = eyJhbGc...
 ```
 
-> ⚠️ Variáveis com prefixo `VITE_` são expostas no bundle do cliente. Nunca coloque secrets do servidor aqui.
+**Opcionais (analytics e monitoramento):**
+```
+VITE_POSTHOG_KEY       = phc_...           # PostHog product analytics
+VITE_POSTHOG_HOST      = https://us.i.posthog.com
+VITE_GTAG_ID           = G-...             # Google Analytics/Ads
+VITE_GTAG_CONVERSION_SIGNUP = AW-...       # Conversão de signup (Google Ads)
+VITE_SENTRY_DSN        = https://...@sentry.io/...  # Error tracking
+```
+
+**Variáveis de build-time para Sentry source maps** (não aparecem no bundle):
+```
+SENTRY_ORG     = seu-org-slug
+SENTRY_PROJECT = promptlabz
+SENTRY_AUTH_TOKEN = sntrys_...   # Token com project:read + org:read + project:releases
+```
+
+> ⚠️ Variáveis com prefixo `VITE_` são expostas no bundle do cliente. Nunca coloque secrets do servidor aqui. `SENTRY_AUTH_TOKEN` é variável de build e nunca vai para o browser.
 
 ### Preview Deployments
 
@@ -164,33 +181,44 @@ Adicione `VITE_SENTRY_DSN` no Vercel com o DSN do seu projeto Sentry.
 
 ### Health Check
 
-Para verificar se o banco está acessível, acesse:
-
-```
-GET /api/health  (não implementado — ver ROADMAP v0.2)
-```
-
-Por enquanto, monitore o status pelo [Supabase Status Page](https://status.supabase.com).
+Para verificar se o banco está acessível, monitore o status pelo [Supabase Status Page](https://status.supabase.com).
 
 ---
 
-## 5. Checklist Pré-Deploy
+## 5. GitHub Actions Secrets (CI/CD)
+
+Para o CI e os workflows automáticos funcionarem, configure os seguintes secrets em **GitHub → Settings → Secrets and variables → Actions**:
+
+| Secret | Obrigatório | Uso |
+|--------|-------------|-----|
+| `DAILY_NEWS_SECRET` | Para o cron de notícias | Autentica chamada à Edge Function `daily-tech-news` |
+| `SUPABASE_URL` | Para o cron de notícias | URL do projeto Supabase |
+| `SENTRY_AUTH_TOKEN` | Para source maps | Upload de source maps no build de produção |
+| `SENTRY_ORG` | Para source maps | Slug da organização Sentry |
+| `SENTRY_PROJECT` | Para source maps | Slug do projeto Sentry |
+
+Os secrets `DAILY_NEWS_SECRET` e `SUPABASE_URL` são lidos pelo workflow `.github/workflows/daily-tech-news.yml` que roda diariamente às 07:00 UTC.
+
+---
+
+## 6. Checklist Pré-Deploy
 
 ```
-[ ] supabase db push rodou sem erros
+[ ] supabase db push rodou sem erros (todas as 14+ migrations aplicadas)
 [ ] Edge Function send-auth-email deployada e testada
 [ ] Hook de email configurado no Supabase Auth
 [ ] VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY configurados no Vercel
 [ ] Redirect URLs configuradas no Supabase (incluindo preview)
-[ ] pnpm build:prod roda sem erros localmente
+[ ] pnpm build roda sem erros localmente
 [ ] Login com email, Google testados no preview
 [ ] Reset de senha testado (email chega com template personalizado)
 [ ] Progresso salva e sincroniza com DB
+[ ] GitHub Actions secrets configurados (DAILY_NEWS_SECRET, SUPABASE_URL)
 ```
 
 ---
 
-## 6. Rollback
+## 7. Rollback
 
 Em caso de problema após deploy:
 
@@ -207,13 +235,41 @@ Para rollback de migrations no Supabase, execute o SQL inverso manualmente via S
 
 ## Variáveis de Ambiente — Referência Completa
 
-| Variável | Ambiente | Obrigatória | Descrição |
-|----------|----------|-------------|-----------|
-| `VITE_SUPABASE_URL` | Frontend | ✅ | URL do projeto Supabase |
-| `VITE_SUPABASE_ANON_KEY` | Frontend | ✅ | Chave pública do Supabase |
-| `VITE_SENTRY_DSN` | Frontend | ❌ | DSN do Sentry para monitoramento |
-| `APP_URL` | Edge Function | ✅ | URL do frontend (para links em emails) |
-| `APP_NAME` | Edge Function | ✅ | Nome do app nos emails |
-| `RESEND_API_KEY` | Edge Function | ✅ | Chave da API do Resend |
-| `RESEND_FROM_EMAIL` | Edge Function | ✅ | Email remetente verificado |
-| `SEND_EMAIL_HOOK_SECRET` | Edge Function | ✅ | Secret do webhook de email do Supabase |
+### Frontend (Vercel)
+
+| Variável | Obrigatória | Descrição |
+|----------|-------------|-----------|
+| `VITE_SUPABASE_URL` | ✅ | URL do projeto Supabase |
+| `VITE_SUPABASE_ANON_KEY` | ✅ | Chave pública do Supabase |
+| `VITE_POSTHOG_KEY` | ❌ | API key do PostHog (product analytics) |
+| `VITE_POSTHOG_HOST` | ❌ | Host do PostHog (default: us.i.posthog.com) |
+| `VITE_GTAG_ID` | ❌ | ID do Google Analytics / Ads |
+| `VITE_GTAG_CONVERSION_SIGNUP` | ❌ | ID de conversão de signup para Google Ads |
+| `VITE_SENTRY_DSN` | ❌ | DSN do Sentry para monitoramento de erros |
+| `VITE_PREVIEW_MODE` | ❌ | Ativa modo demo sem auth (NUNCA em produção) |
+
+### Build-time (Vercel ou CI — não vão para o browser)
+
+| Variável | Obrigatória | Descrição |
+|----------|-------------|-----------|
+| `SENTRY_ORG` | ❌ | Slug da organização no Sentry |
+| `SENTRY_PROJECT` | ❌ | Slug do projeto no Sentry |
+| `SENTRY_AUTH_TOKEN` | ❌ | Token para upload de source maps |
+
+### Edge Functions (Supabase)
+
+| Variável | Obrigatória | Descrição |
+|----------|-------------|-----------|
+| `APP_URL` | ✅ | URL do frontend (para links em emails) |
+| `APP_NAME` | ✅ | Nome do app nos emails |
+| `RESEND_API_KEY` | ✅ | Chave da API do Resend |
+| `RESEND_FROM_EMAIL` | ✅ | Email remetente verificado |
+| `SEND_EMAIL_HOOK_SECRET` | ✅ | Secret do webhook de email do Supabase |
+
+### GitHub Actions Secrets
+
+| Secret | Obrigatório | Descrição |
+|--------|-------------|-----------|
+| `DAILY_NEWS_SECRET` | Para cron de notícias | Autentica a chamada ao Edge Function |
+| `SUPABASE_URL` | Para cron de notícias | URL do projeto Supabase (no Actions) |
+| `SENTRY_AUTH_TOKEN` | Para source maps | Token de upload (se usar Sentry) |
