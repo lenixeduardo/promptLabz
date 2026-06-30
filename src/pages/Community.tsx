@@ -5,7 +5,7 @@ import { AppPageHeader } from "@/components/AppPageHeader";
 
 export default function CommunityPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
       <AppPageHeader title="Comunidade" />
 
       <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">

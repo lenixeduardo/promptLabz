@@ -75,7 +75,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
+    <div className="relative flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
       <AppPageHeader title="Configurações" back="/profile" />
 
       <img
@@ -85,7 +85,7 @@ export default function SettingsPage() {
         className="pointer-events-none absolute right-2 top-0 z-20 w-36 object-contain"
       />
 
-      <div className="mx-auto w-full max-w-lg space-y-5 px-4 py-5">
+      <div className="mx-auto w-full max-w-lg lg:max-w-2xl space-y-5 px-4 py-5">
         {/* Nível */}
         <div className="rounded-2xl bg-gradient-to-br from-forest to-emerald-dark p-5 text-white shadow-lg shadow-forest/20">
           <div className="flex items-center justify-between mb-3">

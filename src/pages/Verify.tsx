@@ -14,7 +14,7 @@ import {
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { AppBottomNav } from "@/components/AppBottomNav";
+import { AppBottomNav } from "@/components/AppBottomNav"
 import { AppPageHeader } from "@/components/AppPageHeader";
 import verifyShield from "@/assets/verify-shield.png";
 import {
@@ -119,7 +119,7 @@ export default function VerifyPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
       <AppPageHeader
         title="Validação de Certificado"
         subtitle="Verifique a autenticidade do certificado emitido pelo PromptLabz"

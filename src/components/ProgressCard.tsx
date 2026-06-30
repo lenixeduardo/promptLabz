@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { BarChart2 } from "lucide-react"
 
 interface ProgressCardProps {
@@ -6,7 +7,7 @@ interface ProgressCardProps {
   targetXP: number
 }
 
-export function ProgressCard({ level, currentXP, targetXP }: ProgressCardProps) {
+export const ProgressCard = memo(function ProgressCard({ level, currentXP, targetXP }: ProgressCardProps) {
   const percent = Math.min((currentXP / targetXP) * 100, 100)
 
   return (
@@ -46,4 +47,4 @@ export function ProgressCard({ level, currentXP, targetXP }: ProgressCardProps) 
       </div>
     </div>
   )
-}
+})

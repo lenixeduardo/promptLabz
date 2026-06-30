@@ -167,6 +167,10 @@ module.exports = {
 					from: { height: 'var(--radix-accordion-content-height)' },
 					to: { height: 0 },
 				},
+				'fade-scale-in': {
+					from: { opacity: '0', transform: 'scale(0.96)' },
+					to: { opacity: '1', transform: 'scale(1)' },
+				},
 				'flame-flicker': {
 					'0%, 100%': { transform: 'scaleY(1) rotate(-1deg)', opacity: '1' },
 					'50%': { transform: 'scaleY(1.08) rotate(1deg)', opacity: '0.9' },
@@ -246,6 +250,7 @@ module.exports = {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-scale-in': 'fade-scale-in 0.2s ease-out',
 				'flame-flicker': 'flame-flicker 0.9s ease-in-out infinite',
 				'ping-slow': 'ping-slow 1.6s cubic-bezier(0,0,0.2,1) infinite',
 				'ping-slower': 'ping-slower 2.2s cubic-bezier(0,0,0.2,1) infinite',

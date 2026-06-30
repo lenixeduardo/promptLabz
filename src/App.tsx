@@ -16,6 +16,7 @@ import { completeMission } from "@/lib/missions"
 import { useUTM } from "@/hooks/useUTM"
 import { useInactiveReminder } from "@/hooks/useInactiveReminder"
 import { QuickEnhanceModal } from "@/components/QuickEnhanceModal"
+import { AppLayout } from "@/components/AppLayout"
 import { getUserProfile, loadProgress } from "@/lib/db"
 import { getLocalXP, getLocalGems, saveLocalXP, saveLocalGems, XP_UPDATE_EVENT, GEMS_UPDATE_EVENT } from "@/lib/xp"
 
@@ -189,11 +190,12 @@ export default function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              {/* ── Authenticated app routes — wrapped with desktop sidebar layout ── */}
               <Route
                 path="/profile"
                 element={
                   <PrivateRoute>
-                    <Profile />
+                    <AppLayout><Profile /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -201,7 +203,7 @@ export default function App() {
                 path="/avatars"
                 element={
                   <PrivateRoute>
-                    <AvatarScreen />
+                    <AppLayout><AvatarScreen /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -209,7 +211,7 @@ export default function App() {
                 path="/home"
                 element={
                   <PrivateRoute>
-                    <Home />
+                    <AppLayout><Home /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -217,7 +219,7 @@ export default function App() {
                 path="/learn"
                 element={
                   <PrivateRoute>
-                    <LearningLab />
+                    <AppLayout><LearningLab /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -225,7 +227,7 @@ export default function App() {
                 path="/lesson"
                 element={
                   <PrivateRoute>
-                    <Lesson />
+                    <AppLayout><Lesson /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -234,7 +236,7 @@ export default function App() {
                 path="/skill/:skillName"
                 element={
                   <PrivateRoute>
-                    <SkillDetail />
+                    <AppLayout><SkillDetail /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -242,7 +244,7 @@ export default function App() {
                 path="/mission"
                 element={
                   <PrivateRoute>
-                    <MissionComplete />
+                    <AppLayout><MissionComplete /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -251,7 +253,7 @@ export default function App() {
                 path="/favorites"
                 element={
                   <PrivateRoute>
-                    <Favorites />
+                    <AppLayout><Favorites /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -259,7 +261,7 @@ export default function App() {
                 path="/notifications"
                 element={
                   <PrivateRoute>
-                    <Notifications />
+                    <AppLayout><Notifications /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -267,7 +269,7 @@ export default function App() {
                 path="/premium"
                 element={
                   <PrivateRoute>
-                    <Premium />
+                    <AppLayout><Premium /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -275,7 +277,7 @@ export default function App() {
                 path="/achievements"
                 element={
                   <PrivateRoute>
-                    <Achievements />
+                    <AppLayout><Achievements /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -283,7 +285,7 @@ export default function App() {
                 path="/prompts"
                 element={
                   <PrivateRoute>
-                    <Prompts />
+                    <AppLayout><Prompts /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -291,7 +293,7 @@ export default function App() {
                 path="/challenge"
                 element={
                   <PrivateRoute>
-                    <PromptChallenge />
+                    <AppLayout><PromptChallenge /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -299,7 +301,7 @@ export default function App() {
                 path="/subscription"
                 element={
                   <PrivateRoute>
-                    <Subscription />
+                    <AppLayout><Subscription /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -307,7 +309,7 @@ export default function App() {
                 path="/learn/category/:categoryId"
                 element={
                   <PrivateRoute>
-                    <SkillCategoryPage />
+                    <AppLayout><SkillCategoryPage /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -315,7 +317,7 @@ export default function App() {
                 path="/prompts/category/:categoryId"
                 element={
                   <PrivateRoute>
-                    <PromptCategoryPage />
+                    <AppLayout><PromptCategoryPage /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -323,7 +325,7 @@ export default function App() {
                 path="/level-up"
                 element={
                   <PrivateRoute>
-                    <LevelUp />
+                    <AppLayout><LevelUp /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -331,7 +333,7 @@ export default function App() {
                 path="/news"
                 element={
                   <PrivateRoute>
-                    <News />
+                    <AppLayout><News /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -339,7 +341,7 @@ export default function App() {
                 path="/quiz"
                 element={
                   <PrivateRoute>
-                    <QuickQuiz />
+                    <AppLayout><QuickQuiz /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -347,7 +349,7 @@ export default function App() {
                 path="/inventory"
                 element={
                   <PrivateRoute>
-                    <Inventory />
+                    <AppLayout><Inventory /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -355,7 +357,7 @@ export default function App() {
                 path="/store"
                 element={
                   <PrivateRoute>
-                    <Store />
+                    <AppLayout><Store /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -363,7 +365,7 @@ export default function App() {
                 path="/ranking"
                 element={
                   <PrivateRoute>
-                    <Ranking />
+                    <AppLayout><Ranking /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -371,7 +373,7 @@ export default function App() {
                 path="/quiz-result"
                 element={
                   <PrivateRoute>
-                    <QuizResult />
+                    <AppLayout><QuizResult /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -379,7 +381,7 @@ export default function App() {
                 path="/certificates"
                 element={
                   <PrivateRoute>
-                    <Certificates />
+                    <AppLayout><Certificates /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -387,7 +389,7 @@ export default function App() {
                 path="/certificate"
                 element={
                   <PrivateRoute>
-                    <Certificate />
+                    <AppLayout><Certificate /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -395,7 +397,7 @@ export default function App() {
                 path="/prompt/:promptId"
                 element={
                   <PrivateRoute>
-                    <PromptDetail />
+                    <AppLayout><PromptDetail /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -403,7 +405,7 @@ export default function App() {
                 path="/templates"
                 element={
                   <PrivateRoute>
-                    <Templates />
+                    <AppLayout><Templates /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -411,7 +413,7 @@ export default function App() {
                 path="/template/:templateId"
                 element={
                   <PrivateRoute>
-                    <TemplateDetail />
+                    <AppLayout><TemplateDetail /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -419,13 +421,13 @@ export default function App() {
                 path="/lab-result"
                 element={
                   <PrivateRoute>
-                    <LabResult />
+                    <AppLayout><LabResult /></AppLayout>
                   </PrivateRoute>
                 }
               />
               <Route path="/onboarding" element={
                 <PrivateRoute>
-                  <Onboarding />
+                  <AppLayout><Onboarding /></AppLayout>
                 </PrivateRoute>
               } />
               <Route path="/terms" element={<Terms />} />
@@ -434,7 +436,7 @@ export default function App() {
                 path="/lab"
                 element={
                   <PrivateRoute>
-                    <Lab />
+                    <AppLayout><Lab /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -442,7 +444,7 @@ export default function App() {
                 path="/prompt-lab"
                 element={
                   <PrivateRoute>
-                    <PromptLab />
+                    <AppLayout><PromptLab /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -450,7 +452,7 @@ export default function App() {
                 path="/missions"
                 element={
                   <PrivateRoute>
-                    <Missions />
+                    <AppLayout><Missions /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -458,13 +460,14 @@ export default function App() {
                 path="/module-exam"
                 element={
                   <PrivateRoute>
-                    <ModuleExam />
+                    <AppLayout><ModuleExam /></AppLayout>
                   </PrivateRoute>
                 }
-              />              <Route path="/prompt-wars"
+              />
+              <Route path="/prompt-wars"
                 element={
                   <PrivateRoute>
-                    <PromptWars />
+                    <AppLayout><PromptWars /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -472,7 +475,7 @@ export default function App() {
                 path="/prompt-analyzer"
                 element={
                   <PrivateRoute>
-                    <PromptAnalyzer />
+                    <AppLayout><PromptAnalyzer /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -480,7 +483,7 @@ export default function App() {
                 path="/prompt-enhancer"
                 element={
                   <PrivateRoute>
-                    <PromptEnhancer />
+                    <AppLayout><PromptEnhancer /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -488,7 +491,7 @@ export default function App() {
                 path="/roadmap"
                 element={
                   <PrivateRoute>
-                    <Roadmap />
+                    <AppLayout><Roadmap /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -496,7 +499,7 @@ export default function App() {
                 path="/settings"
                 element={
                   <PrivateRoute>
-                    <Settings />
+                    <AppLayout><Settings /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -504,7 +507,7 @@ export default function App() {
                 path="/settings/back-tap"
                 element={
                   <PrivateRoute>
-                    <BackTapConfig />
+                    <AppLayout><BackTapConfig /></AppLayout>
                   </PrivateRoute>
                 }
               />
@@ -512,7 +515,7 @@ export default function App() {
                 path="/community"
                 element={
                   <PrivateRoute>
-                    <Community />
+                    <AppLayout><Community /></AppLayout>
                   </PrivateRoute>
                 }
               />

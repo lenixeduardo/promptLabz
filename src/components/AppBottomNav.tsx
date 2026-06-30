@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react"
 import { Link, useLocation } from "react-router-dom"
 import * as Icons from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -27,25 +28,28 @@ interface AppBottomNavProps {
  * Mobile bottom navigation bar.
  * Shows 6 items with icons and labels. The active route is highlighted.
  */
-export function AppBottomNav({ items = BOTTOM_NAV_ITEMS }: AppBottomNavProps) {
+export const AppBottomNav = memo(function AppBottomNav({ items = BOTTOM_NAV_ITEMS }: AppBottomNavProps) {
   const { pathname } = useLocation()
 
-  const getIcon = (iconName: string) => {
-    const IconComp = (Icons as unknown as Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>>)[
-      iconName
-    ]
-    return IconComp
-  }
+  // Resolve icon components once per render (only changes when items changes)
+  const resolvedItems = useMemo(
+    () =>
+      items.map((item) => ({
+        ...item,
+        IconComp: (Icons as unknown as Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>>)[item.icon],
+      })),
+    [items]
+  )
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-stroke-muted bg-card/95 backdrop-blur-md"
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-stroke-muted bg-card/95 backdrop-blur-md lg:hidden"
       aria-label="Navegação principal"
     >
       <div className="mx-auto flex max-w-lg items-center justify-around px-2 py-1">
-        {items.map((item) => {
+        {resolvedItems.map((item) => {
           const isActive = pathname === item.href
-          const IconComp = getIcon(item.icon)
+          const IconComp = item.IconComp
 
           return (
             <Link
@@ -84,4 +88,4 @@ export function AppBottomNav({ items = BOTTOM_NAV_ITEMS }: AppBottomNavProps) {
       </div>
     </nav>
   )
-}
+})

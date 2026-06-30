@@ -37,40 +37,50 @@ export default defineConfig({
   },
   build: {
     sourcemap: "hidden",
+    // Target modern browsers for smaller output (ES2020 avoids many polyfills)
+    target: "es2020",
+    // Split CSS into per-chunk files so only the styles for the current page load
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          "vendor-react": ["react", "react-dom", "react-router-dom"],
-          "vendor-ui": [
-            "@radix-ui/react-accordion",
-            "@radix-ui/react-alert-dialog",
-            "@radix-ui/react-avatar",
-            "@radix-ui/react-checkbox",
-            "@radix-ui/react-collapsible",
-            "@radix-ui/react-context-menu",
-            "@radix-ui/react-dialog",
-            "@radix-ui/react-dropdown-menu",
-            "@radix-ui/react-hover-card",
-            "@radix-ui/react-label",
-            "@radix-ui/react-menubar",
-            "@radix-ui/react-navigation-menu",
-            "@radix-ui/react-popover",
-            "@radix-ui/react-progress",
-            "@radix-ui/react-radio-group",
-            "@radix-ui/react-scroll-area",
-            "@radix-ui/react-select",
-            "@radix-ui/react-separator",
-            "@radix-ui/react-slider",
-            "@radix-ui/react-slot",
-            "@radix-ui/react-switch",
-            "@radix-ui/react-tabs",
-            "@radix-ui/react-toast",
-            "@radix-ui/react-toggle",
-            "@radix-ui/react-toggle-group",
-            "@radix-ui/react-tooltip",
-          ],
-          "vendor-supabase": ["@supabase/supabase-js"],
-          "vendor-analytics": ["posthog-js"],
+        // Put heavy data files in their own async chunk so the main bundle stays small
+        manualChunks: (id: string) => {
+          // Vendor: React core — always needed, load first
+          if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/") || id.includes("node_modules/react-router-dom/")) {
+            return "vendor-react"
+          }
+          // Heavy lesson content — only loaded when user opens a lesson
+          if (id.includes("/src/data/lessonsData")) {
+            return "data-lessons"
+          }
+          // Trending/prompts data — only loaded on lab/prompts pages
+          if (id.includes("/src/data/trendingSkillsData") || id.includes("/src/data/promptsData") || id.includes("/src/data/templatesData")) {
+            return "data-content"
+          }
+          // Radix UI components
+          if (id.includes("node_modules/@radix-ui/")) {
+            return "vendor-ui"
+          }
+          // Supabase
+          if (id.includes("node_modules/@supabase/")) {
+            return "vendor-supabase"
+          }
+          // Analytics (PostHog) — non-critical, can load async
+          if (id.includes("node_modules/posthog-js")) {
+            return "vendor-analytics"
+          }
+          // Heavy PDF/canvas utilities — only used on certificate page
+          if (id.includes("node_modules/jspdf") || id.includes("node_modules/html2canvas")) {
+            return "vendor-pdf"
+          }
+          // Charts — only used on analytics/profile pages
+          if (id.includes("node_modules/recharts")) {
+            return "vendor-charts"
+          }
+          // Sentry — error monitoring, not on critical path
+          if (id.includes("node_modules/@sentry/")) {
+            return "vendor-sentry"
+          }
         },
       },
     },

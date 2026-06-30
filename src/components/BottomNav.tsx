@@ -17,7 +17,7 @@ export function BottomNav({ active }: { active: NavTab }) {
   const resolvedActive = active ?? NAV_ITEMS.find((item) => pathname === item.path)?.key
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-page-bg-light bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-page-bg-light bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.06)] lg:hidden">
       <div className="mx-auto flex max-w-[460px] items-center justify-around px-1 pb-5 pt-2">
         {NAV_ITEMS.map(({ key, label, icon: Icon, path }) => (
           <Link

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Bell, Award, MessageCircle, Settings } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -37,12 +37,12 @@ export function NotificationsBell() {
     });
   }, [user?.id]);
 
-  function handleMarkAllRead() {
+  const handleMarkAllRead = useCallback(() => {
     if (!user?.id || unreadCount === 0) return;
     markNotificationsRead(user.id).then(() => {
       setItems((prev) => prev.map((i) => ({ ...i, read_at: new Date().toISOString() })));
     });
-  }
+  }, [user?.id, unreadCount]);
 
   return (
     <Popover>

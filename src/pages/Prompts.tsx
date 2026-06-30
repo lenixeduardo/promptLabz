@@ -54,7 +54,7 @@ export default function Prompts() {
   }, [error])
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-24">
+    <div className="min-h-screen bg-surface-soft pb-24 lg:pb-8">
       {/* Hero banner */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#C8EDD8] via-[#D5F0E2] to-pageBgLight px-5 pb-6 pt-12">
         <div className="flex items-start justify-between">
@@ -74,7 +74,7 @@ export default function Prompts() {
         </div>
       </div>
 
-      <div className="px-4 pt-4">
+      <div className="px-4 pt-4 lg:max-w-5xl lg:mx-auto">
         {/* Difficulty filter tabs */}
         <div role="tablist" className="no-scrollbar mb-5 flex gap-2 overflow-x-auto pb-1">
           {DIFF_TABS.map((d) => (
@@ -96,7 +96,7 @@ export default function Prompts() {
 
         {/* Categories section */}
         <h2 className="mb-3 text-base font-bold text-foregroundDark">Categorias</h2>
-        <div className="mb-6 grid grid-cols-4 gap-2.5">
+        <div className="mb-6 grid grid-cols-4 lg:grid-cols-6 gap-2.5">
           {categories.map((cat) => (
             <CategoryCard
               key={cat.id}
