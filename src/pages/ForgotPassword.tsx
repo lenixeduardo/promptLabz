@@ -58,7 +58,7 @@ export default function ForgotPassword() {
             className="h-36 w-auto object-contain drop-shadow-md"
           />
           <div className="relative rounded-2xl border border-stroke-light bg-white px-3 py-2 text-sm font-medium leading-snug text-foregroundDark shadow-sm">
-            Não se preocupe! Vamos resolver isso 😊
+            Não se preocupe! Vamos resolver isso
             {/* bubble tail pointing left */}
             <div
               style={{

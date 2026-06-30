@@ -12,6 +12,7 @@ import {
   BarChart2,
   Trophy,
   User,
+  Gem,
 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { AppBottomNav } from "@/components/AppBottomNav"
@@ -343,7 +344,7 @@ export default function PromptAnalyzerPage() {
           <p className="text-[11px] text-foreground-tertiary">Receba uma análise completa</p>
         </div>
         <div className="flex shrink-0 items-center gap-1 rounded-full bg-luxury/15 px-2.5 py-1.5">
-          <span className="text-sm">💎</span>
+          <Gem className="h-4 w-4 text-luxury" />
           <span className="text-xs font-extrabold text-luxury">{gems.toLocaleString()}</span>
         </div>
       </div>

@@ -26,7 +26,7 @@ const STEPS = [
   {
     icon: Trophy,
     title: "Prepare-se para evoluir",
-    desc: "Complete missões diárias, mantenha sua sequência 🔥 e desbloqueie cosméticos para seu mascote.",
+    desc: "Complete missões diárias, mantenha sua sequência e desbloqueie cosméticos para seu mascote.",
     cta: "Começar",
   },
 ] as const;

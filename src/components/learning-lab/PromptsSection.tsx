@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import {
   ArrowRight, Briefcase, Lightbulb, Megaphone, Code2, Apple,
   ClipboardList, BarChart3, MessageSquare, Settings, Palette,
-  Headphones, Users, type LucideIcon,
+  Headphones, Users, FlaskConical, type LucideIcon,
 } from "lucide-react"
 import { useLabCategories } from "@/hooks/useLabCategories"
 import type { LabCategory } from "@/data/labCategoriesData"
@@ -42,8 +42,9 @@ export default function PromptsSection() {
 
   return (
     <div className="px-4 pt-6">
-      <h2 className="mb-4 text-lg font-extrabold text-foregroundDark">
-        🧪 Laboratório de Prompts
+      <h2 className="mb-4 flex items-center gap-2 text-lg font-extrabold text-foregroundDark">
+        <FlaskConical className="h-5 w-5 shrink-0 text-primary-dark" strokeWidth={2} />
+        Laboratório de Prompts
       </h2>
 
       {/* Categories */}

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { X, CheckCircle2, Diamond } from "@/lib/icons"
+import { X, CheckCircle2, Diamond, Sparkles } from "@/lib/icons"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { CHALLENGES, getChallengeByStep } from "@/data/challengeData"
@@ -212,8 +212,8 @@ export default function PromptChallenge() {
         {/* Example panel (revealed on CTA click) */}
         {showExample && (
           <div className="mb-5 rounded-2xl border border-stroke-light bg-white p-4">
-            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-emerald">
-              Exemplo aprimorado ✨
+            <p className="mb-2 flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-emerald">
+              <Sparkles className="h-3.5 w-3.5" /> Exemplo aprimorado
             </p>
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-foregroundDark">
               {challenge.examplePrompt}
@@ -232,7 +232,7 @@ export default function PromptChallenge() {
             ? challenge.step + 1 < CHALLENGES.length
               ? "Próximo desafio →"
               : "Ver resultado →"
-            : "Ver exemplo aprimorado ✨"}
+            : <span className="flex items-center gap-1.5 justify-center">Ver exemplo aprimorado <Sparkles className="h-4 w-4" /></span>}
         </Button>
 
         {/* Skip link */}

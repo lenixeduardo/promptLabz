@@ -10,6 +10,7 @@ import {
   X,
   XCircle,
   Star,
+  PartyPopper,
 } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { cn } from "@/lib/utils";
@@ -280,15 +281,17 @@ export default function ModuleExamPage() {
                   <XCircle className="h-10 w-10" strokeWidth={2} />
                 )}
               </div>
-              <h2 className="mt-4 text-2xl font-extrabold text-foreground-dark">
-                {perfect ? "Nota máxima! 🎉" : passed ? "Módulo concluído!" : "Quase lá!"}
+              <h2 className="mt-4 flex items-center justify-center gap-2 text-2xl font-extrabold text-foreground-dark">
+                {perfect ? (
+                  <><PartyPopper className="h-6 w-6 text-luxury" /> Nota máxima!</>
+                ) : passed ? "Módulo concluído!" : "Quase lá!"}
               </h2>
               <p className="mt-1 text-sm text-foreground-tertiary">
                 Você acertou {score} de {total} ({Math.round((score / total) * 100)}%)
               </p>
               <p className="mt-1 text-xs font-semibold text-foreground-tertiary">
                 {perfect
-                  ? "Perfeição! Você gabaritou a prova. Prepare-se para a festa! 🎊"
+                  ? "Perfeição! Você gabaritou a prova. Prepare-se para a festa!"
                   : passed
                     ? "Aprovação garantida — você passou do mínimo de 60%."
                     : `Você precisa de ao menos ${minToPass} acertos (60%) para concluir o módulo.`}

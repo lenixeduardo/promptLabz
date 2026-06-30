@@ -11,6 +11,9 @@ import {
   Gift,
   Search,
   Wand2,
+  Gem,
+  Hand,
+  PartyPopper,
 } from "lucide-react";
 import { NotificationsBell } from "@/components/NotificationsBell";
 import { AppBottomNav } from "@/components/AppBottomNav";
@@ -207,7 +210,7 @@ export default function HomePage() {
       <div className="flex flex-col min-h-screen bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
         <div className="bg-card border-b border-stroke-muted px-4 lg:px-8 py-3 flex items-center justify-between sticky top-0 z-10">
           <div>
-            <h1 className="text-lg lg:text-xl font-bold text-primary-dark">Olá, {user?.user_metadata?.full_name?.split(" ")[0] ?? "Explorador"}! 👋</h1>
+            <h1 className="flex items-center gap-1.5 text-lg lg:text-xl font-bold text-primary-dark">Olá, {user?.user_metadata?.full_name?.split(" ")[0] ?? "Explorador"}! <Hand className="h-5 w-5 text-yellow-400" /></h1>
             <p className="text-xs text-foreground-tertiary">Pronto para mais um desafio?</p>
           </div>
           <div className="flex items-center gap-2">
@@ -243,8 +246,8 @@ export default function HomePage() {
                   className="h-12 w-12 rounded-full object-cover border-2 border-emerald/30 shrink-0"
                 />
                 <div>
-                  <p className="text-base font-extrabold text-foreground-dark">
-                    Bem-vindo ao PromptLabz! 🎉
+                  <p className="flex items-center gap-1.5 text-base font-extrabold text-foreground-dark">
+                    Bem-vindo ao PromptLabz! <PartyPopper className="h-4 w-4 text-luxury" />
                   </p>
                   <p className="mt-1 text-xs text-foreground-tertiary leading-relaxed">
                     Comece pela primeira lição e ganhe seus primeiros XP. São só 10 minutos!
@@ -323,7 +326,7 @@ export default function HomePage() {
                 Gemas
               </p>
               <div className="flex items-center gap-1.5">
-                <span className="text-2xl">💎</span>
+                <Gem className="h-6 w-6 text-luxury" />
                 <span className="text-xl font-extrabold text-foreground-dark">
                   {gems}
                 </span>

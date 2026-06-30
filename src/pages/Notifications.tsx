@@ -118,7 +118,7 @@ export default function Notifications() {
             </p>
             <p className="text-sm text-foregroundMuted">
               {activeFilter === "unread"
-                ? "Você já leu todas as notificações! 🎉"
+                ? "Você já leu todas as notificações!"
                 : activeFilter === "mentions"
                   ? "Ninguém mencionou você ainda."
                   : "Você está em dia!"}

@@ -162,7 +162,7 @@ export default function Signup() {
             className="h-36 w-auto object-contain drop-shadow-md"
           />
           <div className="relative rounded-2xl border border-stroke-light bg-white px-3 py-2 text-sm font-medium leading-snug text-foregroundDark shadow-sm">
-            Vamos começar! 🐱
+            Vamos começar!
             {/* bubble tail pointing left */}
             <div
               style={{
