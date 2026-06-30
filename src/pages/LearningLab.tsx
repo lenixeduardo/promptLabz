@@ -126,11 +126,11 @@ export default function LearningLabPage() {
     i < completed ? "completed" : i === completed ? "current" : "locked";
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
-      <div className="sticky top-0 z-10 border-b border-stroke-muted bg-card px-4 py-3">
-        <div className="flex items-center justify-between">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
+      <div className="sticky top-0 z-10 border-b border-stroke-muted bg-card px-4 lg:px-8 py-3">
+        <div className="flex items-center justify-between lg:max-w-5xl lg:mx-auto">
           <div>
-            <h1 className="text-lg font-bold text-primary-dark">{active.label}</h1>
+            <h1 className="text-lg lg:text-xl font-bold text-primary-dark">{active.label}</h1>
             <p className="text-xs text-foreground-tertiary">
               {completed} de {active.modules.length} módulos · {active.subtitle}
             </p>
@@ -140,7 +140,7 @@ export default function LearningLabPage() {
           </div>
         </div>
 
-        <div role="tablist" className="mt-3 flex gap-2 overflow-x-auto">
+        <div role="tablist" className="mt-3 flex gap-2 overflow-x-auto lg:max-w-5xl lg:mx-auto">
           {TRACKS.map((t) => {
             const unlocked = trackUnlocked[t.id];
             const isActive = t.id === active.id;
@@ -171,8 +171,8 @@ export default function LearningLabPage() {
         </div>
       </div>
 
-      <div className="relative mx-auto w-full max-w-md px-6 py-8">
-        <div className="relative flex flex-col items-stretch gap-2">
+      <div className="relative mx-auto w-full max-w-md lg:max-w-5xl px-6 py-8 lg:px-8">
+        <div className="relative flex flex-col items-stretch gap-2 lg:grid lg:grid-cols-2 lg:gap-4 lg:items-start">
           {active.modules.map((m, i) => {
             const Icon = m.icon;
             const status = statusFor(i);
@@ -184,7 +184,7 @@ export default function LearningLabPage() {
             const isLast = i === active.modules.length - 1;
 
             return (
-              <div key={i} className={cn("relative flex flex-col items-start gap-1", offset)}>
+              <div key={i} className={cn("relative flex flex-col items-start gap-1 lg:ml-0", offset)}>
                 <Link
                   to={isLocked ? "/learn" : `/lesson?track=${active.id}&module=${i}`}
                   className={cn(

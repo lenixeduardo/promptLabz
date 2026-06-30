@@ -48,8 +48,8 @@ export function AppPageHeader({
   );
 
   return (
-    <div className={cn("sticky top-0 z-10 border-b border-stroke-muted bg-card px-4 py-3", className)}>
-      <div className="flex items-center gap-3">
+    <div className={cn("sticky top-0 z-10 border-b border-stroke-muted bg-card px-4 lg:px-8 py-3", className)}>
+      <div className="flex items-center gap-3 lg:max-w-5xl lg:mx-auto">
         {backBtn}
         <div className="flex-1">
           <h1 className="text-lg font-bold text-primary-dark">{title}</h1>

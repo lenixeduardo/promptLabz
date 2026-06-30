@@ -225,12 +225,23 @@
     line-height: 1.2;
     letter-spacing: normal;
   }
+  @media (min-width: 1024px) {
+    h1 {
+      font-size: 40px;
+    }
+  }
   h2 {
     font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-size: 19px;
     font-weight: 700;
     line-height: 26.6px;
     letter-spacing: normal;
+  }
+  @media (min-width: 1024px) {
+    h2 {
+      font-size: 22px;
+      line-height: 30px;
+    }
   }
   h3, h4, h5, h6 {
     font-family: 'duolingo-sans', 'Poppins', sans-serif;
@@ -311,11 +322,22 @@
     font-weight: 700;
     line-height: 1.2;
   }
+  @media (min-width: 1024px) {
+    .duo-hero {
+      font-size: 40px;
+    }
+  }
   .duo-subheading {
     font-family: 'duolingo-sans', 'Poppins', sans-serif;
     font-size: 19px;
     font-weight: 700;
     line-height: 26.6px;
+  }
+  @media (min-width: 1024px) {
+    .duo-subheading {
+      font-size: 22px;
+      line-height: 30px;
+    }
   }
   .duo-body {
     font-family: 'duolingo-sans', 'Poppins', sans-serif;

@@ -204,10 +204,10 @@ export default function HomePage() {
         avatarName={equipped.name}
         onClose={() => setStreakCelebration(false)}
       />
-      <div className="flex flex-col min-h-screen bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
-        <div className="bg-card border-b border-stroke-muted px-4 py-3 flex items-center justify-between sticky top-0 z-10">
+      <div className="flex flex-col min-h-screen bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
+        <div className="bg-card border-b border-stroke-muted px-4 lg:px-8 py-3 flex items-center justify-between sticky top-0 z-10">
           <div>
-            <h1 className="text-lg font-bold text-primary-dark">Olá, {user?.user_metadata?.full_name?.split(" ")[0] ?? "Explorador"}! 👋</h1>
+            <h1 className="text-lg lg:text-xl font-bold text-primary-dark">Olá, {user?.user_metadata?.full_name?.split(" ")[0] ?? "Explorador"}! 👋</h1>
             <p className="text-xs text-foreground-tertiary">Pronto para mais um desafio?</p>
           </div>
           <div className="flex items-center gap-2">
@@ -229,7 +229,11 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="flex-1 px-4 py-5 flex flex-col gap-5">
+        {/* Desktop: 2-column layout; Mobile: single column */}
+        <div className="flex-1 lg:grid lg:grid-cols-[1fr_340px] lg:gap-6 lg:px-8 lg:py-6 lg:items-start lg:max-w-6xl lg:mx-auto lg:w-full">
+
+        {/* ── LEFT column (main content) ── */}
+        <div className="px-4 py-5 lg:px-0 lg:py-0 flex flex-col gap-5">
           {xp === 0 && streak === 0 && (
             <div className="rounded-2xl border-2 border-emerald/30 bg-gradient-to-br from-emerald/10 to-card p-5">
               <div className="flex items-start gap-3 mb-4">
@@ -364,6 +368,9 @@ export default function HomePage() {
             <ArrowRight className="relative h-5 w-5 text-emerald" />
           </Link>
 
+        </div>
+        {/* ── RIGHT column (sidebar widgets — desktop only) ── */}
+        <div className="hidden lg:flex flex-col gap-5">
           <div className="rounded-2xl border-2 border-stroke-light bg-card p-5">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -466,6 +473,113 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+
+        {/* ── Mobile: trail + lesson (shown below other cards) ── */}
+        <div className="lg:hidden px-4 pb-5 flex flex-col gap-5">
+          <div className="rounded-2xl border-2 border-stroke-light bg-card p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-base font-bold text-foreground-dark">Sua trilha</h2>
+                <p className="text-[11px] text-foreground-tertiary">Trilha {activeTrack.label} em andamento</p>
+              </div>
+              <span className="text-xs font-semibold text-emerald">
+                {activeCompleted} / {activeTrack.modules.length} módulos
+              </span>
+            </div>
+            <ol className="relative space-y-3 pl-2">
+              {trail.map((m, i) => (
+                <li key={i} className="flex items-center gap-3">
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 ${
+                      m.status === "completed"
+                        ? "bg-emerald border-emerald text-white"
+                        : m.status === "current"
+                          ? "bg-luxury border-luxury text-luxury-foreground animate-pulse"
+                          : "bg-surface-soft border-stroke-light text-neutral"
+                    }`}
+                  >
+                    {m.status === "completed" ? (
+                      <Check className="h-5 w-5" strokeWidth={3} />
+                    ) : m.status === "current" ? (
+                      <Sparkles className="h-5 w-5" strokeWidth={2.5} />
+                    ) : (
+                      <Lock className="h-4 w-4" />
+                    )}
+                  </div>
+                  <span
+                    className={`text-sm font-semibold ${
+                      m.status === "locked" ? "text-neutral" : "text-foreground-dark"
+                    }`}
+                  >
+                    {m.label}
+                  </span>
+                </li>
+              ))}
+
+              <li className="pt-1">
+                <Link
+                  to="/missions"
+                  className="flex items-center gap-3 rounded-xl border-2 border-luxury/40 bg-gradient-to-br from-luxury/15 to-luxury/5 p-2.5 transition-transform active:scale-[0.99]"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-luxury bg-luxury text-luxury-foreground">
+                    <Gift className="h-5 w-5" strokeWidth={2.4} />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-extrabold text-foreground-dark">Baú de Missões</p>
+                      <span className="text-[10px] font-bold text-luxury">
+                        {Math.min(missionsDone, CHEST_TOTAL)}/{CHEST_TOTAL}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-stroke-muted/40">
+                      <div
+                        className="h-full rounded-full bg-luxury transition-all"
+                        style={{ width: `${missionsPct}%` }}
+                      />
+                    </div>
+                    <p className="mt-1 text-[10px] text-foreground-tertiary">
+                      Complete {CHEST_TOTAL} missões diárias para abrir
+                    </p>
+                  </div>
+                </Link>
+              </li>
+            </ol>
+          </div>
+
+          <div>
+            <h2 className="text-base font-bold text-foreground-dark mb-3">
+              Aula em destaque
+            </h2>
+            <div className="rounded-2xl border-2 border-stroke-light bg-card p-4">
+              <div className="flex gap-4 mb-4">
+                <div className="w-20 h-20 flex-shrink-0 rounded-xl bg-page-bg-light flex items-center justify-center">
+                  <Brain className="h-9 w-9 text-primary-dark" strokeWidth={1.5} />
+                </div>
+                <div className="flex-1">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-foreground-tertiary">
+                    Trilha {activeTrack.label} · Módulo {currentModuleIdx + 1}
+                  </p>
+                  <p className="text-sm font-bold text-foreground-dark leading-snug">
+                    {currentModuleTitle}
+                  </p>
+                  <div className="flex items-center gap-1 mt-2 text-foreground-tertiary">
+                    <Clock className="h-3.5 w-3.5" strokeWidth={2} />
+                    <span className="text-xs">10 min</span>
+                  </div>
+                </div>
+              </div>
+              <Link
+                to={`/lesson?track=${activeTrack.id}`}
+                className="flex items-center justify-center gap-2 w-full rounded-xl bg-emerald py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-dark"
+              >
+                {activeCompleted === 0 ? "Começar lição" : "Continuar lição"}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        </div>{/* end grid */}
 
         <AppBottomNav />
       </div>

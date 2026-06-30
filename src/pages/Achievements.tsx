@@ -17,7 +17,7 @@ export default function Achievements() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6">
-      <div className="mx-auto w-full max-w-lg">
+      <div className="mx-auto w-full max-w-lg lg:max-w-4xl">
         {/* Header com Mascote */}
         <div className="mb-8 flex items-start justify-between gap-4">
           <button
@@ -93,7 +93,7 @@ export default function Achievements() {
         </div>
 
         {/* Achievement cards */}
-        <div className="flex flex-col gap-3 pb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 pb-6">
           {allAchievements.map((ach, idx) => {
             const isUnlocked = unlocked.includes(ach.id)
             const IconComp = Icons[ach.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }> | undefined
