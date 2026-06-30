@@ -9,6 +9,7 @@ import {
   Zap,
   MessageSquare,
   CheckCircle2,
+  PartyPopper,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CelebrationCanvas } from "@/components/CelebrationCanvas";
@@ -193,7 +194,7 @@ export default function PromptLabPage() {
               <p className="text-sm font-bold text-foreground-dark">Como funciona?</p>
               <p className="mt-0.5 text-xs text-foreground-tertiary leading-relaxed">
                 Escreva um prompt completo no campo abaixo. Nossa gatinha especialista vai
-                analisar e dar uma nota de 0 a 100. Acima de 80, prepare-se para a festa! 🎉
+                analisar e dar uma nota de 0 a 100. Acima de 80, prepare-se para a festa!
               </p>
             </div>
           </div>
@@ -311,8 +312,8 @@ export default function PromptLabPage() {
 
             {result.score > 80 && (
               <div className="mt-4 rounded-xl bg-emerald/10 px-4 py-2">
-                <p className="text-xs font-extrabold text-emerald animate-pulse">
-                  🎉 Nota acima de 80! Você dominou a arte do prompt!
+                <p className="flex items-center gap-1.5 text-xs font-extrabold text-emerald animate-pulse">
+                  <PartyPopper className="h-3.5 w-3.5 shrink-0" /> Nota acima de 80! Você dominou a arte do prompt!
                 </p>
               </div>
             )}

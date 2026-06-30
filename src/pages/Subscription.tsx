@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { ArrowLeft, Award, BookMarked, Check, FileText, RefreshCw } from "@/lib/icons"
+import { ArrowLeft, Award, BookMarked, Check, FileText, RefreshCw, Flame, Zap } from "@/lib/icons"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { sileo } from "sileo"
@@ -89,7 +89,7 @@ export default function Subscription() {
                 : "text-foregroundMuted hover:text-primary-dark"
             )}
           >
-            Anual 🔥 2 meses grátis
+            Anual <Flame className="inline h-3.5 w-3.5 text-orange-500" /> 2 meses grátis
           </button>
         </div>
 
@@ -184,7 +184,7 @@ export default function Subscription() {
         {/* CTA */}
         <div className="px-5 pb-10">
           <Button size="lg" className="w-full text-lg" onClick={handleSubscribe}>
-            Começar agora ⚡
+            Começar agora <Zap className="inline h-4 w-4 ml-1" />
           </Button>
           <p className="mt-3 text-center text-xs text-foregroundPlaceholder">
             7 dias grátis. Cancele quando quiser.

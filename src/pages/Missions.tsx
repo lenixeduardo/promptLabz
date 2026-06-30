@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CheckCircle2, Circle, Gift, Sparkles, ArrowRight, Star } from "lucide-react";
+import { CheckCircle2, Circle, Gift, Sparkles, ArrowRight, Star, Gem } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { AppPageHeader } from "@/components/AppPageHeader";
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ export default function MissionsPage() {
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
       <AppPageHeader
         title="Missões Diárias"
-        subtitle={`Conclua ${CHEST_THRESHOLD} missões para ganhar +${CHEST_REWARD_XP} XP e +${CHEST_REWARD_GEMS} 💎`}
+        subtitle={`Conclua ${CHEST_THRESHOLD} missões para ganhar +${CHEST_REWARD_XP} XP e +${CHEST_REWARD_GEMS} gemas`}
         back="/home"
       />
 
@@ -56,9 +56,9 @@ export default function MissionsPage() {
                 Baú diário{" "}
                 {chestOpened ? "aberto!" : chestUnlocked ? "disponível" : "em progresso"}
               </p>
-              <p className="text-[11px] text-foreground-tertiary">
-                Conclua {CHEST_THRESHOLD} missões para ganhar +{CHEST_REWARD_XP} XP e +
-                {CHEST_REWARD_GEMS} 💎
+              <p className="flex items-center gap-0.5 text-[11px] text-foreground-tertiary flex-wrap">
+                Conclua {CHEST_THRESHOLD} missões para ganhar +{CHEST_REWARD_XP} XP e +{CHEST_REWARD_GEMS}
+                <Gem className="h-3 w-3 text-luxury inline-block" />
               </p>
             </div>
             <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-600">
@@ -84,8 +84,8 @@ export default function MissionsPage() {
             >
               {chestOpened ? (
                 <>
-                  <Sparkles className="h-4 w-4" /> +{CHEST_REWARD_XP} XP e +{CHEST_REWARD_GEMS}{" "}
-                  💎 coletados
+                  <Sparkles className="h-4 w-4" /> +{CHEST_REWARD_XP} XP e +{CHEST_REWARD_GEMS}
+                  <Gem className="h-3.5 w-3.5" /> coletados
                 </>
               ) : (
                 <>
@@ -127,8 +127,8 @@ export default function MissionsPage() {
               </span>
             )}
             {questCompleted && (
-              <span className="ml-auto rounded-full bg-luxury/20 px-2 py-0.5 text-[10px] font-bold text-luxury">
-                +{specialQuest.gems} 💎 coletados
+              <span className="ml-auto flex items-center gap-0.5 rounded-full bg-luxury/20 px-2 py-0.5 text-[10px] font-bold text-luxury">
+                +{specialQuest.gems} <Gem className="h-3 w-3" /> coletados
               </span>
             )}
           </div>
@@ -146,8 +146,8 @@ export default function MissionsPage() {
               </p>
               <p className="mt-0.5 text-[11px] text-foreground-tertiary">{specialQuest.desc}</p>
             </div>
-            <span className="shrink-0 rounded-full bg-luxury/15 px-2 py-0.5 text-[11px] font-bold text-luxury">
-              +{specialQuest.gems} 💎
+            <span className="shrink-0 flex items-center gap-0.5 rounded-full bg-luxury/15 px-2 py-0.5 text-[11px] font-bold text-luxury">
+              +{specialQuest.gems} <Gem className="h-3 w-3" />
             </span>
           </div>
           {questAvailable && !questCompleted && (

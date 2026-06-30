@@ -61,8 +61,9 @@ export default function SkillsSection() {
   return (
     <div className="px-4 pt-8 pb-24">
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-lg font-extrabold text-foregroundDark">
-          ⚡ Central de Skills
+        <h2 className="flex items-center gap-2 text-lg font-extrabold text-foregroundDark">
+          <Icons.Zap className="h-5 w-5 shrink-0 text-primary-dark" strokeWidth={2} />
+          Central de Skills
         </h2>
         <button
           onClick={() => navigate("/lab")}

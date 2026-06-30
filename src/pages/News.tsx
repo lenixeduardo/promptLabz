@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import * as Dialog from "@radix-ui/react-dialog"
-import { ExternalLink, X } from "lucide-react"
+import { ExternalLink, X, MailOpen } from "lucide-react"
 import { AppBottomNav } from "@/components/AppBottomNav"
 import {
   NEWS_ARTICLES,
@@ -175,7 +175,7 @@ export default function News() {
           </>
         ) : filtered.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-2 py-16 text-center">
-            <span className="text-4xl">📭</span>
+            <MailOpen className="h-10 w-10 text-foreground-muted" strokeWidth={1.5} />
             <p className="text-sm font-medium text-foregroundTertiary">Nenhuma notícia nessa categoria.</p>
           </div>
         ) : (

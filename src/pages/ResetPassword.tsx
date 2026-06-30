@@ -71,7 +71,7 @@ export default function ResetPassword() {
             className="h-36 w-auto object-contain drop-shadow-md"
           />
           <div className="relative rounded-2xl border border-stroke-light bg-white px-3 py-2 text-sm font-medium leading-snug text-foregroundDark shadow-sm">
-            Escolha uma senha bem forte, ok? 🔒
+            Escolha uma senha bem forte, ok? <Lock className="inline h-3.5 w-3.5 text-emerald" />
             {/* bubble tail pointing left */}
             <div
               style={{

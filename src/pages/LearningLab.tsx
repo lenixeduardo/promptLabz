@@ -28,6 +28,7 @@ import {
   GitBranch,
   Package,
   Heart,
+  PartyPopper,
 } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { cn } from "@/lib/utils";
@@ -238,8 +239,8 @@ export default function LearningLabPage() {
 
           {completed >= active.modules.length && (
             <div className="mt-6 rounded-2xl border-2 border-emerald/40 bg-emerald/10 p-4 text-center">
-              <p className="text-sm font-bold text-emerald-dark">
-                Trilha {active.label.replace("Trilha ", "")} concluída! 🎉
+              <p className="flex items-center justify-center gap-1.5 text-sm font-bold text-emerald-dark">
+                Trilha {active.label.replace("Trilha ", "")} concluída! <PartyPopper className="h-4 w-4" />
               </p>
               {active.id !== "a3" && trackUnlocked[active.id === "a1" ? "a2" : "a3"] && (
                 <button

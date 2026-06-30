@@ -8,6 +8,7 @@ import { getLevelTitle } from "@/lib/levelTitles"
 import { getAvatarById } from "@/data/avatarsData"
 import { AppBottomNav } from "@/components/AppBottomNav"
 import * as Icons from "@/lib/icons"
+import { Crown, Star, Trophy, PartyPopper, Award } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const MOCK_ENTRIES: LeaderboardEntry[] = [
@@ -91,7 +92,11 @@ function PodiumSpot({ user, rank }: { user: RankedUser | undefined; rank: 1 | 2 
     3: "border-2 border-amber-400/70",
   }
 
-  const medals = { 1: "🥇", 2: "🥈", 3: "🥉" }
+  const medalColors = {
+    1: "text-yellow-400",
+    2: "text-slate-400",
+    3: "text-amber-600",
+  } as const
 
   return (
     <div
@@ -103,9 +108,9 @@ function PodiumSpot({ user, rank }: { user: RankedUser | undefined; rank: 1 | 2 
     >
       {/* Crown / medal icon */}
       {isFirst ? (
-        <span className="text-xl animate-crown-float">👑</span>
+        <Crown className="h-5 w-5 text-yellow-400 animate-crown-float" strokeWidth={2} />
       ) : (
-        <span className="text-base animate-bounce-slow" style={{ animationDelay: `${rank * 0.15}s` }}>{medals[rank]}</span>
+        <Award className={cn("h-5 w-5 animate-bounce-slow", medalColors[rank])} strokeWidth={2} style={{ animationDelay: `${rank * 0.15}s` }} />
       )}
 
       {/* Avatar */}
@@ -291,28 +296,33 @@ export default function Ranking() {
             {/* Top 10 celebration banner */}
             {currentUser && currentUser.position <= 10 && (
               <div className="animate-celebration-pop mb-5 flex items-center gap-3 rounded-2xl border border-emerald/40 bg-gradient-to-r from-emerald/10 to-mint/10 px-4 py-3 shadow-sm animate-top10-glow">
-                <span className="text-2xl">🎉</span>
+                <PartyPopper className="h-6 w-6 shrink-0 text-luxury" />
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-extrabold text-primary-dark">
                     Você está no Top {currentUser.position <= 3 ? currentUser.position : "10"}!
                   </p>
                   <p className="text-xs text-foreground-muted">
                     {currentUser.position === 1
-                      ? "Você é o #1 do PromptLab 🏆"
+                      ? "Você é o #1 do PromptLab"
                       : currentUser.position <= 3
                         ? `Incrível! Pódio garantido na posição #${currentUser.position}`
-                        : `Continue assim — você está no top 10 🔥`}
+                        : `Continue assim — você está no top 10`}
                   </p>
                 </div>
-                <span className="text-xl">{currentUser.position === 1 ? "👑" : "⭐"}</span>
+                {currentUser.position === 1 ? (
+                  <Crown className="h-5 w-5 shrink-0 text-yellow-400" strokeWidth={2} />
+                ) : (
+                  <Star className="h-5 w-5 shrink-0 text-yellow-400 fill-yellow-400" strokeWidth={2} />
+                )}
               </div>
             )}
 
             {/* Podium — white card */}
             <div className="mb-5 overflow-hidden rounded-3xl border border-stroke-muted bg-white shadow-sm">
               <div className="px-4 pt-4 pb-0">
-                <p className="mb-4 text-center text-[11px] font-bold tracking-widest uppercase text-foreground-muted">
-                  🏆 Top 3 do PromptLab
+                <p className="mb-4 flex items-center justify-center gap-1.5 text-center text-[11px] font-bold tracking-widest uppercase text-foreground-muted">
+                  <Trophy className="h-3.5 w-3.5 text-yellow-500" strokeWidth={2} />
+                  Top 3 do PromptLab
                 </p>
                 <div className="flex items-end justify-center gap-2">
                   <PodiumSpot user={top3[1]} rank={2} />

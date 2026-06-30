@@ -13,6 +13,10 @@ import {
   Target,
   AlignLeft,
   Zap,
+  Gem,
+  ThumbsUp,
+  FileText,
+  AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
@@ -237,7 +241,7 @@ export default function PromptEnhancerPage() {
           className="flex shrink-0 items-center gap-1 rounded-full bg-luxury/15 px-2.5 py-1.5"
           aria-label={`Saldo de gemas: ${gems}`}
         >
-          <span className="text-sm">💎</span>
+          <Gem className="h-4 w-4 text-luxury" />
           <span className="text-xs font-extrabold text-luxury">{gems.toLocaleString("pt-BR")}</span>
         </div>
       </div>
@@ -470,10 +474,15 @@ export default function PromptEnhancerPage() {
                   result.enhancedScore >= 40 ? "text-orange-400" :
                   "text-red-400"
                 )}>
-                  {result.enhancedScore >= 85 ? "Excelente! ✨" :
-                   result.enhancedScore >= 65 ? "Bom trabalho! 👍" :
-                   result.enhancedScore >= 40 ? "Pode melhorar 📝" :
-                   "Prompt fraco ⚠️"}
+                  {result.enhancedScore >= 85 ? (
+                    <span className="flex items-center gap-1">Excelente! <Sparkles className="h-4 w-4" /></span>
+                  ) : result.enhancedScore >= 65 ? (
+                    <span className="flex items-center gap-1">Bom trabalho! <ThumbsUp className="h-4 w-4" /></span>
+                  ) : result.enhancedScore >= 40 ? (
+                    <span className="flex items-center gap-1">Pode melhorar <FileText className="h-4 w-4" /></span>
+                  ) : (
+                    <span className="flex items-center gap-1">Prompt fraco <AlertTriangle className="h-4 w-4" /></span>
+                  )}
                 </p>
                 <p className="mt-1 px-1 text-[9px] leading-tight text-foreground-tertiary text-center">
                   {result.enhancedScore >= 85 ? "Seu prompt está com ótima qualidade." :

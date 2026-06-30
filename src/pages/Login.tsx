@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Mail, Lock, Loader2 } from "lucide-react"
+import { Mail, Lock, Loader2, Hand } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -137,8 +137,8 @@ export default function Login() {
         <BrandLogo className="mt-1 text-5xl" />
 
         {isReturning && (
-          <p className="mt-3 text-sm font-semibold text-forest">
-            Bem-vindo de volta! 👋
+          <p className="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold text-forest">
+            Bem-vindo de volta! <Hand className="h-4 w-4 text-yellow-400" />
           </p>
         )}
 

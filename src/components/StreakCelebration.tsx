@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Flame, X } from "lucide-react";
+import { Flame, X, PartyPopper } from "lucide-react";
 
 interface StreakCelebrationProps {
   active: boolean;
@@ -58,7 +58,7 @@ export function StreakCelebration({ active, streak, avatarSrc, avatarName, onClo
         <div className="text-center">
           <p className="text-xs font-extrabold uppercase tracking-wider text-luxury">Streak em chamas!</p>
           <p className="mt-1 text-3xl font-extrabold text-foreground-dark">{streak} dias</p>
-          <p className="mt-1 text-sm text-foreground-tertiary">Continue assim, você está arrasando! 🎉</p>
+          <p className="mt-1 flex items-center justify-center gap-1.5 text-sm text-foreground-tertiary">Continue assim, você está arrasando! <PartyPopper className="h-4 w-4 text-luxury" /></p>
         </div>
       </div>
     </div>

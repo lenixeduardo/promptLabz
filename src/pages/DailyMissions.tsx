@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { ArrowLeft, CheckCircle2, Circle, Zap } from "lucide-react"
+import { ArrowLeft, CheckCircle2, Circle, Zap, PartyPopper } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { DAILY_MISSIONS, TOTAL_DAILY_XP } from "@/data/dailyMissionsData"
 import { AppBottomNav } from "@/components/AppBottomNav"
@@ -145,7 +145,7 @@ export default function DailyMissions() {
         {/* All done state */}
         {completedCount === DAILY_MISSIONS.length && (
           <div className="mt-6 rounded-2xl border border-emerald/30 bg-surface-success/40 p-5 text-center">
-            <p className="text-3xl">🎉</p>
+            <PartyPopper className="h-8 w-8 text-luxury" />
             <p className="mt-2 text-base font-extrabold text-emerald">
               Todas as missões concluídas!
             </p>

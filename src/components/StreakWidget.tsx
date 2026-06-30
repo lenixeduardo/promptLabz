@@ -1,4 +1,4 @@
-import { Flame } from "lucide-react"
+import { Flame, HeartCrack } from "lucide-react"
 
 interface StreakWidgetProps {
   streak: number
@@ -20,7 +20,7 @@ export function StreakWidget({ streak, longestStreak, loading = false, streakBro
   if (streakBroken) {
     return (
       <div className="flex items-center gap-3 rounded-2xl border-2 border-orange-200 bg-orange-50 px-4 py-3">
-        <span className="text-2xl">💔</span>
+        <HeartCrack className="h-6 w-6 text-orange-400" />
         <div>
           <p className="text-sm font-bold text-orange-800">Streak zerado — recomeça hoje!</p>
           {longestStreak > 0 && (
