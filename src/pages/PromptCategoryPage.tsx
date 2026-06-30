@@ -11,6 +11,7 @@ import { type PromptCard } from "@/data/promptsData"
 import { usePrompts } from "@/hooks/usePrompts"
 import { useLabCategories } from "@/hooks/useLabCategories"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 
 type DiffFilter = "Todos" | PromptCard["difficulty"]
 
@@ -136,7 +137,8 @@ export default function PromptCategoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-24">
+    <AppLayout>
+    <div className="min-h-screen bg-surface-soft pb-24 lg:pb-8">
       {/* Header */}
       <div className="bg-white px-4 pb-4 pt-12 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
@@ -225,5 +227,6 @@ export default function PromptCategoryPage() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

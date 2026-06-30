@@ -5,7 +5,9 @@ import {
   Hand,
   Smartphone,
 } from "lucide-react";
-import { AppBottomNav } from "@/components/AppBottomNav";
+import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout";
+import { AppLayout } from "@/components/AppLayout";
 import { AppPageHeader } from "@/components/AppPageHeader";
 
 const BACK_TAP_STEPS = [
@@ -29,7 +31,8 @@ const BACK_TAP_STEPS = [
 
 export default function BackTapConfigPage() {
   return (
-    <div className="relative flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24">
+    <AppLayout>
+    <div className="relative flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
       <AppPageHeader title="Configurar Back Tap" back="/settings" />
 
       <img
@@ -81,5 +84,6 @@ export default function BackTapConfigPage() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   );
 }

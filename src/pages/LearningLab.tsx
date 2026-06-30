@@ -30,6 +30,7 @@ import {
   Heart,
 } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
+import { AppLayout } from "@/components/AppLayout";
 import { cn } from "@/lib/utils";
 import { useModuleProgress, type TrackId } from "@/lib/moduleProgress";
 import { useLives } from "@/contexts/useLives";
@@ -257,5 +258,6 @@ export default function LearningLabPage() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   );
 }

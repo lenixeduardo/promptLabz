@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 import { TRAIL_CATEGORY_SKILLS, type SkillDifficulty } from "@/data/trailCategorySkillsData"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 
 type DiffFilter = "Todas" | SkillDifficulty
 
@@ -63,7 +64,8 @@ export default function SkillCategoryPage() {
   const CategoryIcon = ICON_MAP[catData.icon] ?? Lightbulb
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-24">
+    <AppLayout>
+    <div className="min-h-screen bg-surface-soft pb-24 lg:pb-8">
       {/* Header */}
       <div className="bg-white px-4 pb-4 pt-12 shadow-sm">
         <div className="flex items-center justify-between">
@@ -157,5 +159,6 @@ export default function SkillCategoryPage() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

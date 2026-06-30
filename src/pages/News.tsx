@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import * as Dialog from "@radix-ui/react-dialog"
 import { ExternalLink, X } from "lucide-react"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 import {
   NEWS_ARTICLES,
   CATEGORY_COVER_IMAGES,
@@ -244,5 +245,6 @@ export default function News() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

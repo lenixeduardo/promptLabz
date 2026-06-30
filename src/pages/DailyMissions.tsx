@@ -3,6 +3,7 @@ import { ArrowLeft, CheckCircle2, Circle, Zap } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { DAILY_MISSIONS, TOTAL_DAILY_XP } from "@/data/dailyMissionsData"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 import { useAchievements } from "@/hooks/useAchievements"
 import { cn } from "@/lib/utils"
 
@@ -26,7 +27,8 @@ export default function DailyMissions() {
   )
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-pageBgLight to-white pb-24">
+    <AppLayout>
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-pageBgLight to-white pb-24 lg:pb-8">
       {/* Header */}
       <div className="sticky top-0 z-10 border-b border-stroke-muted bg-white px-4 py-3">
         <div className="flex items-center gap-3">
@@ -158,5 +160,6 @@ export default function DailyMissions() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

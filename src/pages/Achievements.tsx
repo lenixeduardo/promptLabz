@@ -5,6 +5,7 @@ import { MascotGlow } from "@/components/MascotGlow"
 import { cn } from "@/lib/utils"
 import * as Icons from "@/lib/icons"
 import { getProgressCount } from "@/lib/achievements"
+import { AppLayout } from "@/components/AppLayout"
 
 export default function Achievements() {
   const navigate = useNavigate()
@@ -16,6 +17,7 @@ export default function Achievements() {
   )
 
   return (
+    <AppLayout>
     <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6">
       <div className="mx-auto w-full max-w-lg lg:max-w-4xl">
         {/* Header com Mascote */}
@@ -186,5 +188,6 @@ export default function Achievements() {
 
       </div>
     </div>
+    </AppLayout>
   )
 }

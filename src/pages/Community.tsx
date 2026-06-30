@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Users, Clock } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
+import { AppLayout } from "@/components/AppLayout";
 import { AppPageHeader } from "@/components/AppPageHeader";
 
 export default function CommunityPage() {
@@ -32,5 +33,6 @@ export default function CommunityPage() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   );
 }

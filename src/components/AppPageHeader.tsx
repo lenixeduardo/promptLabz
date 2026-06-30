@@ -32,7 +32,7 @@ export function AppPageHeader({
   const backBtn = back ? (
     <Link
       to={back}
-      className="rounded-full p-1.5 text-forest transition-colors hover:bg-surface-success"
+      className="rounded-full p-1.5 text-forest transition-colors hover:bg-surface-success focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       aria-label="Voltar"
     >
       <ArrowLeft className="h-5 w-5" />
@@ -40,7 +40,7 @@ export function AppPageHeader({
   ) : (
     <button
       onClick={onBack ?? (() => navigate(-1))}
-      className="rounded-full p-1.5 text-forest transition-colors hover:bg-surface-success"
+      className="rounded-full p-1.5 text-forest transition-colors hover:bg-surface-success focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       aria-label="Voltar"
     >
       <ArrowLeft className="h-5 w-5" />

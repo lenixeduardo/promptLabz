@@ -23,6 +23,7 @@ import {
   type FocusMode,
 } from "@/lib/promptEnhancer";
 import { AppBottomNav } from "@/components/AppBottomNav";
+import { AppLayout } from "@/components/AppLayout";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -213,6 +214,7 @@ export default function PromptEnhancerPage() {
     !isEnhancing;
 
   return (
+    <AppLayout>
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg">
       {/* ── Header ── */}
       <div className="sticky top-0 z-20 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
@@ -617,5 +619,6 @@ export default function PromptEnhancerPage() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   );
 }

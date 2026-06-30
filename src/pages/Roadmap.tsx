@@ -1,5 +1,6 @@
 import { Check, Sparkles, Clock, Rocket } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
+import { AppLayout } from "@/components/AppLayout";
 import { AppPageHeader } from "@/components/AppPageHeader";
 
 type Status = "done" | "now" | "next" | "future";
@@ -133,5 +134,6 @@ export default function RoadmapPage() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   );
 }

@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 import { TEMPLATES, TEMPLATE_CATEGORIES, type Template } from "@/data/templatesData"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Globe, BarChart3, ClipboardList, Calendar, Briefcase,
@@ -161,7 +162,8 @@ export default function Templates() {
   const isSearching = search.trim().length > 0
 
   return (
-    <div className="min-h-screen bg-[#F0FAF3] dark:bg-pageBg pb-24">
+    <AppLayout>
+    <div className="min-h-screen bg-[#F0FAF3] dark:bg-pageBg pb-24 lg:pb-8">
       {/* Header */}
       <div className="bg-white px-4 pb-3 pt-12 shadow-sm">
         <div className="mb-1 flex items-start justify-between">
@@ -295,5 +297,6 @@ export default function Templates() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

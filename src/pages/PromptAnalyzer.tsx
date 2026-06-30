@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 import { useAuth } from "@/hooks/useAuth"
 import { getLocalGems } from "@/lib/xp"
 import { cn } from "@/lib/utils"
@@ -807,5 +808,6 @@ export default function PromptAnalyzerPage() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

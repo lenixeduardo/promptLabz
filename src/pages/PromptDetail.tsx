@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate, useParams, useLocation } from "react-router-dom"
 import { ChevronDown, ChevronUp, Copy, ArrowRight, Heart } from "lucide-react"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 import { cn } from "@/lib/utils"
 import { trackPromptUsed } from "@/lib/analytics"
 import { useFavoritePrompts } from "@/hooks/useFavoritePrompts"
@@ -153,7 +154,8 @@ export default function PromptDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-32">
+    <AppLayout>
+    <div className="min-h-screen bg-surface-soft pb-32 lg:pb-8">
       {/* Header */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#C8EDD8] via-[#D5F0E2] to-pageBgLight px-5 pb-6 pt-12">
         <div className="mb-3 flex items-center gap-3">
@@ -279,5 +281,6 @@ export default function PromptDetail() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

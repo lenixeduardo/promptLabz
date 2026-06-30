@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { Settings, ChevronRight, Zap, BookOpen, Edit2, Heart, Crown, Flame } from "lucide-react"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 import { useAuth } from "@/hooks/useAuth"
 import { useAchievements } from "@/hooks/useAchievements"
 import { useAvatar } from "@/components/AvatarProvider"
@@ -200,5 +201,6 @@ export default function Profile() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { NotificationsBell } from "@/components/NotificationsBell";
 import { AppBottomNav } from "@/components/AppBottomNav";
+import { AppLayout } from "@/components/AppLayout";
 import { DailyTipCard } from "@/components/DailyTipCard";
 import { useAvatar } from "@/components/AvatarProvider";
 import { StreakFlame } from "@/components/StreakFlame";
@@ -196,7 +197,7 @@ export default function HomePage() {
   }, [streak]);
 
   return (
-    <>
+    <AppLayout>
       <StreakCelebration
         active={streakCelebration}
         streak={streak}
@@ -583,6 +584,6 @@ export default function HomePage() {
 
         <AppBottomNav />
       </div>
-    </>
+    </AppLayout>
   );
 }

@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom"
 import { ArrowRight, CheckCircle2, BookmarkPlus } from "lucide-react"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 
 const DEFAULT_RESULT = {
   score: 92,
@@ -52,7 +53,8 @@ export default function LabResult() {
   const result = (location.state as typeof DEFAULT_RESULT) ?? DEFAULT_RESULT
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-32">
+    <AppLayout>
+    <div className="min-h-screen bg-surface-soft pb-32 lg:pb-8">
       {/* Header */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#C8EDD8] via-[#D5F0E2] to-pageBgLight px-5 pb-6 pt-12">
         <div className="mb-3 flex items-center gap-3">
@@ -162,5 +164,6 @@ export default function LabResult() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

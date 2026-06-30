@@ -5,6 +5,7 @@ import { AppPageHeader } from "@/components/AppPageHeader"
 import { PillTabs } from "@/components/PillTabs"
 import { FavoritesEmptyState } from "@/components/favorites/FavoritesEmptyState"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 import { FavoriteSuggestionItem } from "@/components/favorites/FavoriteSuggestionItem"
 import {
   FAVORITES_TABS,
@@ -72,5 +73,6 @@ export default function Favorites() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CheckCircle2, Circle, Gift, Sparkles, ArrowRight, Star } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
+import { AppLayout } from "@/components/AppLayout";
 import { AppPageHeader } from "@/components/AppPageHeader";
 import { cn } from "@/lib/utils";
 import { useDailyMissions } from "@/hooks/useDailyMissions";
@@ -236,5 +237,6 @@ export default function MissionsPage() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   );
 }

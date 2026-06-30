@@ -7,6 +7,7 @@ import { getLocalXP, getLocalGems, getLevel, getLevelProgress } from "@/lib/xp"
 import { getLevelTitle } from "@/lib/levelTitles"
 import { getAvatarById } from "@/data/avatarsData"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 import * as Icons from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
@@ -243,6 +244,7 @@ export default function Ranking() {
   }
 
   return (
+    <AppLayout>
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-page-bg-light via-gradient-mid to-gradient-end">
       <div className="mx-auto flex w-full max-w-[420px] lg:max-w-2xl flex-col px-5 pb-24 lg:pb-8 pt-8">
 
@@ -454,5 +456,6 @@ export default function Ranking() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }

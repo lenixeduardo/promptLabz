@@ -6,6 +6,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { AppLayout } from "@/components/AppLayout"
 import { cn } from "@/lib/utils"
 import { TEMPLATES, type Template } from "@/data/templatesData"
 
@@ -238,7 +239,8 @@ export default function TemplateDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-32">
+    <AppLayout>
+    <div className="min-h-screen bg-surface-soft pb-32 lg:pb-8">
       {/* Top header */}
       <div className="sticky top-0 z-20 flex items-center justify-between border-b border-pageBgLight bg-white px-4 pt-10 pb-3">
         <div className="flex items-center gap-2">
@@ -335,5 +337,6 @@ export default function TemplateDetail() {
 
       <AppBottomNav />
     </div>
+    </AppLayout>
   )
 }
