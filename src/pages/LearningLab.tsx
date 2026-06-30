@@ -190,7 +190,7 @@ export default function LearningLabPage() {
                   className={cn(
                     "relative flex h-20 w-20 items-center justify-center rounded-full border-4 transition-transform active:scale-95",
                     isDone && "bg-emerald border-emerald-dark text-white shadow-lg shadow-emerald/30",
-                    isCurrent && "bg-luxury border-amber-500 text-luxury-foreground shadow-lg shadow-luxury/40 animate-pulse",
+                    isCurrent && "bg-luxury border-amber-500 text-luxury-foreground shadow-lg shadow-luxury/40 animate-pulse will-change-[opacity]",
                     isLocked && "bg-surface-soft border-stroke-light text-neutral",
                   )}
                   aria-label={m.title}

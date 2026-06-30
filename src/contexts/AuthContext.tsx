@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { User } from "@supabase/supabase-js"
 import { supabase } from "@/lib/supabase"
 
@@ -41,12 +41,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription?.unsubscribe()
   }, [])
 
-  return (
-    <AuthContext.Provider value={{
+  const value = useMemo(
+    () => ({
       user: IS_PREVIEW ? PREVIEW_USER : user,
       loading: IS_PREVIEW ? false : loading,
       error: IS_PREVIEW ? null : error,
-    }}>
+    }),
+    [user, loading, error]
+  )
+
+  return (
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   )

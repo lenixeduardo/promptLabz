@@ -2,7 +2,7 @@
 // Shared Skill Components — used by both Skills page & SkillsSection (LearningLab)
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { type ReactNode } from "react"
+import { memo, type ReactNode } from "react"
 import * as Icons from "@/lib/icons"
 import {
   type TrendingSkill,
@@ -40,7 +40,7 @@ export function CountBadge({ count }: { count: number }) {
 
 // ─── Skill Card ──────────────────────────────────────────────────────────
 
-export function SkillCard({
+export const SkillCard = memo(function SkillCard({
   skill,
   isFav,
   onToggleFav,
@@ -96,11 +96,11 @@ export function SkillCard({
       </div>
     </div>
   )
-}
+})
 
 // ─── Grid View ───────────────────────────────────────────────────────────
 
-export function SkillsGridView({
+export const SkillsGridView = memo(function SkillsGridView({
   skills,
   favorites,
   onToggleFav,
@@ -134,4 +134,4 @@ export function SkillsGridView({
       ))}
     </div>
   )
-}
+})

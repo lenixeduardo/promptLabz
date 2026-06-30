@@ -1,8 +1,10 @@
+import { memo } from "react";
+
 interface DailyTipCardProps {
   tip: string;
 }
 
-export function DailyTipCard({ tip }: DailyTipCardProps) {
+export const DailyTipCard = memo(function DailyTipCard({ tip }: DailyTipCardProps) {
   return (
     <section
       aria-labelledby="daily-tip-title"
@@ -26,4 +28,4 @@ export function DailyTipCard({ tip }: DailyTipCardProps) {
       </div>
     </section>
   );
-}
+})

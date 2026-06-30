@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo, useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import * as Icons from "@/lib/icons"
 import {
@@ -21,10 +21,13 @@ export default function SkillsSection() {
   const [activeCategory, setActiveCategory] = useState<SkillCategory | "Todas">("Todas")
   const [searchQuery, setSearchQuery] = useState("")
 
-  const filteredByCat =
-    activeCategory === "Todas"
-      ? TRENDING_SKILLS
-      : TRENDING_SKILLS.filter((s) => s.category === activeCategory)
+  const filteredByCat = useMemo(
+    () =>
+      activeCategory === "Todas"
+        ? TRENDING_SKILLS
+        : TRENDING_SKILLS.filter((s) => s.category === activeCategory),
+    [activeCategory]
+  )
 
   const searched = useMemo(() => {
     if (!searchQuery.trim()) return filteredByCat
@@ -39,7 +42,7 @@ export default function SkillsSection() {
     )
   }, [searchQuery, filteredByCat])
 
-  const handleToggleFav = (skillName: string) => {
+  const handleToggleFav = useCallback((skillName: string) => {
     const wasFav = isFavorite(skillName)
     toggleFavorite(skillName)
     if (!wasFav) {
@@ -49,11 +52,11 @@ export default function SkillsSection() {
         console.log("[DEV] Novas conquistas desbloqueadas:", newAchs.map((a) => a.title))
       }
     }
-  }
+  }, [isFavorite, toggleFavorite, achievements, favorites.length])
 
-  const goToDetail = (skill: TrendingSkill) => {
+  const goToDetail = useCallback((skill: TrendingSkill) => {
     navigate(`/skill/${encodeURIComponent(skill.name)}`, { state: { skill } })
-  }
+  }, [navigate])
 
   return (
     <div className="px-4 pt-8 pb-24">

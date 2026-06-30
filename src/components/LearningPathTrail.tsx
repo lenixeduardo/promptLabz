@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { Check, Lock, PenLine, type LucideIcon } from "lucide-react"
 
 export interface TrailModule {
@@ -13,7 +14,7 @@ interface LearningPathTrailProps {
   totalCount: number
 }
 
-export function LearningPathTrail({ modules, completedCount, totalCount }: LearningPathTrailProps) {
+export const LearningPathTrail = memo(function LearningPathTrail({ modules, completedCount, totalCount }: LearningPathTrailProps) {
   return (
     <div>
       <div className="flex items-baseline justify-between mb-3">
@@ -89,7 +90,7 @@ export function LearningPathTrail({ modules, completedCount, totalCount }: Learn
       </div>
     </div>
   )
-}
+})
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const DEFAULT_TRAIL_MODULES: TrailModule[] = [
