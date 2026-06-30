@@ -45,7 +45,7 @@ vi.mock("@/lib/userScope", () => ({
   getUserId: vi.fn().mockReturnValue("user-1"),
 }))
 
-// a1Boas_vindas for track=a1, module=0: 3 questions, all correct = "b"
+// a1Boas_vindas for track=a1, module=0: 1 content slide + 3 questions, all correct = "b"
 const Q1_PROMPT = "O que é o PromptLabz?"
 const Q1_OPT_B = "Uma trilha de aprendizado prática para você dominar a arte de escrever prompts"
 
@@ -61,6 +61,12 @@ function renderLesson(url = "/lesson?track=a1&module=0") {
   )
 }
 
+// Click past any content slides so tests start at the first quiz question
+function skipSlides() {
+  const continueBtn = screen.queryByRole("button", { name: /Continuar/i })
+  if (continueBtn) fireEvent.click(continueBtn)
+}
+
 describe("Lesson — fluxo de aprendizado", () => {
   beforeEach(() => {
     localStorage.clear()
@@ -69,16 +75,19 @@ describe("Lesson — fluxo de aprendizado", () => {
 
   it("exibe a primeira pergunta e a barra de progresso", () => {
     renderLesson()
+    skipSlides()
     expect(screen.getByText(/^\s*\d+\s+de\s+\d+\s*$/)).toBeInTheDocument()
   })
 
   it("exibe o botão desabilitado antes de selecionar uma opção", () => {
     renderLesson()
+    skipSlides()
     expect(screen.getByText(/Selecione uma opção/i)).toBeInTheDocument()
   })
 
   it("mostra feedback positivo ao acertar a resposta", () => {
     renderLesson()
+    skipSlides()
     // Click on option B (correct answer)
     const optionB = screen.getAllByRole("button").find(
       (el) => el.textContent?.includes(Q1_OPT_B)
@@ -90,6 +99,7 @@ describe("Lesson — fluxo de aprendizado", () => {
 
   it("mostra feedback negativo ao errar a resposta", () => {
     renderLesson()
+    skipSlides()
     // Click on option A (wrong answer for q1 — a1bv0)
     const optionA = screen.getAllByRole("button").find(
       (el) => el.textContent?.includes("Uma plataforma para treinar modelos de IA do zero")
@@ -101,6 +111,7 @@ describe("Lesson — fluxo de aprendizado", () => {
 
   it("exibe o botão 'Próxima atividade' após responder", () => {
     renderLesson()
+    skipSlides()
     const optionB = screen.getAllByRole("button").find(
       (el) => el.textContent?.includes(Q1_OPT_B)
     )
@@ -110,17 +121,20 @@ describe("Lesson — fluxo de aprendizado", () => {
 
   it("avança para a próxima pergunta ao clicar em 'Próxima atividade'", () => {
     renderLesson()
-    // Answer q1
+    skipSlides()
+    // Answer q1 (now step 1 of 4 total)
     const optionB = screen.getAllByRole("button").find(
       (el) => el.textContent?.includes(Q1_OPT_B)
     )
     fireEvent.click(optionB!)
     fireEvent.click(screen.getByRole("button", { name: /Próxima atividade/i }))
-    expect(screen.getByText(/^\s*2\s+de\s+3\s*$/)).toBeInTheDocument()
+    // step 2 of 4 (slide + q1 + q2 + q3)
+    expect(screen.getByText(/^\s*3\s+de\s+4\s*$/)).toBeInTheDocument()
   })
 
   it("exibe tela de resultado após completar todas as perguntas", async () => {
     renderLesson()
+    skipSlides()
     // Answer all 3 questions correctly (a1Boas_vindas — all correct = option "b")
     const answers = [
       Q1_OPT_B,
@@ -147,6 +161,7 @@ describe("Lesson — fluxo de aprendizado", () => {
 
   it("exibe 'Boa tentativa!' ao errar alguma pergunta", async () => {
     renderLesson()
+    skipSlides()
     // Answer q1 wrong (option A — a1bv0)
     const wrongBtn = screen.getAllByRole("button").find((el) => el.textContent?.includes("Uma plataforma para treinar modelos de IA do zero"))
     fireEvent.click(wrongBtn!)
