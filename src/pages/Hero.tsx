@@ -230,7 +230,7 @@ export default function Hero() {
               alt=""
               aria-hidden="true"
               fetchPriority="high"
-              className="animate-mascot-float h-[480px] xl:h-[560px] w-auto object-contain pointer-events-none select-none"
+              className="animate-mascot-float will-change-transform h-[480px] xl:h-[560px] w-auto object-contain pointer-events-none select-none"
             />
           </div>
         </div>

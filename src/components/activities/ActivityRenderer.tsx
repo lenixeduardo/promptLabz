@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { Lightbulb } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { LessonActivity, FillBlankActivity, MatchActivity, OrderActivity, Question } from "@/lib/lessonContent"
@@ -20,7 +21,7 @@ interface Props {
   onEssayAnswer: (text: string) => void
 }
 
-export function ActivityRenderer({
+export const ActivityRenderer = memo(function ActivityRenderer({
   activity,
   selected,
   answered,
@@ -46,7 +47,7 @@ export function ActivityRenderer({
         </div>
         <div className="mb-2 flex items-start gap-3">
           <img
-            src="/assets/mascot-teacher.png"
+            src="/assets/mascot-teacher.png" loading="lazy"
             alt=""
             className="h-20 w-20 shrink-0 object-contain"
           />
@@ -92,7 +93,7 @@ export function ActivityRenderer({
       {/* Mascot + pergunta/instrução */}
       <div className="mb-2 flex items-start gap-3">
         <img
-          src="/assets/mascot-teacher.png"
+          src="/assets/mascot-teacher.png" loading="lazy"
           alt=""
           className="h-14 w-14 shrink-0 object-contain"
         />
@@ -201,4 +202,4 @@ export function ActivityRenderer({
       )}
     </div>
   )
-}
+})

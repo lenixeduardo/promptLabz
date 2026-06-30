@@ -1,3 +1,4 @@
+import { memo, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   ArrowRight, Briefcase, Lightbulb, Megaphone, Code2, Apple,
@@ -12,7 +13,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   MessageSquare, Settings, Briefcase, Palette, Headphones, Users,
 }
 
-function CategoryCard({ cat }: { cat: LabCategory }) {
+const CategoryCard = memo(function CategoryCard({ cat }: { cat: LabCategory }) {
   const navigate = useNavigate()
   const Icon = ICON_MAP[cat.icon] ?? Lightbulb
   return (
@@ -27,11 +28,17 @@ function CategoryCard({ cat }: { cat: LabCategory }) {
       <p className="text-[9px] text-foregroundMuted">{cat.promptCount} prompts</p>
     </button>
   )
-}
+})
 
 export default function PromptsSection() {
   const navigate = useNavigate()
-  const { categories, promptOfTheDay, loading } = useLabCategories()
+  const { categories, promptOfTheDay } = useLabCategories()
+
+  const handleViewAll = useCallback(() => navigate("/prompts"), [navigate])
+  const handleUsePrompt = useCallback(
+    () => navigate(`/prompts/category/${promptOfTheDay?.categoryId}`),
+    [navigate, promptOfTheDay?.categoryId]
+  )
 
   return (
     <div className="px-4 pt-6">
@@ -50,7 +57,7 @@ export default function PromptsSection() {
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-sm font-bold text-foregroundDark">Em destaque</h3>
         <button
-          onClick={() => navigate("/prompts")}
+          onClick={handleViewAll}
           className="text-xs font-semibold text-primary-dark"
         >
           Ver todos &gt;
@@ -73,7 +80,7 @@ export default function PromptsSection() {
           </div>
         </div>
         <button
-          onClick={() => navigate(`/prompts/category/${promptOfTheDay?.categoryId}`)}
+          onClick={handleUsePrompt}
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
         >
           Usar prompt

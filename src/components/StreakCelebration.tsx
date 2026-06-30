@@ -31,7 +31,7 @@ export function StreakCelebration({ active, streak, avatarSrc, avatarName, onClo
       onClick={() => { setShow(false); onClose(); }}
     >
       <div
-        className="relative mx-4 flex flex-col items-center gap-3 rounded-3xl border-2 border-luxury/50 bg-gradient-to-br from-card to-surface-soft px-8 py-7 shadow-2xl animate-scale-in"
+        className="relative mx-4 flex flex-col items-center gap-3 rounded-3xl border-2 border-luxury/50 bg-gradient-to-br from-card to-surface-soft px-8 py-7 shadow-2xl animate-scale-in will-change-transform"
         onClick={(e) => e.stopPropagation()}
       >
         <button
