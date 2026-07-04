@@ -14,7 +14,7 @@ function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "dark";
   const stored = localStorage.getItem("promptlabz-theme") as Theme | null;
   if (stored === "light" || stored === "dark") return stored;
-  // Dark (fundo preto) é o padrão — o usuário pode trocar pelo ThemeToggle
+  if (window.matchMedia("(prefers-color-scheme: light)").matches) return "light";
   return "dark";
 }
 
