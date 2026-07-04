@@ -6,11 +6,18 @@ import {
   saveProgress,
   loadProgress,
   syncLocalProgressToSupabase,
+  getLeaderboard,
+  updateUserXP,
+  updateUserGems,
+  syncInventoryToServer,
+  fetchInventoryFromServer,
 } from "./db"
+import { loadInventory, type StoredInventory } from "./inventory"
 
 vi.mock("@/lib/supabase", () => ({
   supabase: {
     from: vi.fn(),
+    rpc: vi.fn(),
   },
   isSupabaseConfigured: () => {
     return !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -28,6 +35,7 @@ vi.mock("@/lib/supabase", () => ({
 import { supabase } from "@/lib/supabase"
 
 const mockFrom = supabase.from as ReturnType<typeof vi.fn>
+const mockRpc = supabase.rpc as ReturnType<typeof vi.fn>
 
 function buildQuery(overrides: Record<string, unknown> = {}) {
   const q = {
@@ -37,6 +45,9 @@ function buildQuery(overrides: Record<string, unknown> = {}) {
     maybeSingle: vi.fn().mockReturnThis(),
     update: vi.fn().mockReturnThis(),
     upsert: vi.fn().mockReturnThis(),
+    gte: vi.fn().mockReturnThis(),
+    order: vi.fn().mockReturnThis(),
+    limit: vi.fn().mockReturnThis(),
     ...overrides,
   }
   mockFrom.mockReturnValue(q)
@@ -250,5 +261,199 @@ describe("syncLocalProgressToSupabase", () => {
     const result = await syncLocalProgressToSupabase("u1")
 
     expect(result.error).toBe("Sync failed")
+  })
+})
+
+// ── getLeaderboard ─────────────────────────────────────────────────────────
+
+describe("getLeaderboard", () => {
+  it("consulta a view leaderboard_entries (nunca a tabela users diretamente)", async () => {
+    const entries = [{ id: "u1", full_name: "Ana", avatar_url: null, xp: 300 }]
+    buildQuery({ limit: vi.fn().mockResolvedValue({ data: entries, error: null }) })
+
+    const result = await getLeaderboard(10)
+
+    expect(mockFrom).toHaveBeenCalledWith("leaderboard_entries")
+    expect(mockFrom).not.toHaveBeenCalledWith("users")
+    expect(result.data).toEqual(entries)
+    expect(result.error).toBeNull()
+  })
+
+  it("retorna erro quando a consulta falha", async () => {
+    buildQuery({ limit: vi.fn().mockResolvedValue({ data: null, error: { message: "Query failed" } }) })
+
+    const result = await getLeaderboard()
+
+    expect(result.data).toBeNull()
+    expect(result.error).toBe("Query failed")
+  })
+})
+
+// ── updateUserXP ───────────────────────────────────────────────────────────
+
+describe("updateUserXP", () => {
+  it("chama o RPC sync_user_xp em vez de dar update direto na tabela users", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null })
+
+    const result = await updateUserXP("u1", 500, 20)
+
+    expect(mockRpc).toHaveBeenCalledWith("sync_user_xp", { new_xp: 500, new_gems: 20 })
+    expect(mockFrom).not.toHaveBeenCalled()
+    expect(result.error).toBeNull()
+  })
+
+  it("envia new_gems null quando gems não é informado", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null })
+
+    await updateUserXP("u1", 500)
+
+    expect(mockRpc).toHaveBeenCalledWith("sync_user_xp", { new_xp: 500, new_gems: null })
+  })
+
+  it("retorna erro quando o RPC rejeita (ex: delta acima do permitido)", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "sync_user_xp: xp increase too large" } })
+
+    const result = await updateUserXP("u1", 999999)
+
+    expect(result.error).toBe("sync_user_xp: xp increase too large")
+  })
+})
+
+// ── updateUserGems ─────────────────────────────────────────────────────────
+
+describe("updateUserGems", () => {
+  it("busca o xp atual e chama sync_user_xp em vez de dar update direto na tabela users", async () => {
+    buildQuery({ single: vi.fn().mockResolvedValue({ data: { xp: 300 }, error: null }) })
+    mockRpc.mockResolvedValue({ data: null, error: null })
+
+    const result = await updateUserGems("u1", 40)
+
+    expect(mockRpc).toHaveBeenCalledWith("sync_user_xp", { new_xp: 300, new_gems: 40 })
+    expect(result.error).toBeNull()
+  })
+
+  it("retorna erro quando não consegue ler o xp atual", async () => {
+    buildQuery({ single: vi.fn().mockResolvedValue({ data: null, error: { message: "Profile not found" } }) })
+
+    const result = await updateUserGems("u1", 40)
+
+    expect(mockRpc).not.toHaveBeenCalled()
+    expect(result.error).toBe("Profile not found")
+  })
+
+  it("retorna erro quando o RPC rejeita", async () => {
+    buildQuery({ single: vi.fn().mockResolvedValue({ data: { xp: 300 }, error: null }) })
+    mockRpc.mockResolvedValue({ data: null, error: { message: "sync_user_xp: gems increase too large" } })
+
+    const result = await updateUserGems("u1", 999999)
+
+    expect(result.error).toBe("sync_user_xp: gems increase too large")
+  })
+})
+
+// ── syncInventoryToServer ──────────────────────────────────────────────────
+
+describe("syncInventoryToServer", () => {
+  const userId = "u1"
+  const inv: StoredInventory = {
+    powerUps: { "boost-xp": 2, protection: 1, "focus-total": 0 },
+    ownedAvatarIds: ["cat-green", "cat-blue"],
+  }
+
+  it("retorna erro quando Supabase não está configurado", async () => {
+    import.meta.env.VITE_SUPABASE_URL = ""
+
+    const result = await syncInventoryToServer(userId, inv)
+
+    expect(result.error).toBe("Supabase não configurado")
+  })
+
+  it("faz upsert no Supabase com os dados do inventário", async () => {
+    const q = buildQuery({ upsert: vi.fn().mockResolvedValue({ error: null }) })
+
+    const result = await syncInventoryToServer(userId, inv)
+
+    expect(result.error).toBeNull()
+    expect(q.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user_id: userId,
+        boost_xp: 2,
+        protection: 1,
+        focus_total: 0,
+        owned_avatar_ids: ["cat-green", "cat-blue"],
+      }),
+      expect.anything()
+    )
+  })
+
+  it("retorna erro quando o upsert falha", async () => {
+    buildQuery({ upsert: vi.fn().mockResolvedValue({ error: { message: "Insert failed" } }) })
+
+    const result = await syncInventoryToServer(userId, inv)
+
+    expect(result.error).toBe("Insert failed")
+  })
+})
+
+// ── fetchInventoryFromServer ───────────────────────────────────────────────
+
+describe("fetchInventoryFromServer", () => {
+  const userId = "u1"
+
+  it("retorna erro quando Supabase não está configurado", async () => {
+    import.meta.env.VITE_SUPABASE_URL = ""
+
+    const result = await fetchInventoryFromServer(userId)
+
+    expect(result.error).toBe("Supabase não configurado")
+  })
+
+  it("retorna null sem erro quando não há linha no servidor", async () => {
+    buildQuery({ maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }) })
+
+    const result = await fetchInventoryFromServer(userId)
+
+    expect(result.data).toBeNull()
+    expect(result.error).toBeNull()
+  })
+
+  it("mescla dados do servidor com o localStorage (mantendo o maior valor)", async () => {
+    localStorage.setItem(
+      `pl:inventory:${userId}`,
+      JSON.stringify({
+        powerUps: { "boost-xp": 3, protection: 0, "focus-total": 1 },
+        ownedAvatarIds: ["cat-green"],
+      })
+    )
+    buildQuery({
+      maybeSingle: vi.fn().mockResolvedValue({
+        data: {
+          boost_xp: 1,
+          protection: 5,
+          focus_total: 0,
+          owned_avatar_ids: ["cat-blue"],
+        },
+        error: null,
+      }),
+    })
+
+    const result = await fetchInventoryFromServer(userId)
+
+    expect(result.error).toBeNull()
+    expect(result.data).toEqual({
+      powerUps: { "boost-xp": 3, protection: 5, "focus-total": 1 },
+      ownedAvatarIds: ["cat-green", "cat-blue"],
+    })
+    // Deve ter persistido o resultado mesclado no localStorage
+    expect(loadInventory(userId)).toEqual(result.data)
+  })
+
+  it("retorna erro quando a consulta falha", async () => {
+    buildQuery({ maybeSingle: vi.fn().mockResolvedValue({ data: null, error: { message: "Query failed" } }) })
+
+    const result = await fetchInventoryFromServer(userId)
+
+    expect(result.data).toBeNull()
+    expect(result.error).toBe("Query failed")
   })
 })

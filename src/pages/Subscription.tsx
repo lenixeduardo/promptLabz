@@ -1,9 +1,10 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { ArrowLeft, Award, BookMarked, Check, FileText, RefreshCw, Flame, Zap } from "@/lib/icons"
+import { ArrowLeft, Award, BookMarked, Check, FileText, RefreshCw, Flame, Loader2, Zap } from "@/lib/icons"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { sileo } from "sileo"
+import { supabase } from "@/lib/supabase"
 
 type BillingPeriod = "monthly" | "annual"
 
@@ -24,12 +25,30 @@ const EXTRA_FEATURES = [
 export default function Subscription() {
   const navigate = useNavigate()
   const [billing, setBilling] = useState<BillingPeriod>("annual")
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
 
-  function handleSubscribe() {
-    sileo.success({
-      title: "Em breve!",
-      description: `Plano ${billing === "annual" ? "Anual" : "Mensal"} selecionado. Integração de pagamento em construção.`,
-    })
+  async function handleSubscribe() {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    if (!session) {
+      navigate("/login")
+      return
+    }
+
+    setCheckoutLoading(true)
+    try {
+      const { data, error } = await supabase.functions.invoke("stripe-checkout")
+      if (error || !data?.url) {
+        sileo.error({ title: "Erro", description: "Não foi possível iniciar o checkout." })
+        return
+      }
+      window.location.href = data.url
+    } catch {
+      sileo.error({ title: "Erro", description: "Não foi possível iniciar o checkout." })
+    } finally {
+      setCheckoutLoading(false)
+    }
   }
 
   return (
@@ -183,8 +202,21 @@ export default function Subscription() {
 
         {/* CTA */}
         <div className="px-5 pb-10">
-          <Button size="lg" className="w-full text-lg" onClick={handleSubscribe}>
-            Começar agora <Zap className="inline h-4 w-4 ml-1" />
+          <Button
+            size="lg"
+            className="w-full gap-1 text-lg"
+            onClick={handleSubscribe}
+            disabled={checkoutLoading}
+          >
+            {checkoutLoading ? (
+              <>
+                Redirecionando... <Loader2 className="inline h-4 w-4 animate-spin" />
+              </>
+            ) : (
+              <>
+                Começar agora <Zap className="inline h-4 w-4 ml-1" />
+              </>
+            )}
           </Button>
           <p className="mt-3 text-center text-xs text-foregroundPlaceholder">
             7 dias grátis. Cancele quando quiser.

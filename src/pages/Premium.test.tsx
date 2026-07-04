@@ -4,6 +4,30 @@ import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import Premium from "./Premium"
 
+const { mockGetSession, mockInvoke } = vi.hoisted(() => ({
+  mockGetSession: vi.fn(),
+  mockInvoke: vi.fn(),
+}))
+
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    auth: {
+      getSession: mockGetSession,
+    },
+    functions: {
+      invoke: mockInvoke,
+    },
+  },
+}))
+
+const mockSileoError = vi.fn()
+vi.mock("sileo", () => ({
+  sileo: {
+    success: vi.fn(),
+    error: (...args: unknown[]) => mockSileoError(...args),
+  },
+}))
+
 vi.mock("@/components/AppBottomNav", () => ({
   AppBottomNav: () => <div data-testid="bottom-nav">Bottom Nav</div>,
 }))
@@ -21,6 +45,8 @@ function renderPremium(initialRoute = "/premium") {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  mockGetSession.mockResolvedValue({ data: { session: null } })
+  mockInvoke.mockResolvedValue({ data: { url: "https://checkout.stripe.com/session" }, error: null })
 })
 
 describe("Premium — renderização", () => {
@@ -59,14 +85,14 @@ describe("Premium — renderização", () => {
     expect(screen.getByText("R$ 49,90")).toBeInTheDocument()
   })
 
-  it("exibe o CTA de entrada na lista de espera", () => {
+  it("exibe o CTA de assinatura", () => {
     renderPremium()
-    expect(screen.getByText("Entrar na lista de espera")).toBeInTheDocument()
+    expect(screen.getByText("Assinar Premium")).toBeInTheDocument()
   })
 
-  it("exibe o texto indicando que premium está em breve", () => {
+  it("exibe o texto do período de teste grátis", () => {
     renderPremium()
-    expect(screen.getByText(/Premium em breve/i)).toBeInTheDocument()
+    expect(screen.getByText(/30 dias grátis/i)).toBeInTheDocument()
   })
 
   it("exibe os trust badges", () => {
@@ -138,6 +164,49 @@ describe("Premium — navegação", () => {
     await userEvent.click(backButton)
     await waitFor(() => {
       expect(screen.getByText("Home Page")).toBeInTheDocument()
+    })
+  })
+})
+
+describe("Premium — checkout", () => {
+  it("redireciona para login ao clicar sem sessão ativa", async () => {
+    mockGetSession.mockResolvedValue({ data: { session: null } })
+    renderPremium("/premium")
+    await userEvent.click(screen.getByText("Assinar Premium"))
+    expect(mockInvoke).not.toHaveBeenCalled()
+  })
+
+  it("chama o checkout do Stripe quando o usuário está logado", async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { access_token: "token" } } })
+    const originalLocation = window.location
+    // @ts-expect-error - simplify window.location for assertion in jsdom
+    delete window.location
+    window.location = { ...originalLocation, href: "" } as unknown as Location
+
+    renderPremium("/premium")
+    await userEvent.click(screen.getByText("Assinar Premium"))
+
+    await waitFor(() => {
+      expect(mockInvoke).toHaveBeenCalledWith("stripe-checkout")
+    })
+    await waitFor(() => {
+      expect(window.location.href).toBe("https://checkout.stripe.com/session")
+    })
+
+    window.location = originalLocation
+  })
+
+  it("exibe erro quando o checkout falha", async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { access_token: "token" } } })
+    mockInvoke.mockResolvedValue({ data: null, error: new Error("failed") })
+
+    renderPremium("/premium")
+    await userEvent.click(screen.getByText("Assinar Premium"))
+
+    await waitFor(() => {
+      expect(mockSileoError).toHaveBeenCalledWith(
+        expect.objectContaining({ title: "Erro" })
+      )
     })
   })
 })
