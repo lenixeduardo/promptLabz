@@ -5,7 +5,7 @@ import { loadInventory } from "@/lib/inventory"
 import { getLocalXP } from "@/lib/xp"
 import { POWER_UPS } from "@/data/powerUpsData"
 import { AVATARS, getAvatarById } from "@/data/avatarsData"
-import { getUserProfile } from "@/lib/db"
+import { getUserProfile, fetchInventoryFromServer } from "@/lib/db"
 import * as Icons from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
@@ -30,6 +30,19 @@ export default function Inventory() {
       })
       .catch((err) => {
         console.error("Falha ao carregar perfil do usuário:", err)
+      })
+
+    // Hidrata com o servidor (útil ao logar em um dispositivo novo), mesclando
+    // com o que já está em localStorage.
+    fetchInventoryFromServer(user.id)
+      .then(({ data }) => {
+        if (data) {
+          setPowerUps(data.powerUps)
+          setOwnedAvatarIds(data.ownedAvatarIds)
+        }
+      })
+      .catch((err) => {
+        console.error("Falha ao sincronizar inventário do servidor:", err)
       })
   }, [user?.id])
 

@@ -1,4 +1,5 @@
 import { supabase, isSupabaseConfigured, getErrorMessage } from "./supabase"
+import { loadInventory, saveInventory, type StoredInventory } from "./inventory"
 
 export interface CategoryProgress {
   currentModuleIndex: number
@@ -434,14 +435,75 @@ export async function insertNotification(
 export async function updateUserGems(userId: string, gems: number): Promise<DbResult<void>> {
   if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
   try {
-    const { error } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from("users")
-      .update({ gems })
+      .select("xp")
       .eq("id", userId)
+      .single()
+    if (profileError) throw profileError
+    const { error } = await supabase.rpc("sync_user_xp", {
+      new_xp: (profile as { xp: number }).xp,
+      new_gems: gems,
+    })
     if (error) throw error
     return { data: null, error: null }
   } catch (err) {
     return { data: null, error: getErrorMessage(err, "Erro ao atualizar gemas") }
+  }
+}
+
+// ── Inventory Sync ────────────────────────────────────────────────────────────
+
+// Sends the current local inventory (power-ups + avatares comprados) to Supabase.
+// Called as an additional side-effect after a purchase; local storage remains the
+// source of truth for offline/degraded mode.
+export async function syncInventoryToServer(userId: string, inv: StoredInventory): Promise<DbResult<void>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { error } = await supabase.from("user_inventory").upsert(
+      {
+        user_id: userId,
+        boost_xp: inv.powerUps["boost-xp"] ?? 0,
+        protection: inv.powerUps["protection"] ?? 0,
+        focus_total: inv.powerUps["focus-total"] ?? 0,
+        owned_avatar_ids: inv.ownedAvatarIds,
+      },
+      { onConflict: "user_id" }
+    )
+    if (error) throw error
+    return { data: null, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao sincronizar inventário") }
+  }
+}
+
+// Hydrates the inventory from Supabase (útil ao logar em um dispositivo novo),
+// mesclando com o que já existe em localStorage para não perder compras feitas offline.
+export async function fetchInventoryFromServer(userId: string): Promise<DbResult<StoredInventory>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { data, error } = await supabase
+      .from("user_inventory")
+      .select("boost_xp,protection,focus_total,owned_avatar_ids")
+      .eq("user_id", userId)
+      .maybeSingle()
+
+    if (error) throw error
+    if (!data) return { data: null, error: null }
+
+    const local = loadInventory(userId)
+    const merged: StoredInventory = {
+      powerUps: {
+        "boost-xp": Math.max(local.powerUps["boost-xp"] ?? 0, data.boost_xp ?? 0),
+        protection: Math.max(local.powerUps["protection"] ?? 0, data.protection ?? 0),
+        "focus-total": Math.max(local.powerUps["focus-total"] ?? 0, data.focus_total ?? 0),
+      },
+      ownedAvatarIds: Array.from(new Set([...local.ownedAvatarIds, ...(data.owned_avatar_ids ?? [])])),
+    }
+    saveInventory(userId, merged)
+    return { data: merged, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao carregar inventário") }
   }
 }
 
