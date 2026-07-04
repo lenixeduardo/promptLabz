@@ -13,12 +13,17 @@ import {
   Trophy,
   User,
   Gem,
+  Sparkles,
+  Loader2,
+  Lock,
 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { AppBottomNav } from "@/components/AppBottomNav"
 import { useAuth } from "@/hooks/useAuth"
 import { getLocalGems } from "@/lib/xp"
 import { cn } from "@/lib/utils"
+import { isSupabaseConfigured } from "@/lib/supabase"
+import { evaluatePromptWithAI, type PromptEvaluation } from "@/lib/evaluatePrompt"
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -252,6 +257,11 @@ export default function PromptAnalyzerPage() {
   const [result, setResult] = useState<ConversationAnalysis | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // ── AI analysis (opt-in, complements the local heuristic result) ──────
+  const [aiStatus, setAiStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [aiResult, setAiResult] = useState<PromptEvaluation | null>(null)
+  const [aiError, setAiError] = useState<{ message: string; quotaExceeded: boolean } | null>(null)
+
   useEffect(() => {
     if (userId) setGems(getLocalGems(userId))
   }, [userId])
@@ -310,7 +320,26 @@ export default function PromptAnalyzerPage() {
     setFileError(null)
     setResult(null)
     setPageState("upload")
+    setAiStatus("idle")
+    setAiResult(null)
+    setAiError(null)
     if (fileInputRef.current) fileInputRef.current.value = ""
+  }
+
+  async function handleAiAnalyze() {
+    if (!result || result.messages.length === 0) return
+    const lastMessage = result.messages[result.messages.length - 1]
+    setAiStatus("loading")
+    setAiError(null)
+
+    const outcome = await evaluatePromptWithAI(lastMessage.text)
+    if (outcome.ok === true) {
+      setAiResult(outcome.data)
+      setAiStatus("success")
+    } else {
+      setAiError(outcome.error)
+      setAiStatus("error")
+    }
   }
 
   const overallColor =
@@ -786,6 +815,127 @@ export default function PromptAnalyzerPage() {
                 </div>
               </div>
             </div>
+
+            {/* Análise com IA — opt-in, complementa a análise heurística acima */}
+            {isSupabaseConfigured() && (
+              <div className="rounded-2xl border-2 border-emerald/30 bg-card p-4 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald/15">
+                      <Sparkles className="h-3.5 w-3.5 text-emerald" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-foreground-dark">Análise com IA</p>
+                      <p className="text-[11px] text-foreground-tertiary">
+                        Peça um segundo parecer ao Claude sobre sua última solicitação.
+                      </p>
+                    </div>
+                  </div>
+                  {aiStatus !== "success" && (
+                    <button
+                      onClick={handleAiAnalyze}
+                      disabled={aiStatus === "loading"}
+                      className={cn(
+                        "flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-[11px] font-bold text-white transition-all active:scale-95",
+                        aiStatus === "loading"
+                          ? "bg-emerald/60 cursor-wait"
+                          : "bg-emerald hover:bg-emerald-dark",
+                      )}
+                    >
+                      {aiStatus === "loading" ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Sparkles className="h-3.5 w-3.5" />
+                      )}
+                      {aiStatus === "loading" ? "Analisando…" : "Analisar com IA"}
+                    </button>
+                  )}
+                </div>
+
+                {aiStatus === "loading" && (
+                  <div className="space-y-2" aria-live="polite" aria-busy="true">
+                    <div className="h-3 w-3/4 animate-pulse rounded-full bg-surface-soft" />
+                    <div className="h-3 w-1/2 animate-pulse rounded-full bg-surface-soft" />
+                    <div className="h-16 w-full animate-pulse rounded-xl bg-surface-soft" />
+                  </div>
+                )}
+
+                {aiStatus === "error" && aiError && (
+                  <div
+                    className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5"
+                    role="alert"
+                  >
+                    <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
+                    <div className="text-xs text-amber-700 leading-relaxed">
+                      <p>
+                        {aiError.quotaExceeded
+                          ? "Você atingiu o limite diário gratuito de análises com IA."
+                          : aiError.message}
+                      </p>
+                      {aiError.quotaExceeded && (
+                        <Link
+                          to="/premium"
+                          className="mt-1 inline-flex items-center gap-1 font-bold text-emerald hover:underline"
+                        >
+                          <Lock className="h-3 w-3" />
+                          Assine o Premium para análises ilimitadas
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {aiStatus === "success" && aiResult && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                        Nota da IA
+                      </span>
+                      <ScoreBadge score={Math.round(aiResult.score) / 10} />
+                    </div>
+
+                    {aiResult.strengths.length > 0 && (
+                      <div className="space-y-1.5">
+                        <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                          Pontos fortes
+                        </p>
+                        {aiResult.strengths.map((s, i) => (
+                          <div key={i} className="flex items-start gap-1.5">
+                            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald" />
+                            <span className="text-xs text-foreground-secondary">{s}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {aiResult.improvements.length > 0 && (
+                      <div className="space-y-1.5">
+                        <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                          Melhorias sugeridas
+                        </p>
+                        {aiResult.improvements.map((s, i) => (
+                          <div key={i} className="flex items-start gap-1.5">
+                            <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
+                            <span className="text-xs text-foreground-secondary">{s}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {aiResult.enhancedPrompt && (
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-extrabold uppercase tracking-wider text-foreground-tertiary">
+                          Prompt aprimorado pela IA
+                        </p>
+                        <p className="rounded-lg bg-surface-soft px-3 py-2 text-xs text-foreground-secondary leading-relaxed whitespace-pre-line">
+                          {aiResult.enhancedPrompt}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Botões */}
             <div className="flex gap-2">
