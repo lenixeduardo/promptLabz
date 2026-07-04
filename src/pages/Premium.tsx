@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { ChevronLeft, Sparkles } from "lucide-react"
+import { ChevronLeft, Sparkles, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PremiumPlanCard } from "@/components/premium/PremiumPlanCard"
 import { PremiumBenefitCard } from "@/components/premium/PremiumBenefitCard"
@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils"
 import { AppBottomNav } from "@/components/AppBottomNav"
 import { useEffect } from "react"
 import { sileo } from "sileo"
+import { supabase } from "@/lib/supabase"
 import { trackPremiumViewed } from "@/lib/analytics"
 import { tryCompleteSpecialQuest } from "@/lib/missions"
 
@@ -26,12 +27,36 @@ export default function Premium() {
     tryCompleteSpecialQuest("try-premium")
   }, [])
   const [billingCycle, setBillingCycle] = useState<BillingCycle>("yearly")
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
 
-  const handleStartPremium = () => {
-    sileo.success({
-      title: "Obrigado pelo interesse!",
-      description: "O Premium chega em breve. Você será notificado quando estiver disponível.",
-    })
+  const handleStartPremium = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    if (!session) {
+      navigate("/login")
+      return
+    }
+
+    setCheckoutLoading(true)
+    try {
+      const { data, error } = await supabase.functions.invoke("stripe-checkout")
+      if (error || !data?.url) {
+        sileo.error({
+          title: "Erro",
+          description: "Não foi possível iniciar o checkout.",
+        })
+        return
+      }
+      window.location.href = data.url
+    } catch {
+      sileo.error({
+        title: "Erro",
+        description: "Não foi possível iniciar o checkout.",
+      })
+    } finally {
+      setCheckoutLoading(false)
+    }
   }
 
   return (
@@ -122,13 +147,15 @@ export default function Premium() {
         <div className="mb-6 text-center">
           <Button
             size="lg"
-            className="w-full shadow-lg shadow-primary-dark/20"
+            className="w-full gap-2 shadow-lg shadow-primary-dark/20"
             onClick={handleStartPremium}
+            disabled={checkoutLoading}
           >
-            Entrar na lista de espera
+            {checkoutLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+            {checkoutLoading ? "Redirecionando..." : "Assinar Premium"}
           </Button>
           <p className="mt-2 text-xs font-medium text-foregroundMuted">
-            Premium em breve · você será o primeiro a saber
+            30 dias grátis · cancele quando quiser
           </p>
         </div>
 

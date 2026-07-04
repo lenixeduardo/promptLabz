@@ -69,10 +69,15 @@ export function PremiumProvider({ children }: { children: ReactNode }) {
   const deactivate = useCallback(() => setLocalPremium(false), []);
   const toggle = useCallback(() => setLocalPremium((p) => !p), []);
 
-  const isPremium = subscriptionActive || localPremium;
+  // localPremium is a dev-only manual test shortcut (see the toggle in
+  // Profile.tsx, gated behind import.meta.env.DEV). It must never grant
+  // premium access in production — the only real source of truth is
+  // subscriptionActive, read from users.premium_status via Supabase.
+  const isDevLocalPremiumAllowed = import.meta.env.DEV && localPremium;
+  const isPremium = subscriptionActive || isDevLocalPremiumAllowed;
   const source: PremiumContextType["source"] = subscriptionActive
     ? "subscription"
-    : localPremium
+    : isDevLocalPremiumAllowed
       ? "local"
       : "none";
 
