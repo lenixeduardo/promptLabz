@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/hooks/useAuth"
 import { loadInventory, addPowerUp, addAvatar } from "@/lib/inventory"
 import { getLocalGems, saveLocalGems } from "@/lib/xp"
-import { updateUserAvatar, updateUserGems } from "@/lib/db"
+import { updateUserAvatar, updateUserGems, syncInventoryToServer, fetchInventoryFromServer } from "@/lib/db"
 import { AVATARS } from "@/data/avatarsData"
 import { POWER_UPS } from "@/data/powerUpsData"
 import { GEM_PACKAGES } from "@/data/storeItemsData"
@@ -24,6 +24,16 @@ export default function Store() {
     setGems(getLocalGems(user.id))
     const inv = loadInventory(user.id)
     setOwnedAvatarIds(inv.ownedAvatarIds)
+
+    // Hidrata com o servidor (útil ao logar em um dispositivo novo), mesclando
+    // com o que já está em localStorage.
+    fetchInventoryFromServer(user.id)
+      .then(({ data }) => {
+        if (data) setOwnedAvatarIds(data.ownedAvatarIds)
+      })
+      .catch((err) => {
+        console.error("Falha ao sincronizar inventário do servidor:", err)
+      })
   }, [user?.id])
 
   function deductGems(price: number): number | null {
@@ -49,6 +59,7 @@ export default function Store() {
       setOwnedAvatarIds([...inv.ownedAvatarIds])
       await updateUserAvatar(user.id, avatarId)
       await updateUserGems(user.id, newGems)
+      await syncInventoryToServer(user.id, inv)
       sileo.success({ title: "Avatar desbloqueado! 🎉" })
     } catch {
       sileo.error({ title: "Erro ao salvar. Tente novamente." })
@@ -63,8 +74,9 @@ export default function Store() {
     if (newGems === null) return
     setPurchasingId(id)
     try {
-      addPowerUp(user.id, id)
+      const inv = addPowerUp(user.id, id)
       await updateUserGems(user.id, newGems)
+      await syncInventoryToServer(user.id, inv)
       sileo.success({ title: "Power-up adicionado! ⚡" })
     } catch {
       sileo.error({ title: "Erro ao salvar. Tente novamente." })

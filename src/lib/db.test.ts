@@ -6,7 +6,10 @@ import {
   saveProgress,
   loadProgress,
   syncLocalProgressToSupabase,
+  syncInventoryToServer,
+  fetchInventoryFromServer,
 } from "./db"
+import { loadInventory, type StoredInventory } from "./inventory"
 
 vi.mock("@/lib/supabase", () => ({
   supabase: {
@@ -250,5 +253,112 @@ describe("syncLocalProgressToSupabase", () => {
     const result = await syncLocalProgressToSupabase("u1")
 
     expect(result.error).toBe("Sync failed")
+  })
+})
+
+// ── syncInventoryToServer ──────────────────────────────────────────────────
+
+describe("syncInventoryToServer", () => {
+  const userId = "u1"
+  const inv: StoredInventory = {
+    powerUps: { "boost-xp": 2, protection: 1, "focus-total": 0 },
+    ownedAvatarIds: ["cat-green", "cat-blue"],
+  }
+
+  it("retorna erro quando Supabase não está configurado", async () => {
+    import.meta.env.VITE_SUPABASE_URL = ""
+
+    const result = await syncInventoryToServer(userId, inv)
+
+    expect(result.error).toBe("Supabase não configurado")
+  })
+
+  it("faz upsert no Supabase com os dados do inventário", async () => {
+    const q = buildQuery({ upsert: vi.fn().mockResolvedValue({ error: null }) })
+
+    const result = await syncInventoryToServer(userId, inv)
+
+    expect(result.error).toBeNull()
+    expect(q.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user_id: userId,
+        boost_xp: 2,
+        protection: 1,
+        focus_total: 0,
+        owned_avatar_ids: ["cat-green", "cat-blue"],
+      }),
+      expect.anything()
+    )
+  })
+
+  it("retorna erro quando o upsert falha", async () => {
+    buildQuery({ upsert: vi.fn().mockResolvedValue({ error: { message: "Insert failed" } }) })
+
+    const result = await syncInventoryToServer(userId, inv)
+
+    expect(result.error).toBe("Insert failed")
+  })
+})
+
+// ── fetchInventoryFromServer ───────────────────────────────────────────────
+
+describe("fetchInventoryFromServer", () => {
+  const userId = "u1"
+
+  it("retorna erro quando Supabase não está configurado", async () => {
+    import.meta.env.VITE_SUPABASE_URL = ""
+
+    const result = await fetchInventoryFromServer(userId)
+
+    expect(result.error).toBe("Supabase não configurado")
+  })
+
+  it("retorna null sem erro quando não há linha no servidor", async () => {
+    buildQuery({ maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }) })
+
+    const result = await fetchInventoryFromServer(userId)
+
+    expect(result.data).toBeNull()
+    expect(result.error).toBeNull()
+  })
+
+  it("mescla dados do servidor com o localStorage (mantendo o maior valor)", async () => {
+    localStorage.setItem(
+      `pl:inventory:${userId}`,
+      JSON.stringify({
+        powerUps: { "boost-xp": 3, protection: 0, "focus-total": 1 },
+        ownedAvatarIds: ["cat-green"],
+      })
+    )
+    buildQuery({
+      maybeSingle: vi.fn().mockResolvedValue({
+        data: {
+          boost_xp: 1,
+          protection: 5,
+          focus_total: 0,
+          owned_avatar_ids: ["cat-blue"],
+        },
+        error: null,
+      }),
+    })
+
+    const result = await fetchInventoryFromServer(userId)
+
+    expect(result.error).toBeNull()
+    expect(result.data).toEqual({
+      powerUps: { "boost-xp": 3, protection: 5, "focus-total": 1 },
+      ownedAvatarIds: ["cat-green", "cat-blue"],
+    })
+    // Deve ter persistido o resultado mesclado no localStorage
+    expect(loadInventory(userId)).toEqual(result.data)
+  })
+
+  it("retorna erro quando a consulta falha", async () => {
+    buildQuery({ maybeSingle: vi.fn().mockResolvedValue({ data: null, error: { message: "Query failed" } }) })
+
+    const result = await fetchInventoryFromServer(userId)
+
+    expect(result.data).toBeNull()
+    expect(result.error).toBe("Query failed")
   })
 })
