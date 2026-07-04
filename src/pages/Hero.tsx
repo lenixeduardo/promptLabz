@@ -44,7 +44,7 @@ export default function Hero() {
   }
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden" data-force-light>
+    <div className="min-h-screen bg-[#05080A] overflow-x-hidden">
       <PageSEO
         title="Aprenda Engenharia de Prompts — Curso Gratuito de IA"
         description="Aprenda engenharia de prompts do zero com lições gamificadas. Plataforma 100% gratuita para dominar ChatGPT, Claude e IA generativa. Comece agora sem cartão de crédito!"
@@ -53,7 +53,7 @@ export default function Hero() {
       <CircleTransition to="/signup" active={transitioning} />
 
       {/* ── Desktop Navbar (hidden on mobile) ── */}
-      <nav className="hidden lg:flex items-center justify-between px-8 xl:px-16 py-4 bg-white border-b border-gray-100 sticky top-0 z-50">
+      <nav className="hidden lg:flex items-center justify-between px-8 xl:px-16 py-4 bg-[#05080A] border-b border-[#1B2723] sticky top-0 z-50">
         <BrandLogo className="text-2xl" />
 
         <ul className="flex items-center gap-6 xl:gap-8">
@@ -61,7 +61,7 @@ export default function Hero() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="text-sm text-[#4A6741] hover:text-[#1A3B24] font-medium transition-colors"
+                className="text-sm text-[#A3B8AB] hover:text-[#F5F7F6] font-medium transition-colors"
               >
                 {link.label}
               </a>
@@ -83,7 +83,7 @@ export default function Hero() {
       </nav>
 
       {/* ── Seção 1: Hero ── */}
-      <section className="relative bg-[#EEF9F4] overflow-hidden" style={{ minHeight: "520px" }}>
+      <section className="relative bg-[#0A140F] overflow-hidden" style={{ minHeight: "520px" }}>
 
         {/* ── MOBILE layout ── */}
         <div className="lg:hidden">
@@ -110,7 +110,7 @@ export default function Hero() {
           <div className="relative z-10 flex flex-col px-5 pt-10 pb-10 max-w-[58%]">
             <BrandLogo className="text-2xl mb-10" />
 
-            <h1 className="font-extrabold text-[#1A3B24] leading-[1.1] mb-4">
+            <h1 className="font-extrabold text-[#F5F7F6] leading-[1.1] mb-4">
               <span className="text-[2.5rem]">Aprenda IA</span>
               <br />
               <span className="text-[2rem]">do zero ao</span>
@@ -118,10 +118,10 @@ export default function Hero() {
               <span className="text-[2rem]">avançado</span>
             </h1>
 
-            <p className="text-sm text-[#4A6741] leading-snug mb-1">
+            <p className="text-sm text-[#A3B8AB] leading-snug mb-1">
               Domine ChatGPT, Claude e IA generativa com lições gamificadas.
             </p>
-            <p className="text-sm text-[#4A6741] leading-snug mb-7">
+            <p className="text-sm text-[#A3B8AB] leading-snug mb-7">
               Do zero ao avançado, sem precisar saber programar.
             </p>
 
@@ -144,20 +144,20 @@ export default function Hero() {
           {/* Left column */}
           <div className="flex flex-col max-w-[560px] xl:max-w-[620px] z-10">
             {/* Badge */}
-            <div className="inline-flex items-center gap-1.5 bg-white/70 border border-[#A8D5B5] rounded-full px-3.5 py-1.5 w-fit mb-6">
-              <Sparkles className="h-3.5 w-3.5 text-[#2A7A4B]" />
-              <span className="text-xs font-semibold text-[#2A7A4B]">Do zero ao avançado</span>
+            <div className="inline-flex items-center gap-1.5 bg-[#22C55E]/10 border border-[#2F5C41] rounded-full px-3.5 py-1.5 w-fit mb-6">
+              <Sparkles className="h-3.5 w-3.5 text-[#4ADE80]" />
+              <span className="text-xs font-semibold text-[#4ADE80]">Do zero ao avançado</span>
             </div>
 
             {/* H1 */}
-            <h1 className="font-extrabold text-[#1A3B24] leading-[1.05] mb-5">
+            <h1 className="font-extrabold text-[#F5F7F6] leading-[1.05] mb-5">
               <span className="text-[3.25rem] xl:text-[3.75rem] block">Aprenda IA</span>
               <span className="text-[3rem] xl:text-[3.5rem] block">do zero ao</span>
               <span className="text-[3rem] xl:text-[3.5rem] block text-[#22C55E]">avançado</span>
             </h1>
 
             {/* Description */}
-            <p className="text-base xl:text-lg text-[#4A6741] leading-relaxed mb-8 max-w-[460px]">
+            <p className="text-base xl:text-lg text-[#A3B8AB] leading-relaxed mb-8 max-w-[460px]">
               Domine ChatGPT, Claude e IA generativa com lições gamificadas.
               <br />
               Do zero ao avançado, sem precisar saber programar.
@@ -176,11 +176,11 @@ export default function Hero() {
               </Button>
 
               <button
-                className="flex items-center gap-2.5 text-[#2A7A4B] font-medium text-sm hover:text-[#1A3B24] transition-colors group"
+                className="flex items-center gap-2.5 text-[#4ADE80] font-medium text-sm hover:text-[#F5F7F6] transition-colors group"
                 onClick={handleWatchDemo}
               >
-                <span className="flex items-center justify-center w-9 h-9 rounded-full border-2 border-[#2A7A4B] group-hover:border-[#1A3B24] transition-colors">
-                  <Play className="h-3.5 w-3.5 fill-[#2A7A4B] group-hover:fill-[#1A3B24] transition-colors ml-0.5" />
+                <span className="flex items-center justify-center w-9 h-9 rounded-full border-2 border-[#4ADE80] group-hover:border-[#86EFAC] transition-colors">
+                  <Play className="h-3.5 w-3.5 fill-[#4ADE80] group-hover:fill-[#86EFAC] transition-colors ml-0.5" />
                 </span>
                 Ver como funciona
               </button>
@@ -189,21 +189,21 @@ export default function Hero() {
             {/* Stats */}
             <div className="flex items-center gap-5">
               <div className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-[#2A7A4B]" />
-                <span className="text-sm text-[#4A6741]">
-                  <strong className="text-[#1A3B24]">68+</strong> lições
+                <BookOpen className="h-4 w-4 text-[#4ADE80]" />
+                <span className="text-sm text-[#A3B8AB]">
+                  <strong className="text-[#F5F7F6]">68+</strong> lições
                 </span>
               </div>
-              <span className="text-[#A8D5B5]">•</span>
+              <span className="text-[#2F5C41]">•</span>
               <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-[#2A7A4B]" />
-                <span className="text-sm text-[#4A6741]">Gamificado</span>
+                <Zap className="h-4 w-4 text-[#4ADE80]" />
+                <span className="text-sm text-[#A3B8AB]">Gamificado</span>
               </div>
-              <span className="text-[#A8D5B5]">•</span>
+              <span className="text-[#2F5C41]">•</span>
               <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-[#2A7A4B]" />
-                <span className="text-sm text-[#4A6741]">
-                  <strong className="text-[#1A3B24]">100%</strong> grátis
+                <ShieldCheck className="h-4 w-4 text-[#4ADE80]" />
+                <span className="text-sm text-[#A3B8AB]">
+                  <strong className="text-[#F5F7F6]">100%</strong> grátis
                 </span>
               </div>
             </div>
@@ -244,22 +244,22 @@ export default function Hero() {
           className="w-full block"
           style={{ height: "48px" }}
         >
-          <path d="M0,0 Q195,48 390,0 L390,48 L0,48 Z" fill="white" />
+          <path d="M0,0 Q195,48 390,0 L390,48 L0,48 Z" fill="#05080A" />
         </svg>
-        <div className="absolute inset-0 top-auto h-px bg-white" />
+        <div className="absolute inset-0 top-auto h-px bg-[#05080A]" />
       </div>
 
       {/* ── Seção 2: Features ── */}
-      <section className="bg-white px-4 lg:px-8 xl:px-16 pt-2 pb-8 lg:pb-16">
+      <section className="bg-[#05080A] px-4 lg:px-8 xl:px-16 pt-2 pb-8 lg:pb-16">
         {/* Heading */}
         <div className="flex items-center justify-center gap-2 mb-2 lg:mb-3">
           <Sparkles className="h-4 w-4 text-[#4CAF50] flex-shrink-0" />
-          <h2 className="text-[15px] lg:text-2xl xl:text-3xl font-bold text-[#1A3B24] text-center leading-tight">
+          <h2 className="text-[15px] lg:text-2xl xl:text-3xl font-bold text-[#F5F7F6] text-center leading-tight">
             Aprenda brincando. Evolua de verdade.
           </h2>
           <Sparkles className="h-4 w-4 text-[#4CAF50] flex-shrink-0" />
         </div>
-        <p className="text-sm lg:text-base text-[#4A6741] text-center leading-relaxed mb-6 lg:mb-10">
+        <p className="text-sm lg:text-base text-[#A3B8AB] text-center leading-relaxed mb-6 lg:mb-10">
           Lições curtas, desafios e recompensas para
           <br />
           você aprender mais e melhor todos os dias.
@@ -268,17 +268,17 @@ export default function Hero() {
         {/* 3 cards — mobile: stacked columns, desktop: horizontal with icon on left */}
         <div className="grid grid-cols-3 gap-3 lg:gap-6 max-w-4xl lg:mx-auto">
           {/* Card 1 */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 lg:p-6 flex flex-col lg:flex-row items-center lg:items-start lg:gap-5 text-center lg:text-left">
+          <div className="bg-[#0E1513] rounded-2xl shadow-sm border border-[#1B2723] p-3 lg:p-6 flex flex-col lg:flex-row items-center lg:items-start lg:gap-5 text-center lg:text-left">
             <img
               src="/assets/mascot-hero-laptop.png"
               alt="Lições práticas"
               className="w-14 h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 object-contain mb-2 lg:mb-0 flex-shrink-0"
             />
             <div className="flex-1">
-              <p className="text-[11px] lg:text-base font-bold text-[#1A3B24] mb-1 leading-tight">
+              <p className="text-[11px] lg:text-base font-bold text-[#F5F7F6] mb-1 leading-tight">
                 Lições práticas
               </p>
-              <p className="text-[10px] lg:text-sm text-[#4A6741] leading-snug lg:leading-relaxed">
+              <p className="text-[10px] lg:text-sm text-[#A3B8AB] leading-snug lg:leading-relaxed">
                 Conteúdo direto ao ponto com exemplos reais.
               </p>
               <div className="hidden lg:block h-0.5 w-8 bg-[#22C55E] rounded-full mt-3" />
@@ -286,17 +286,17 @@ export default function Hero() {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 lg:p-6 flex flex-col lg:flex-row items-center lg:items-start lg:gap-5 text-center lg:text-left">
+          <div className="bg-[#0E1513] rounded-2xl shadow-sm border border-[#1B2723] p-3 lg:p-6 flex flex-col lg:flex-row items-center lg:items-start lg:gap-5 text-center lg:text-left">
             <img
               src="/assets/icon-trophy.png"
               alt="Gamificado"
               className="w-14 h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 object-contain mb-2 lg:mb-0 flex-shrink-0"
             />
             <div className="flex-1">
-              <p className="text-[11px] lg:text-base font-bold text-[#1A3B24] mb-1 leading-tight">
+              <p className="text-[11px] lg:text-base font-bold text-[#F5F7F6] mb-1 leading-tight">
                 Gamificado
               </p>
-              <p className="text-[10px] lg:text-sm text-[#4A6741] leading-snug lg:leading-relaxed">
+              <p className="text-[10px] lg:text-sm text-[#A3B8AB] leading-snug lg:leading-relaxed">
                 Ganhe XP, conquistas e suba de nível.
               </p>
               <div className="hidden lg:block h-0.5 w-8 bg-[#22C55E] rounded-full mt-3" />
@@ -304,17 +304,17 @@ export default function Hero() {
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 lg:p-6 flex flex-col lg:flex-row items-center lg:items-start lg:gap-5 text-center lg:text-left">
+          <div className="bg-[#0E1513] rounded-2xl shadow-sm border border-[#1B2723] p-3 lg:p-6 flex flex-col lg:flex-row items-center lg:items-start lg:gap-5 text-center lg:text-left">
             <img
               src="/assets/icon-fire.png"
               alt="Progresso real"
               className="w-14 h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 object-contain mb-2 lg:mb-0 flex-shrink-0"
             />
             <div className="flex-1">
-              <p className="text-[11px] lg:text-base font-bold text-[#1A3B24] mb-1 leading-tight">
+              <p className="text-[11px] lg:text-base font-bold text-[#F5F7F6] mb-1 leading-tight">
                 Progresso real
               </p>
-              <p className="text-[10px] lg:text-sm text-[#4A6741] leading-snug lg:leading-relaxed">
+              <p className="text-[10px] lg:text-sm text-[#A3B8AB] leading-snug lg:leading-relaxed">
                 Acompanhe seu progresso e veja sua evolução.
               </p>
               <div className="hidden lg:block h-0.5 w-8 bg-[#22C55E] rounded-full mt-3" />
@@ -325,21 +325,21 @@ export default function Hero() {
 
       {/* ── Seção 3: Prova social ── */}
       <section className="px-4 lg:px-8 xl:px-16 pb-10 lg:pb-16">
-        <div className="bg-[#EAF7F0] rounded-2xl p-4 lg:p-6 xl:p-8 flex items-center gap-3 lg:gap-6 max-w-4xl lg:mx-auto">
+        <div className="bg-[#0E1A14] rounded-2xl p-4 lg:p-6 xl:p-8 flex items-center gap-3 lg:gap-6 max-w-4xl lg:mx-auto">
           {/* Coração */}
-          <div className="bg-[#C5EDD6] rounded-xl p-2.5 lg:p-4 flex-shrink-0">
-            <Heart className="h-5 w-5 lg:h-7 lg:w-7 text-[#2A7A4B] fill-[#2A7A4B]" />
+          <div className="bg-[#14301F] rounded-xl p-2.5 lg:p-4 flex-shrink-0">
+            <Heart className="h-5 w-5 lg:h-7 lg:w-7 text-[#4ADE80] fill-[#4ADE80]" />
           </div>
 
           {/* Texto + avatares */}
           <div className="flex-1 min-w-0">
-            <p className="text-xs lg:text-sm xl:text-base text-[#1A3B24] leading-snug mb-2">
+            <p className="text-xs lg:text-sm xl:text-base text-[#F5F7F6] leading-snug mb-2">
               Junte-se aos alunos
               <br className="lg:hidden" />
               {" "}que já estão evoluindo
               <br className="lg:hidden" />
               {" "}com o{" "}
-              <span className="text-[#2A7A4B] font-bold">PromptLabz</span>
+              <span className="text-[#4ADE80] font-bold">PromptLabz</span>
             </p>
             <div className="flex -space-x-2">
               {["avatar-cat", "avatar-punk", "avatar-rocker"].map((name) => (
@@ -347,7 +347,7 @@ export default function Hero() {
                   key={name}
                   src={`/assets/${name}.png`}
                   alt=""
-                  className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border-2 border-white object-cover"
+                  className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border-2 border-[#1B2723] object-cover"
                 />
               ))}
             </div>
@@ -360,16 +360,16 @@ export default function Hero() {
                 <Star key={i} className="h-3.5 w-3.5 lg:h-5 lg:w-5 text-amber-400 fill-amber-400" />
               ))}
             </div>
-            <p className="text-lg lg:text-2xl xl:text-3xl font-extrabold text-[#1A3B24] leading-none">4.9/5</p>
-            <p className="text-[10px] lg:text-xs text-[#4A6741] mt-0.5">de alunos</p>
+            <p className="text-lg lg:text-2xl xl:text-3xl font-extrabold text-[#F5F7F6] leading-none">4.9/5</p>
+            <p className="text-[10px] lg:text-xs text-[#A3B8AB] mt-0.5">de alunos</p>
           </div>
         </div>
 
         {/* Link "Já tem conta?" discreto */}
-        <p className="text-sm text-[#4A6741] text-center mt-6">
+        <p className="text-sm text-[#A3B8AB] text-center mt-6">
           Já tem uma conta?{" "}
           <button
-            className="font-bold text-[#2A7A4B] underline-offset-2 hover:underline"
+            className="font-bold text-[#4ADE80] underline-offset-2 hover:underline"
             onClick={handleLoginClick}
           >
             Entrar
