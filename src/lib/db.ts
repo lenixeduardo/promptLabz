@@ -286,8 +286,11 @@ export interface LeaderboardEntry {
 export async function getLeaderboard(limit = 20): Promise<DbResult<LeaderboardEntry[]>> {
   if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
   try {
+    // `leaderboard_entries` is a narrow view (id, full_name, avatar_url, xp)
+    // over public.users — it never exposes email or other sensitive columns.
+    // See supabase/migrations/20260704_014_secure_leaderboard_and_xp.sql.
     const { data, error } = await supabase
-      .from("users")
+      .from("leaderboard_entries")
       .select("id,full_name,avatar_url,xp")
       .gte("xp", 0)
       .order("xp", { ascending: false })
@@ -302,12 +305,15 @@ export async function getLeaderboard(limit = 20): Promise<DbResult<LeaderboardEn
 export async function updateUserXP(userId: string, xp: number, gems?: number): Promise<DbResult<void>> {
   if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
   try {
-    const payload: { xp: number; gems?: number } = { xp }
-    if (gems !== undefined) payload.gems = gems
-    const { error } = await supabase
-      .from("users")
-      .update(payload)
-      .eq("id", userId)
+    // The client no longer has UPDATE grant on users.xp/gems. Syncing goes
+    // through the sync_user_xp() SECURITY DEFINER function instead, which
+    // only ever updates the caller's own row (auth.uid()) and enforces
+    // sane per-call deltas server-side.
+    // See supabase/migrations/20260704_014_secure_leaderboard_and_xp.sql.
+    const { error } = await supabase.rpc("sync_user_xp", {
+      new_xp: xp,
+      new_gems: gems ?? null,
+    })
     if (error) throw error
     return { data: null, error: null }
   } catch (err) {
