@@ -111,7 +111,7 @@ export default function Signup() {
 
   if (pendingEmail) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-6 text-center">
+      <div className="dark flex min-h-screen flex-col items-center justify-center gap-5 bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-6 text-center text-foreground">
         <img
           src="/assets/mascot-login-new.png"
           alt="Mascot"
@@ -133,8 +133,10 @@ export default function Signup() {
     )
   }
 
+  // Classe "dark" fixa: esta tela usa sempre a paleta escura (fundo preto),
+  // independente do tema do app — evita texto claro sobre fundo branco
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
+    <div className="dark relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8 text-foreground">
       <PageSEO
         title="Comece Gratis — Aprenda Prompts de IA"
         description="Crie sua conta gratuita em 30 segundos. Aprenda engenharia de prompts com gamificacao, XP e conquistas. Do zero ao avancado. Sem cartao de credito!"

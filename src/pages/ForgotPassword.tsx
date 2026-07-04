@@ -28,8 +28,9 @@ export default function ForgotPassword() {
     setLoading(false)
   }
 
+  // Classe "dark" fixa: tela do fluxo de login usa sempre a paleta escura
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
+    <div className="dark relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8 text-foreground">
       <PageSEO
         title="Recuperar Senha"
         description="Recupere o acesso à sua conta PromptLabz."
