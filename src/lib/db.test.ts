@@ -6,11 +6,14 @@ import {
   saveProgress,
   loadProgress,
   syncLocalProgressToSupabase,
+  getLeaderboard,
+  updateUserXP,
 } from "./db"
 
 vi.mock("@/lib/supabase", () => ({
   supabase: {
     from: vi.fn(),
+    rpc: vi.fn(),
   },
   isSupabaseConfigured: () => {
     return !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -28,6 +31,7 @@ vi.mock("@/lib/supabase", () => ({
 import { supabase } from "@/lib/supabase"
 
 const mockFrom = supabase.from as ReturnType<typeof vi.fn>
+const mockRpc = supabase.rpc as ReturnType<typeof vi.fn>
 
 function buildQuery(overrides: Record<string, unknown> = {}) {
   const q = {
@@ -37,6 +41,9 @@ function buildQuery(overrides: Record<string, unknown> = {}) {
     maybeSingle: vi.fn().mockReturnThis(),
     update: vi.fn().mockReturnThis(),
     upsert: vi.fn().mockReturnThis(),
+    gte: vi.fn().mockReturnThis(),
+    order: vi.fn().mockReturnThis(),
+    limit: vi.fn().mockReturnThis(),
     ...overrides,
   }
   mockFrom.mockReturnValue(q)
@@ -250,5 +257,60 @@ describe("syncLocalProgressToSupabase", () => {
     const result = await syncLocalProgressToSupabase("u1")
 
     expect(result.error).toBe("Sync failed")
+  })
+})
+
+// ── getLeaderboard ─────────────────────────────────────────────────────────
+
+describe("getLeaderboard", () => {
+  it("consulta a view leaderboard_entries (nunca a tabela users diretamente)", async () => {
+    const entries = [{ id: "u1", full_name: "Ana", avatar_url: null, xp: 300 }]
+    buildQuery({ limit: vi.fn().mockResolvedValue({ data: entries, error: null }) })
+
+    const result = await getLeaderboard(10)
+
+    expect(mockFrom).toHaveBeenCalledWith("leaderboard_entries")
+    expect(mockFrom).not.toHaveBeenCalledWith("users")
+    expect(result.data).toEqual(entries)
+    expect(result.error).toBeNull()
+  })
+
+  it("retorna erro quando a consulta falha", async () => {
+    buildQuery({ limit: vi.fn().mockResolvedValue({ data: null, error: { message: "Query failed" } }) })
+
+    const result = await getLeaderboard()
+
+    expect(result.data).toBeNull()
+    expect(result.error).toBe("Query failed")
+  })
+})
+
+// ── updateUserXP ───────────────────────────────────────────────────────────
+
+describe("updateUserXP", () => {
+  it("chama o RPC sync_user_xp em vez de dar update direto na tabela users", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null })
+
+    const result = await updateUserXP("u1", 500, 20)
+
+    expect(mockRpc).toHaveBeenCalledWith("sync_user_xp", { new_xp: 500, new_gems: 20 })
+    expect(mockFrom).not.toHaveBeenCalled()
+    expect(result.error).toBeNull()
+  })
+
+  it("envia new_gems null quando gems não é informado", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null })
+
+    await updateUserXP("u1", 500)
+
+    expect(mockRpc).toHaveBeenCalledWith("sync_user_xp", { new_xp: 500, new_gems: null })
+  })
+
+  it("retorna erro quando o RPC rejeita (ex: delta acima do permitido)", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "sync_user_xp: xp increase too large" } })
+
+    const result = await updateUserXP("u1", 999999)
+
+    expect(result.error).toBe("sync_user_xp: xp increase too large")
   })
 })
