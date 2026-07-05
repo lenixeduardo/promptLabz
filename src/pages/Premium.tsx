@@ -99,13 +99,13 @@ export default function Premium() {
               <img
                 src="/assets/mascot-premium.png"
                 alt="Mascote PromptLabz comemorando"
-                className="h-32 w-auto object-contain sm:h-36"
+                className="h-48 w-auto object-contain lg:h-56"
               />
               <Sparkles
                 aria-hidden
-                className="absolute -left-2 top-2 h-3 w-3 text-emerald opacity-40"
+                className="absolute -left-3 top-3 h-3.5 w-3.5 text-emerald opacity-40"
               />
-              <Star aria-hidden className="absolute right-0 top-0 h-2.5 w-2.5 text-emerald opacity-30" />
+              <Star aria-hidden className="absolute right-0 top-0 h-3 w-3 text-emerald opacity-30" />
             </div>
           </div>
         </div>
