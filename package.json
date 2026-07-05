@@ -22,12 +22,16 @@
     "android:sync": "pnpm build && npx cap sync android",
     "android:open": "npx cap open android",
     "android:build:debug": "pnpm android:sync && cd android && ./gradlew assembleDebug",
-    "android:build:release": "pnpm android:sync && cd android && ./gradlew assembleRelease"
+    "android:build:release": "pnpm android:sync && cd android && ./gradlew assembleRelease",
+    "ios:sync": "pnpm build && npx cap sync ios",
+    "ios:open": "npx cap open ios",
+    "mobile:sync": "pnpm build && npx cap sync"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.1",
     "@capacitor/cli": "^8.4.1",
     "@capacitor/core": "^8.4.1",
+    "@capacitor/ios": "^8.4.1",
     "@hookform/resolvers": "^5.4.0",
     "@radix-ui/react-accordion": "^1.2.14",
     "@radix-ui/react-alert-dialog": "^1.1.17",
@@ -90,6 +94,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@eslint/js": "^9.39.4",
     "@playwright/test": "^1.61.0",
     "@testing-library/jest-dom": "^6.9.1",
@@ -118,7 +123,11 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild"
-    ]
+      "esbuild",
+      "sharp"
+    ],
+    "overrides": {
+      "sharp": "^0.33.5"
+    }
   }
 }

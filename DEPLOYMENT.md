@@ -233,6 +233,69 @@ Para rollback de migrations no Supabase, execute o SQL inverso manualmente via S
 
 ---
 
+## 8. Build Mobile — Android e iOS (Capacitor)
+
+O app mobile é o mesmo SPA empacotado com Capacitor. As credenciais do Supabase
+são **embutidas no build web** (`VITE_*`), então sempre gere o build com o
+`.env.local`/`.env.production` correto ANTES de sincronizar as plataformas.
+
+### Pré-requisitos
+
+| Plataforma | Requisitos |
+|------------|-----------|
+| Android | Android Studio (ou SDK + JDK 21), variável `ANDROID_HOME` |
+| iOS | macOS com Xcode 15+, CocoaPods não é necessário (usa Swift Package Manager) |
+
+### Fluxo comum (ambas as plataformas)
+
+```bash
+# 1. Build web com env de produção + sincroniza assets nativos
+pnpm build && npx cap sync
+```
+
+### Android
+
+```bash
+pnpm android:build:debug     # APK de teste (android/app/build/outputs/apk/debug)
+pnpm android:build:release   # APK/AAB de release — exige keystore (abaixo)
+```
+
+**Assinatura de release**: coloque o keystore em `android/app/release.keystore`
+(alias `promptlabz`, conforme `capacitor.config.ts`). O arquivo está no
+`.gitignore` — nunca o commite. Gere um com:
+
+```bash
+keytool -genkeypair -v -keystore android/app/release.keystore \
+  -alias promptlabz -keyalg RSA -keysize 2048 -validity 10000
+```
+
+Antes de publicar na Play Store, incremente `versionCode`/`versionName` em
+`android/app/build.gradle`.
+
+### iOS (requer macOS)
+
+```bash
+pnpm ios:sync   # build web + sync
+pnpm ios:open   # abre o projeto no Xcode
+```
+
+No Xcode: selecione o time de assinatura (Signing & Capabilities → Team),
+ajuste `MARKETING_VERSION`/`CURRENT_PROJECT_VERSION` e gere o archive
+(Product → Archive) para enviar à App Store via Organizer.
+
+### Regenerar ícones e splash screens
+
+Os ícones nativos e splash screens são gerados a partir de `assets/logo.png`
+(1024×1024) com o `@capacitor/assets`:
+
+```bash
+npx capacitor-assets generate \
+  --iconBackgroundColor '#EAF7F0' --iconBackgroundColorDark '#0B110F' \
+  --splashBackgroundColor '#EAF7F0' --splashBackgroundColorDark '#05080A'
+```
+
+---
+
 ## Variáveis de Ambiente — Referência Completa
 
 ### Frontend (Vercel)
