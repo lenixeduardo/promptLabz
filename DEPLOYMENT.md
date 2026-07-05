@@ -283,6 +283,33 @@ No Xcode: selecione o time de assinatura (Signing & Capabilities → Team),
 ajuste `MARKETING_VERSION`/`CURRENT_PROJECT_VERSION` e gere o archive
 (Product → Archive) para enviar à App Store via Organizer.
 
+### iOS sem Mac — alternativas
+
+Não é possível compilar iOS localmente sem macOS, mas há caminhos:
+
+1. **GitHub Actions (recomendado, já configurado)** — o workflow
+   `.github/workflows/ios-build.yml` compila o app em runner macOS na nuvem:
+   - Modo `validate` (padrão): valida o build sem assinatura — **não exige
+     conta Apple**. Rode manualmente em Actions → iOS Build → Run workflow.
+   - Modo `ipa`: gera o `.ipa` para App Store/TestFlight — exige conta
+     Apple Developer (US$ 99/ano) e os secrets descritos no cabeçalho do
+     workflow. Sem Mac: crie certificado/profile pelo portal
+     [developer.apple.com](https://developer.apple.com) (a chave e o CSR
+     podem ser gerados com `openssl` no Linux).
+   - Atenção: em repositório privado, minutos macOS contam 10× no plano free.
+2. **Serviços de build na nuvem** — Codemagic (tem free tier) e Ionic
+   Appflow suportam Capacitor nativamente e cuidam do build + assinatura.
+3. **Mac remoto por hora** — MacinCloud, MacStadium ou EC2 Mac, se precisar
+   do Xcode interativo (ex.: depurar no simulador).
+4. **PWA no iOS (custo zero, sem App Store)** — o app já tem manifest e
+   ícones PWA; usuários de iPhone podem instalar via Safari → Compartilhar →
+   "Adicionar à Tela de Início". Sem conta Apple e sem build nativo.
+
+> **Expo Go não se aplica**: Expo/Expo Go executa apps **React Native**.
+> O PromptLabz é um app web (React + Vite) empacotado com **Capacitor** —
+> são pilhas incompatíveis; usar Expo exigiria reescrever toda a UI.
+> Para distribuir sem loja, a PWA acima cumpre o mesmo papel do Expo Go.
+
 ### Regenerar ícones e splash screens
 
 Os ícones nativos e splash screens são gerados a partir de `assets/logo.png`
