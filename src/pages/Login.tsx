@@ -114,8 +114,10 @@ export default function Login() {
     setLoading(false)
   }
 
+  // Classe "dark" fixa: esta tela usa sempre a paleta escura (fundo preto),
+  // independente do tema do app — evita texto claro sobre fundo branco
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8">
+    <div className="dark relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8 text-foreground">
       <PageSEO
         title="Entrar no PromptLabz — Aprenda IA com Gamificacao"
         description="Acesse sua conta PromptLabz e retome seu progresso. Trilha gamificada de engenharia de prompts com sistema de vidas, XP e conquistas. Continue agora."
