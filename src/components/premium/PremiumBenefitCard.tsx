@@ -1,22 +1,37 @@
 import * as Icons from "@/lib/icons"
+import { cn } from "@/lib/utils"
 import type { PremiumFeature } from "@/data/premiumData"
 
 interface PremiumBenefitCardProps {
   feature: PremiumFeature
+  variant?: "card" | "row"
 }
 
 /**
- * A single benefit/feature item in the premium feature grid.
+ * A single benefit/feature item in the premium feature list.
  * Renders an icon, title, and optional description.
+ * "card" is a standalone bordered tile; "row" is a divider-separated list row.
  */
-export function PremiumBenefitCard({ feature }: PremiumBenefitCardProps) {
+export function PremiumBenefitCard({ feature, variant = "card" }: PremiumBenefitCardProps) {
   const IconComp = (Icons as unknown as Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>>)[
     feature.icon
   ]
 
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-pageBgLight bg-white px-4 py-3.5 shadow-sm">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-pageBgLight">
+    <div
+      className={cn(
+        "flex items-start gap-3",
+        variant === "card"
+          ? "rounded-2xl border border-pageBgLight bg-white px-4 py-3.5 shadow-sm"
+          : "py-3.5 first:pt-0 last:pb-0",
+      )}
+    >
+      <span
+        className={cn(
+          "flex h-9 w-9 shrink-0 items-center justify-center bg-surface-success",
+          variant === "card" ? "rounded-xl" : "rounded-full",
+        )}
+      >
         {IconComp ? (
           <IconComp className="h-5 w-5 text-emerald" strokeWidth={2} />
         ) : (

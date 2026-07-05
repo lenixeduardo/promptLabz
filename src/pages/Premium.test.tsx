@@ -50,15 +50,15 @@ beforeEach(() => {
 })
 
 describe("Premium — renderização", () => {
-  it("exibe o título 'PromptLabz Premium'", () => {
+  it("exibe o título 'Seja Premium'", () => {
     renderPremium()
-    expect(screen.getByText("PromptLabz Premium")).toBeInTheDocument()
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Seja Premium")
   })
 
   it("exibe o texto descritivo", () => {
     renderPremium()
     expect(
-      screen.getByText(/Desbloqueie todo o potencial/i)
+      screen.getByText(/Acesse recursos exclusivos/i)
     ).toBeInTheDocument()
   })
 
@@ -87,7 +87,7 @@ describe("Premium — renderização", () => {
 
   it("exibe o CTA de assinatura", () => {
     renderPremium()
-    expect(screen.getByText("Assinar Premium")).toBeInTheDocument()
+    expect(screen.getByText("Quero ser Premium")).toBeInTheDocument()
   })
 
   it("exibe o texto do período de teste grátis", () => {
@@ -95,22 +95,18 @@ describe("Premium — renderização", () => {
     expect(screen.getByText(/30 dias grátis/i)).toBeInTheDocument()
   })
 
-  it("exibe os trust badges", () => {
+  it("exibe a linha de confiança no rodapé", () => {
     renderPremium()
-    expect(screen.getByText("Cancele fácil")).toBeInTheDocument()
-    expect(screen.getByText("Ambiente seguro")).toBeInTheDocument()
-    expect(screen.getByText("Mais de 50 mil usuários")).toBeInTheDocument()
+    expect(screen.getByText(/Pagamento seguro/i)).toBeInTheDocument()
   })
 
   it("exibe os benefícios inclusos", () => {
     renderPremium()
-    expect(screen.getByText("Benefícios inclusos")).toBeInTheDocument()
-    expect(screen.getByText("IA Ilimitada")).toBeInTheDocument()
-    expect(screen.getByText("Templates Premium")).toBeInTheDocument()
-    expect(screen.getByText("Certificados")).toBeInTheDocument()
-    expect(screen.getByText("Skills Avançadas")).toBeInTheDocument()
+    expect(screen.getByText("Todos os planos incluem")).toBeInTheDocument()
+    expect(screen.getByText("IA ilimitada")).toBeInTheDocument()
+    expect(screen.getByText("Gamificação")).toBeInTheDocument()
+    expect(screen.getByText("Conteúdo Premium")).toBeInTheDocument()
     expect(screen.getByText("Suporte Prioritário")).toBeInTheDocument()
-    expect(screen.getByText("Acesso Antecipado")).toBeInTheDocument()
   })
 
   it("renderiza a bottom nav", () => {
@@ -126,7 +122,7 @@ describe("Premium — interação", () => {
     // Plan card titles also have "Anual" and "Mensal"
     const buttons = screen.getAllByRole("button")
     const anualToggle = buttons.find(
-      (b) => b.textContent?.includes("Anual") && b.classList.contains("bg-primary-dark")
+      (b) => b.textContent?.includes("Anual") && b.getAttribute("data-selected") === "true"
     )
     expect(anualToggle).toBeTruthy()
   })
@@ -140,7 +136,7 @@ describe("Premium — interação", () => {
     expect(mensalToggle).toBeTruthy()
     if (mensalToggle) {
       await userEvent.click(mensalToggle)
-      expect(mensalToggle).toHaveClass("bg-primary-dark")
+      expect(mensalToggle).toHaveAttribute("data-selected", "true")
     }
   })
 
@@ -172,7 +168,7 @@ describe("Premium — checkout", () => {
   it("redireciona para login ao clicar sem sessão ativa", async () => {
     mockGetSession.mockResolvedValue({ data: { session: null } })
     renderPremium("/premium")
-    await userEvent.click(screen.getByText("Assinar Premium"))
+    await userEvent.click(screen.getByText("Quero ser Premium"))
     expect(mockInvoke).not.toHaveBeenCalled()
   })
 
@@ -184,7 +180,7 @@ describe("Premium — checkout", () => {
     window.location = { ...originalLocation, href: "" } as unknown as Location
 
     renderPremium("/premium")
-    await userEvent.click(screen.getByText("Assinar Premium"))
+    await userEvent.click(screen.getByText("Quero ser Premium"))
 
     await waitFor(() => {
       expect(mockInvoke).toHaveBeenCalledWith("stripe-checkout")
@@ -201,7 +197,7 @@ describe("Premium — checkout", () => {
     mockInvoke.mockResolvedValue({ data: null, error: new Error("failed") })
 
     renderPremium("/premium")
-    await userEvent.click(screen.getByText("Assinar Premium"))
+    await userEvent.click(screen.getByText("Quero ser Premium"))
 
     await waitFor(() => {
       expect(mockSileoError).toHaveBeenCalledWith(
