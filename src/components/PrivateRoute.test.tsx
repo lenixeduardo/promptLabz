@@ -36,7 +36,7 @@ describe("PrivateRoute", () => {
   it("exibe loading enquanto auth está carregando", () => {
     mockUseAuthContext.mockReturnValue({ user: null, loading: true })
     renderWithRouter()
-    expect(screen.getByText("Carregando...")).toBeInTheDocument()
+    expect(screen.getByText("Carregando ideias incríveis...")).toBeInTheDocument()
   })
 
   it("renderiza conteúdo protegido quando usuário está autenticado", () => {

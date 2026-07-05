@@ -444,6 +444,24 @@
   .animate-twinkle {
     animation: sparkle-twinkle 2.8s ease-in-out infinite;
   }
+  /* Diagonal stripes scrolling across an indeterminate progress bar */
+  .animate-progress-stripes {
+    animation: progress-stripes 1s linear infinite;
+  }
+  /* Three-dot "typing" style loading indicator */
+  .animate-dot-pulse {
+    animation: dot-pulse 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes progress-stripes {
+  from { background-position: 0 0; }
+  to   { background-position: 1rem 0; }
+}
+
+@keyframes dot-pulse {
+  0%, 80%, 100% { opacity: 0.35; transform: scale(0.8); }
+  40%           { opacity: 1;    transform: scale(1.15); }
 }
 
 @keyframes slideUp {
@@ -489,7 +507,9 @@
   .animate-top10-glow,
   .animate-celebration-pop,
   .animate-mascot-celebrate,
-  .animate-mascot-float {
+  .animate-mascot-float,
+  .animate-progress-stripes,
+  .animate-dot-pulse {
     animation: none;
     opacity: 1;
     transform: none;
