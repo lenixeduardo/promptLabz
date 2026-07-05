@@ -63,8 +63,9 @@ export function LoadingScreen({
 
       <div className="mt-2 flex flex-col items-center gap-1">
         <div className="flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full border border-primary/40 bg-primary/10">
-            <MessageCircle className="h-3.5 w-3.5 text-primary" />
+          <span className="relative flex h-7 w-7 shrink-0 items-center justify-center">
+            <MessageCircle className="absolute inset-0 h-full w-full text-mint" strokeWidth={2} />
+            <Sparkles className="relative h-3.5 w-3.5 text-primary-light" />
           </span>
           <BrandLogo className="text-lg" />
         </div>
