@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/ThemeProvider"
 import { AvatarProvider } from "@/components/AvatarProvider"
 import { PremiumProvider } from "@/components/PremiumProvider"
 import { PrivateRoute } from "@/components/PrivateRoute"
+import { LoadingScreen } from "@/components/LoadingScreen"
 import { Toaster } from "sileo"
 import "sileo/styles.css"
 import { initAnalytics, pageView, identify, reset } from "@/lib/analytics"
@@ -74,21 +75,6 @@ const Community = lazy(() => import("@/pages/Community"))
 const Verify = lazy(() => import("@/pages/Verify"))
 const Terms = lazy(() => import("@/pages/Terms"))
 const Privacy = lazy(() => import("@/pages/Privacy"))
-
-function PageLoading() {
-  return (
-    <div className="flex h-screen items-center justify-center bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end">
-      <div className="text-center">
-        <img
-          src="/assets/mascot-login-new.png"
-          alt="Carregando"
-          className="mx-auto mb-4 h-32 w-auto"
-        />
-        <p className="text-lg font-medium text-primary-dark">Carregando...</p>
-      </div>
-    </div>
-  )
-}
 
 // ── Analytics tracker (page views + user identification + UTM capture) ───
 function AnalyticsTracker() {
@@ -182,7 +168,7 @@ export default function App() {
           <ProfileSyncTracker />
           <Toaster position="top-right" />
           <QuickEnhanceModal />
-          <Suspense fallback={<PageLoading />}>
+          <Suspense fallback={<LoadingScreen />}>
             <Routes>
               <Route path="/" element={<Hero />} />
               <Route path="/login" element={<Login />} />
