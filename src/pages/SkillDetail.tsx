@@ -33,7 +33,7 @@ export default function SkillDetail() {
 
   if (!skill) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-b from-pageBgLight to-white px-6">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-pageBgLight px-6">
         <Icons.Frown className="h-16 w-16 text-foregroundMuted" />
         <h1 className="text-xl font-bold text-foregroundDark">Skill não encontrada</h1>
         <p className="text-sm text-foregroundMuted">A skill que você procura não está disponível.</p>
@@ -49,7 +49,7 @@ export default function SkillDetail() {
   const total = allSkills.length
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white">
+    <div className="min-h-screen bg-pageBgLight">
       {/* Top gradient bar */}
       <div className="bg-gradient-to-r from-stroke-light to-stroke-muted px-4 pb-12 pt-6">
         <div className="mx-auto w-full max-w-3xl">
