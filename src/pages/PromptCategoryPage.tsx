@@ -11,6 +11,7 @@ import { type PromptCard } from "@/data/promptsData"
 import { usePrompts } from "@/hooks/usePrompts"
 import { useLabCategories } from "@/hooks/useLabCategories"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { slugifyTitle } from "@/lib/utils"
 
 type DiffFilter = "Todos" | PromptCard["difficulty"]
 
@@ -37,15 +38,21 @@ function PromptListCard({
   prompt,
   saved,
   onToggleSave,
+  onOpen,
 }: {
   prompt: PromptCard
   saved: boolean
   onToggleSave: () => void
+  onOpen: () => void
 }) {
   const badge = DIFF_BADGE[prompt.difficulty]
 
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-stroke-muted bg-white p-4 shadow-sm">
+    <button
+      type="button"
+      onClick={onOpen}
+      className="flex w-full items-start gap-3 rounded-2xl border border-stroke-muted bg-white p-4 text-left shadow-sm transition-all active:scale-[0.99] hover:bg-surface-soft"
+    >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
@@ -55,15 +62,27 @@ function PromptListCard({
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-1.5">
-            <button
-              onClick={onToggleSave}
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={(e) => {
+                e.stopPropagation()
+                onToggleSave()
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  onToggleSave()
+                }
+              }}
               className="rounded-full p-1 transition-colors hover:bg-pageBgLight"
               aria-label={saved ? "Remover dos salvos" : "Salvar prompt"}
             >
               <Bookmark
                 className={`h-4 w-4 ${saved ? "fill-primary-dark text-primary-dark" : "text-foregroundMuted"}`}
               />
-            </button>
+            </span>
             <ChevronRight className="h-4 w-4 text-foregroundMuted" />
           </div>
         </div>
@@ -74,7 +93,7 @@ function PromptListCard({
           {badge.label}
         </span>
       </div>
-    </div>
+    </button>
   )
 }
 
@@ -217,6 +236,15 @@ export default function PromptCategoryPage() {
                 prompt={prompt}
                 saved={savedIds.has(prompt.title)}
                 onToggleSave={() => toggleSave(prompt.title)}
+                onOpen={() =>
+                  navigate(`/prompt/${slugifyTitle(prompt.title)}`, {
+                    state: {
+                      title: prompt.title,
+                      category: prompt.category,
+                      promptText: prompt.promptText,
+                    },
+                  })
+                }
               />
             ))}
           </div>
