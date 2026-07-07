@@ -310,22 +310,24 @@ export default function LessonPage() {
           </div>
 
           <div className="mt-6 flex w-full max-w-xs flex-col gap-3">
-            {isLastLesson ? (
-              <Link
-                to="/module-exam"
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-luxury py-4 text-sm font-extrabold uppercase tracking-wide text-luxury-foreground shadow-lg shadow-luxury/30 transition-transform active:scale-[0.98]"
-              >
-                Fazer prova final do módulo
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            ) : (
-              <Link
-                to={`/lesson?track=${track}&module=${module + 1}`}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-emerald/30 transition-transform active:scale-[0.98]"
-              >
-                Próxima aula
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+            {perfect && (
+              isLastLesson ? (
+                <Link
+                  to="/module-exam"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-luxury py-4 text-sm font-extrabold uppercase tracking-wide text-luxury-foreground shadow-lg shadow-luxury/30 transition-transform active:scale-[0.98]"
+                >
+                  Fazer prova final do módulo
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              ) : (
+                <Link
+                  to={`/lesson?track=${track}&module=${module + 1}`}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-emerald/30 transition-transform active:scale-[0.98]"
+                >
+                  Próxima aula
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              )
             )}
             <Link
               to="/learn"

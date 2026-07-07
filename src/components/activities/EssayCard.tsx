@@ -44,10 +44,10 @@ export function EssayCard({ activity, answered, onAnswer }: EssayCardProps) {
       )}
 
       {answered && (
-        <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-4">
+        <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 dark:border-amber-700 dark:bg-amber-950/40">
           <div className="mb-2 flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-amber-600" />
-            <p className="text-xs font-extrabold uppercase tracking-wider text-amber-700">
+            <CheckCircle2 className="h-4 w-4 text-amber-600 dark:text-amber-300" />
+            <p className="text-xs font-extrabold uppercase tracking-wider text-amber-700 dark:text-amber-300">
               Gabarito de referência
             </p>
           </div>
