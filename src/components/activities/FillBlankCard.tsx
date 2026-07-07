@@ -25,7 +25,7 @@ export function FillBlankCard({ activity, selected, answered, onSelect }: Props)
                   answered && selected
                     ? selected === activity.correct
                       ? "border-emerald bg-emerald/10 text-emerald"
-                      : "border-red-400 bg-red-50 text-red-500"
+                      : "border-red-400 bg-red-50 text-red-500 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300"
                     : "border-dashed border-forest text-forest",
                 )}
               >
@@ -53,7 +53,7 @@ export function FillBlankCard({ activity, selected, answered, onSelect }: Props)
                 "rounded-xl border-2 px-4 py-2.5 text-sm font-semibold transition-all",
                 !answered && "border-stroke-light bg-card hover:border-emerald hover:bg-surface-success",
                 isCorrect && "border-emerald bg-emerald/15 text-emerald-dark",
-                isWrong && "border-red-400 bg-red-50 text-red-600",
+                isWrong && "border-red-400 bg-red-50 text-red-600 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300",
                 answered && !isSelected && !isCorrect && "border-stroke-light bg-card opacity-50",
               )}
             >

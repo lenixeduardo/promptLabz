@@ -94,7 +94,7 @@ export function OrderCard({ activity, answered, onAnswer }: Props) {
                   !answered && selectedLeft === item.id && "border-emerald bg-emerald/10 ring-2 ring-emerald/30",
                   !answered && selectedLeft !== item.id && "border-stroke-light bg-card hover:border-emerald",
                   answered && isLeftCorrect(item.id) && "border-emerald bg-emerald/15",
-                  answered && isLeftWrong(item.id) && "border-red-400 bg-red-50",
+                  answered && isLeftWrong(item.id) && "border-red-400 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300",
                   answered && !connections[item.id] && "border-stroke-light bg-card opacity-50",
                 )}
               >
@@ -142,7 +142,7 @@ export function OrderCard({ activity, answered, onAnswer }: Props) {
                   !answered && !selectedLeft && "border-stroke-light bg-card",
                   !answered && isUsed && "border-forest bg-forest/10",
                   answered && isItemCorrect && "border-emerald bg-emerald/15",
-                  answered && isUsed && !isItemCorrect && "border-red-400 bg-red-50",
+                  answered && isUsed && !isItemCorrect && "border-red-400 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300",
                   answered && !isUsed && "border-stroke-light bg-card opacity-50",
                 )}
               >
