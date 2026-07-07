@@ -46,7 +46,7 @@ function escapeHtml(s: string) {
 }
 
 const FONTS_HREF =
-  "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap";
+  "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500;1,600&display=swap";
 
 let fontsPromise: Promise<void> | null = null;
 function ensureFontsLoaded(): Promise<void> {
@@ -71,6 +71,16 @@ function ensureFontsLoaded(): Promise<void> {
   return fontsPromise;
 }
 
+function dividerHtml(withLines: boolean) {
+  const line = `<span style="width:40px;height:1px;background:#2e7d4e;opacity:0.35;"></span>`;
+  return `
+    <div style="margin-top:18px;display:flex;align-items:center;justify-content:center;gap:8px;">
+      ${withLines ? line : ""}
+      <span style="width:7px;height:7px;transform:rotate(45deg);background:#2e7d4e;opacity:0.55;"></span>
+      ${withLines ? line : ""}
+    </div>`;
+}
+
 export function buildCertificateHtml(
   data: CertificateData,
   frame: string,
@@ -80,47 +90,50 @@ export function buildCertificateHtml(
   return `
 <div style="
   width: 800px; height: 1131px; position: relative; background: #ffffff;
-  font-family: 'Inter', -apple-system, sans-serif; color: #1f2a23;
+  font-family: 'Poppins', -apple-system, sans-serif; color: #1f2a23;
   overflow: hidden; box-sizing: border-box;
 ">
   <img src="${frame}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:1;"/>
-  <div style="position:absolute;top:110px;left:90px;right:90px;bottom:130px;display:flex;flex-direction:column;align-items:center;text-align:center;z-index:2;">
-    <div style="margin-top:0px;font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:64px;line-height:1;color:#0f3d24;">Certificado</div>
-    <div style="margin-top:4px;font-family:'Playfair Display',Georgia,serif;font-weight:500;font-style:italic;font-size:26px;color:#2e7d4e;">de Conquista</div>
-    <div style="margin-top:28px;font-weight:500;font-size:15px;color:#6b7f72;">Parabéns,</div>
-    <div style="margin-top:8px;font-weight:700;font-size:30px;color:#2e7d4e;">${escapeHtml(data.recipient)}</div>
-    <div style="margin-top:16px;font-weight:500;font-size:14px;color:#6b7f72;">por concluir com excelência o módulo</div>
-    <div style="margin-top:8px;font-weight:700;font-size:20px;color:#0f3d24;max-width:520px;line-height:1.25;">${escapeHtml(data.title)}</div>
-    <div style="margin-top:22px;display:flex;align-items:center;gap:8px;">
-      <span style="width:40px;height:1px;background:#2e7d4e;opacity:0.4;"></span>
-      <span style="width:6px;height:6px;border-radius:50%;border:1px solid #2e7d4e;opacity:0.6;"></span>
-      <span style="width:40px;height:1px;background:#2e7d4e;opacity:0.4;"></span>
+  <div style="position:absolute;top:135px;left:110px;right:110px;bottom:150px;display:flex;flex-direction:column;align-items:center;text-align:center;z-index:2;">
+    <div style="font-weight:800;font-size:62px;line-height:1.05;letter-spacing:-0.5px;color:#0f3d24;">Certificado</div>
+    <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+      <span style="width:36px;height:1px;background:#2e7d4e;opacity:0.4;"></span>
+      <span style="font-weight:600;font-size:24px;color:#2e7d4e;">de Conquista</span>
+      <span style="width:36px;height:1px;background:#2e7d4e;opacity:0.4;"></span>
     </div>
-    <div style="margin-top:18px;display:flex;gap:90px;">
+    ${dividerHtml(true)}
+    <div style="margin-top:36px;font-weight:500;font-size:15px;color:#6b7f72;">Parabéns,</div>
+    <div style="margin-top:8px;font-weight:700;font-size:34px;color:#2e7d4e;">${escapeHtml(data.recipient)}</div>
+    <div style="margin-top:26px;font-weight:500;font-size:15px;color:#6b7f72;">por concluir com excelência o módulo</div>
+    <div style="margin-top:8px;font-weight:700;font-size:22px;color:#0f3d24;max-width:540px;line-height:1.3;">${escapeHtml(data.title)}</div>
+    ${dividerHtml(true)}
+    <div style="margin-top:30px;display:flex;align-items:center;gap:36px;">
       <div style="text-align:center;">
-        <div style="font-size:12px;color:#6b7f72;font-weight:500;">Data de conclusão</div>
-        <div style="margin-top:4px;font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:17px;color:#0f3d24;">${escapeHtml(data.issuedAt)}</div>
+        <div style="font-size:13px;color:#6b7f72;font-weight:500;">Data de conclusão</div>
+        <div style="margin-top:6px;font-weight:700;font-size:18px;color:#0f3d24;">${escapeHtml(data.issuedAt)}</div>
       </div>
+      <div style="width:1px;height:36px;background:#2e7d4e;opacity:0.25;"></div>
       <div style="text-align:center;">
-        <div style="font-size:12px;color:#6b7f72;font-weight:500;">Carga horária</div>
-        <div style="margin-top:4px;font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:17px;color:#0f3d24;">${escapeHtml(data.hours)}</div>
+        <div style="font-size:13px;color:#6b7f72;font-weight:500;">Carga horária</div>
+        <div style="margin-top:6px;font-weight:700;font-size:18px;color:#0f3d24;">${escapeHtml(data.hours)}</div>
       </div>
     </div>
-    <img src="${mascot}" alt="" style="margin-top:8px;width:280px;height:auto;object-fit:contain;"/>
+    <img src="${mascot}" alt="" style="margin-top:32px;width:320px;height:auto;object-fit:contain;"/>
+    ${dividerHtml(false)}
     <div style="flex:1;"></div>
-    <div style="width:100%;display:flex;align-items:flex-end;justify-content:space-between;padding:0 6px;gap:12px;">
-      <div style="display:flex;align-items:center;gap:6px;">
-        <img src="${qr}" alt="" style="width:58px;height:58px;"/>
+    <div style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <img src="${qr}" alt="" style="width:56px;height:56px;"/>
         <div style="text-align:left;">
-          <div style="font-size:10px;color:#1f2a23;font-weight:600;">Verifique</div>
+          <div style="font-size:10px;color:#1f2a23;font-weight:700;">Verifique</div>
           <div style="font-size:9px;color:#6b7f72;margin-top:1px;">ID: ${escapeHtml(data.id)}</div>
         </div>
       </div>
       <div style="text-align:right;">
-        <div style="font-family:'Dancing Script','Brush Script MT',cursive;font-weight:700;font-size:32px;color:#0f3d24;line-height:1;">PromptLabz</div>
-        <div style="margin-top:1px;width:140px;margin-left:auto;border-top:1px solid #2e7d4e;opacity:0.5;"></div>
-        <div style="margin-top:2px;font-weight:700;font-size:11px;color:#0f3d24;">PromptLabz</div>
-        <div style="font-size:8px;color:#6b7f72;margin-top:0px;">Seu laboratório com IA</div>
+        <div style="font-weight:800;font-size:22px;line-height:1;">
+          <span style="color:#0f3d24;">Prompt</span><span style="font-style:italic;color:#2e7d4e;">Labz</span>
+        </div>
+        <div style="margin-top:3px;font-size:8px;color:#6b7f72;">Seu laboratório com IA</div>
       </div>
     </div>
   </div>
