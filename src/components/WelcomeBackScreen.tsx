@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MascotGlow } from "@/components/MascotGlow"
 
@@ -32,18 +31,13 @@ export function WelcomeBackScreen({ active, name, onClose }: WelcomeBackScreenPr
   return (
     <div className="dark fixed inset-0 z-[70] flex flex-col items-center justify-center bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-6 py-10 text-foreground animate-fade-in">
       <div className="flex w-full max-w-[420px] flex-1 flex-col items-center justify-center text-center">
-        <div className="relative">
-          <MascotGlow size={220}>
-            <img
-              src="/assets/mascot-login-new.png"
-              alt="Mascote PromptLabz"
-              className="h-48 w-auto object-contain drop-shadow-md"
-            />
-          </MascotGlow>
-          <div className="absolute -right-2 top-2 flex h-12 w-12 items-center justify-center rounded-full bg-emerald text-white shadow-lg">
-            <Sparkles className="h-6 w-6" />
-          </div>
-        </div>
+        <MascotGlow size={220}>
+          <img
+            src="/assets/mascot-welcome-back.png"
+            alt="Mascote PromptLabz acenando"
+            className="h-48 w-auto object-contain drop-shadow-md"
+          />
+        </MascotGlow>
 
         <h1 className="mt-6 animate-scale-in text-2xl font-extrabold text-foreground-dark">
           {greeting}
