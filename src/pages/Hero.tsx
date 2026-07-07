@@ -1,16 +1,13 @@
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ArrowRight, Sparkles, Heart, Star, Play, BookOpen, Zap, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { BrandLogo } from "@/components/BrandLogo"
-import { CircleTransition } from "@/components/CircleTransition"
 import { PageSEO } from "@/components/PageSEO"
 import { capture } from "@/lib/analytics"
 
 const HAS_ACCOUNT_KEY = "promptlabz:hasAccount"
 
 export default function Hero() {
-  const [transitioning, setTransitioning] = useState(false)
   const navigate = useNavigate()
   const hasAccount =
     typeof window !== "undefined" && localStorage.getItem(HAS_ACCOUNT_KEY) === "true"
@@ -21,7 +18,7 @@ export default function Hero() {
       navigate("/login")
     } else {
       capture("hero_cta_clicked", { cta_text: "Começar agora" })
-      setTransitioning(true)
+      navigate("/login")
     }
   }
 
@@ -41,8 +38,6 @@ export default function Hero() {
         description="Aprenda engenharia de prompts do zero com lições gamificadas. Plataforma 100% gratuita para dominar ChatGPT, Claude e IA generativa. Comece agora sem cartão de crédito!"
         canonicalPath="/"
       />
-      <CircleTransition to="/signup" active={transitioning} />
-
       {/* ── Desktop Navbar (hidden on mobile) ── */}
       <nav className="hidden lg:flex items-center justify-between px-8 xl:px-16 py-4 bg-white border-b border-gray-100 sticky top-0 z-50">
         <BrandLogo className="text-2xl" />
@@ -50,7 +45,6 @@ export default function Hero() {
         <Button
           size="default"
           className="flex items-center gap-2 px-6"
-          disabled={transitioning}
           onClick={handleCTA}
         >
           <span className="text-sm font-bold tracking-wide">
@@ -106,7 +100,6 @@ export default function Hero() {
             <Button
               size="default"
               className="flex items-center justify-between px-5 w-full"
-              disabled={transitioning}
               onClick={handleCTA}
             >
               <span className="text-[13px]">
@@ -146,7 +139,6 @@ export default function Hero() {
               <Button
                 size="lg"
                 className="flex items-center gap-3 px-8 text-base font-bold tracking-wide"
-                disabled={transitioning}
                 onClick={handleCTA}
               >
                 {hasAccount ? "CONTINUAR" : "COMEÇAR AGORA"}

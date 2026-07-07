@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Mail, Lock, Loader2, Hand } from "lucide-react"
+import { Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -36,6 +36,14 @@ function GoogleIcon() {
   )
 }
 
+function AppleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor">
+      <path d="M16.365 1.43c0 1.14-.463 2.213-1.19 2.982-.79.85-2.07 1.5-3.09 1.42-.14-1.1.43-2.25 1.14-2.98.79-.83 2.16-1.44 3.14-1.42ZM20.34 17.4c-.55 1.27-.82 1.83-1.53 2.95-.99 1.56-2.39 3.5-4.12 3.51-1.54.02-1.94-1.01-4.03-1-2.09.01-2.53 1.02-4.07 1-1.73-.02-3.05-1.77-4.04-3.33-2.77-4.33-3.06-9.41-1.35-12.11 1.21-1.92 3.13-3.05 4.93-3.05 1.84 0 3 .99 4.53.99 1.48 0 2.38-1 4.53-1 1.6 0 3.29.87 4.5 2.38-3.96 2.17-3.32 7.83.65 9.66Z" />
+    </svg>
+  )
+}
+
 const HAS_ACCOUNT_KEY = "promptlabz:hasAccount"
 
 export default function Login() {
@@ -45,6 +53,7 @@ export default function Login() {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [rateLimitCooldown, setRateLimitCooldown] = useState(0)
+  const [showPassword, setShowPassword] = useState(false)
   const isReturning =
     typeof window !== "undefined" && localStorage.getItem(HAS_ACCOUNT_KEY) === "true"
 
@@ -138,18 +147,29 @@ export default function Login() {
         {/* Wordmark */}
         <BrandLogo className="mt-1 text-5xl" />
 
-        {isReturning && (
-          <p className="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold text-forest">
-            Bem-vindo de volta! <Hand className="h-4 w-4 text-yellow-400" />
-          </p>
-        )}
+        {/* Heading */}
+        <h1 className="mt-6 text-center text-2xl font-extrabold leading-tight text-foreground sm:text-[28px]">
+          {isReturning ? (
+            <>
+              Bem-vindo de volta,{" "}
+              <span className="text-primary">continue aprendendo</span>
+            </>
+          ) : (
+            <>
+              Faça login para <span className="text-primary">continuar aprendendo</span>
+            </>
+          )}
+        </h1>
+        <p className="mt-2 text-center text-sm text-foregroundTertiary">
+          Transforme seus estudos em conquistas com o PromptLabz. 💚
+        </p>
 
         {/* Login card */}
         <Card className="mt-7 w-full border-stroke-muted bg-surface-success p-6 shadow-md sm:p-7">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit} role="form" aria-label="Formulário de login">
             <Input
               type="email"
-              placeholder="Seu e-mail"
+              placeholder="E-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               icon={<Mail className="h-5 w-5" strokeWidth={2.2} />}
@@ -163,19 +183,30 @@ export default function Login() {
             <small id="email-help-login" className="sr-only">
               Insira o e-mail da sua conta
             </small>
-            <Input
-              type="password"
-              placeholder="Sua senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              icon={<Lock className="h-5 w-5" strokeWidth={2.2} />}
-              autoComplete="current-password"
-              required
-              disabled={loading}
-              aria-label="Sua senha de acesso"
-              aria-required="true"
-              aria-describedby="password-help-login"
-            />
+            <div className="relative flex items-center">
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                icon={<Lock className="h-5 w-5" strokeWidth={2.2} />}
+                autoComplete="current-password"
+                required
+                disabled={loading}
+                aria-label="Sua senha de acesso"
+                aria-required="true"
+                aria-describedby="password-help-login"
+                className="pr-12"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-4 flex h-7 w-7 items-center justify-center text-foregroundTertiary hover:text-primary"
+                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
+            </div>
             <small id="password-help-login" className="sr-only">
               Insira sua senha de acesso segura
             </small>
@@ -200,19 +231,26 @@ export default function Login() {
             </div>
 
             {/* Social logins */}
-            <div className="flex justify-center gap-5">
+            <div className="flex gap-3">
               <Button
                 type="button"
                 variant="social"
-                size="icon"
-                aria-label="Google"
+                className="flex-1 gap-2 normal-case tracking-normal"
                 onClick={handleGoogleLogin}
                 disabled={loading || rateLimitCooldown > 0}
               >
                 <GoogleIcon />
+                Google
               </Button>
-              <Button type="button" variant="social" size="icon" aria-label="E-mail" disabled>
-                <Mail className="h-6 w-6 text-primary" strokeWidth={2.2} />
+              <Button
+                type="button"
+                variant="social"
+                className="flex-1 gap-2 normal-case tracking-normal"
+                aria-label="Apple"
+                disabled
+              >
+                <AppleIcon />
+                Apple
               </Button>
             </div>
           </form>
@@ -220,7 +258,7 @@ export default function Login() {
 
         {/* Footer */}
         <p className="mt-7 text-center text-base text-foregroundDark">
-          NÃ£o tem uma conta?{" "}
+          Não tem uma conta?{" "}
           <Link
             to="/signup"
             className="font-semibold text-link underline underline-offset-2 hover:text-primary"
