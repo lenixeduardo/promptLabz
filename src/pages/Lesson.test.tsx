@@ -180,4 +180,87 @@ describe("Lesson — fluxo de aprendizado", () => {
       expect(screen.getByText(/Boa tentativa!/i)).toBeInTheDocument()
     })
   })
+
+  it("acertando todas as questões: mostra a pontuação real e libera 'Próxima aula'", async () => {
+    renderLesson()
+    skipSlides()
+    const answers = [
+      Q1_OPT_B,
+      "Escrever prompts claros, específicos e eficazes",
+      "prompts bem escritos multiplicam sua produtividade",
+    ]
+    for (let i = 0; i < answers.length; i++) {
+      const btn = screen.getAllByRole("button").find((el) => el.textContent?.includes(answers[i]))
+      fireEvent.click(btn!)
+      const nextBtn = screen.queryByRole("button", { name: /Próxima atividade/i })
+      const finishBtn = screen.queryByRole("button", { name: /Ver resultado/i })
+      if (i < answers.length - 1) fireEvent.click(nextBtn!)
+      else if (finishBtn) fireEvent.click(finishBtn)
+    }
+
+    await waitFor(() => {
+      expect(screen.getByText(/Perfeito!/i)).toBeInTheDocument()
+    })
+    expect(screen.getByText(/Você acertou\s*3\s*de\s*3\s*atividades/i)).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: /Próxima aula/i })).toBeInTheDocument()
+  })
+
+  it("errando todas as questões: mostra 0/3 e NÃO libera 'Próxima aula'", async () => {
+    renderLesson()
+    skipSlides()
+    const wrongAnswers = [
+      "Uma plataforma para treinar modelos de IA do zero",
+      "Programar modelos de linguagem (LLMs) em Python",
+      "Porque a IA não funciona sem prompts perfeitos",
+    ]
+    for (let i = 0; i < wrongAnswers.length; i++) {
+      const btn = screen.getAllByRole("button").find((el) => el.textContent?.includes(wrongAnswers[i]))
+      fireEvent.click(btn!)
+      const nextBtn = screen.queryByRole("button", { name: /Próxima atividade/i })
+      const finishBtn = screen.queryByRole("button", { name: /Ver resultado/i })
+      if (i < wrongAnswers.length - 1) fireEvent.click(nextBtn!)
+      else if (finishBtn) fireEvent.click(finishBtn)
+    }
+
+    await waitFor(() => {
+      expect(screen.getByText(/Boa tentativa!/i)).toBeInTheDocument()
+    })
+    expect(screen.getByText(/Você acertou\s*0\s*de\s*3\s*atividades/i)).toBeInTheDocument()
+    expect(screen.queryByRole("link", { name: /Próxima aula/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole("link", { name: /Fazer prova final/i })).not.toBeInTheDocument()
+  })
+
+  it("ao navegar para a próxima aula (mesma rota, só troca a query), o progresso não vaza da aula anterior", async () => {
+    // Regression test: React Router keeps the same LessonPage instance when
+    // only the `module` query param changes (clicking "Próxima aula" doesn't
+    // remount). Local state (step/answers/etc.) used to leak from the
+    // finished lesson into the next one, making the next lesson render
+    // already "finished" with a bogus near-zero score.
+    renderLesson("/lesson?track=a1&module=0")
+    skipSlides()
+    const answers = [
+      Q1_OPT_B,
+      "Escrever prompts claros, específicos e eficazes",
+      "prompts bem escritos multiplicam sua produtividade",
+    ]
+    for (let i = 0; i < answers.length; i++) {
+      const btn = screen.getAllByRole("button").find((el) => el.textContent?.includes(answers[i]))
+      fireEvent.click(btn!)
+      const nextBtn = screen.queryByRole("button", { name: /Próxima atividade/i })
+      const finishBtn = screen.queryByRole("button", { name: /Ver resultado/i })
+      if (i < answers.length - 1) fireEvent.click(nextBtn!)
+      else if (finishBtn) fireEvent.click(finishBtn)
+    }
+    await waitFor(() => {
+      expect(screen.getByText(/Perfeito!/i)).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByRole("link", { name: /Próxima aula/i }))
+
+    // The next lesson must start at its own first activity, not jump
+    // straight to a stale "Lição concluída" screen.
+    await waitFor(() => {
+      expect(screen.queryByText(/Lição concluída/i)).not.toBeInTheDocument()
+    })
+  })
 })

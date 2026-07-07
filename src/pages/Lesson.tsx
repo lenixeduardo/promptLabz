@@ -59,6 +59,19 @@ export default function LessonPage() {
     setProofDataUrl(readProof(track, module));
   }, [track, module]);
 
+  // React Router keeps the same component instance when only the query
+  // string changes (e.g. clicking "Próxima aula"), so quiz progress from
+  // the previous lesson must be reset explicitly when track/module changes.
+  useEffect(() => {
+    setStep(0);
+    setSelected(null);
+    setAnswers({});
+    setMatchOrderAnswers({});
+    rewardGrantedRef.current = false;
+    completionSoundPlayedRef.current = false;
+    scoreRef.current = 0;
+  }, [track, module]);
+
   const finished = step >= ACTIVITIES.length;
   const currentActivity = ACTIVITIES[step] as LessonActivity | undefined;
   const isCurrentSlide = currentActivity ? isContentSlide(currentActivity) : false;
