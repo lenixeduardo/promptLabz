@@ -76,7 +76,7 @@ describe("Login — renderização", () => {
 
   it("exibe link para criar conta", () => {
     renderLogin()
-    expect(screen.getByText(/crie agora/i)).toBeInTheDocument()
+    expect(screen.getByText(/criar conta/i)).toBeInTheDocument()
   })
 
   it("não exibe 'Bem-vindo de volta' para novo usuário", () => {
@@ -137,9 +137,9 @@ describe("Login — navegação", () => {
     )
   })
 
-  it("navega para /signup ao clicar em 'Crie agora'", async () => {
+  it("navega para /signup ao clicar em 'criar conta'", async () => {
     renderLogin()
-    await userEvent.click(screen.getByText(/crie agora/i))
+    await userEvent.click(screen.getByText(/criar conta/i))
     await waitFor(() =>
       expect(screen.getByText("cadastro")).toBeInTheDocument()
     )

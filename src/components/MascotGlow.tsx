@@ -6,6 +6,8 @@ interface MascotGlowProps {
   size?: number
   className?: string
   children: React.ReactNode
+  /** Show the rotating conic shine sweep and dashed ring outline */
+  ring?: boolean
 }
 
 /**
@@ -13,7 +15,7 @@ interface MascotGlowProps {
  * glow, a rotating conic "shine" sweep, a counter-rotating dashed ring and
  * twinkling sparkles. Honours prefers-reduced-motion (animations disabled).
  */
-export function MascotGlow({ size = 260, className, children }: MascotGlowProps) {
+export function MascotGlow({ size = 260, className, children, ring = true }: MascotGlowProps) {
   return (
     <div
       className={cn("relative flex items-center justify-center", className)}
@@ -29,18 +31,22 @@ export function MascotGlow({ size = 260, className, children }: MascotGlowProps)
         }}
       />
 
-      {/* Rotating conic shine sweep */}
-      <div
-        className="animate-shine absolute inset-2 rounded-full"
-        style={{
-          background:
-            "conic-gradient(from 0deg, transparent 0deg, rgba(124,199,154,0.65) 60deg, transparent 150deg, transparent 360deg)",
-          filter: "blur(6px)",
-        }}
-      />
+      {ring && (
+        <>
+          {/* Rotating conic shine sweep */}
+          <div
+            className="animate-shine absolute inset-2 rounded-full"
+            style={{
+              background:
+                "conic-gradient(from 0deg, transparent 0deg, rgba(124,199,154,0.65) 60deg, transparent 150deg, transparent 360deg)",
+              filter: "blur(6px)",
+            }}
+          />
 
-      {/* Counter-rotating dashed ring */}
-      <div className="animate-ring absolute inset-1 rounded-full border-2 border-dashed border-[#7CC79A]/70" />
+          {/* Counter-rotating dashed ring */}
+          <div className="animate-ring absolute inset-1 rounded-full border-2 border-dashed border-[#7CC79A]/70" />
+        </>
+      )}
 
       {/* Twinkling sparkles around the circle */}
       <Sparkles

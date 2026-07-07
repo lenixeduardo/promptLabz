@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom"
 import { Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
 import { BrandLogo } from "@/components/BrandLogo"
 import { MascotGlow } from "@/components/MascotGlow"
 import { CircleRevealEntry } from "@/components/CircleTransition"
@@ -135,17 +134,8 @@ export default function Login() {
       {/* Shrinking circle reveal â€" plays when arriving from Hero */}
       <CircleRevealEntry />
       <div className="mx-auto flex w-full max-w-[420px] flex-col items-center">
-        {/* Mascot with animated glow halo */}
-        <MascotGlow size={260}>
-          <img
-            src="/assets/mascot-login-new.png"
-            alt="PromptLabz mascot"
-            className="h-56 w-auto object-contain drop-shadow-md"
-          />
-        </MascotGlow>
-
         {/* Wordmark */}
-        <BrandLogo className="mt-1 text-5xl" />
+        <BrandLogo className="text-4xl" />
 
         {/* Heading */}
         <h1 className="mt-6 text-center text-2xl font-extrabold leading-tight text-foreground sm:text-[28px]">
@@ -164,8 +154,16 @@ export default function Login() {
           Transforme seus estudos em conquistas com o PromptLabz. 💚
         </p>
 
-        {/* Login card */}
-        <Card className="mt-7 w-full border-stroke-muted bg-surface-success p-6 shadow-md sm:p-7">
+        {/* Mascot with animated glow halo */}
+        <MascotGlow size={380} ring={false} className="mt-2">
+          <img
+            src="/assets/mascot-login-wave.png"
+            alt="PromptLabz mascot"
+            className="h-80 w-auto object-contain drop-shadow-md"
+          />
+        </MascotGlow>
+
+        <div className="mt-2 w-full">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit} role="form" aria-label="Formulário de login">
             <Input
               type="email"
@@ -183,30 +181,29 @@ export default function Login() {
             <small id="email-help-login" className="sr-only">
               Insira o e-mail da sua conta
             </small>
-            <div className="relative flex items-center">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Senha"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                icon={<Lock className="h-5 w-5" strokeWidth={2.2} />}
-                autoComplete="current-password"
-                required
-                disabled={loading}
-                aria-label="Sua senha de acesso"
-                aria-required="true"
-                aria-describedby="password-help-login"
-                className="pr-12"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-4 flex h-7 w-7 items-center justify-center text-foregroundTertiary hover:text-primary"
-                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-              >
-                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-              </button>
-            </div>
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              icon={<Lock className="h-5 w-5" strokeWidth={2.2} />}
+              rightElement={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="flex h-7 w-7 items-center justify-center text-foregroundTertiary hover:text-primary"
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              }
+              autoComplete="current-password"
+              required
+              disabled={loading}
+              aria-label="Sua senha de acesso"
+              aria-required="true"
+              aria-describedby="password-help-login"
+            />
             <small id="password-help-login" className="sr-only">
               Insira sua senha de acesso segura
             </small>
@@ -254,16 +251,16 @@ export default function Login() {
               </Button>
             </div>
           </form>
-        </Card>
+        </div>
 
         {/* Footer */}
         <p className="mt-7 text-center text-base text-foregroundDark">
-          Não tem uma conta?{" "}
+          Ainda não tem uma conta?{" "}
           <Link
             to="/signup"
             className="font-semibold text-link underline underline-offset-2 hover:text-primary"
           >
-            Crie agora
+            Criar conta
           </Link>
         </p>
       </div>
