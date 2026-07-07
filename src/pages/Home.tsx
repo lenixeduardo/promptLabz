@@ -207,7 +207,7 @@ export default function HomePage() {
         avatarName={equipped.name}
         onClose={() => setStreakCelebration(false)}
       />
-      <div className="flex flex-col min-h-screen bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
+      <div className="flex flex-col min-h-screen bg-white pb-24 lg:pb-8">
         <div className="bg-card border-b border-stroke-muted px-4 lg:px-8 py-3 flex items-center justify-between sticky top-0 z-10">
           <div>
             <h1 className="flex items-center gap-1.5 text-lg lg:text-xl font-bold text-primary-dark">Olá, {user?.user_metadata?.full_name?.split(" ")[0] ?? "Explorador"}! <Hand className="h-5 w-5 text-yellow-400" /></h1>

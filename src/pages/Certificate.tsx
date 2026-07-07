@@ -71,7 +71,7 @@ export default function Certificate() {
   const linkedInUrl = `https://www.linkedin.com/shareArticle?mini=true&title=${encodeURIComponent("Certificado PromptLab")}&summary=${encodeURIComponent(`Concluí o curso: ${courseName}`)}`
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-4 py-6">
+    <div className="min-h-screen bg-white px-4 py-6">
       <div className="mx-auto w-full max-w-[420px]">
         {/* Back */}
         <button

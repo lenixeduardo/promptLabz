@@ -34,7 +34,7 @@ export default function MissionComplete() {
   const bonusAwarded = state?.bonusAwarded ?? false
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-white via-pageBgLight to-gradient-end px-6 py-10">
+    <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-white px-6 py-10">
       {CONFETTI.map((confetti, index) => (
         <span
           key={index}

@@ -20,7 +20,7 @@ export function LoadingScreen({
   return (
     <div
       className={cn(
-        "flex h-screen flex-col items-center justify-center gap-6 bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-6 text-center",
+        "flex h-screen flex-col items-center justify-center gap-6 bg-white px-6 text-center",
         className,
       )}
     >

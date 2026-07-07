@@ -21,7 +21,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-6 text-center">
+        <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-white px-6 text-center">
           <img
             src="/assets/mascot-login-new.png"
             alt="Erro"

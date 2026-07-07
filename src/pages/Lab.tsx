@@ -520,9 +520,9 @@ export default function Lab() {
   const { title, subtitle } = HEADER_INFO[activeTab]
 
   return (
-    <div className="min-h-screen bg-[#F0FAF3] pb-24 lg:pb-8 dark:bg-pageBg">
+    <div className="min-h-screen bg-white pb-24 lg:pb-8 dark:bg-pageBg">
       {/* Sticky header + tabs */}
-      <div className="sticky top-0 z-10 bg-[#F0FAF3] px-4 lg:px-8 pb-0 pt-6 lg:pt-8 dark:bg-pageBg">
+      <div className="sticky top-0 z-10 bg-white px-4 lg:px-8 pb-0 pt-6 lg:pt-8 dark:bg-pageBg">
         <div className="lg:max-w-5xl lg:mx-auto">
           <h1 className="text-2xl lg:text-3xl font-extrabold text-foregroundDark dark:text-white">{title}</h1>
           <p className="mt-0.5 text-sm lg:text-base text-[#3E6B50] dark:text-foregroundMuted">{subtitle}</p>

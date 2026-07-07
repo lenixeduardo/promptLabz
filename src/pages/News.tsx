@@ -137,7 +137,7 @@ export default function News() {
       : articles.filter((a) => a.category === activeCategory)
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-pageBgLight to-white pb-24 lg:pb-8">
+    <div className="flex min-h-screen flex-col bg-white pb-24 lg:pb-8">
       {/* Header */}
       <div className="sticky top-0 z-10 border-b border-stroke-muted bg-white px-4 lg:px-8 py-3">
         <h1 className="text-xl lg:text-2xl font-bold text-primary-dark">Notícias</h1>

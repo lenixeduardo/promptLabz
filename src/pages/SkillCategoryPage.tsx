@@ -48,7 +48,7 @@ export default function SkillCategoryPage() {
 
   if (!catData) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-surface-soft text-foregroundMuted">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-white text-foregroundMuted">
         <p className="text-base font-semibold">Categoria não encontrada</p>
         <button
           onClick={() => navigate(-1)}
@@ -63,7 +63,7 @@ export default function SkillCategoryPage() {
   const CategoryIcon = ICON_MAP[catData.icon] ?? Lightbulb
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-24 lg:pb-8">
+    <div className="min-h-screen bg-white pb-24 lg:pb-8">
       {/* Header */}
       <div className="bg-white px-4 pb-4 pt-12 shadow-sm">
         <div className="flex items-center justify-between">

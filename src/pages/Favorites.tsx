@@ -22,7 +22,7 @@ export default function Favorites() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6 pb-24 lg:pb-8">
+    <div className="min-h-screen bg-white px-4 py-6 pb-24 lg:pb-8">
       <div className="mx-auto w-full max-w-md lg:max-w-3xl">
         {/* Header */}
         <AppPageHeader

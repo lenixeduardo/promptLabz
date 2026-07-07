@@ -51,7 +51,7 @@ export default function Inventory() {
     .filter(Boolean) as typeof AVATARS
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end">
+    <div className="relative min-h-screen overflow-hidden bg-white">
       <div className="mx-auto flex w-full max-w-[420px] flex-col px-5 pb-10 pt-8">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">

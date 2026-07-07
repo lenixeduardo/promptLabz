@@ -48,7 +48,7 @@ export default function OnboardingPage() {
   const needsPick = "options" in current;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg">
+    <div className="flex min-h-screen flex-col bg-white">
       <div className="flex items-center justify-between px-4 py-4">
         <div className="flex gap-1.5">
           {STEPS.map((_, i) => (

@@ -222,7 +222,7 @@ export default function TemplateDetail() {
 
   if (!template) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-surface-soft px-6 text-center">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-white px-6 text-center">
         <p className="text-lg font-bold text-primary-dark">Template não encontrado</p>
         <p className="text-sm text-foregroundMuted">
           O template que você está tentando acessar não existe ou foi removido.
@@ -238,7 +238,7 @@ export default function TemplateDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-32 lg:pb-8">
+    <div className="min-h-screen bg-white pb-32 lg:pb-8">
       {/* Top header */}
       <div className="sticky top-0 z-20 flex items-center justify-between border-b border-pageBgLight bg-white px-4 pt-10 pb-3">
         <div className="flex items-center gap-2">

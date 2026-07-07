@@ -47,9 +47,9 @@ export default function Profile() {
   const skillsCount = unlocked.length
 
   return (
-    <div className="min-h-screen bg-pageBg pb-28 lg:pb-8">
+    <div className="min-h-screen bg-white pb-28 lg:pb-8">
       {/* Header */}
-      <div className="sticky top-0 z-10 border-b border-stroke-muted bg-pageBg/95 px-5 pb-3 pt-5 backdrop-blur-sm">
+      <div className="sticky top-0 z-10 border-b border-stroke-muted bg-white/95 px-5 pb-3 pt-5 backdrop-blur-sm">
         <div className="mx-auto flex w-full max-w-[420px] lg:max-w-2xl items-center justify-between">
           <h1 className="text-xl font-extrabold text-primary-dark">Perfil</h1>
           <div className="flex items-center gap-2">
