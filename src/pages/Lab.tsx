@@ -7,6 +7,7 @@ import { usePrompts } from "@/hooks/usePrompts"
 import { TEMPLATES } from "@/data/templatesData"
 import { SkillIcon } from "@/components/skills/shared"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { slugifyTitle } from "@/lib/utils"
 
 type LabTab = "skills" | "prompts" | "templates"
 type FilterMode = "todas" | "recomendadas" | "mais-usadas"
@@ -368,7 +369,15 @@ function PromptsTab() {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => navigate(`/prompts/category/${prompt.category}`)}
+                  onClick={() =>
+                    navigate(`/prompt/${slugifyTitle(prompt.title)}`, {
+                      state: {
+                        title: prompt.title,
+                        category: prompt.category,
+                        promptText: prompt.promptText,
+                      },
+                    })
+                  }
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-emerald py-2.5 text-sm font-semibold text-white transition-colors active:scale-95 hover:bg-emerald/90"
                 >
                   <Icons.Eye className="h-4 w-4" />
