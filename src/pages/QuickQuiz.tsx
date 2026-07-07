@@ -35,7 +35,7 @@ function OptionButton({ option, selected, confirmed, correct, onSelect }: Option
         !confirmed && !isSelected && "border-stroke-muted hover:border-emerald hover:bg-surface-soft",
         !confirmed && isSelected  && "border-emerald bg-pageBgLight",
         showCorrect && "border-emerald bg-surface-success",
-        showWrong   && "border-red bg-red-100",
+        showWrong   && "border-red-400 bg-red-50 dark:border-red-800 dark:bg-red-950/40",
         dimmed      && "border-stroke-muted opacity-50"
       )}
     >
@@ -45,7 +45,7 @@ function OptionButton({ option, selected, confirmed, correct, onSelect }: Option
           !confirmed && !isSelected && "border-stroke-muted text-foregroundTertiary",
           !confirmed && isSelected  && "border-emerald bg-emerald text-white",
           showCorrect && "border-emerald bg-emerald text-white",
-          showWrong   && "border-red bg-red text-white",
+          showWrong   && "border-red-500 bg-red-500 text-white dark:border-red-600 dark:bg-red-600",
           dimmed      && "border-stroke-muted text-[#A0A8A3]"
         )}
       >
@@ -57,7 +57,7 @@ function OptionButton({ option, selected, confirmed, correct, onSelect }: Option
           !confirmed && !isSelected && "text-foregroundDark",
           !confirmed && isSelected  && "font-semibold text-primary-dark",
           showCorrect && "font-semibold text-primary-dark",
-          showWrong   && "text-red",
+          showWrong   && "text-red-700 dark:text-red-300",
           dimmed      && "text-[#A0A8A3]"
         )}
       >
@@ -95,18 +95,18 @@ function QuestionView({ question, selected, confirmed, onSelect }: QuestionViewP
         <div
           className={cn(
             "flex items-start gap-2.5 rounded-2xl p-3.5",
-            selected === question.correct ? "bg-surface-success" : "bg-red-100"
+            selected === question.correct ? "bg-surface-success" : "bg-red-100 dark:bg-red-950/40"
           )}
         >
           {selected === question.correct ? (
             <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary-dark" />
           ) : (
-            <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red" />
+            <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600 dark:text-red-400" />
           )}
           <p
             className={cn(
               "text-sm font-semibold leading-snug",
-              selected === question.correct ? "text-primary-dark" : "text-red"
+              selected === question.correct ? "text-primary-dark" : "text-red-700 dark:text-red-300"
             )}
           >
             {selected === question.correct

@@ -149,7 +149,7 @@ export const ActivityRenderer = memo(function ActivityRenderer({
                   "rounded-2xl border-2 px-4 py-3 text-left text-sm font-medium transition-all active:scale-[0.99]",
                   !answered && "border-stroke-light bg-card hover:border-emerald",
                   isOptCorrect && "border-emerald bg-surface-success text-emerald-dark",
-                  isOptWrong && "border-red-300 bg-red-50 text-red-700",
+                  isOptWrong && "border-red-300 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300",
                   answered && !isSelected && !isOptCorrect && "border-stroke-light bg-card opacity-60",
                 )}
               >
@@ -171,7 +171,7 @@ export const ActivityRenderer = memo(function ActivityRenderer({
             activityType === "multiple-choice" || activityType === "fill-blank"
               ? selected === (activity as any).correct
                 ? "border-emerald bg-surface-success"
-                : "border-red-300 bg-red-50"
+                : "border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950/40"
               : "border-emerald bg-surface-success",
           )}
         >
@@ -179,13 +179,13 @@ export const ActivityRenderer = memo(function ActivityRenderer({
             <Lightbulb className={cn(
               "h-5 w-5 shrink-0",
               selected === (activity as any).correct || isMatch(activity) || isOrder(activity)
-                ? "text-emerald-dark" : "text-red-500",
+                ? "text-emerald-dark" : "text-red-500 dark:text-red-400",
             )} />
             <div>
               <p className={cn(
                 "text-sm font-bold",
                 selected === (activity as any).correct || isMatch(activity) || isOrder(activity)
-                  ? "text-emerald-dark" : "text-red-700",
+                  ? "text-emerald-dark" : "text-red-700 dark:text-red-300",
               )}>
                 {(activity as any).type === "match" || (activity as any).type === "order"
                   ? "Atividade concluída!"

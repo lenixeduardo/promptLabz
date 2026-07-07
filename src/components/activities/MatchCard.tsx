@@ -80,7 +80,7 @@ export function MatchCard({ activity, answered, onAnswer }: Props) {
                 !answered && selectedWord === pair.word && "border-emerald bg-emerald/10 ring-2 ring-emerald/30",
                 !answered && selectedWord !== pair.word && "border-stroke-light bg-card hover:border-emerald",
                 answered && isCorrect(pair.word) && "border-emerald bg-emerald/15",
-                answered && isWrong(pair.word) && "border-red-400 bg-red-50",
+                answered && isWrong(pair.word) && "border-red-400 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300",
                 answered && !connections[pair.word] && "border-stroke-light bg-card opacity-50",
               )}
             >
@@ -119,7 +119,7 @@ export function MatchCard({ activity, answered, onAnswer }: Props) {
                   !answered && !selectedWord && "border-stroke-light bg-card",
                   !answered && isConnected && "border-forest bg-forest/10",
                   answered && isDefCorrect && "border-emerald bg-emerald/15",
-                  answered && isConnected && !isDefCorrect && "border-red-400 bg-red-50",
+                  answered && isConnected && !isDefCorrect && "border-red-400 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300",
                   answered && !isConnected && "border-stroke-light bg-card opacity-50",
                 )}
               >
