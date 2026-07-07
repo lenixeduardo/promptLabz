@@ -46,7 +46,7 @@ function escapeHtml(s: string) {
 }
 
 const FONTS_HREF =
-  "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500;1,600&display=swap";
+  "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500;1,600&family=Great+Vibes&display=swap";
 
 let fontsPromise: Promise<void> | null = null;
 function ensureFontsLoaded(): Promise<void> {
@@ -87,6 +87,9 @@ function dividerHtml(withLines: boolean) {
     </div>`;
 }
 
+const MUTED = "#666666";
+const SCRIPT_FONT = "'Great Vibes', cursive";
+
 export function buildCertificateHtml(
   data: CertificateData,
   frame: string,
@@ -95,51 +98,48 @@ export function buildCertificateHtml(
 ) {
   return `
 <div style="
-  width: 800px; height: 1131px; position: relative; background: #ffffff;
+  width: 800px; height: 1131px; position: relative; background: #FFFDF8;
   font-family: 'Poppins', -apple-system, sans-serif; color: #1f2a23;
   overflow: hidden; box-sizing: border-box;
 ">
   <img src="${frame}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:1;"/>
-  <div style="position:absolute;top:135px;left:110px;right:110px;bottom:150px;display:flex;flex-direction:column;align-items:center;text-align:center;z-index:2;">
-    <div style="font-weight:800;font-size:62px;line-height:1.05;letter-spacing:-0.5px;color:${GREEN_DARK};">Certificado</div>
-    <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+  <div style="position:absolute;top:135px;left:130px;right:130px;bottom:290px;display:flex;flex-direction:column;align-items:center;text-align:center;z-index:2;">
+    <div style="font-weight:800;font-size:64px;line-height:1.05;letter-spacing:5px;text-transform:uppercase;color:${GREEN_DARK};">Certificado</div>
+    <div style="margin-top:16px;display:flex;align-items:center;gap:12px;">
       <span style="width:36px;height:1px;background:${GREEN_LIGHT};opacity:0.6;"></span>
-      <span style="font-weight:600;font-size:24px;color:${GREEN_PRIMARY};">de Conquista</span>
+      <span style="font-family:${SCRIPT_FONT};font-size:44px;color:${GREEN_PRIMARY};">de Conquista</span>
       <span style="width:36px;height:1px;background:${GREEN_LIGHT};opacity:0.6;"></span>
     </div>
-    ${dividerHtml(true)}
-    <div style="margin-top:36px;font-weight:500;font-size:15px;color:#6b7f72;">Parabéns,</div>
-    <div style="margin-top:8px;font-weight:700;font-size:34px;color:${GREEN_PRIMARY};">${escapeHtml(data.recipient)}</div>
-    <div style="margin-top:26px;font-weight:500;font-size:15px;color:#6b7f72;">por concluir com excelência o módulo</div>
-    <div style="margin-top:8px;font-weight:700;font-size:22px;color:${GREEN_DARK};max-width:540px;line-height:1.3;">${escapeHtml(data.title)}</div>
-    ${dividerHtml(true)}
-    <div style="margin-top:30px;display:flex;align-items:center;gap:36px;">
-      <div style="text-align:center;">
-        <div style="font-size:13px;color:#6b7f72;font-weight:500;">Data de conclusão</div>
-        <div style="margin-top:6px;font-weight:700;font-size:18px;color:${GREEN_DARK};">${escapeHtml(data.issuedAt)}</div>
-      </div>
-      <div style="width:1px;height:36px;background:${GREEN_LIGHT};opacity:0.5;"></div>
-      <div style="text-align:center;">
-        <div style="font-size:13px;color:#6b7f72;font-weight:500;">Carga horária</div>
-        <div style="margin-top:6px;font-weight:700;font-size:18px;color:${GREEN_DARK};">${escapeHtml(data.hours)}</div>
-      </div>
-    </div>
-    <img src="${mascot}" alt="" style="margin-top:32px;width:320px;height:auto;object-fit:contain;"/>
+    <div style="margin-top:34px;font-weight:400;font-size:17px;color:${MUTED};">Parabéns,</div>
+    <div style="margin-top:6px;font-family:${SCRIPT_FONT};font-size:66px;line-height:1.1;max-width:620px;color:${GREEN_DARK};">${escapeHtml(data.recipient)}</div>
     ${dividerHtml(false)}
-    <div style="flex:1;"></div>
-    <div style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+    <div style="margin-top:22px;font-weight:400;font-size:17px;color:${MUTED};">por concluir com excelência o módulo</div>
+    <div style="margin-top:8px;font-weight:700;font-size:24px;color:${GREEN_PRIMARY};max-width:540px;line-height:1.3;">${escapeHtml(data.title)}</div>
+    <div style="margin-top:26px;display:flex;align-items:center;gap:36px;">
+      <div style="text-align:center;">
+        <div style="font-size:14px;color:${MUTED};font-weight:400;">Data de conclusão</div>
+        <div style="margin-top:4px;font-family:${SCRIPT_FONT};font-size:28px;color:${GREEN_PRIMARY};">${escapeHtml(data.issuedAt)}</div>
+      </div>
+      <div style="width:1px;height:36px;background:${GREEN_SUPPORT};opacity:0.6;"></div>
+      <div style="text-align:center;">
+        <div style="font-size:14px;color:${MUTED};font-weight:400;">Carga horária</div>
+        <div style="margin-top:4px;font-family:${SCRIPT_FONT};font-size:28px;color:${GREEN_PRIMARY};">${escapeHtml(data.hours)}</div>
+      </div>
+    </div>
+    <img src="${mascot}" alt="" style="margin-top:24px;width:300px;height:auto;object-fit:contain;"/>
+    ${dividerHtml(false)}
+    <div style="margin-top:22px;width:calc(100% - 100px);display:flex;align-items:center;justify-content:space-between;gap:12px;">
       <div style="display:flex;align-items:center;gap:8px;">
         <img src="${qr}" alt="" style="width:56px;height:56px;"/>
         <div style="text-align:left;">
-          <div style="font-size:10px;color:#1f2a23;font-weight:700;">Verifique</div>
-          <div style="font-size:9px;color:#6b7f72;margin-top:1px;">ID: ${escapeHtml(data.id)}</div>
+          <div style="font-size:13px;color:${GREEN_PRIMARY};font-weight:600;">Verifique</div>
+          <div style="font-size:12px;color:${MUTED};margin-top:1px;">ID: ${escapeHtml(data.id)}</div>
         </div>
       </div>
       <div style="text-align:right;">
-        <div style="font-weight:800;font-size:22px;line-height:1;">
-          <span style="color:${GREEN_DARK};">Prompt</span><span style="font-style:italic;color:${GREEN_SUPPORT};">Labz</span>
-        </div>
-        <div style="margin-top:3px;font-size:8px;color:#6b7f72;">Seu laboratório com IA</div>
+        <div style="font-family:${SCRIPT_FONT};font-size:32px;line-height:1;color:${GREEN_DARK};">PromptLabz</div>
+        <div style="margin-top:3px;font-weight:600;font-size:13px;color:${GREEN_PRIMARY};">PromptLabz</div>
+        <div style="margin-top:2px;font-weight:400;font-size:10px;color:${MUTED};">Seu aprendizado, sua conquista.</div>
       </div>
     </div>
   </div>
@@ -153,7 +153,7 @@ export async function createCertificatePdfBlob(data: CertificateData): Promise<B
     loadImage(mascotUrl),
     QRCode.toDataURL(
       `https://promptlabz.app/verify/${encodeURIComponent(data.id)}`,
-      { margin: 0, color: { dark: GREEN_DARK, light: "#ffffff" } },
+      { margin: 0, color: { dark: GREEN_DARK, light: "#FFFDF8" } },
     ),
   ]);
 
@@ -170,7 +170,7 @@ export async function createCertificatePdfBlob(data: CertificateData): Promise<B
     const node = host.firstElementChild as HTMLElement;
     const canvas = await html2canvas(node, {
       scale: 2,
-      backgroundColor: "#ffffff",
+      backgroundColor: "#FFFDF8",
       useCORS: true,
       logging: false,
     });
