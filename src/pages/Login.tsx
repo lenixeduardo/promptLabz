@@ -1,10 +1,8 @@
 ﻿import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react"
+import { User, Lock, Loader2, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { BrandLogo } from "@/components/BrandLogo"
-import { MascotGlow } from "@/components/MascotGlow"
 import { CircleRevealEntry } from "@/components/CircleTransition"
 import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
@@ -43,8 +41,6 @@ function AppleIcon() {
   )
 }
 
-const HAS_ACCOUNT_KEY = "promptlabz:hasAccount"
-
 export default function Login() {
   const navigate = useNavigate()
   const { login, loginWithGoogle, user } = useAuth()
@@ -53,8 +49,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [rateLimitCooldown, setRateLimitCooldown] = useState(0)
   const [showPassword, setShowPassword] = useState(false)
-  const isReturning =
-    typeof window !== "undefined" && localStorage.getItem(HAS_ACCOUNT_KEY) === "true"
 
   useEffect(() => {
     if (user) {
@@ -134,47 +128,33 @@ export default function Login() {
       {/* Shrinking circle reveal â€" plays when arriving from Hero */}
       <CircleRevealEntry />
       <div className="mx-auto flex w-full max-w-[420px] flex-col items-center">
-        {/* Wordmark */}
-        <BrandLogo className="text-4xl" />
+        {/* Mascot + wordmark + tagline hero art (all baked into the asset) */}
+        <img
+          src="/assets/mascot-login-hero.png"
+          alt="PromptLabz — Aprenda. Crie. Evolua."
+          className="w-[280px] max-w-full object-contain"
+        />
 
         {/* Heading */}
         <h1 className="mt-6 text-center text-2xl font-extrabold leading-tight text-foreground sm:text-[28px]">
-          {isReturning ? (
-            <>
-              Bem-vindo de volta,{" "}
-              <span className="text-primary">continue aprendendo</span>
-            </>
-          ) : (
-            <>
-              Faça login para <span className="text-primary">continuar aprendendo</span>
-            </>
-          )}
+          Seja bem-vindo! 👋
         </h1>
         <p className="mt-2 text-center text-sm text-foregroundTertiary">
-          Transforme seus estudos em conquistas com o PromptLabz. 💚
+          Entre para continuar sua jornada criativa
         </p>
 
-        {/* Mascot with animated glow halo */}
-        <MascotGlow size={380} ring={false} className="mt-2">
-          <img
-            src="/assets/mascot-login-wave.png"
-            alt="PromptLabz mascot"
-            className="h-80 w-auto object-contain drop-shadow-md"
-          />
-        </MascotGlow>
-
-        <div className="mt-2 w-full">
+        <div className="mt-7 w-full">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit} role="form" aria-label="Formulário de login">
             <Input
-              type="email"
-              placeholder="E-mail"
+              type="text"
+              placeholder="E-mail ou nome de usuário"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              icon={<Mail className="h-5 w-5" strokeWidth={2.2} />}
+              icon={<User className="h-5 w-5" strokeWidth={2.2} />}
               autoComplete="email"
               required
               disabled={loading}
-              aria-label="Endereço de e-mail para login"
+              aria-label="E-mail ou nome de usuário para login"
               aria-required="true"
               aria-describedby="email-help-login"
             />
@@ -212,7 +192,7 @@ export default function Login() {
               to="/forgot-password"
               className="-mt-1 self-end text-sm font-medium text-link underline underline-offset-2 hover:text-primary"
             >
-              Esqueci minha senha
+              Esqueceu sua senha?
             </Link>
 
             <Button type="submit" size="lg" className="mt-1 w-full gap-2" disabled={loading || rateLimitCooldown > 0}>
@@ -223,31 +203,31 @@ export default function Login() {
             {/* Divider */}
             <div className="my-1 flex items-center gap-3">
               <span className="h-px flex-1 bg-stroke-light" />
-              <span className="text-sm text-foregroundTertiary">ou continue com</span>
+              <span className="text-sm text-foregroundTertiary">ou</span>
               <span className="h-px flex-1 bg-stroke-light" />
             </div>
 
             {/* Social logins */}
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3">
               <Button
                 type="button"
                 variant="social"
-                className="flex-1 gap-2 normal-case tracking-normal"
+                className="w-full gap-2 normal-case tracking-normal"
                 onClick={handleGoogleLogin}
                 disabled={loading || rateLimitCooldown > 0}
               >
                 <GoogleIcon />
-                Google
+                Entrar com Google
               </Button>
               <Button
                 type="button"
                 variant="social"
-                className="flex-1 gap-2 normal-case tracking-normal"
+                className="w-full gap-2 normal-case tracking-normal"
                 aria-label="Apple"
                 disabled
               >
                 <AppleIcon />
-                Apple
+                Entrar com Apple
               </Button>
             </div>
           </form>
