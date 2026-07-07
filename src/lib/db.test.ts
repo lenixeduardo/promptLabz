@@ -9,6 +9,8 @@ import {
   getLeaderboard,
   updateUserXP,
   updateUserGems,
+  saveModuleProgress,
+  fetchModuleProgress,
   syncInventoryToServer,
   fetchInventoryFromServer,
 } from "./db"
@@ -348,6 +350,58 @@ describe("updateUserGems", () => {
     const result = await updateUserGems("u1", 999999)
 
     expect(result.error).toBe("sync_user_xp: gems increase too large")
+  })
+})
+
+// ── saveModuleProgress / fetchModuleProgress ───────────────────────────────
+
+describe("saveModuleProgress", () => {
+  it("faz upsert no Supabase com o track e a contagem concluída", async () => {
+    const q = buildQuery({ upsert: vi.fn().mockResolvedValue({ error: null }) })
+
+    const result = await saveModuleProgress("u1", "a1", 3)
+
+    expect(result.error).toBeNull()
+    expect(q.upsert).toHaveBeenCalledWith(
+      { user_id: "u1", track: "a1", completed_count: 3 },
+      expect.anything()
+    )
+  })
+
+  it("retorna erro quando o upsert falha", async () => {
+    buildQuery({ upsert: vi.fn().mockResolvedValue({ error: { message: "Insert failed" } }) })
+
+    const result = await saveModuleProgress("u1", "a1", 3)
+
+    expect(result.error).toBe("Insert failed")
+  })
+})
+
+describe("fetchModuleProgress", () => {
+  it("retorna um mapa track → completed_count", async () => {
+    buildQuery({
+      eq: vi.fn().mockResolvedValue({
+        data: [
+          { track: "a1", completed_count: 7 },
+          { track: "a2", completed_count: 2 },
+        ],
+        error: null,
+      }),
+    })
+
+    const result = await fetchModuleProgress("u1")
+
+    expect(result.error).toBeNull()
+    expect(result.data).toEqual({ a1: 7, a2: 2 })
+  })
+
+  it("retorna erro quando a consulta falha", async () => {
+    buildQuery({ eq: vi.fn().mockResolvedValue({ data: null, error: { message: "Query failed" } }) })
+
+    const result = await fetchModuleProgress("u1")
+
+    expect(result.data).toBeNull()
+    expect(result.error).toBe("Query failed")
   })
 })
 

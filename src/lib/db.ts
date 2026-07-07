@@ -452,6 +452,47 @@ export async function updateUserGems(userId: string, gems: number): Promise<DbRe
   }
 }
 
+// ── Module (Trilha) Progress Sync ─────────────────────────────────────────────
+
+// Persists how many modules the user completed in a track (a1/a2/a3). Called as a
+// fire-and-forget side-effect after `advanceModule()`; localStorage remains the
+// source of truth for immediate reads. See src/lib/moduleProgress.ts.
+export async function saveModuleProgress(
+  userId: string,
+  track: string,
+  completedCount: number
+): Promise<DbResult<void>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { error } = await supabase.from("user_module_progress").upsert(
+      { user_id: userId, track, completed_count: completedCount },
+      { onConflict: "user_id,track" }
+    )
+    if (error) throw error
+    return { data: null, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao sincronizar progresso da trilha") }
+  }
+}
+
+// Hydrates module progress from Supabase (útil ao logar em um dispositivo novo ou
+// após perda de localStorage). Caller merges with local data, taking the max per track.
+export async function fetchModuleProgress(userId: string): Promise<DbResult<Record<string, number>>> {
+  if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
+  try {
+    const { data, error } = await supabase
+      .from("user_module_progress")
+      .select("track,completed_count")
+      .eq("user_id", userId)
+    if (error) throw error
+    const result: Record<string, number> = {}
+    for (const row of data ?? []) result[row.track] = row.completed_count
+    return { data: result, error: null }
+  } catch (err) {
+    return { data: null, error: getErrorMessage(err, "Erro ao carregar progresso da trilha") }
+  }
+}
+
 // ── Inventory Sync ────────────────────────────────────────────────────────────
 
 // Sends the current local inventory (power-ups + avatares comprados) to Supabase.

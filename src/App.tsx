@@ -22,6 +22,7 @@ import { useAchievements } from "@/hooks/useAchievements"
 import { AppLayout } from "@/components/AppLayout"
 import { getUserProfile, loadProgress } from "@/lib/db"
 import { getLocalXP, getLocalGems, saveLocalXP, saveLocalGems, XP_UPDATE_EVENT, GEMS_UPDATE_EVENT } from "@/lib/xp"
+import { syncModuleProgressFromServer } from "@/lib/moduleProgress"
 
 // Initialize user-scoped localStorage namespacing
 initUserScope()
@@ -152,6 +153,9 @@ function ProfileSyncTracker() {
 
     // Sync category progress from DB → localStorage (loadProgress already does this)
     loadProgress(uid).catch(() => {/* silent — localStorage remains as fallback */})
+
+    // Sync Trilha (module) progress from DB → localStorage, merging the higher count
+    syncModuleProgressFromServer(uid).catch(() => {/* silent — localStorage remains as fallback */})
   }, [user?.id])
   return null
 }
