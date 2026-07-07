@@ -126,9 +126,9 @@ export function TrailPath({
                   <img
                     src="/assets/mascot-trail-guide.png"
                     alt=""
-                    className="h-12 w-12 rounded-full object-cover object-top animate-mascot-float"
+                    className="h-20 w-20 rounded-full object-cover object-top shadow-lg animate-mascot-float"
                   />
-                  <span className="mt-0.5 whitespace-nowrap rounded-full bg-duo-green px-2 py-0.5 text-[10px] font-bold text-white shadow">
+                  <span className="mt-1 whitespace-nowrap rounded-full bg-duo-green px-2.5 py-1 text-[11px] font-bold text-white shadow">
                     Você está aqui!
                   </span>
                 </div>

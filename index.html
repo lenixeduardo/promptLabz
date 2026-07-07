@@ -5,13 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Google Fonts — preconnect evita bloqueio de render -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,700&display=swap" media="print" onload="this.media='all'" />
-  <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,700&display=swap" />
-  </noscript>
+  <!-- Poppins — hospedada localmente em /public/fonts (ver src/index.css).
+       Evita depender do Google Fonts CDN, que pode falhar em redes/ambientes
+       restritos e derrubar a tipografia para a fonte serif padrão do navegador. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/poppins/poppins-400.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/poppins/poppins-700.woff2" crossorigin />
 
   <!-- Preload do LCP element — mascote da landing -->
   <link rel="preload" as="image" href="/assets/mascot-login-new.png" fetchpriority="high" />
@@ -21,7 +19,7 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
   <!-- CSP: googletagmanager.com added for gtag.js; google-analytics.com for GA4 beacons -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://api.resend.com https://*.posthog.com https://us.i.posthog.com https://*.sentry.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; frame-src 'none'; object-src 'none'; base-uri 'self'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://api.resend.com https://*.posthog.com https://us.i.posthog.com https://*.sentry.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; frame-src 'none'; object-src 'none'; base-uri 'self'" />
 
   <!-- SEO Meta Tags — fallback para crawlers sem JS (WhatsApp, Telegram, etc.) -->
   <title>Engenharia de Prompts Gamificada | PromptLabz</title>
