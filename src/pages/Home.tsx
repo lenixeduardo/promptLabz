@@ -5,10 +5,7 @@ import {
   ArrowRight,
   Clock,
   Sparkles,
-  Lock,
-  Check,
   Zap,
-  Gift,
   Search,
   Wand2,
   Gem,
@@ -18,6 +15,7 @@ import {
 import { NotificationsBell } from "@/components/NotificationsBell";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { DailyTipCard } from "@/components/DailyTipCard";
+import { TrailPath } from "@/components/TrailPath";
 import { useAvatar } from "@/components/AvatarProvider";
 import { StreakFlame } from "@/components/StreakFlame";
 import { StreakCelebration } from "@/components/StreakCelebration";
@@ -374,75 +372,15 @@ export default function HomePage() {
         </div>
         {/* ── RIGHT column (sidebar widgets — desktop only) ── */}
         <div className="hidden lg:flex flex-col gap-5">
-          <div className="rounded-2xl border-2 border-stroke-light bg-card p-5">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-base font-bold text-foreground-dark">Sua trilha</h2>
-                <p className="text-[11px] text-foreground-tertiary">Trilha {activeTrack.label} em andamento</p>
-              </div>
-              <span className="text-xs font-semibold text-emerald">
-                {activeCompleted} / {activeTrack.modules.length} módulos
-              </span>
-            </div>
-            <ol className="relative space-y-3 pl-2">
-              {trail.map((m, i) => (
-                <li key={i} className="flex items-center gap-3">
-                  <div
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 ${
-                      m.status === "completed"
-                        ? "bg-emerald border-emerald text-white"
-                        : m.status === "current"
-                          ? "bg-luxury border-luxury text-luxury-foreground animate-pulse"
-                          : "bg-surface-soft border-stroke-light text-neutral"
-                    }`}
-                  >
-                    {m.status === "completed" ? (
-                      <Check className="h-5 w-5" strokeWidth={3} />
-                    ) : m.status === "current" ? (
-                      <Sparkles className="h-5 w-5" strokeWidth={2.5} />
-                    ) : (
-                      <Lock className="h-4 w-4" />
-                    )}
-                  </div>
-                  <span
-                    className={`text-sm font-semibold ${
-                      m.status === "locked" ? "text-neutral" : "text-foreground-dark"
-                    }`}
-                  >
-                    {m.label}
-                  </span>
-                </li>
-              ))}
-
-              <li className="pt-1">
-                <Link
-                  to="/missions"
-                  className="flex items-center gap-3 rounded-xl border-2 border-luxury/40 bg-gradient-to-br from-luxury/15 to-luxury/5 p-2.5 transition-transform active:scale-[0.99]"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-luxury bg-luxury text-luxury-foreground">
-                    <Gift className="h-5 w-5" strokeWidth={2.4} />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-extrabold text-foreground-dark">Baú de Missões</p>
-                      <span className="text-[10px] font-bold text-luxury">
-                        {Math.min(missionsDone, CHEST_TOTAL)}/{CHEST_TOTAL}
-                      </span>
-                    </div>
-                    <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-stroke-muted/40">
-                      <div
-                        className="h-full rounded-full bg-luxury transition-all"
-                        style={{ width: `${missionsPct}%` }}
-                      />
-                    </div>
-                    <p className="mt-1 text-[10px] text-foreground-tertiary">
-                      Complete {CHEST_TOTAL} missões diárias para abrir
-                    </p>
-                  </div>
-                </Link>
-              </li>
-            </ol>
-          </div>
+          <TrailPath
+            trail={trail}
+            trackLabel={activeTrack.label}
+            completedCount={activeCompleted}
+            totalCount={activeTrack.modules.length}
+            missionsDone={missionsDone}
+            missionsTotal={CHEST_TOTAL}
+            missionsPct={missionsPct}
+          />
 
           <div>
             <h2 className="text-base font-bold text-foreground-dark mb-3">
@@ -479,75 +417,15 @@ export default function HomePage() {
 
         {/* ── Mobile: trail + lesson (shown below other cards) ── */}
         <div className="lg:hidden px-4 pb-5 flex flex-col gap-5">
-          <div className="rounded-2xl border-2 border-stroke-light bg-card p-5">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-base font-bold text-foreground-dark">Sua trilha</h2>
-                <p className="text-[11px] text-foreground-tertiary">Trilha {activeTrack.label} em andamento</p>
-              </div>
-              <span className="text-xs font-semibold text-emerald">
-                {activeCompleted} / {activeTrack.modules.length} módulos
-              </span>
-            </div>
-            <ol className="relative space-y-3 pl-2">
-              {trail.map((m, i) => (
-                <li key={i} className="flex items-center gap-3">
-                  <div
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 ${
-                      m.status === "completed"
-                        ? "bg-emerald border-emerald text-white"
-                        : m.status === "current"
-                          ? "bg-luxury border-luxury text-luxury-foreground animate-pulse"
-                          : "bg-surface-soft border-stroke-light text-neutral"
-                    }`}
-                  >
-                    {m.status === "completed" ? (
-                      <Check className="h-5 w-5" strokeWidth={3} />
-                    ) : m.status === "current" ? (
-                      <Sparkles className="h-5 w-5" strokeWidth={2.5} />
-                    ) : (
-                      <Lock className="h-4 w-4" />
-                    )}
-                  </div>
-                  <span
-                    className={`text-sm font-semibold ${
-                      m.status === "locked" ? "text-neutral" : "text-foreground-dark"
-                    }`}
-                  >
-                    {m.label}
-                  </span>
-                </li>
-              ))}
-
-              <li className="pt-1">
-                <Link
-                  to="/missions"
-                  className="flex items-center gap-3 rounded-xl border-2 border-luxury/40 bg-gradient-to-br from-luxury/15 to-luxury/5 p-2.5 transition-transform active:scale-[0.99]"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-luxury bg-luxury text-luxury-foreground">
-                    <Gift className="h-5 w-5" strokeWidth={2.4} />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-extrabold text-foreground-dark">Baú de Missões</p>
-                      <span className="text-[10px] font-bold text-luxury">
-                        {Math.min(missionsDone, CHEST_TOTAL)}/{CHEST_TOTAL}
-                      </span>
-                    </div>
-                    <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-stroke-muted/40">
-                      <div
-                        className="h-full rounded-full bg-luxury transition-all"
-                        style={{ width: `${missionsPct}%` }}
-                      />
-                    </div>
-                    <p className="mt-1 text-[10px] text-foreground-tertiary">
-                      Complete {CHEST_TOTAL} missões diárias para abrir
-                    </p>
-                  </div>
-                </Link>
-              </li>
-            </ol>
-          </div>
+          <TrailPath
+            trail={trail}
+            trackLabel={activeTrack.label}
+            completedCount={activeCompleted}
+            totalCount={activeTrack.modules.length}
+            missionsDone={missionsDone}
+            missionsTotal={CHEST_TOTAL}
+            missionsPct={missionsPct}
+          />
 
           <div>
             <h2 className="text-base font-bold text-foreground-dark mb-3">

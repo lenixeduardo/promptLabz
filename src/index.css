@@ -2,6 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Poppins — hospedada localmente para não depender do Google Fonts CDN
+   (evita fallback para a fonte serif padrão do navegador quando a rede
+   externa está bloqueada, ex: ambientes de preview sandboxed). */
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins/poppins-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins/poppins-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins/poppins-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins/poppins-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins/poppins-800.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* duolingo-sans — apelido para Poppins (carregada via Google Fonts no index.html) */
 @font-face {
   font-family: 'duolingo-sans';
