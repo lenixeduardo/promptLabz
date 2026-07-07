@@ -20,6 +20,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLives } from "@/contexts/useLives";
 import { useAchievements } from "@/hooks/useAchievements";
 import { saveLocalXP, saveLocalGems, getLocalXP, getLocalGems, XP_UPDATE_EVENT, GEMS_UPDATE_EVENT } from "@/lib/xp";
+import { playCorrectSound, playLessonCompleteSound } from "@/lib/sound";
 
 const proofKey = (track: TrackId, module: number) =>
   scopedKey(`promptlabz:proof:${track}:${module}`);
@@ -51,6 +52,7 @@ export default function LessonPage() {
   const [proofDataUrl, setProofDataUrl] = useState<string | null>(() => readProof(track, module));
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const rewardGrantedRef = useRef(false);
+  const completionSoundPlayedRef = useRef(false);
   const scoreRef = useRef(0);
 
   useEffect(() => {
@@ -106,6 +108,8 @@ export default function LessonPage() {
     const correct = (currentActivity as any).correct as string | undefined
     if (correct && id !== correct) {
       consumeLife()
+    } else if (correct) {
+      playCorrectSound()
     }
   }
 
@@ -113,12 +117,20 @@ export default function LessonPage() {
     if (answered || !currentActivity) return
     setMatchOrderAnswers((prev) => ({ ...prev, [step]: pairs }))
     setSelected("__match_done__")
+    if (isMatch(currentActivity)) {
+      const allCorrect = currentActivity.pairs.every((p) => pairs[p.word] === p.definition)
+      if (allCorrect) playCorrectSound()
+    }
   }
 
   function handleOrderAnswer(pairs: Record<string, string>) {
     if (answered || !currentActivity) return
     setMatchOrderAnswers((prev) => ({ ...prev, [step]: pairs }))
     setSelected("__order_done__")
+    if (isOrder(currentActivity)) {
+      const allCorrect = Object.entries(currentActivity.correctPairs).every(([k, v]) => pairs[k] === v)
+      if (allCorrect) playCorrectSound()
+    }
   }
 
   function handleEssayAnswer(text: string) {
@@ -165,6 +177,13 @@ export default function LessonPage() {
   const proofDone = !!proofDataUrl;
   const lessonComplete = perfect && (!needsProof || proofDone);
   const isLastLesson = module === TRACK_TOTALS[track] - 1;
+  const showsCompletionScreen = finished && (!needsProof || proofDone);
+
+  useEffect(() => {
+    if (!showsCompletionScreen || completionSoundPlayedRef.current) return;
+    completionSoundPlayedRef.current = true;
+    playLessonCompleteSound();
+  }, [showsCompletionScreen]);
 
   useEffect(() => {
     if (!lessonComplete || rewardGrantedRef.current) return;

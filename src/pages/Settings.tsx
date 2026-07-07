@@ -24,9 +24,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { getReminderEnabled, setReminderEnabled } from "@/hooks/useInactiveReminder";
 import { getLocalXP, XP_UPDATE_EVENT } from "@/lib/xp";
 import { getLevelTitle } from "@/lib/levelTitles";
+import { SOUND_KEY, playCorrectSound } from "@/lib/sound";
 
 const NOTIF_KEY = "promptlabz:settings:notif";
-const SOUND_KEY = "promptlabz:settings:sound";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
@@ -62,6 +62,7 @@ export default function SettingsPage() {
   function setSound(value: boolean) {
     setSoundState(value);
     localStorage.setItem(SOUND_KEY, String(value));
+    if (value) playCorrectSound();
   }
 
   useEffect(() => {
