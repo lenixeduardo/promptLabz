@@ -3,6 +3,7 @@ import {
   ACHIEVEMENTS,
   checkAchievements,
   updateStreak,
+  getDaysSinceLastVisit,
 } from "@/lib/achievements"
 import {
   loadAchievements,
@@ -130,7 +131,7 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
   )
 
   const checkDailyVisit = useCallback(
-    async (userId?: string, favoritesCount?: number): Promise<Achievement[]> => {
+    async (userId?: string, favoritesCount?: number): Promise<{ newUnlocks: Achievement[]; daysAbsent: number | null }> => {
       const existing = dataRef.current
 
       // Calculate new streak locally first (optimistic)
@@ -138,6 +139,7 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
 
       let finalConsecutive = newConsecutive
       let finalLongest = Math.max(existing.longestStreak, newConsecutive)
+      let priorLastVisit = existing.lastVisitDate
 
       // Sync with Supabase if authenticated
       if (userId) {
@@ -150,6 +152,10 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
             finalConsecutive = remote.currentStreak
           }
           finalLongest = Math.max(finalLongest, remote.longestStreak, finalConsecutive)
+          // Remote may be more recent than local (e.g. visited from another device)
+          if (remote.lastVisitDate && (!priorLastVisit || remote.lastVisitDate > priorLastVisit)) {
+            priorLastVisit = remote.lastVisitDate
+          }
         }
 
         // Persist updated streak to Supabase (fire-and-forget)
@@ -159,6 +165,9 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
           lastVisitDate: newLastVisit,
         }).catch(() => {/* silent — localStorage is the fallback */})
       }
+
+      // Days the user was away before this visit — used to greet returning users.
+      const daysAbsent = getDaysSinceLastVisit(priorLastVisit)
 
       const streakData: AchievementsData = {
         ...existing,
@@ -176,7 +185,7 @@ export function AchievementsProvider({ children }: { children: ReactNode }) {
         setData({ ...next, longestStreak: finalLongest })
       }
 
-      return newUnlocks
+      return { newUnlocks, daysAbsent }
     },
     [],
   )
