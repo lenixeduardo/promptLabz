@@ -15,7 +15,7 @@ export const BOTTOM_NAV_ITEMS: BottomNavItem[] = [
   { key: "tracks", label: "Trilha", href: "/learn", icon: "GraduationCap" },
   { key: "lab", label: "Laboratório", href: "/lab", icon: "FlaskConical" },
   { key: "challenges", label: "Missões", href: "/missions", icon: "Target" },
-  { key: "news", label: "Notícias", href: "/news", icon: "Newspaper" },
+  { key: "achievements", label: "Conquistas", href: "/achievements", icon: "Trophy" },
   { key: "profile", label: "Perfil", href: "/profile", icon: "User" },
 ]
 

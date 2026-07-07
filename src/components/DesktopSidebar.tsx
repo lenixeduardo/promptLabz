@@ -4,7 +4,7 @@ import {
   GraduationCap,
   FlaskConical,
   Target,
-  Newspaper,
+  Trophy,
   User,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -14,7 +14,7 @@ const NAV_ITEMS = [
   { key: "tracks",     label: "Trilha",        href: "/learn",    Icon: GraduationCap  },
   { key: "lab",        label: "Laboratório",   href: "/lab",      Icon: FlaskConical   },
   { key: "challenges", label: "Missões",       href: "/missions", Icon: Target         },
-  { key: "news",       label: "Notícias",      href: "/news",     Icon: Newspaper      },
+  { key: "achievements", label: "Conquistas",  href: "/achievements", Icon: Trophy     },
   { key: "profile",    label: "Perfil",        href: "/profile",  Icon: User           },
 ]
 

@@ -23,8 +23,8 @@ vi.mock("@/lib/icons", () => {
     Bell: (props: Record<string, unknown>) => (
       <svg data-testid="icon-Bell" {...props} />
     ),
-    Newspaper: (props: Record<string, unknown>) => (
-      <svg data-testid="icon-Newspaper" {...props} />
+    Trophy: (props: Record<string, unknown>) => (
+      <svg data-testid="icon-Trophy" {...props} />
     ),
     User: (props: Record<string, unknown>) => (
       <svg data-testid="icon-User" {...props} />
@@ -52,19 +52,19 @@ describe("AppBottomNav", () => {
     expect(screen.getByText("Trilha")).toBeInTheDocument()
     expect(screen.getByText("Laboratório")).toBeInTheDocument()
     expect(screen.getByText("Missões")).toBeInTheDocument()
-    expect(screen.getByText("Notícias")).toBeInTheDocument()
+    expect(screen.getByText("Conquistas")).toBeInTheDocument()
     expect(screen.getByText("Perfil")).toBeInTheDocument()
   })
 
   it("destaca o item ativo com aria-current='page'", () => {
     render(
-      <MemoryRouter initialEntries={["/news"]}>
+      <MemoryRouter initialEntries={["/achievements"]}>
         <AppBottomNav />
       </MemoryRouter>
     )
 
-    const newsLink = screen.getByLabelText("Notícias")
-    expect(newsLink).toHaveAttribute("aria-current", "page")
+    const achievementsLink = screen.getByLabelText("Conquistas")
+    expect(achievementsLink).toHaveAttribute("aria-current", "page")
   })
 
   it("não destaca itens inativos", () => {
