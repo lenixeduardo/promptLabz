@@ -71,12 +71,18 @@ function ensureFontsLoaded(): Promise<void> {
   return fontsPromise;
 }
 
+// Paleta de verdes do certificado
+const GREEN_PRIMARY = "#307818"; // verde principal
+const GREEN_SUPPORT = "#4B8636"; // verde médio de apoio
+const GREEN_LIGHT = "#6FAE55"; // verde claro (próximo da gatinha)
+const GREEN_DARK = "#1F5E17"; // verde escuro para contraste
+
 function dividerHtml(withLines: boolean) {
-  const line = `<span style="width:40px;height:1px;background:#307818;opacity:0.35;"></span>`;
+  const line = `<span style="width:40px;height:1px;background:${GREEN_LIGHT};opacity:0.5;"></span>`;
   return `
     <div style="margin-top:18px;display:flex;align-items:center;justify-content:center;gap:8px;">
       ${withLines ? line : ""}
-      <span style="width:7px;height:7px;transform:rotate(45deg);background:#307818;opacity:0.55;"></span>
+      <span style="width:7px;height:7px;transform:rotate(45deg);background:${GREEN_SUPPORT};opacity:0.7;"></span>
       ${withLines ? line : ""}
     </div>`;
 }
@@ -95,27 +101,27 @@ export function buildCertificateHtml(
 ">
   <img src="${frame}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:1;"/>
   <div style="position:absolute;top:135px;left:110px;right:110px;bottom:150px;display:flex;flex-direction:column;align-items:center;text-align:center;z-index:2;">
-    <div style="font-weight:800;font-size:62px;line-height:1.05;letter-spacing:-0.5px;color:#307818;">Certificado</div>
+    <div style="font-weight:800;font-size:62px;line-height:1.05;letter-spacing:-0.5px;color:${GREEN_DARK};">Certificado</div>
     <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
-      <span style="width:36px;height:1px;background:#307818;opacity:0.4;"></span>
-      <span style="font-weight:600;font-size:24px;color:#307818;">de Conquista</span>
-      <span style="width:36px;height:1px;background:#307818;opacity:0.4;"></span>
+      <span style="width:36px;height:1px;background:${GREEN_LIGHT};opacity:0.6;"></span>
+      <span style="font-weight:600;font-size:24px;color:${GREEN_PRIMARY};">de Conquista</span>
+      <span style="width:36px;height:1px;background:${GREEN_LIGHT};opacity:0.6;"></span>
     </div>
     ${dividerHtml(true)}
     <div style="margin-top:36px;font-weight:500;font-size:15px;color:#6b7f72;">Parabéns,</div>
-    <div style="margin-top:8px;font-weight:700;font-size:34px;color:#307818;">${escapeHtml(data.recipient)}</div>
+    <div style="margin-top:8px;font-weight:700;font-size:34px;color:${GREEN_PRIMARY};">${escapeHtml(data.recipient)}</div>
     <div style="margin-top:26px;font-weight:500;font-size:15px;color:#6b7f72;">por concluir com excelência o módulo</div>
-    <div style="margin-top:8px;font-weight:700;font-size:22px;color:#307818;max-width:540px;line-height:1.3;">${escapeHtml(data.title)}</div>
+    <div style="margin-top:8px;font-weight:700;font-size:22px;color:${GREEN_DARK};max-width:540px;line-height:1.3;">${escapeHtml(data.title)}</div>
     ${dividerHtml(true)}
     <div style="margin-top:30px;display:flex;align-items:center;gap:36px;">
       <div style="text-align:center;">
         <div style="font-size:13px;color:#6b7f72;font-weight:500;">Data de conclusão</div>
-        <div style="margin-top:6px;font-weight:700;font-size:18px;color:#307818;">${escapeHtml(data.issuedAt)}</div>
+        <div style="margin-top:6px;font-weight:700;font-size:18px;color:${GREEN_DARK};">${escapeHtml(data.issuedAt)}</div>
       </div>
-      <div style="width:1px;height:36px;background:#307818;opacity:0.25;"></div>
+      <div style="width:1px;height:36px;background:${GREEN_LIGHT};opacity:0.5;"></div>
       <div style="text-align:center;">
         <div style="font-size:13px;color:#6b7f72;font-weight:500;">Carga horária</div>
-        <div style="margin-top:6px;font-weight:700;font-size:18px;color:#307818;">${escapeHtml(data.hours)}</div>
+        <div style="margin-top:6px;font-weight:700;font-size:18px;color:${GREEN_DARK};">${escapeHtml(data.hours)}</div>
       </div>
     </div>
     <img src="${mascot}" alt="" style="margin-top:32px;width:320px;height:auto;object-fit:contain;"/>
@@ -131,7 +137,7 @@ export function buildCertificateHtml(
       </div>
       <div style="text-align:right;">
         <div style="font-weight:800;font-size:22px;line-height:1;">
-          <span style="color:#307818;">Prompt</span><span style="font-style:italic;color:#307818;">Labz</span>
+          <span style="color:${GREEN_DARK};">Prompt</span><span style="font-style:italic;color:${GREEN_SUPPORT};">Labz</span>
         </div>
         <div style="margin-top:3px;font-size:8px;color:#6b7f72;">Seu laboratório com IA</div>
       </div>
@@ -147,7 +153,7 @@ export async function createCertificatePdfBlob(data: CertificateData): Promise<B
     loadImage(mascotUrl),
     QRCode.toDataURL(
       `https://promptlabz.app/verify/${encodeURIComponent(data.id)}`,
-      { margin: 0, color: { dark: "#307818", light: "#ffffff" } },
+      { margin: 0, color: { dark: GREEN_DARK, light: "#ffffff" } },
     ),
   ]);
 
