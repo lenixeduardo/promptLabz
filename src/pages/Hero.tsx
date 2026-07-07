@@ -9,15 +9,6 @@ import { capture } from "@/lib/analytics"
 
 const HAS_ACCOUNT_KEY = "promptlabz:hasAccount"
 
-const NAV_LINKS = [
-  { label: "Recursos", href: "#recursos" },
-  { label: "Como funciona", href: "#como-funciona" },
-  { label: "Gamificação", href: "#gamificacao" },
-  { label: "Depoimentos", href: "#depoimentos" },
-  { label: "Planos", href: "#planos" },
-  { label: "FAQ", href: "#faq" },
-]
-
 export default function Hero() {
   const [transitioning, setTransitioning] = useState(false)
   const navigate = useNavigate()
@@ -55,19 +46,6 @@ export default function Hero() {
       {/* ── Desktop Navbar (hidden on mobile) ── */}
       <nav className="hidden lg:flex items-center justify-between px-8 xl:px-16 py-4 bg-white border-b border-gray-100 sticky top-0 z-50">
         <BrandLogo className="text-2xl" />
-
-        <ul className="flex items-center gap-6 xl:gap-8">
-          {NAV_LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="text-sm text-[#4A6741] hover:text-[#1A3B24] font-medium transition-colors"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
 
         <Button
           size="default"
