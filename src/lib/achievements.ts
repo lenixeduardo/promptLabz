@@ -221,6 +221,17 @@ export function updateStreak(lastVisitDate: string | null, consecutiveDays: numb
   return { newLastVisit: today, newConsecutive: 1 }
 }
 
+/**
+ * Whole calendar days between `lastVisitDate` ("YYYY-MM-DD") and today.
+ * Returns null when there's no prior visit to compare against.
+ */
+export function getDaysSinceLastVisit(lastVisitDate: string | null): number | null {
+  if (!lastVisitDate) return null
+  const today = new Date().toISOString().slice(0, 10)
+  const msPerDay = 86400000
+  return Math.round((Date.parse(today) - Date.parse(lastVisitDate)) / msPerDay)
+}
+
 export function getProgressCount(
   achId: string,
   data: Pick<AchievementsData, "totalLessonsCompleted" | "perfectCount" | "consecutiveDays" | "visitedCategories">,

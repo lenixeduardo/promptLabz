@@ -8,7 +8,10 @@ export interface AchievementsCtx {
   /** Whether we're still loading from DB on first mount */
   initialLoading: boolean
   checkLessonComplete: (wasPerfect: boolean) => Achievement[]
-  checkDailyVisit: (userId?: string, favoritesCount?: number) => Promise<Achievement[]>
+  checkDailyVisit: (
+    userId?: string,
+    favoritesCount?: number,
+  ) => Promise<{ newUnlocks: Achievement[]; daysAbsent: number | null }>
   visitCategory: (categoryId: string) => void
   checkFavorites: (count: number) => Achievement[]
   getAchievement: (id: string) => Achievement | undefined

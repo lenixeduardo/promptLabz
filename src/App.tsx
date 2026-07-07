@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react"
+import { lazy, Suspense, useEffect, useRef, useState } from "react"
 import { Routes, Route, Navigate, useLocation } from "react-router-dom"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { LivesProvider } from "@/contexts/LivesContext"
@@ -17,6 +17,8 @@ import { completeMission } from "@/lib/missions"
 import { useUTM } from "@/hooks/useUTM"
 import { useInactiveReminder } from "@/hooks/useInactiveReminder"
 import { QuickEnhanceModal } from "@/components/QuickEnhanceModal"
+import { WelcomeBackScreen } from "@/components/WelcomeBackScreen"
+import { useAchievements } from "@/hooks/useAchievements"
 import { AppLayout } from "@/components/AppLayout"
 import { getUserProfile, loadProgress } from "@/lib/db"
 import { getLocalXP, getLocalGems, saveLocalXP, saveLocalGems, XP_UPDATE_EVENT, GEMS_UPDATE_EVENT } from "@/lib/xp"
@@ -154,6 +156,34 @@ function ProfileSyncTracker() {
   return null
 }
 
+// ── Welcome Back: greets users who were away for 2+ days ─────────────────
+function WelcomeBackTracker() {
+  const { user } = useAuth()
+  const { initialLoading, checkDailyVisit } = useAchievements()
+  const [daysAbsent, setDaysAbsent] = useState<number | null>(null)
+  const checkedUserIdRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (!user?.id || initialLoading) return
+    if (checkedUserIdRef.current === user.id) return
+    checkedUserIdRef.current = user.id
+
+    checkDailyVisit(user.id).then(({ daysAbsent: absent }) => {
+      if (absent !== null && absent >= 2) setDaysAbsent(absent)
+    })
+  }, [user?.id, initialLoading, checkDailyVisit])
+
+  if (daysAbsent === null) return null
+
+  return (
+    <WelcomeBackScreen
+      active
+      name={user?.user_metadata?.full_name?.split(" ")[0]}
+      onClose={() => setDaysAbsent(null)}
+    />
+  )
+}
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -166,6 +196,7 @@ export default function App() {
           <ActivityTracker />
           <MissionTracker />
           <ProfileSyncTracker />
+          <WelcomeBackTracker />
           <Toaster position="top-right" />
           <QuickEnhanceModal />
           <Suspense fallback={<LoadingScreen />}>
