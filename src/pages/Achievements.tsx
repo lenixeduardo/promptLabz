@@ -16,7 +16,7 @@ export default function Achievements() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white px-4 py-6">
+    <div className="min-h-screen bg-white px-4 py-6">
       <div className="mx-auto w-full max-w-lg lg:max-w-4xl">
         {/* Header com Mascote */}
         <div className="mb-8 flex items-start justify-between gap-4">

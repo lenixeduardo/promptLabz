@@ -42,7 +42,7 @@ export default function AuthCallback() {
   }, [navigate])
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-6">
+    <div className="flex min-h-screen items-center justify-center bg-white px-6">
       <div className="text-center">
         <img
           src="/assets/mascot-login-new.png"

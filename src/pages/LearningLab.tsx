@@ -127,7 +127,7 @@ export default function LearningLabPage() {
     i < completed ? "completed" : i === completed ? "current" : "locked";
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
+    <div className="flex min-h-screen flex-col bg-white pb-24 lg:pb-8">
       <div className="sticky top-0 z-10 border-b border-stroke-muted bg-card px-4 lg:px-8 py-3">
         <div className="flex items-center justify-between lg:max-w-5xl lg:mx-auto">
           <div>

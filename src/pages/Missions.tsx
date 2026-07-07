@@ -23,7 +23,7 @@ export default function MissionsPage() {
   } = useDailyMissions();
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg pb-24 lg:pb-8">
+    <div className="flex min-h-screen flex-col bg-white pb-24 lg:pb-8">
       <AppPageHeader
         title="Missões Diárias"
         subtitle={`Conclua ${CHEST_THRESHOLD} missões para ganhar +${CHEST_REWARD_XP} XP e +${CHEST_REWARD_GEMS} gemas`}

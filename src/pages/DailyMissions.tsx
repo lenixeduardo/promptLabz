@@ -26,7 +26,7 @@ export default function DailyMissions() {
   )
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-pageBgLight to-white pb-24 lg:pb-8">
+    <div className="flex min-h-screen flex-col bg-white pb-24 lg:pb-8">
       {/* Header */}
       <div className="sticky top-0 z-10 border-b border-stroke-muted bg-white px-4 py-3">
         <div className="flex items-center gap-3">

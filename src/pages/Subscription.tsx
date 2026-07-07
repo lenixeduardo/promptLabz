@@ -52,7 +52,7 @@ export default function Subscription() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end">
+    <div className="relative min-h-screen overflow-hidden bg-white">
       <div className="mx-auto w-full max-w-[420px]">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-5">

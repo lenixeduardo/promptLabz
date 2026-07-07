@@ -93,7 +93,7 @@ export default function QuizResult() {
   const performanceLabel = getPerformanceLabel(score, total)
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center overflow-hidden bg-gradient-to-b from-white via-pageBgLight to-gradient-end px-5 pb-10 pt-8">
+    <div className="relative flex min-h-screen flex-col items-center overflow-hidden bg-white px-5 pb-10 pt-8">
       {CONFETTI.map((c, i) => (
         <span
           key={i}

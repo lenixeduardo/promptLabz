@@ -135,7 +135,7 @@ export default function PromptDetail() {
   // Not found state
   if (!prompt) {
     return (
-      <div className="min-h-screen bg-surface-soft flex flex-col items-center justify-center px-6 pb-32">
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 pb-32">
         <p className="mb-2 text-lg font-bold text-foregroundDark">Prompt não encontrado</p>
         <p className="mb-6 text-sm text-foregroundSecondary text-center">
           Não conseguimos encontrar o prompt com ID "{promptId}".
@@ -153,7 +153,7 @@ export default function PromptDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-32 lg:pb-8">
+    <div className="min-h-screen bg-white pb-32 lg:pb-8">
       {/* Header */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#C8EDD8] via-[#D5F0E2] to-pageBgLight px-5 pb-6 pt-12">
         <div className="mb-3 flex items-center gap-3">

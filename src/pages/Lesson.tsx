@@ -221,7 +221,7 @@ export default function LessonPage() {
 
   if (finished && needsProof && !proofDone) {
     return (
-      <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg">
+      <div className="flex min-h-screen flex-col bg-white">
         <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
           <Link to="/learn" className="rounded-full p-1.5 text-forest hover:bg-surface-success">
             <ArrowLeft className="h-5 w-5" />
@@ -286,7 +286,7 @@ export default function LessonPage() {
 
   if (finished) {
     return (
-      <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg">
+      <div className="flex min-h-screen flex-col bg-white">
         <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
           <Link to="/learn" className="rounded-full p-1.5 text-forest hover:bg-surface-success">
             <ArrowLeft className="h-5 w-5" />
@@ -384,7 +384,7 @@ export default function LessonPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg">
+    <div className="flex min-h-screen flex-col bg-white">
       <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
         <Link to="/learn" className="rounded-full p-1.5 text-forest hover:bg-surface-success">
           <ArrowLeft className="h-5 w-5" />

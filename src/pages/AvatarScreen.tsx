@@ -49,7 +49,7 @@ export default function AvatarScreen() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-pageBg pb-28 lg:pb-8">
+    <div className="flex min-h-screen flex-col bg-white pb-28 lg:pb-8">
       {/* Header */}
       <div className="px-4 pt-6">
         <div className="mb-2 flex items-center justify-between">

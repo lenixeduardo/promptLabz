@@ -186,7 +186,7 @@ export default function QuickQuiz() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-surface-soft">
+    <div className="flex min-h-screen flex-col bg-white">
       {/* Header */}
       <div className="sticky top-0 z-10 border-b border-pageBgLight bg-surface-soft px-4 pb-3 pt-4">
         <div className="mb-3 flex items-center justify-between">

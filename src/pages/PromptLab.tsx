@@ -169,7 +169,7 @@ export default function PromptLabPage() {
         : "text-red-400";
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-page-bg-light to-page-bg">
+    <div className="flex min-h-screen flex-col bg-white">
       <CelebrationCanvas active={showCelebration} duration={3500} />
 
       <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">

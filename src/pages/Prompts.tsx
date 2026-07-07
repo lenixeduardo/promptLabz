@@ -54,7 +54,7 @@ export default function Prompts() {
   }, [error])
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-24 lg:pb-8">
+    <div className="min-h-screen bg-white pb-24 lg:pb-8">
       {/* Hero banner */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#C8EDD8] via-[#D5F0E2] to-pageBgLight px-5 pb-6 pt-12">
         <div className="flex items-start justify-between">

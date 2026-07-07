@@ -161,7 +161,7 @@ export default function Templates() {
   const isSearching = search.trim().length > 0
 
   return (
-    <div className="min-h-screen bg-[#F0FAF3] dark:bg-pageBg pb-24 lg:pb-8">
+    <div className="min-h-screen bg-white dark:bg-pageBg pb-24 lg:pb-8">
       {/* Header */}
       <div className="bg-white px-4 pb-3 pt-12 shadow-sm">
         <div className="mb-1 flex items-start justify-between">

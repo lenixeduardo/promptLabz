@@ -84,7 +84,7 @@ export default function Certificates() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pageBgLight to-white pb-10">
+    <div className="min-h-screen bg-white pb-10">
       <AppPageHeader title="Meus Certificados" back="/settings" />
 
       <div className="mx-auto w-full max-w-lg px-4 py-6">
