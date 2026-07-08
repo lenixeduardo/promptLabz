@@ -116,10 +116,8 @@ export default function Login() {
     setLoading(false)
   }
 
-  // Classe "dark" fixa: esta tela usa sempre a paleta escura (fundo preto),
-  // independente do tema do app — evita texto claro sobre fundo branco
   return (
-    <div className="dark relative min-h-screen overflow-hidden bg-gradient-to-b from-pageBgLight via-gradient-mid to-gradient-end px-5 py-8 text-foreground">
+    <div className="relative min-h-screen overflow-hidden bg-white px-5 py-8 text-foreground">
       <PageSEO
         title="Entrar no PromptLabz — Aprenda IA com Gamificacao"
         description="Acesse sua conta PromptLabz e retome seu progresso. Trilha gamificada de engenharia de prompts com sistema de vidas, XP e conquistas. Continue agora."
@@ -164,7 +162,7 @@ export default function Login() {
             aria-label="E-mail ou nome de usuário"
             aria-required="true"
             aria-describedby="email-help-login"
-            className="border-stroke-light bg-white/[0.04] text-foreground placeholder:text-foregroundTertiary focus-visible:border-primary focus-visible:ring-primary/25"
+            className="border-stroke-light text-foreground placeholder:text-foregroundTertiary focus-visible:border-primary focus-visible:ring-primary/25"
           />
           <small id="email-help-login" className="sr-only">
             Insira o e-mail ou nome de usuário da sua conta
@@ -183,7 +181,7 @@ export default function Login() {
               aria-label="Senha"
               aria-required="true"
               aria-describedby="password-help-login"
-              className="border-stroke-light bg-white/[0.04] pr-12 text-foreground placeholder:text-foregroundTertiary focus-visible:border-primary focus-visible:ring-primary/25"
+              className="border-stroke-light pr-12 text-foreground placeholder:text-foregroundTertiary focus-visible:border-primary focus-visible:ring-primary/25"
             />
             <button
               type="button"
@@ -201,7 +199,7 @@ export default function Login() {
 
           <Link
             to="/forgot-password"
-            className="-mt-1 self-end text-sm font-semibold text-mint hover:text-primary"
+            className="-mt-1 self-end text-sm font-semibold text-link hover:text-primary"
           >
             Esqueceu sua senha?
           </Link>
@@ -228,7 +226,7 @@ export default function Login() {
             type="button"
             variant="ghost"
             size="lg"
-            className="w-full justify-center gap-3 rounded-2xl border-2 border-stroke-light bg-transparent normal-case tracking-normal text-foreground hover:bg-white/5 active:bg-white/10"
+            className="w-full justify-center gap-3 rounded-2xl border-2 border-stroke-light bg-transparent normal-case tracking-normal text-foreground hover:bg-surface-soft active:bg-stroke-light"
             onClick={handleGoogleLogin}
             disabled={loading || rateLimitCooldown > 0}
           >
@@ -239,7 +237,7 @@ export default function Login() {
             type="button"
             variant="ghost"
             size="lg"
-            className="w-full justify-center gap-3 rounded-2xl border-2 border-stroke-light bg-transparent normal-case tracking-normal text-foreground hover:bg-white/5 active:bg-white/10"
+            className="w-full justify-center gap-3 rounded-2xl border-2 border-stroke-light bg-transparent normal-case tracking-normal text-foreground hover:bg-surface-soft active:bg-stroke-light"
             onClick={() => sileo.info({ title: "Login com Apple em breve" })}
             aria-label="Entrar com Apple"
           >
@@ -251,7 +249,7 @@ export default function Login() {
         {/* Footer */}
         <p className="mt-7 text-center text-base text-foregroundDark">
           Ainda não tem uma conta?{" "}
-          <Link to="/signup" className="font-semibold text-mint hover:text-primary">
+          <Link to="/signup" className="font-semibold text-link hover:text-primary">
             Criar conta
           </Link>
         </p>
