@@ -4,13 +4,14 @@ import { saveModuleProgress, fetchModuleProgress } from "./db";
 
 const BASE_KEY = "promptlabz:module-progress:v2";
 
-export type TrackId = "a1" | "a2" | "a3";
+export type TrackId = "a1" | "a2" | "a3" | "a4";
 
 // A1 starts pre-completed as the initial experience
 const DEFAULTS: Record<TrackId, number> = {
   a1: 7,
   a2: 0,
   a3: 0,
+  a4: 0,
 };
 
 type State = Partial<Record<TrackId, number>>;

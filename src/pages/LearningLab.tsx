@@ -29,6 +29,12 @@ import {
   Package,
   Heart,
   PartyPopper,
+  Image as ImageIcon,
+  User,
+  Frame,
+  SunMedium,
+  Ban,
+  GraduationCap,
 } from "lucide-react";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { cn } from "@/lib/utils";
@@ -98,13 +104,30 @@ const TRACKS: { id: TrackId; label: string; subtitle: string; modules: Module[] 
       { title: "Skills em LLMs — Como usar",                icon: Brain,        xp: 180 },
     ],
   },
+  {
+    id: "a4",
+    label: "Trilha A4",
+    subtitle: "Prompts visuais com a técnica SAFE",
+    modules: [
+      { title: "Introdução à Técnica SAFE",           icon: ImageIcon,    xp: 60 },
+      { title: "S — Sujeito",                          icon: User,         xp: 90 },
+      { title: "A — Atributos",                        icon: Palette,      xp: 100 },
+      { title: "F — Enquadramento",                    icon: Frame,        xp: 110 },
+      { title: "E — Ambiente",                         icon: SunMedium,    xp: 120 },
+      { title: "Restrições negativas",                 icon: Ban,          xp: 130 },
+      { title: "Prova final — Dissertativa SAFE",      icon: GraduationCap, xp: 200 },
+    ],
+  },
 ];
+
+const TRACK_ORDER: TrackId[] = ["a1", "a2", "a3", "a4"];
 
 function useTrackCompletion() {
   return {
     a1: useModuleProgress("a1"),
     a2: useModuleProgress("a2"),
     a3: useModuleProgress("a3"),
+    a4: useModuleProgress("a4"),
   };
 }
 
@@ -119,6 +142,7 @@ export default function LearningLabPage() {
     a1: true,
     a2: true,
     a3: true,
+    a4: true,
   };
 
   const active = TRACKS.find((t) => t.id === track) ?? TRACKS[0];
@@ -242,15 +266,19 @@ export default function LearningLabPage() {
               <p className="flex items-center justify-center gap-1.5 text-sm font-bold text-emerald-dark">
                 Trilha {active.label.replace("Trilha ", "")} concluída! <PartyPopper className="h-4 w-4" />
               </p>
-              {active.id !== "a3" && trackUnlocked[active.id === "a1" ? "a2" : "a3"] && (
-                <button
-                  type="button"
-                  onClick={() => setSearchParams({ track: active.id === "a1" ? "a2" : "a3" })}
-                  className="mt-2 rounded-full bg-primary px-4 py-1.5 text-xs font-bold text-primary-foreground"
-                >
-                  Continuar na próxima trilha →
-                </button>
-              )}
+              {(() => {
+                const nextId = TRACK_ORDER[TRACK_ORDER.indexOf(active.id) + 1];
+                if (!nextId || !trackUnlocked[nextId]) return null;
+                return (
+                  <button
+                    type="button"
+                    onClick={() => setSearchParams({ track: nextId })}
+                    className="mt-2 rounded-full bg-primary px-4 py-1.5 text-xs font-bold text-primary-foreground"
+                  >
+                    Continuar na próxima trilha →
+                  </button>
+                );
+              })()}
             </div>
           )}
         </div>
