@@ -21,20 +21,13 @@ vi.mock("sileo", () => ({
   sileo: {
     success: vi.fn(),
     error: vi.fn(),
+    info: vi.fn(),
   },
   Toaster: () => null,
 }))
 
 vi.mock("@/components/CircleTransition", () => ({
   CircleRevealEntry: () => null,
-}))
-
-vi.mock("@/components/MascotGlow", () => ({
-  MascotGlow: ({ children }: any) => <div>{children}</div>,
-}))
-
-vi.mock("@/components/BrandLogo", () => ({
-  BrandLogo: () => <div>PromptLabz</div>,
 }))
 
 function renderLogin() {
@@ -60,34 +53,37 @@ beforeEach(() => {
 describe("Login — renderização", () => {
   it("exibe campos de email e senha", () => {
     renderLogin()
-    expect(screen.getByPlaceholderText("Seu e-mail")).toBeInTheDocument()
-    expect(screen.getByPlaceholderText("Sua senha")).toBeInTheDocument()
+    expect(screen.getByPlaceholderText("E-mail ou nome de usuário")).toBeInTheDocument()
+    expect(screen.getByPlaceholderText("Senha")).toBeInTheDocument()
   })
 
   it("exibe o botão de entrar", () => {
     renderLogin()
-    expect(screen.getByRole("button", { name: /entrar/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /^entrar$/i })).toBeInTheDocument()
   })
 
-  it("exibe link para esqueci minha senha", () => {
+  it("exibe link para esqueceu sua senha", () => {
     renderLogin()
-    expect(screen.getByText(/esqueci minha senha/i)).toBeInTheDocument()
+    expect(screen.getByText(/esqueceu sua senha/i)).toBeInTheDocument()
   })
 
   it("exibe link para criar conta", () => {
     renderLogin()
-    expect(screen.getByText(/crie agora/i)).toBeInTheDocument()
+    expect(screen.getByText(/criar conta/i)).toBeInTheDocument()
   })
 
-  it("não exibe 'Bem-vindo de volta' para novo usuário", () => {
-    renderLogin()
-    expect(screen.queryByText(/bem-vindo de volta/i)).not.toBeInTheDocument()
-  })
-
-  it("exibe 'Bem-vindo de volta' para usuário que já tem conta", () => {
-    localStorage.setItem("promptlabz:hasAccount", "true")
+  it("exibe 'Bem-vindo de volta'", () => {
     renderLogin()
     expect(screen.getByText(/bem-vindo de volta/i)).toBeInTheDocument()
+  })
+
+  it("permite alternar a visibilidade da senha", async () => {
+    renderLogin()
+    const passwordInput = screen.getByPlaceholderText("Senha")
+    expect(passwordInput).toHaveAttribute("type", "password")
+
+    await userEvent.click(screen.getByRole("button", { name: /mostrar senha/i }))
+    expect(passwordInput).toHaveAttribute("type", "text")
   })
 })
 
@@ -96,9 +92,9 @@ describe("Login — submissão", () => {
     mockLogin.mockResolvedValue({ success: true, user: { email: "a@a.com" } })
 
     renderLogin()
-    await userEvent.type(screen.getByPlaceholderText("Seu e-mail"), "a@a.com")
-    await userEvent.type(screen.getByPlaceholderText("Sua senha"), "senha123")
-    await userEvent.click(screen.getByRole("button", { name: /entrar/i }))
+    await userEvent.type(screen.getByPlaceholderText("E-mail ou nome de usuário"), "a@a.com")
+    await userEvent.type(screen.getByPlaceholderText("Senha"), "senha123")
+    await userEvent.click(screen.getByRole("button", { name: /^entrar$/i }))
 
     await waitFor(() => expect(screen.getByText("home")).toBeInTheDocument())
   })
@@ -107,9 +103,9 @@ describe("Login — submissão", () => {
     mockLogin.mockResolvedValue({ success: false, error: "Credenciais inválidas" })
 
     renderLogin()
-    await userEvent.type(screen.getByPlaceholderText("Seu e-mail"), "a@a.com")
-    await userEvent.type(screen.getByPlaceholderText("Sua senha"), "errada")
-    await userEvent.click(screen.getByRole("button", { name: /entrar/i }))
+    await userEvent.type(screen.getByPlaceholderText("E-mail ou nome de usuário"), "a@a.com")
+    await userEvent.type(screen.getByPlaceholderText("Senha"), "errada")
+    await userEvent.click(screen.getByRole("button", { name: /^entrar$/i }))
 
     await waitFor(() =>
       expect(sileo.error).toHaveBeenCalledWith({ title: "Credenciais inválidas" })
@@ -120,26 +116,26 @@ describe("Login — submissão", () => {
     mockLogin.mockImplementation(() => new Promise(() => {}))
 
     renderLogin()
-    await userEvent.type(screen.getByPlaceholderText("Seu e-mail"), "a@a.com")
-    await userEvent.type(screen.getByPlaceholderText("Sua senha"), "senha123")
-    await userEvent.click(screen.getByRole("button", { name: /entrar/i }))
+    await userEvent.type(screen.getByPlaceholderText("E-mail ou nome de usuário"), "a@a.com")
+    await userEvent.type(screen.getByPlaceholderText("Senha"), "senha123")
+    await userEvent.click(screen.getByRole("button", { name: /^entrar$/i }))
 
     expect(screen.getByRole("button", { name: /entrando/i })).toBeDisabled()
   })
 })
 
 describe("Login — navegação", () => {
-  it("navega para /forgot-password ao clicar em 'Esqueci minha senha'", async () => {
+  it("navega para /forgot-password ao clicar em 'Esqueceu sua senha'", async () => {
     renderLogin()
-    await userEvent.click(screen.getByText(/esqueci minha senha/i))
+    await userEvent.click(screen.getByText(/esqueceu sua senha/i))
     await waitFor(() =>
       expect(screen.getByText("esqueci senha")).toBeInTheDocument()
     )
   })
 
-  it("navega para /signup ao clicar em 'Crie agora'", async () => {
+  it("navega para /signup ao clicar em 'Criar conta'", async () => {
     renderLogin()
-    await userEvent.click(screen.getByText(/crie agora/i))
+    await userEvent.click(screen.getByText(/criar conta/i))
     await waitFor(() =>
       expect(screen.getByText("cadastro")).toBeInTheDocument()
     )
