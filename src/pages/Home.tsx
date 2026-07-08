@@ -83,6 +83,19 @@ const TRACKS: TrackInfo[] = [
       "Skills em LLMs — Como usar",
     ],
   },
+  {
+    id: "a4",
+    label: "A4",
+    modules: [
+      "Introdução à Técnica SAFE",
+      "S — Sujeito",
+      "A — Atributos",
+      "F — Enquadramento",
+      "E — Ambiente",
+      "Restrições negativas",
+      "Prova final — Dissertativa SAFE",
+    ],
+  },
 ];
 
 const MISSIONS_BASE = "promptlabz:dailyMissions";
@@ -125,7 +138,8 @@ export default function HomePage() {
   const a1 = useModuleProgress("a1");
   const a2 = useModuleProgress("a2");
   const a3 = useModuleProgress("a3");
-  const completions: Record<TrackId, number> = { a1, a2, a3 };
+  const a4 = useModuleProgress("a4");
+  const completions: Record<TrackId, number> = { a1, a2, a3, a4 };
 
   const activeTrack =
     TRACKS.find((t) => completions[t.id] < t.modules.length) ?? TRACKS[TRACKS.length - 1];

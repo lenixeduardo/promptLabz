@@ -2180,6 +2180,398 @@ const a3ProjetoFinalExtra: LessonActivity[] = [
 
 // Conteúdo por trilha → módulo (índice). Falta → DEFAULT_QUESTIONS.
 // Agora suporta LessonActivity[] (múltiplos tipos) em vez de apenas Question[]
+// ── A4 — Técnica SAFE para Geração de Imagens com IA ──────────────────────
+
+const a4Intro: Question[] = [
+  {
+    id: "a4-intro-1",
+    prompt: "O que significa a sigla SAFE na técnica de prompts visuais?",
+    options: [
+      { id: "a", text: "Style, Angle, Focus, Edit" },
+      { id: "b", text: "Subject, Attributes, Framing, Environment (Sujeito, Atributos, Enquadramento, Ambiente)" },
+      { id: "c", text: "Speed, Accuracy, Format, Export" },
+    ],
+    correct: "b",
+    explanation: "SAFE organiza o prompt em quatro partes: Sujeito (quem aparece), Atributos (como aparece), Enquadramento (como a imagem é composta) e Ambiente (onde e sob qual luz).",
+  },
+  {
+    id: "a4-intro-2",
+    prompt: "Por que o prompt \"Gere uma imagem bonita de um homem em uma cafeteria\" é considerado fraco?",
+    options: [
+      { id: "a", text: "Porque é curto demais para qualquer IA processar." },
+      { id: "b", text: "Porque não define sujeito com detalhes, atributos, enquadramento nem ambiente com clareza." },
+      { id: "c", text: "Porque menciona um cenário muito específico." },
+    ],
+    correct: "b",
+    explanation: "O prompt não informa idade, roupa, estilo, ângulo de câmera nem iluminação — a IA precisa 'adivinhar' quase tudo, gerando um resultado genérico.",
+  },
+  {
+    id: "a4-intro-3",
+    prompt: "Qual é a fórmula principal da técnica SAFE, incluindo o componente que evita erros técnicos?",
+    options: [
+      { id: "a", text: "Ideia + Referência + Estilo" },
+      { id: "b", text: "Sujeito + Atributos + Enquadramento + Ambiente + Restrições" },
+      { id: "c", text: "Título + Legenda + Hashtags" },
+    ],
+    correct: "b",
+    explanation: "A fórmula completa é Sujeito + Atributos + Enquadramento + Ambiente + Restrições — as restrições fecham o prompt evitando erros comuns como mãos deformadas ou texto indesejado.",
+    hint: "Pense nas quatro letras de SAFE mais o último campo do template da aula.",
+  },
+];
+
+const a4IntroFill: LessonActivity[] = [
+  {
+    id: "a4-intro-fill-1",
+    type: "fill-blank",
+    sentence: "A técnica SAFE ajuda a estruturar prompts completos, evitando comandos {___} como 'gere uma imagem bonita'.",
+    options: [
+      { id: "a", text: "vagos" },
+      { id: "b", text: "longos" },
+      { id: "c", text: "técnicos" },
+    ],
+    correct: "a",
+    explanation: "Comandos vagos não especificam sujeito, atributos, enquadramento ou ambiente — a técnica SAFE existe justamente para eliminar essa vagueza.",
+  },
+];
+
+const a4Sujeito: Question[] = [
+  {
+    id: "a4-sujeito-1",
+    prompt: "O que o 'S' (Sujeito) da técnica SAFE define?",
+    options: [
+      { id: "a", text: "A iluminação e o clima da cena." },
+      { id: "b", text: "O elemento principal da imagem — quem ou o que aparece." },
+      { id: "c", text: "O formato de arquivo exportado pela IA." },
+    ],
+    correct: "b",
+    explanation: "O Sujeito é o elemento central: uma pessoa, animal, produto, personagem, objeto ou cenário — a resposta para 'quem ou o que aparece'.",
+  },
+  {
+    id: "a4-sujeito-2",
+    prompt: "Qual das perguntas abaixo NÃO ajuda a definir o Sujeito?",
+    options: [
+      { id: "a", text: "Quem aparece?" },
+      { id: "b", text: "Qual tipo de lente será usada?" },
+      { id: "c", text: "Qual postura ou ação o sujeito tem?" },
+    ],
+    correct: "b",
+    explanation: "O tipo de lente pertence ao Enquadramento (F), não ao Sujeito. Sujeito trata de quem/o quê, idade, aparência geral e postura.",
+    hint: "Lente e ângulo de câmera pertencem a outra letra do SAFE.",
+  },
+  {
+    id: "a4-sujeito-3",
+    prompt: "Qual opção descreve melhor um Sujeito bem definido?",
+    options: [
+      { id: "a", text: "\"Uma pessoa.\"" },
+      { id: "b", text: "\"Homem jovem brasileiro, desenvolvedor de software, sentado diante de um setup moderno.\"" },
+      { id: "c", text: "\"Luz dourada de início de dia.\"" },
+    ],
+    correct: "b",
+    explanation: "A opção B especifica quem é (homem jovem brasileiro), sua atividade (desenvolvedor) e ação (sentado diante de um setup) — exatamente o que o Sujeito deve conter.",
+  },
+];
+
+const a4SujeitoFill: LessonActivity[] = [
+  {
+    id: "a4-sujeito-fill-1",
+    type: "fill-blank",
+    sentence: "O Sujeito responde à pergunta: quem ou o que {___} na imagem.",
+    options: [
+      { id: "a", text: "aparece" },
+      { id: "b", text: "ilumina" },
+      { id: "c", text: "emoldura" },
+    ],
+    correct: "a",
+    explanation: "Sujeito = quem ou o que aparece na imagem — é sempre o ponto de partida do prompt SAFE.",
+  },
+];
+
+const a4Atributos: Question[] = [
+  {
+    id: "a4-atributos-1",
+    prompt: "O que os Atributos (A) de SAFE descrevem?",
+    options: [
+      { id: "a", text: "O local onde a cena acontece." },
+      { id: "b", text: "Os detalhes visuais do sujeito: roupa, expressão, estilo, cores e nível de realismo." },
+      { id: "c", text: "O ângulo e a lente da câmera." },
+    ],
+    correct: "b",
+    explanation: "Atributos cobrem tudo o que descreve como o sujeito aparece: roupa, expressão, estilo visual, cores principais e nível de realismo.",
+  },
+  {
+    id: "a4-atributos-2",
+    prompt: "Em 'Usando camiseta preta minimalista, barba bem aparada, expressão concentrada, estilo fotográfico ultra-realista', qual elemento do SAFE está sendo descrito?",
+    options: [
+      { id: "a", text: "Ambiente" },
+      { id: "b", text: "Atributos" },
+      { id: "c", text: "Enquadramento" },
+    ],
+    correct: "b",
+    explanation: "Roupa, barba, expressão e estilo são características visuais do sujeito — ou seja, Atributos.",
+  },
+  {
+    id: "a4-atributos-3",
+    prompt: "Qual pergunta pertence à etapa de Atributos?",
+    options: [
+      { id: "a", text: "Qual é a idade aproximada do sujeito?" },
+      { id: "b", text: "A imagem será vertical ou horizontal?" },
+      { id: "c", text: "Existe algum detalhe importante que deve ser preservado, como uma cicatriz ou tatuagem?" },
+    ],
+    correct: "c",
+    explanation: "Detalhes a preservar fazem parte dos Atributos. Idade aproximada é do Sujeito (S); formato da imagem é do Enquadramento (F).",
+    hint: "Cuidado: uma das opções pertence ao Sujeito, não aos Atributos.",
+  },
+];
+
+const a4AtributosMatch: LessonActivity[] = [
+  {
+    id: "a4-atributos-match-1",
+    type: "match",
+    instruction: "Ligue cada palavra-chave de estilo visual ao tipo de imagem que ela melhor descreve:",
+    pairs: [
+      { word: "Ultra-realista", definition: "Foto profissional indistinguível de uma câmera real" },
+      { word: "3D cartoon", definition: "Personagem estilizado tipo mascote de aplicativo" },
+      { word: "Editorial", definition: "Estética de revista de moda/lifestyle" },
+      { word: "Isométrico", definition: "Ilustração técnica em ângulo de 30° sem perspectiva" },
+    ],
+    correctPairs: {
+      "Ultra-realista": "Foto profissional indistinguível de uma câmera real",
+      "3D cartoon": "Personagem estilizado tipo mascote de aplicativo",
+      "Editorial": "Estética de revista de moda/lifestyle",
+      "Isométrico": "Ilustração técnica em ângulo de 30° sem perspectiva",
+    },
+    explanation: "Cada estilo visual direciona a IA para uma linguagem estética diferente — escolher a palavra certa nos Atributos evita resultados genéricos.",
+  },
+];
+
+const a4Enquadramento: Question[] = [
+  {
+    id: "a4-enquadramento-1",
+    prompt: "O que o Enquadramento (F) da técnica SAFE define?",
+    options: [
+      { id: "a", text: "A expressão facial do sujeito." },
+      { id: "b", text: "Como a imagem é composta: formato, plano, ângulo, lente e composição." },
+      { id: "c", text: "A paleta de cores do cenário." },
+    ],
+    correct: "b",
+    explanation: "Formato, plano, ângulo de câmera e lente descrevem como a imagem é composta — isso é Enquadramento.",
+  },
+  {
+    id: "a4-enquadramento-2",
+    prompt: "Em \"Formato vertical 4:5, plano médio, câmera na altura dos olhos, lente 50 mm\", a que elemento do SAFE isso pertence?",
+    options: [
+      { id: "a", text: "Sujeito" },
+      { id: "b", text: "Ambiente" },
+      { id: "c", text: "Enquadramento" },
+    ],
+    correct: "c",
+    explanation: "Formato, plano, ângulo de câmera e lente descrevem como a imagem é composta — isso é Enquadramento.",
+  },
+  {
+    id: "a4-enquadramento-3",
+    prompt: "Qual é a diferença entre 'plano médio' e 'corpo inteiro' no Enquadramento?",
+    options: [
+      { id: "a", text: "Não há diferença, são sinônimos." },
+      { id: "b", text: "'Plano médio' mostra o sujeito da cintura para cima; 'corpo inteiro' mostra o sujeito completo, da cabeça aos pés." },
+      { id: "c", text: "'Plano médio' é usado só para produtos, nunca para pessoas." },
+    ],
+    correct: "b",
+    explanation: "Plano médio enquadra da cintura para cima; corpo inteiro mostra o sujeito por completo — a escolha muda o quanto do cenário aparece ao redor.",
+  },
+];
+
+const a4EnquadramentoOrder: LessonActivity[] = [
+  {
+    id: "a4-enquadramento-order-1",
+    type: "order",
+    instruction: "Conecte cada termo de enquadramento à sua definição:",
+    leftItems: [
+      { id: "a", text: "Plano fechado" },
+      { id: "b", text: "Composição centralizada" },
+      { id: "c", text: "Lente 50 mm" },
+      { id: "d", text: "Fundo desfocado" },
+    ],
+    rightItems: [
+      { id: "w", text: "Enquadra apenas rosto ou detalhe próximo" },
+      { id: "x", text: "Sujeito posicionado no centro do quadro" },
+      { id: "y", text: "Lente padrão que aproxima o resultado da visão humana" },
+      { id: "z", text: "Profundidade de campo rasa isolando o sujeito do cenário" },
+    ],
+    correctPairs: { a: "w", b: "x", c: "y", d: "z" },
+    explanation: "Cada termo de enquadramento controla um aspecto diferente da composição — dominar esse vocabulário dá controle fino sobre o resultado.",
+  },
+];
+
+const a4Ambiente: Question[] = [
+  {
+    id: "a4-ambiente-1",
+    prompt: "O que o Ambiente (E) da técnica SAFE define?",
+    options: [
+      { id: "a", text: "A postura do sujeito." },
+      { id: "b", text: "O local, a iluminação, o clima e a atmosfera da cena." },
+      { id: "c", text: "O tipo de lente da câmera." },
+    ],
+    correct: "b",
+    explanation: "Local, horário, iluminação e atmosfera emocional pertencem ao Ambiente — a última letra do SAFE antes das Restrições.",
+  },
+  {
+    id: "a4-ambiente-2",
+    prompt: "'Escritório moderno durante a noite, iluminação ambiente azul e roxa, atmosfera tecnológica' descreve qual elemento do SAFE?",
+    options: [
+      { id: "a", text: "Ambiente" },
+      { id: "b", text: "Atributos" },
+      { id: "c", text: "Enquadramento" },
+    ],
+    correct: "a",
+    explanation: "Local, horário, iluminação e atmosfera emocional pertencem ao Ambiente — a última letra do SAFE antes das Restrições.",
+  },
+  {
+    id: "a4-ambiente-3",
+    prompt: "Qual das opções é um exemplo de 'iluminação' que pode ser usada no campo Ambiente?",
+    options: [
+      { id: "a", text: "Lente 35 mm" },
+      { id: "b", text: "Luz dourada de início de dia" },
+      { id: "c", text: "Plano médio aberto" },
+    ],
+    correct: "b",
+    explanation: "'Luz dourada de início de dia' descreve iluminação — elemento do Ambiente. Lente e plano pertencem ao Enquadramento.",
+    hint: "Duas das opções são termos de Enquadramento, não de Ambiente.",
+  },
+];
+
+const a4AmbienteMatch: LessonActivity[] = [
+  {
+    id: "a4-ambiente-match-1",
+    type: "match",
+    instruction: "Ligue cada tipo de iluminação ao clima que ela transmite:",
+    pairs: [
+      { word: "Luz dourada de início de dia", definition: "Atmosfera quente, sofisticada e acolhedora" },
+      { word: "Neon discreto", definition: "Atmosfera urbana, tecnológica e noturna" },
+      { word: "Luz suave de estúdio", definition: "Atmosfera limpa e profissional, sem sombras duras" },
+      { word: "Iluminação volumétrica", definition: "Atmosfera cinematográfica com feixes de luz visíveis" },
+    ],
+    correctPairs: {
+      "Luz dourada de início de dia": "Atmosfera quente, sofisticada e acolhedora",
+      "Neon discreto": "Atmosfera urbana, tecnológica e noturna",
+      "Luz suave de estúdio": "Atmosfera limpa e profissional, sem sombras duras",
+      "Iluminação volumétrica": "Atmosfera cinematográfica com feixes de luz visíveis",
+    },
+    explanation: "A escolha da iluminação no campo Ambiente é o que mais influencia a sensação emocional da imagem gerada.",
+  },
+];
+
+const a4Restricoes: Question[] = [
+  {
+    id: "a4-restricoes-1",
+    prompt: "Qual é a função das Restrições negativas no prompt SAFE?",
+    options: [
+      { id: "a", text: "Substituir a necessidade de descrever o Sujeito." },
+      { id: "b", text: "Informar explicitamente o que NÃO deve aparecer na imagem, evitando erros comuns da IA." },
+      { id: "c", text: "Definir o formato de arquivo de saída." },
+    ],
+    correct: "b",
+    explanation: "Restrições como 'sem texto', 'sem logotipos' e 'mãos anatômicas corretas' funcionam como uma rede de segurança contra artefatos comuns de geração de imagem.",
+  },
+  {
+    id: "a4-restricoes-2",
+    prompt: "Por que 'mãos anatômicas corretas' costuma aparecer como restrição em prompts de pessoas?",
+    options: [
+      { id: "a", text: "Porque IAs de imagem historicamente erram na geração de mãos, gerando dedos deformados." },
+      { id: "b", text: "Porque é uma exigência legal em todos os países." },
+      { id: "c", text: "Porque aumenta o tempo de geração da imagem." },
+    ],
+    correct: "a",
+    explanation: "Mãos são um ponto fraco conhecido de muitos modelos de geração de imagem — pedir explicitamente anatomia correta reduz esse tipo de erro.",
+  },
+  {
+    id: "a4-restricoes-3",
+    prompt: "Restrições negativas substituem a necessidade de um bom Sujeito, Atributos, Enquadramento e Ambiente?",
+    options: [
+      { id: "a", text: "Sim, restrições bem escritas bastam sozinhas." },
+      { id: "b", text: "Não — elas apenas complementam as quatro primeiras letras, evitando falhas técnicas, mas não definem o conteúdo da imagem." },
+      { id: "c", text: "Sim, desde que sejam longas o suficiente." },
+    ],
+    correct: "b",
+    explanation: "Restrições fecham o prompt prevenindo erros técnicos, mas sem um Sujeito, Atributos, Enquadramento e Ambiente bem definidos, a imagem ainda sai genérica.",
+  },
+];
+
+const a4RestricoesOrder: LessonActivity[] = [
+  {
+    id: "a4-restricoes-order-1",
+    type: "order",
+    instruction: "Conecte cada restrição negativa ao problema que ela evita:",
+    leftItems: [
+      { id: "a", text: "Sem texto / sem logotipos" },
+      { id: "b", text: "Mãos anatômicas corretas" },
+      { id: "c", text: "Sem pele artificial" },
+      { id: "d", text: "Sem distorções" },
+    ],
+    rightItems: [
+      { id: "w", text: "Palavras ilegíveis ou marcas inventadas aparecendo na imagem" },
+      { id: "x", text: "Dedos extras ou deformados" },
+      { id: "y", text: "Aparência de boneco/plástico no rosto" },
+      { id: "z", text: "Elementos fisicamente impossíveis ou tortos na composição" },
+    ],
+    correctPairs: { a: "w", b: "x", c: "y", d: "z" },
+    explanation: "Cada restrição ataca um erro específico e recorrente dos modelos de geração de imagem.",
+  },
+];
+
+// Essays de revisão — cada item revisa o módulo anterior da trilha A4
+const essayA4: EssayActivity[] = [
+  // [1] revisa "Introdução à Técnica SAFE" (módulo 0)
+  { id: "essay-a4-1", type: "essay",
+    prompt: "Com base na introdução à técnica SAFE: por que um prompt como 'gere uma imagem bonita de um app' é considerado fraco, e o que a sigla SAFE resolve nesse problema?",
+    placeholder: "Explique o problema do prompt vago e como SAFE organiza a solução...",
+    referenceAnswer: "O prompt não define sujeito, atributos, enquadramento nem ambiente, forçando a IA a adivinhar. SAFE resolve isso organizando o prompt em Sujeito (quem/o quê), Atributos (como aparece), Enquadramento (como é composto) e Ambiente (onde e sob qual luz), além de Restrições para evitar erros técnicos — o resultado é um prompt completo e replicável." },
+  // [2] revisa "S — Sujeito" (módulo 1)
+  { id: "essay-a4-2", type: "essay",
+    prompt: "O que deve estar presente na definição do Sujeito de um prompt SAFE? Escreva um exemplo de Sujeito bem descrito para uma cena à sua escolha.",
+    placeholder: "Descreva quem/o que aparece, com idade, aparência e ação...",
+    referenceAnswer: "O Sujeito deve responder quem ou o que aparece, com idade aproximada, aparência geral e postura/ação. Ex.: 'Mulher jovem brasileira, designer gráfica, sentada em frente a uma mesa de desenho digital, olhando atentamente para a tela.'" },
+  // [3] revisa "A — Atributos" (módulo 2)
+  { id: "essay-a4-3", type: "essay",
+    prompt: "Explique a diferença entre Sujeito e Atributos na técnica SAFE. Dê um exemplo de Atributos aplicados ao Sujeito do exercício anterior.",
+    placeholder: "Diferencie os dois campos e complete com atributos...",
+    referenceAnswer: "O Sujeito define quem/o que aparece; os Atributos definem como esse sujeito aparece — roupa, expressão, estilo, cores e nível de realismo. Ex.: 'Usando blazer bege, expressão focada, estilo editorial premium, pele natural, cores neutras.'" },
+  // [4] revisa "F — Enquadramento" (módulo 3)
+  { id: "essay-a4-4", type: "essay",
+    prompt: "Escreva um Enquadramento completo (formato, plano, ângulo e lente) para a cena que você vem construindo nos exercícios anteriores.",
+    placeholder: "Defina formato da imagem, plano, ângulo de câmera e lente...",
+    referenceAnswer: "Exemplo: 'Formato vertical 4:5, plano médio, câmera na altura dos olhos, composição centralizada, lente 50 mm, fundo levemente desfocado.' O Enquadramento controla como a cena é composta visualmente, independente do que está nela." },
+  // [5] revisa "E — Ambiente" (módulo 4)
+  { id: "essay-a4-5", type: "essay",
+    prompt: "Descreva o Ambiente ideal para a cena que você vem construindo: local, iluminação e atmosfera. Por que a escolha de iluminação muda tanto o resultado?",
+    placeholder: "Descreva local, horário, luz e clima emocional...",
+    referenceAnswer: "Exemplo: 'Estúdio de design moderno durante a tarde, luz natural suave entrando pela janela, atmosfera criativa e organizada.' A iluminação muda o resultado porque define o tom emocional da imagem — a mesma cena parece completamente diferente sob luz dourada, neon ou luz fria de estúdio." },
+  // [6] revisa "Restrições negativas" (módulo 5)
+  { id: "essay-a4-6", type: "essay",
+    prompt: "Liste ao menos 4 restrições negativas úteis para o tipo de imagem que você vem descrevendo nos exercícios e explique o que cada uma evita.",
+    placeholder: "Liste restrições e o problema técnico que cada uma previne...",
+    referenceAnswer: "Exemplo: 'Sem texto' evita palavras ilegíveis inventadas; 'sem logotipos' evita marcas fictícias; 'mãos anatômicas corretas' evita dedos deformados; 'sem distorções' evita elementos fisicamente impossíveis. Restrições não substituem um bom Sujeito/Atributos/Enquadramento/Ambiente, mas evitam falhas técnicas comuns da IA." },
+];
+
+// Prova final — dissertativa aplicando as 5 regras (S, A, F, E, Restrições) de uma vez
+const a4ProvaFinal: EssayActivity[] = [
+  { id: "a4-prova-1", type: "essay",
+    prompt: "PROVA — Parte 1 (Foto profissional): escolha um tema de pessoa trabalhando ou estudando. Escreva separadamente 1) Sujeito, 2) Atributos, 3) Enquadramento, 4) Ambiente, 5) Restrições — depois una tudo em um único parágrafo de prompt final.",
+    placeholder: "1) Sujeito: ... 2) Atributos: ... 3) Enquadramento: ... 4) Ambiente: ... 5) Restrições: ... Prompt final: ...",
+    referenceAnswer: "Exemplo — Sujeito: 'Jovem estudante brasileira de medicina, sentada em uma biblioteca.' Atributos: 'Usando blusa azul-clara, óculos de leitura, expressão concentrada, estilo fotográfico realista.' Enquadramento: 'Formato vertical 4:5, plano médio, câmera na altura dos olhos, composição centralizada, lente 50 mm.' Ambiente: 'Biblioteca universitária à tarde, luz natural suave pela janela, estantes desfocadas ao fundo, atmosfera estudiosa e tranquila.' Restrições: 'Sem texto, sem logotipos, sem distorções, mãos anatômicas corretas, alta definição.' Prompt final: 'Jovem estudante brasileira de medicina, sentada em uma biblioteca universitária, lendo com expressão concentrada. Usando blusa azul-clara e óculos de leitura, estilo fotográfico realista, pele natural. Formato vertical 4:5, plano médio, câmera na altura dos olhos, composição centralizada, lente 50 mm, fundo desfocado. Ambiente com luz natural suave da tarde, estantes ao fundo, atmosfera estudiosa e tranquila. Sem texto, sem logotipos, sem distorções, mãos anatômicas corretas, alta definição.'" },
+  { id: "a4-prova-2", type: "essay",
+    prompt: "PROVA — Parte 2 (Divulgação de produto digital): escolha um app, SaaS, curso ou ferramenta. Escreva separadamente Sujeito, Atributos, Enquadramento, Ambiente e Restrições, e depois o prompt final unificado.",
+    placeholder: "1) Sujeito: ... 2) Atributos: ... 3) Enquadramento: ... 4) Ambiente: ... 5) Restrições: ... Prompt final: ...",
+    referenceAnswer: "Exemplo — Sujeito: 'Mockup de aplicativo de finanças pessoais exibido em uma tela de celular centralizada.' Atributos: 'Interface moderna e limpa, gráficos de gastos coloridos, tipografia elegante, paleta verde e branco.' Enquadramento: 'Formato vertical 9:16, celular centralizado na composição.' Ambiente: 'Fundo escuro premium com linhas abstratas suaves, iluminação sofisticada, atmosfera de produto digital moderno.' Restrições: 'Sem textos ilegíveis, sem marcas externas, sem distorções, alta definição.' O prompt final reúne os cinco campos em um único parágrafo coeso, como no Exemplo 2 da aula." },
+  { id: "a4-prova-3", type: "essay",
+    prompt: "PROVA — Parte 3 (Asset para interface): escolha um mascote, ícone ou ilustração sem fundo. Escreva separadamente Sujeito, Atributos, Enquadramento, Ambiente e Restrições, e depois o prompt final unificado.",
+    placeholder: "1) Sujeito: ... 2) Atributos: ... 3) Enquadramento: ... 4) Ambiente: ... 5) Restrições: ... Prompt final: ...",
+    referenceAnswer: "Exemplo — Sujeito: 'Mascote robô estilizado para aplicativo de produtividade.' Atributos: 'Aparência amigável e moderna, cores azul e branco, olhos grandes, pose confiante, estilo 3D cartoon premium.' Enquadramento: 'Composição centralizada, corpo inteiro.' Ambiente: 'Iluminação suave de estúdio, fundo transparente.' Restrições: 'Sem texto adicional, sem fundo, sem distorções, alta definição.' O prompt final combina os cinco campos em um único parágrafo coeso, seguindo o modelo do Exemplo 3 da aula." },
+  { id: "a4-prova-4", type: "essay",
+    prompt: "Releia os prompts finais que você escreveu nas partes 1, 2 e 3. Avalie-os usando os critérios da aula: clareza do sujeito, riqueza dos atributos, precisão do enquadramento, qualidade do ambiente, coerência visual e uso correto de restrições negativas. O que você melhoraria em cada um?",
+    placeholder: "Para cada prompt, aponte um ponto forte e um ponto a melhorar...",
+    referenceAnswer: "Uma boa autoavaliação identifica, para cada prompt: se o Sujeito está livre de ambiguidade, se os Atributos evitam contradições (ex.: não pedir 'realista' e 'cartoon' ao mesmo tempo), se o Enquadramento é compatível com o Ambiente descrito, e se as Restrições cobrem os riscos mais prováveis daquele tipo de imagem (mãos, texto, logotipos). Não existe resposta única certa — o objetivo é praticar a autocrítica usando os critérios da aula." },
+];
+
 export const LESSONS: Record<TrackId, LessonActivity[][]> = {
   a1: [
     a1Boas_vindas,                                                           // 0
@@ -2223,6 +2615,15 @@ export const LESSONS: Record<TrackId, LessonActivity[][]> = {
     [essayA3[17], ...gitBashBasico, ...gitOrder],              // 18 ← essay revisa módulo 17
     [essayA3[18], ...npmBasico],                               // 19 ← essay revisa módulo 18
     [essayA3[19], ...skillsLLMBasico, ...llmMatch],            // 20 ← essay revisa módulo 19
+  ],
+  a4: [
+    [...a4Intro, ...a4IntroFill],                                          // 0 — Introdução à Técnica SAFE
+    [essayA4[0], ...a4Sujeito, ...a4SujeitoFill],                          // 1 — S — Sujeito (essay revisa módulo 0)
+    [essayA4[1], ...a4Atributos, ...a4AtributosMatch],                     // 2 — A — Atributos (essay revisa módulo 1)
+    [essayA4[2], ...a4Enquadramento, ...a4EnquadramentoOrder],             // 3 — F — Enquadramento (essay revisa módulo 2)
+    [essayA4[3], ...a4Ambiente, ...a4AmbienteMatch],                       // 4 — E — Ambiente (essay revisa módulo 3)
+    [essayA4[4], ...a4Restricoes, ...a4RestricoesOrder],                   // 5 — Restrições negativas (essay revisa módulo 4)
+    [essayA4[5], ...a4ProvaFinal],                                         // 6 — Prova final dissertativa (essay revisa módulo 5 + prova SAFE completa)
   ],
 };
 
@@ -3093,6 +3494,123 @@ Você é um engenheiro sênior especializado em code review.
       ],
     }],
   ],
+
+  // ── Trilha A4 — Técnica SAFE para Geração de Imagens com IA ────────────
+  a4: [
+    // Módulo 0 — Introdução à Técnica SAFE
+    [{
+      id: "slide-a4-0",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "A Técnica SAFE para Geração de Imagens" },
+        { type: "text", text: "A geração de imagens com IA depende diretamente da clareza do prompt. Quanto mais organizado for o pedido, maior a chance de a imagem sair próxima do resultado desejado. A técnica SAFE estrutura o prompt em quatro partes essenciais, evitando comandos vagos." },
+        { type: "example", label: "Prompt fraco × Prompt SAFE", before: "Gere uma imagem bonita de um homem em uma cafeteria.", after: "Jovem empresário brasileiro sentado em uma cafeteria moderna, usando camisa preta casual, expressão confiante. Fotografia ultra-realista, luz dourada de início de dia, enquadramento meio corpo, lente 50 mm. Sem texto, sem logotipos, sem artefatos." },
+        { type: "mind-map", title: "SAFE", branches: [
+          { label: "S — Sujeito", children: ["Quem ou o que aparece", "Idade, aparência, postura"] },
+          { label: "A — Atributos", children: ["Roupa, expressão, estilo", "Cores e nível de realismo"] },
+          { label: "F — Enquadramento", children: ["Formato, plano, ângulo", "Lente e composição"] },
+          { label: "E — Ambiente", children: ["Local, iluminação", "Clima e atmosfera"] },
+        ]},
+        { type: "tip", text: "Nesta trilha você vai dominar cada letra do SAFE em um módulo dedicado — e no módulo final vai aplicar as 5 regras (S, A, F, E e Restrições) de uma vez, em uma prova dissertativa." },
+      ],
+    }],
+    // Módulo 1 — S: Sujeito
+    [{
+      id: "slide-a4-1",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "S — Sujeito: Quem ou o que aparece" },
+        { type: "text", text: "O Sujeito define o elemento principal da imagem: uma pessoa, animal, produto, personagem, objeto ou cenário. É sempre a primeira frase do prompt SAFE — defina-o antes de pensar em estilo, enquadramento ou cenário." },
+        { type: "mind-map", title: "Perguntas para definir o Sujeito", branches: [
+          { label: "Identidade", children: ["Quem aparece?", "É pessoa, animal, produto, personagem ou objeto?"] },
+          { label: "Características", children: ["Qual idade aproximada?", "Qual aparência geral?"] },
+          { label: "Ação", children: ["Qual postura?", "O que está fazendo?"] },
+        ]},
+        { type: "example", label: "Sujeito vago × Sujeito claro", before: "Um homem.", after: "Homem jovem brasileiro, desenvolvedor de software, sentado diante de um setup moderno." },
+        { type: "tip", text: "Evite adjetivos genéricos como 'bonito' ou 'legal' no Sujeito — prefira fatos concretos: idade, profissão, ação." },
+      ],
+    }],
+    // Módulo 2 — A: Atributos
+    [{
+      id: "slide-a4-2",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "A — Atributos: Como o sujeito aparece" },
+        { type: "text", text: "Os Atributos definem os detalhes visuais do sujeito: roupa, expressão, estilo visual, cores principais, nível de realismo e qualquer detalhe importante que deve ser preservado." },
+        { type: "mind-map", title: "Atributos", branches: [
+          { label: "Roupa & estilo", children: ["Tipo de roupa", "Estilo visual (ultra-realista, cartoon, editorial...)"] },
+          { label: "Expressão", children: ["Expressão facial", "Emoção transmitida"] },
+          { label: "Cores & realismo", children: ["Cores principais", "Nível de realismo desejado"] },
+        ]},
+        { type: "example", label: "Sujeito sem atributos × Sujeito com atributos", before: "Homem jovem brasileiro, desenvolvedor de software.", after: "Usando camiseta preta minimalista, barba bem aparada, expressão concentrada, aparência natural, estilo fotográfico ultra-realista." },
+        { type: "tip", text: "Palavras úteis de estilo: ultra-realista, cinematográfico, editorial, minimalista, futurista, premium, 3D cartoon, isométrico, concept art." },
+      ],
+    }],
+    // Módulo 3 — F: Enquadramento
+    [{
+      id: "slide-a4-3",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "F — Enquadramento: Como a imagem é composta" },
+        { type: "text", text: "O Enquadramento define como a imagem será composta: formato, plano, ângulo de câmera, tipo de lente e posição do sujeito na composição." },
+        { type: "mind-map", title: "Enquadramento", branches: [
+          { label: "Formato", children: ["Vertical (4:5, 9:16)", "Horizontal (16:9)", "Quadrado (1:1)"] },
+          { label: "Plano", children: ["Fechado (rosto)", "Médio (cintura para cima)", "Corpo inteiro"] },
+          { label: "Ângulo & lente", children: ["Altura dos olhos", "Levemente abaixo", "Lente 35 mm / 50 mm"] },
+        ]},
+        { type: "example", label: "Sem enquadramento × Com enquadramento", before: "Uma câmera apontada para o homem.", after: "Formato vertical 4:5, plano médio, câmera levemente abaixo da linha dos olhos, composição centralizada, lente 50 mm, fundo levemente desfocado." },
+        { type: "tip", text: "O Enquadramento não muda o que está na cena — muda como a cena é mostrada. Combine-o sempre com um bom Sujeito e Atributos." },
+      ],
+    }],
+    // Módulo 4 — E: Ambiente
+    [{
+      id: "slide-a4-4",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "E — Ambiente: Onde e sob qual luz" },
+        { type: "text", text: "O Ambiente define o local, o horário, a iluminação e a atmosfera emocional da cena. É o elemento que mais influencia o clima e a sensação transmitida pela imagem." },
+        { type: "mind-map", title: "Ambiente", branches: [
+          { label: "Local", children: ["Onde a cena acontece", "Interno ou externo"] },
+          { label: "Iluminação", children: ["Horário do dia", "Tipo de luz"] },
+          { label: "Atmosfera", children: ["Clima emocional", "Fundo limpo ou detalhado"] },
+        ]},
+        { type: "example", label: "Ambiente vago × Ambiente descrito", before: "Em um escritório.", after: "Escritório moderno durante a noite, iluminação ambiente azul e roxa, monitores ligados ao fundo, atmosfera tecnológica e premium." },
+        { type: "tip", text: "Palavras úteis de iluminação: luz dourada de início de dia, luz suave de estúdio, iluminação cinematográfica, luz natural pela janela, neon discreto, contraluz suave, iluminação volumétrica." },
+      ],
+    }],
+    // Módulo 5 — Restrições negativas (a 5ª regra)
+    [{
+      id: "slide-a4-5",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Restrições — A 5ª Regra da Técnica SAFE" },
+        { type: "text", text: "Além de Sujeito, Atributos, Enquadramento e Ambiente, todo prompt SAFE completo termina com Restrições: o que NÃO deve aparecer na imagem. Elas funcionam como uma rede de segurança contra erros técnicos comuns de modelos de geração de imagem." },
+        { type: "mind-map", title: "Restrições comuns", branches: [
+          { label: "Elementos indesejados", children: ["Sem texto", "Sem logotipos", "Sem elementos extras"] },
+          { label: "Erros técnicos", children: ["Sem artefatos", "Sem distorções", "Mãos anatômicas corretas"] },
+          { label: "Aparência", children: ["Sem pele artificial", "Sem aparência de boneco"] },
+        ]},
+        { type: "example", label: "Sem restrições × Com restrições", before: "Homem sentado em uma cafeteria, foto realista.", after: "Homem sentado em uma cafeteria, foto realista. Sem texto, sem logotipos, sem distorções, sem artefatos, mãos anatômicas corretas, alta definição." },
+        { type: "tip", text: "Restrições não substituem um bom Sujeito, Atributos, Enquadramento e Ambiente — elas apenas evitam erros técnicos comuns da IA, como dedos deformados ou texto inventado." },
+      ],
+    }],
+    // Módulo 6 — Prova final
+    [{
+      id: "slide-a4-6",
+      type: "content-slide",
+      blocks: [
+        { type: "heading", text: "Prova Final — Aplicando as 5 Regras de Uma Vez" },
+        { type: "text", text: "Chegou a hora de juntar tudo. Nesta prova dissertativa, você vai escrever três prompts completos aplicando as 5 regras da técnica SAFE: Sujeito, Atributos, Enquadramento, Ambiente e Restrições — para uma foto profissional, uma divulgação de produto digital e um asset de interface." },
+        { type: "mind-map", title: "Critérios de avaliação", branches: [
+          { label: "Conteúdo", children: ["Clareza do sujeito", "Riqueza dos atributos"] },
+          { label: "Composição", children: ["Precisão do enquadramento", "Qualidade da descrição do ambiente"] },
+          { label: "Consistência", children: ["Coerência visual", "Ausência de contradições", "Uso correto de restrições negativas"] },
+        ]},
+        { type: "quote", text: "\"Quanto mais claro o prompt, maior o controle sobre o resultado gerado pela IA.\"" },
+        { type: "tip", text: "Não corra para o prompt final — escreva primeiro cada regra separadamente (S, A, F, E, Restrições) e só depois junte tudo em um único parágrafo coeso." },
+      ],
+    }],
+  ],
 };
 
 export function getActivities(track: TrackId, moduleIndex: number): LessonActivity[] {
@@ -3112,6 +3630,7 @@ export const TRACK_TOTALS: Record<TrackId, number> = {
   a1: 7,
   a2: 9,
   a3: 21,
+  a4: 7,
 };
 
 // --- Tarefa prática (envio de print) ---
