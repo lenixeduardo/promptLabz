@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { User, Lock, Eye, EyeOff, Loader2, Code2, Sparkles } from "lucide-react"
+import { User, Lock, Eye, EyeOff, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { MascotGlow } from "@/components/MascotGlow"
 import { CircleRevealEntry } from "@/components/CircleTransition"
 import { useAuth } from "@/hooks/useAuth"
 import { sileo } from "sileo"
@@ -129,29 +128,12 @@ export default function Login() {
       {/* Shrinking circle reveal — plays when arriving from Hero */}
       <CircleRevealEntry />
       <div className="mx-auto flex w-full max-w-[420px] flex-col items-center">
-        {/* Mascot with animated glow halo */}
-        <MascotGlow size={260}>
-          <img
-            src="/assets/mascot-login-new.png"
-            alt="PromptLabz mascot"
-            className="h-56 w-auto object-contain drop-shadow-md"
-          />
-        </MascotGlow>
-
-        {/* Wordmark lockup */}
-        <div className="mt-1 flex items-center gap-2">
-          <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-forest text-mint">
-            <Code2 className="h-5 w-5" strokeWidth={2.5} />
-            <Sparkles className="absolute -right-1.5 -top-1.5 h-3.5 w-3.5 text-mint" />
-          </span>
-          <span className="text-4xl font-extrabold tracking-tight">
-            <span className="text-foreground">prompt</span>
-            <span className="text-mint">labz</span>
-          </span>
-        </div>
-        <p className="mt-1 text-sm text-foregroundTertiary">
-          Aprenda. Crie. <span className="font-medium text-mint">Evolua.</span>
-        </p>
+        {/* Mascot + wordmark lockup (brand asset) */}
+        <img
+          src="/assets/mascot-login-hero.png"
+          alt="PromptLabz — Aprenda. Crie. Evolua."
+          className="w-full max-w-[300px] object-contain"
+        />
 
         {/* Welcome heading */}
         <div className="mt-8 text-center">

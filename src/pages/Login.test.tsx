@@ -30,10 +30,6 @@ vi.mock("@/components/CircleTransition", () => ({
   CircleRevealEntry: () => null,
 }))
 
-vi.mock("@/components/MascotGlow", () => ({
-  MascotGlow: ({ children }: any) => <div>{children}</div>,
-}))
-
 function renderLogin() {
   return render(
     <HelmetProvider>
