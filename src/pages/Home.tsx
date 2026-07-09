@@ -215,8 +215,6 @@ export default function HomePage() {
       <StreakCelebration
         active={streakCelebration}
         streak={streak}
-        avatarSrc={equipped.image}
-        avatarName={equipped.name}
         onClose={() => setStreakCelebration(false)}
       />
       <div className="flex flex-col min-h-screen bg-white pb-24 lg:pb-8">

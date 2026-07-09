@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 
-interface StreakCelebrationProps {
+interface TrailCompleteCelebrationProps {
   active: boolean;
-  streak: number;
+  trackLabel: string;
   onClose: () => void;
 }
 
-export function StreakCelebration({ active, streak, onClose }: StreakCelebrationProps) {
+export function TrailCompleteCelebration({ active, trackLabel, onClose }: TrailCompleteCelebrationProps) {
   const [show, setShow] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
 
@@ -17,13 +17,6 @@ export function StreakCelebration({ active, streak, onClose }: StreakCelebration
       setVideoEnded(false);
     }
   }, [active]);
-
-  useEffect(() => {
-    if (!videoEnded) return;
-    const t = setTimeout(close, 1400);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoEnded]);
 
   if (!active && !show) return null;
 
@@ -48,7 +41,7 @@ export function StreakCelebration({ active, streak, onClose }: StreakCelebration
       <div className="relative flex w-full max-w-lg flex-col items-center">
         <video
           className="w-full"
-          src="/assets/animations/streak-fire.mp4"
+          src="/assets/animations/trail-complete.mp4"
           autoPlay
           muted
           playsInline
@@ -56,12 +49,17 @@ export function StreakCelebration({ active, streak, onClose }: StreakCelebration
         />
 
         <div
-          className={`absolute bottom-6 flex flex-col items-center gap-1 text-center transition-opacity duration-500 ${
+          className={`absolute bottom-6 flex flex-col items-center gap-3 text-center transition-opacity duration-500 ${
             videoEnded ? "opacity-100" : "opacity-0"
           }`}
         >
-          <p className="text-xs font-extrabold uppercase tracking-wider text-brand-orange">Streak em chamas!</p>
-          <p className="text-4xl font-extrabold text-white">{streak} dias</p>
+          <p className="text-sm font-semibold text-white/80">Trilha {trackLabel} finalizada!</p>
+          <button
+            onClick={close}
+            className="rounded-2xl bg-emerald px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-emerald/30 transition-transform active:scale-[0.98]"
+          >
+            Continuar
+          </button>
         </div>
       </div>
     </div>

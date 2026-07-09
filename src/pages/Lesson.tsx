@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
   Heart,
@@ -19,8 +19,9 @@ import { completeMission } from "@/lib/missions";
 import { useAuth } from "@/hooks/useAuth";
 import { useLives } from "@/contexts/useLives";
 import { useAchievements } from "@/hooks/useAchievements";
-import { saveLocalXP, saveLocalGems, getLocalXP, getLocalGems, XP_UPDATE_EVENT, GEMS_UPDATE_EVENT } from "@/lib/xp";
+import { awardXP, saveLocalGems, getLocalGems, GEMS_UPDATE_EVENT } from "@/lib/xp";
 import { playCorrectSound, playLessonCompleteSound } from "@/lib/sound";
+import { TrailCompleteCelebration } from "@/components/TrailCompleteCelebration";
 
 const proofKey = (track: TrackId, module: number) =>
   scopedKey(`promptlabz:proof:${track}:${module}`);
@@ -38,10 +39,13 @@ export default function LessonPage() {
   const [searchParams] = useSearchParams();
   const track = (searchParams.get("track") as TrackId) || "a1";
   const module = parseInt(searchParams.get("module") || "0", 10);
+  const navigate = useNavigate();
 
   const { user } = useAuth();
   const { lives, consumeLife, awardPerfectBonus } = useLives();
   const { checkLessonComplete } = useAchievements();
+  const [trailCelebration, setTrailCelebration] = useState<{ trackLabel: string } | null>(null);
+  const pendingLevelUpRef = useRef<{ newLevel: number; prevLevel: number } | null>(null);
 
   const ACTIVITIES = useMemo(() => getActivities(track, module), [track, module]);
   const proofTask = useMemo(() => getProofTask(track, module), [track, module]);
@@ -204,19 +208,33 @@ export default function LessonPage() {
     advanceModule(TRACK_TOTALS[track], track);
     completeMission("lesson");
     // Save XP and gems earned in this lesson
+    let leveledUp: { newLevel: number; prevLevel: number } | null = null;
     if (user?.id) {
       const earned = scoreRef.current;
       const xpGain = earned * 25;
       const gemGain = earned * 3;
-      saveLocalXP(user.id, getLocalXP(user.id) + xpGain);
+      const xpResult = awardXP(user.id, xpGain);
+      if (xpResult.leveledUp) {
+        leveledUp = { newLevel: xpResult.newLevel, prevLevel: xpResult.prevLevel };
+      }
       saveLocalGems(user.id, getLocalGems(user.id) + gemGain);
-      window.dispatchEvent(new Event(XP_UPDATE_EVENT));
       window.dispatchEvent(new Event(GEMS_UPDATE_EVENT));
     }
     // Check achievements (lessonComplete implies perfect == true)
     checkLessonComplete(true);
     // Award a bonus life for perfect completion
     awardPerfectBonus();
+
+    // Finishing the last lesson of a track completes the whole trail —
+    // celebrate that first, then hand off to the level-up screen if the
+    // same lesson also crossed a level threshold.
+    if (isLastLesson) {
+      pendingLevelUpRef.current = leveledUp;
+      setTrailCelebration({ trackLabel: track.toUpperCase() });
+    } else if (leveledUp) {
+      const t = setTimeout(() => navigate("/level-up", { state: leveledUp }), 1200);
+      return () => clearTimeout(t);
+    }
   }, [lessonComplete, track]);
 
   if (finished && needsProof && !proofDone) {
@@ -287,6 +305,16 @@ export default function LessonPage() {
   if (finished) {
     return (
       <div className="flex min-h-screen flex-col bg-white">
+        <TrailCompleteCelebration
+          active={!!trailCelebration}
+          trackLabel={trailCelebration?.trackLabel ?? track.toUpperCase()}
+          onClose={() => {
+            setTrailCelebration(null);
+            const pending = pendingLevelUpRef.current;
+            pendingLevelUpRef.current = null;
+            if (pending) navigate("/level-up", { state: pending });
+          }}
+        />
         <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-stroke-muted bg-card px-4 py-3">
           <Link to="/learn" className="rounded-full p-1.5 text-forest hover:bg-surface-success">
             <ArrowLeft className="h-5 w-5" />
