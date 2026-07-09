@@ -62,3 +62,17 @@ export const saveLocalGems = (userId: string, gems: number): void => {
     // ignore write errors
   }
 }
+
+// Adds XP and reports whether the user just crossed into a new level, so
+// callers can trigger the level-up celebration without duplicating the
+// before/after comparison themselves.
+export const awardXP = (userId: string, amount: number) => {
+  const prevXP = getLocalXP(userId)
+  const newXP = prevXP + amount
+  saveLocalXP(userId, newXP)
+  window.dispatchEvent(new Event(XP_UPDATE_EVENT))
+
+  const prevLevel = getLevel(prevXP)
+  const newLevel = getLevel(newXP)
+  return { newXP, prevLevel, newLevel, leveledUp: newLevel > prevLevel }
+}

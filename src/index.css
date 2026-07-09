@@ -548,7 +548,8 @@
   .animate-mascot-celebrate,
   .animate-mascot-float,
   .animate-progress-stripes,
-  .animate-dot-pulse {
+  .animate-dot-pulse,
+  .animate-flame-flicker {
     animation: none;
     opacity: 1;
     transform: none;

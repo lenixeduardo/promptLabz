@@ -29,6 +29,7 @@ vi.mock("@/lib/xp", () => ({
   saveLocalGems: vi.fn(),
   getLocalXP: vi.fn().mockReturnValue(0),
   getLocalGems: vi.fn().mockReturnValue(0),
+  awardXP: vi.fn().mockReturnValue({ newXP: 0, prevLevel: 1, newLevel: 1, leveledUp: false }),
   XP_UPDATE_EVENT: "promptlabz:xp-updated",
   GEMS_UPDATE_EVENT: "promptlabz:gems-updated",
 }))

@@ -1,57 +1,10 @@
-import React from "react"
+import { useState } from "react"
 import { Navigate, useLocation, useNavigate } from "react-router-dom"
 import { CheckCircle2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/useAuth"
 import { getLocalXP, getLevel } from "@/lib/xp"
 import { getLevelTitle } from "@/lib/levelTitles"
-
-// ── Confetti rectangles ─────────────────────────────────────────────
-// Negative delays start pieces mid-fall so confetti is visible immediately
-const CONFETTI = [
-  { color: "#4ADE80", x: "5%",  w: 8,  h: 20, rotate: 20,  delay: "-0.8s", dur: "3.2s" },
-  { color: "#FCD34D", x: "14%", w: 6,  h: 16, rotate: -30, delay: "-2.1s", dur: "3.8s" },
-  { color: "#86EFAC", x: "24%", w: 7,  h: 18, rotate: 45,  delay: "-1.4s", dur: "2.9s" },
-  { color: "#FCD34D", x: "38%", w: 6,  h: 14, rotate: 15,  delay: "-0.5s", dur: "3.5s" },
-  { color: "#4ADE80", x: "50%", w: 8,  h: 18, rotate: -20, delay: "-2.8s", dur: "4.0s" },
-  { color: "#A8EDCA", x: "62%", w: 7,  h: 17, rotate: 55,  delay: "-1.8s", dur: "3.1s" },
-  { color: "#FCD34D", x: "73%", w: 6,  h: 15, rotate: -40, delay: "-0.3s", dur: "3.6s" },
-  { color: "#4ADE80", x: "83%", w: 9,  h: 21, rotate: 25,  delay: "-1.1s", dur: "2.7s" },
-  { color: "#86EFAC", x: "91%", w: 7,  h: 16, rotate: -15, delay: "-2.5s", dur: "3.3s" },
-  { color: "#FCD34D", x: "30%", w: 6,  h: 13, rotate: 60,  delay: "-0.7s", dur: "4.1s" },
-  { color: "#4ADE80", x: "57%", w: 8,  h: 19, rotate: -50, delay: "-3.2s", dur: "3.0s" },
-  { color: "#A8EDCA", x: "78%", w: 6,  h: 14, rotate: 30,  delay: "-1.6s", dur: "3.7s" },
-  { color: "#FCD34D", x: "8%",  w: 7,  h: 16, rotate: -10, delay: "-2.3s", dur: "3.4s" },
-  { color: "#4ADE80", x: "45%", w: 6,  h: 13, rotate: 35,  delay: "-0.9s", dur: "3.9s" },
-  { color: "#86EFAC", x: "68%", w: 8,  h: 17, rotate: -25, delay: "-1.7s", dur: "2.8s" },
-  { color: "#FCD34D", x: "88%", w: 5,  h: 12, rotate: 50,  delay: "-3.5s", dur: "4.2s" },
-]
-
-// ── Sparkle stars ──────────────────────────────────────────────────
-const SPARKLES = [
-  { x: "7%",  y: "22%", s: 18, delay: "0.3s",  c: "#FCD34D" },
-  { x: "88%", y: "16%", s: 14, delay: "1.1s",  c: "#4ADE80" },
-  { x: "16%", y: "42%", s: 20, delay: "0.7s",  c: "#FCD34D" },
-  { x: "82%", y: "36%", s: 16, delay: "0.2s",  c: "#86EFAC" },
-  { x: "4%",  y: "56%", s: 12, delay: "1.5s",  c: "#FCD34D" },
-  { x: "94%", y: "50%", s: 18, delay: "0.9s",  c: "#4ADE80" },
-  { x: "26%", y: "28%", s: 14, delay: "1.3s",  c: "#86EFAC" },
-  { x: "74%", y: "60%", s: 16, delay: "0.4s",  c: "#FCD34D" },
-]
-
-// ── 4-point sparkle star SVG ────────────────────────────────────────
-function Star({ x, y, s, delay, c }: typeof SPARKLES[0]) {
-  return (
-    <svg
-      className="pointer-events-none absolute animate-twinkle"
-      style={{ left: x, top: y, animationDelay: delay, width: s, height: s }}
-      viewBox="0 0 24 24"
-      fill={c}
-    >
-      <path d="M12 2L13.8 9.2L21 12L13.8 14.8L12 22L10.2 14.8L3 12L10.2 9.2L12 2Z" />
-    </svg>
-  )
-}
 
 // ── 3-tier 3D podium ───────────────────────────────────────────────
 const TIERS = [
@@ -151,17 +104,6 @@ function HexBadge({ level }: { level: number }) {
   )
 }
 
-// ── Ray burst (conic gradient, slowly spinning) ─────────────────────
-const RAY_BG = (() => {
-  const stops: string[] = []
-  for (let i = 0; i < 18; i++) {
-    const a = i * 20
-    stops.push(`rgba(167,243,208,0.55) ${a}deg ${a + 8}deg`)
-    stops.push(`transparent ${a + 8}deg ${a + 20}deg`)
-  }
-  return `conic-gradient(${stops.join(", ")})`
-})()
-
 // ── Unlock items ────────────────────────────────────────────────────
 const UNLOCK_ITEMS = [
   (level: number) => `Novos badges (${level} desbloqueados)`,
@@ -179,6 +121,7 @@ export default function LevelUp() {
   const navigate = useNavigate()
   const location = useLocation()
   const { user } = useAuth()
+  const [introDone, setIntroDone] = useState(false)
 
   const state = location.state as LevelUpState | null
 
@@ -195,6 +138,34 @@ export default function LevelUp() {
   }
 
   const { newLevel } = state
+
+  return introDone
+    ? <LevelUpDetails newLevel={newLevel} onDone={() => navigate("/home")} />
+    : (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black animate-fade-in"
+        onClick={() => setIntroDone(true)}
+      >
+        <button
+          onClick={() => setIntroDone(true)}
+          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+          aria-label="Pular"
+        >
+          <X className="h-5 w-5" />
+        </button>
+        <video
+          className="w-full max-w-lg"
+          src="/assets/animations/level-up.mp4"
+          autoPlay
+          muted
+          playsInline
+          onEnded={() => setIntroDone(true)}
+        />
+      </div>
+    )
+}
+
+function LevelUpDetails({ newLevel, onDone }: { newLevel: number; onDone: () => void }) {
   const levelTitle = getLevelTitle(newLevel)
 
   return (
@@ -204,35 +175,13 @@ export default function LevelUp() {
         background: "linear-gradient(160deg, #E4F5EC 0%, #EDF8F2 45%, #F3FBF6 100%)",
       }}
     >
-      {/* ── Falling confetti ───────────────────────────────────────── */}
-      {CONFETTI.map((c, i) => (
-        <span
-          key={i}
-          className="pointer-events-none absolute top-0"
-          style={{
-            left: c.x,
-            width: c.w,
-            height: c.h,
-            backgroundColor: c.color,
-            borderRadius: 2,
-            animation: `confettiFall ${c.dur} ${c.delay} ease-in infinite`,
-            ['--r' as string]: `${c.rotate}deg`,
-          } as React.CSSProperties}
-        />
-      ))}
-
-      {/* ── Sparkle stars ─────────────────────────────────────────── */}
-      {SPARKLES.map((s, i) => (
-        <Star key={i} {...s} />
-      ))}
-
       {/* ── Top bar ───────────────────────────────────────────────── */}
       <div
         className="animate-podium-rise flex items-center justify-between px-5 pt-8 pb-1"
         style={{ animationDelay: "0s" }}
       >
         <button
-          onClick={() => navigate("/home")}
+          onClick={onDone}
           className="flex h-9 w-9 items-center justify-center rounded-full border border-white/60 bg-white/70 text-foregroundMuted shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
           aria-label="Fechar"
         >
@@ -252,40 +201,8 @@ export default function LevelUp() {
         Novo Nível!
       </h1>
 
-      {/* ── Celebration zone ──────────────────────────────────────── */}
-      <div className="relative flex flex-col items-center px-4 pt-2 pb-1">
-        {/* Ray burst */}
-        <div
-          className="pointer-events-none absolute"
-          style={{
-            width: 300,
-            height: 300,
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -58%)",
-            animation: "spin-cw 22s linear infinite",
-            background: RAY_BG,
-            maskImage:
-              "radial-gradient(circle at 50% 50%, black 20%, transparent 70%)",
-            WebkitMaskImage:
-              "radial-gradient(circle at 50% 50%, black 20%, transparent 70%)",
-            borderRadius: "50%",
-          }}
-        />
-
-        {/* Mascot — floats above podium */}
-        <div
-          className="animate-mascot-celebrate relative z-10"
-          style={{ marginBottom: -12 }}
-        >
-          <img
-            src="/assets/mascot-levelup.png"
-            alt="Mascote celebrando novo nível"
-            className="h-96 w-auto object-contain drop-shadow-xl"
-          />
-        </div>
-
-        {/* Badge + Podium stacked */}
+      {/* ── Badge + Podium recap ─────────────────────────────────────── */}
+      <div className="relative flex flex-col items-center px-4 pt-4 pb-1">
         <div
           className="animate-podium-rise relative z-10 flex flex-col items-center"
           style={{ animationDelay: "0.18s" }}
@@ -356,7 +273,7 @@ export default function LevelUp() {
           <Button
             size="lg"
             className="w-full text-base font-bold tracking-wide"
-            onClick={() => navigate("/home")}
+            onClick={onDone}
           >
             EXPLORAR NOVO NÍVEL →
           </Button>
