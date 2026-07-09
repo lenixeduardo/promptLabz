@@ -192,12 +192,18 @@ Para o CI e os workflows automáticos funcionarem, configure os seguintes secret
 | Secret | Obrigatório | Uso |
 |--------|-------------|-----|
 | `DAILY_NEWS_SECRET` | Para o cron de notícias | Autentica chamada à Edge Function `daily-tech-news` |
-| `SUPABASE_URL` | Para o cron de notícias | URL do projeto Supabase |
+| `SUPABASE_URL` | Para o cron de notícias | URL do projeto Supabase (secret de CI, distinto da `SUPABASE_URL` auto-injetada nas Edge Functions) |
 | `SENTRY_AUTH_TOKEN` | Para source maps | Upload de source maps no build de produção |
 | `SENTRY_ORG` | Para source maps | Slug da organização Sentry |
 | `SENTRY_PROJECT` | Para source maps | Slug do projeto Sentry |
+| `VITE_SUPABASE_URL` | Para o build Android | Usado por `.github/workflows/android-build.yml` ao rodar `pnpm build` |
+| `VITE_SUPABASE_ANON_KEY` | Para o build Android | Idem — sem isso o build do APK falha em runtime (auth quebrada no app) |
+| `KEYSTORE_BASE64` | Para release Android | Keystore de assinatura codificada em base64 (só builds `release`/tags `v*`) |
+| `KEYSTORE_PASSWORD` | Para release Android | Senha do keystore |
+| `KEY_ALIAS` | Para release Android | Alias da chave de assinatura |
+| `KEY_PASSWORD` | Para release Android | Senha da chave |
 
-Os secrets `DAILY_NEWS_SECRET` e `SUPABASE_URL` são lidos pelo workflow `.github/workflows/daily-tech-news.yml` que roda diariamente às 07:00 UTC.
+Os secrets `DAILY_NEWS_SECRET` e `SUPABASE_URL` são lidos pelo workflow `.github/workflows/daily-tech-news.yml` que roda diariamente às 07:00 UTC. `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` e os `KEYSTORE_*` são lidos por `.github/workflows/android-build.yml`.
 
 ---
 
@@ -260,11 +266,17 @@ Para rollback de migrations no Supabase, execute o SQL inverso manualmente via S
 
 | Variável | Obrigatória | Descrição |
 |----------|-------------|-----------|
-| `APP_URL` | ✅ | URL do frontend (para links em emails) |
-| `APP_NAME` | ✅ | Nome do app nos emails |
-| `RESEND_API_KEY` | ✅ | Chave da API do Resend |
-| `RESEND_FROM_EMAIL` | ✅ | Email remetente verificado |
-| `SEND_EMAIL_HOOK_SECRET` | ✅ | Secret do webhook de email do Supabase |
+| `APP_URL` | ✅ | URL do frontend (links em emails, CORS allowlist, redirect do Stripe Checkout) |
+| `APP_NAME` | ❌ | Nome do app nos emails (default: `PromptLabz`) |
+| `RESEND_API_KEY` | ✅ | Chave da API do Resend (`send-auth-email`) |
+| `RESEND_FROM_EMAIL` | ✅ | Email remetente verificado (`send-auth-email`) |
+| `SEND_EMAIL_HOOK_SECRET` | ✅ | Secret do webhook de email do Supabase (`send-auth-email`) |
+| `DAILY_NEWS_SECRET` | ✅ | Autentica a chamada ao Edge Function `daily-tech-news` |
+| `STRIPE_SECRET_KEY` | ✅ | Chave secreta do Stripe (`stripe-checkout`, `stripe-webhook`) |
+| `STRIPE_PRICE_ID` | ✅ | Price ID da assinatura Premium (`stripe-checkout`) |
+| `STRIPE_WEBHOOK_SECRET` | ✅ | Secret do endpoint webhook do Stripe (`stripe-webhook`) |
+| `ANTHROPIC_API_KEY` | ❌ | Habilita "Análise com IA" no Prompt Analyzer (`evaluate-prompt`); sem ela, cai no heurístico local |
+| `SUPABASE_URL` / `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` | — | Auto-injetadas pelo runtime das Edge Functions, não precisam de `supabase secrets set` |
 
 ### GitHub Actions Secrets
 
@@ -273,3 +285,6 @@ Para rollback de migrations no Supabase, execute o SQL inverso manualmente via S
 | `DAILY_NEWS_SECRET` | Para cron de notícias | Autentica a chamada ao Edge Function |
 | `SUPABASE_URL` | Para cron de notícias | URL do projeto Supabase (no Actions) |
 | `SENTRY_AUTH_TOKEN` | Para source maps | Token de upload (se usar Sentry) |
+| `SENTRY_ORG` / `SENTRY_PROJECT` | Para source maps | Slug da org/projeto Sentry (se usar Sentry) |
+| `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | Para build Android | Injetadas no `pnpm build` do workflow `android-build.yml` |
+| `KEYSTORE_BASE64` / `KEYSTORE_PASSWORD` / `KEY_ALIAS` / `KEY_PASSWORD` | Para release Android | Assinatura do APK release (builds de tag `v*`) |
