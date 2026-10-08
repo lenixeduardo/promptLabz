@@ -909,7 +909,6 @@ export async function uploadLessonProof(
   }
 }
 
-
 // ── Lab result persistence ────────────────────────────────────────────────────
 export interface SavedLabResult {
   score: number
@@ -926,22 +925,28 @@ export async function saveLabResult(
   result: SavedLabResult
 ): Promise<DbResult<{ id: string }>> {
   if (!isSupabaseConfigured()) return { data: null, error: "Supabase não configurado" }
-  if (!userId || userId === "preview-user") return { data: null, error: "Faça login para salvar resultados" }
+  if (!userId || userId === "preview-user") {
+    return { data: null, error: "Faça login para salvar resultados" }
+  }
   try {
     const { data: session, error: authError } = await supabase.auth.getUser()
     if (authError || session.user?.id !== userId) {
       return { data: null, error: "Sessão inválida. Entre novamente." }
     }
-    const { data, error } = await supabase.from("lab_results").insert({
-      user_id: userId,
-      score: result.score,
-      label: result.label,
-      stars: result.stars,
-      original_prompt: result.originalPrompt,
-      analysis: result.analysis,
-      feedback: result.feedback,
-      ai_compatibility: result.aiCompatibility,
-    }).select("id").single()
+    const { data, error } = await supabase
+      .from("lab_results")
+      .insert({
+        user_id: userId,
+        score: result.score,
+        label: result.label,
+        stars: result.stars,
+        original_prompt: result.originalPrompt,
+        analysis: result.analysis,
+        feedback: result.feedback,
+        ai_compatibility: result.aiCompatibility,
+      })
+      .select("id")
+      .single()
     if (error) throw error
     return { data: data as { id: string }, error: null }
   } catch (err) {
