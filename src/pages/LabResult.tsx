@@ -1,8 +1,10 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { ArrowRight, CheckCircle2, BookmarkPlus } from "lucide-react"
 import { sileo } from "sileo"
 import { AppBottomNav } from "@/components/AppBottomNav"
+import { useAuthContext } from "@/contexts/AuthContext"
+import { saveLabResult } from "@/lib/db"
 
 interface LabResultState {
   score: number
@@ -36,6 +38,9 @@ function StarRating({ stars }: { stars: number }) {
 }
 
 export default function LabResult() {
+  const { user } = useAuthContext()
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   const result = location.state as LabResultState | null
@@ -53,11 +58,24 @@ export default function LabResult() {
 
   if (!result) return null
 
-  const handleSaveResult = () => {
-    sileo.info({
-      title: "Em breve",
-      description: "Salvar resultados do laboratório estará disponível em breve.",
-    })
+  const handleSaveResult = async () => {
+    if (saving || saved) return
+    if (!user) {
+      sileo.error({ title: "Entre na sua conta para salvar o resultado" })
+      return
+    }
+    setSaving(true)
+    try {
+      const { error } = await saveLabResult(user.id, result)
+      if (error) {
+        sileo.error({ title: "Não foi possível salvar", description: error })
+      } else {
+        setSaved(true)
+        sileo.success({ title: "Resultado salvo com sucesso" })
+      }
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -164,10 +182,11 @@ export default function LabResult() {
         <div className="mx-auto max-w-[460px]">
           <button
             onClick={handleSaveResult}
+            disabled={saving || saved}
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-dark py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-emerald"
           >
             <BookmarkPlus className="h-4 w-4" />
-            Salvar Resultado
+            {saved ? "Resultado salvo" : saving ? "Salvando..." : "Salvar Resultado"}
           </button>
         </div>
       </div>
